@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "filamentcolors.xyz"
+version = "0.1.0"
+description = "The source code for a small website to compare pieces of printed filament."
+authors = ["Joe Kaufeld <joe.kaufeld@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+django = "^2.1"
+Pillow = "^5.3"
+
+[tool.poetry.dev-dependencies]
+better-exceptions = "^0.2.1"
+ipdb = "^0.11.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

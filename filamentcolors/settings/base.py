@@ -25,7 +25,12 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'ssssh I\'m hunting wabbits')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.filamentcolors.xyz']
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
+MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
 
 
 # Application definition

@@ -1,0 +1,112 @@
+body {
+  color: black;
+}
+
+.card-title a:hover, a:visited, a:link, a:active {
+  color: black;
+  text-decoration: None;
+}
+
+.card-title a:hover, a:visited, a:link, a:active {
+  color: black;
+  text-decoration: None;
+}
+
+.card-text {
+  color: black;
+  text-decoration: None;
+}
+
+.item-page-header {
+    position: relative;
+    margin-bottom: 20px
+}
+
+.item-page-header .avatar-wrapper {
+    width: 58px;
+    height: 58px
+}
+
+.item-page-info {
+    display: inline-block;
+    color: #666;
+    width: calc(100% - 70px)
+}
+
+.item-info {
+    display: inline-block;
+    height: 3em;
+    left: 25px
+}
+
+.item-info span {
+    position: relative;
+    left: 3em;
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden
+}
+
+.item-info a {
+    position: absolute;
+    left: 25px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333
+}
+
+.app-card {
+    display: inline-block;
+    vertical-align: top;
+    height: 280px;
+    background: #fff;
+    margin: 0 auto 30px;
+    text-align: left
+}
+
+.app-card .cover {
+    display: block;
+    width: 100%;
+    height: 225px;
+    overflow: hidden;
+    position: relative
+}
+
+.app-card .cover img {
+    width: 100%
+}
+
+.app-card .cover::after {
+    content: '';
+    display: inline-block;
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25));
+    width: 100%;
+    height: 40px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 100
+}
+
+.app-card .item-info {
+    height: 55px;
+    padding: 5px 10px 0
+}
+
+.app-card .item-info .avatar-wrapper {
+    vertical-align: middle;
+    border: none
+}
+
+.app-card .item-name {
+    display: inline-block;
+    font-size: 12px;
+    color: #333;
+    margin: 0 0 0 12px;
+    line-height: 1.25em;
+    width: calc(100% - 58px);
+    vertical-align: middle
+}

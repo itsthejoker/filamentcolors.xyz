@@ -3,11 +3,16 @@
     <title>FilamentColors</title>
 </head>
 
-test
+
+<div class="container">
+
+This is the library!
 
 
 <div class="card-deck">
-{% for r in recents %}
-    {% include 'partials/card.partial' with obj=r %}
+{% for s in swatches %}
+    {% include 'partials/card.partial' with obj=s %}
 {% endfor %}
+</div>
+
 </div>

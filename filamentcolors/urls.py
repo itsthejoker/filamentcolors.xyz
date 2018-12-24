@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 from filamentcolors.models import Swatch
 from filamentcolors.models import Printer
@@ -25,5 +27,13 @@ admin.site.register(Printer)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.homepage, name='homepage')
+    path('', views.homepage, name='homepage'),
+    path('library/sort/<str:method>/', views.librarysort, name='librarysort'),
+    path('library/', views.library, name='library'),
+    path('swatch/<int:id>', views.swatch_detail, name='swatchdetail'),
+    path('printer/<int:id>', views.printer_detail, name='printerdetail')
 ]
+
+if settings.DEBUG :
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

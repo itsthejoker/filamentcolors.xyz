@@ -1,5 +1,21 @@
 from django.db import models
 from django.contrib.auth.models import User
+# from smartfields import fields
+# from smartfields.dependencies import FileDependency
+# from smartfields.processors import ImageProcessor
+import cv2
+import numpy as np
+from skimage import io
+from PIL import Image as Img
+from io import BytesIO
+import os
+from django.core.files.images import ImageFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
+from django.core.files import File
+from django.utils import timezone
 
 
 class Printer(models.Model):
@@ -15,18 +31,88 @@ class Printer(models.Model):
 class Swatch(models.Model):
     manufacturer = models.CharField(max_length=160)
     color_name = models.CharField(max_length=240)
-    hex_color = models.CharField(max_length=6)
+
     # PLA, PETG, etc.
     filament_type = models.CharField(max_length=10, default='PLA')
     hot_end_temp = models.IntegerField(default=205)
     bed_temp = models.IntegerField(default=60)
+    card_img_jpeg = models.ImageField(upload_to="card_img", blank=True)
+
+    # !!!!!!!!!!!!!!!!!!!!!!!!
+    # DO NOT PUT ANYTHING IN THESE FIELDS!
+    # They are computed and added automatically!
+    card_img = models.ImageField(blank=True)
+    hex_color = models.CharField(max_length=6, blank=True)
+    # !!!!!!!!!!!!!!!!!!!!!!!!
+
+    # full size images
     image_back = models.ImageField(null=True, blank=True)
     image_front = models.ImageField(null=True, blank=True)
     image_side = models.ImageField(null=True, blank=True)
+
     printed_on = models.ForeignKey(Printer, on_delete=models.CASCADE)
     maker = models.ForeignKey(User, on_delete=models.CASCADE)
-    date_added = models.DateTimeField(auto_now=True)
+    date_added = models.DateTimeField(default=timezone.now)
     notes = models.TextField(max_length=4000, null=True, blank=True)
+
+
+    def save(self, *args, **kwargs):
+
+        # https://stackoverflow.com/a/24380132
+        if self.card_img_jpeg:
+            try:
+                # first let's see if we even need to work on it
+                this = Swatch.objects.get(id=self.id)
+                if this.card_img_jpeg != self.card_img_jpeg:
+                    this.card_img_jpeg.delete(save=False)
+            except:
+                pass  # when new photo
+
+            # Process:
+            #
+            # Take the image file, create a thumbnail, save the thumbnail to disk,
+            # then add that file to the self.card_img attribute.
+
+            image = Img.open(self.card_img_jpeg)
+            image.thumbnail((200, 200), Img.ANTIALIAS)
+            # do we even need to do it this way? Need to learn more about byte streams
+            # and verify that this is actually a valid way to handle this.
+            output = BytesIO()
+            image.save(output, format='JPEG', quality=75)
+            output.seek(0)
+            # remove the file type so that we can modify the filename
+            filename_str = self.card_img_jpeg.name[:self.card_img_jpeg.name.rindex('.')]
+            filename = default_storage.save(
+                f'{filename_str}-thumb.jpg', ContentFile(output.read())
+            )
+
+            path = os.path.join(settings.MEDIA_ROOT, filename)
+            self.card_img = ImageFile(open(path, 'rb'))
+            self.card_img.name = filename
+
+        # sanity check
+        if self.card_img:
+            # lovingly ripped from https://stackoverflow.com/a/43111221
+            self.card_img.file.seek(0)
+            img = io.imread(self.card_img.file)
+
+            pixels = np.float32(img.reshape(-1, 3))
+
+            n_colors = 5
+            criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
+            flags = cv2.KMEANS_RANDOM_CENTERS
+
+            # this line is super painful in computation time
+            _, labels, palette = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
+            _, counts = np.unique(labels, return_counts=True)
+            dominant = palette[np.argmax(counts)]
+
+            self.hex_color = "{R}{G}{B}".format(
+                R = "%0.2X" % int(dominant[0]),
+                G = "%0.2X" % int(dominant[1]),
+                B = "%0.2X" % int(dominant[2])
+            )
+        super(Swatch, self).save(*args, **kwargs)
 
 
     def __str__(self):

@@ -106,7 +106,4 @@ venv.bak/
 db.sqlite3
 .idea/
 migrations/
-static/*
-images/*.jpg
-images/*.jpeg
-images/*.png
+static/

@@ -1,0 +1,31 @@
+{% include 'partials/bootstrap.partial' %}
+
+<section class="gallery-block grid-gallery">
+    <div class="container">
+        <div class="heading">
+            <h2>{{obj.manufacturer}} - {{ obj.color_name }}</h2>
+            <p>{{ obj.hex_color }}</p>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-lg-4 item">
+                <a class="lightbox" href="{{ obj.image_front.url }}">
+                    <img class="img-fluid image scale-on-hover" src="{{ obj.image_front.url }}" alt="An image of the front of the color swatch.">
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4 item">
+                <a class="lightbox" href="{{ obj.image_back.url }}">
+                    <img class="img-fluid image scale-on-hover" src="{{ obj.image_back.url }}" alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4 item">
+                <a class="lightbox" href="{{ obj.image_side.url }}">
+                    <img class="img-fluid image scale-on-hover" src="{{ obj.image_side.url }}" alt="An image of the side of a color swatch, showing the layer lines of the printed object.">
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    baguetteBox.run('.grid-gallery', {animation: 'slideIn'});
+</script>

@@ -108,3 +108,4 @@ db.sqlite3
 migrations/
 static/
 images/
+.DS_Store

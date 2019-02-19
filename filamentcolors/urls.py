@@ -31,7 +31,8 @@ urlpatterns = [
     path('library/sort/<str:method>/', views.librarysort, name='librarysort'),
     path('library/', views.library, name='library'),
     path('swatch/<int:id>', views.swatch_detail, name='swatchdetail'),
-    path('printer/<int:id>', views.printer_detail, name='printerdetail')
+    path('printer/<int:id>', views.printer_detail, name='printerdetail'),
+    path('about/', views.about_page, name='about'),
 ]
 
 if settings.DEBUG :

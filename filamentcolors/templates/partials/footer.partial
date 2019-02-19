@@ -1,0 +1,23 @@
+<div class="container my-3">
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-3 text-center">
+            <a href="/about">about</a>
+        </div>
+        <div class="col-sm-3 text-center">
+            © Joe Kaufeld,
+            <script type="text/javascript">document.write((new Date()).getFullYear());</script>
+        </div>
+        <div class="col-sm-3 text-center">
+            Going to #MRRF 2019? Come say hi!
+        </div>
+        <div class="col-sm-3 text-center kofi-button">
+            <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script>
+            <script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee', '#46b798', 'C0C2QOVZ');
+            kofiwidget2.draw();</script>
+        </div>
+    </div>
+
+</div>
+

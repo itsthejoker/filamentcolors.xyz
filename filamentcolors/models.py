@@ -1,21 +1,17 @@
-from django.db import models
-from django.contrib.auth.models import User
-# from smartfields import fields
-# from smartfields.dependencies import FileDependency
-# from smartfields.processors import ImageProcessor
+import os
+from io import BytesIO
+
 import cv2
 import numpy as np
-from skimage import io
 from PIL import Image as Img
-from io import BytesIO
-import os
-from django.core.files.images import ImageFile
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 from django.conf import settings
-from django.core.files import File
+from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
+from django.core.files.images import ImageFile
+from django.core.files.storage import default_storage
+from django.db import models
 from django.utils import timezone
+from skimage import io
 
 
 class Printer(models.Model):
@@ -43,6 +39,7 @@ class Swatch(models.Model):
     # They are computed and added automatically!
     card_img = models.ImageField(blank=True)
     hex_color = models.CharField(max_length=6, blank=True)
+    complement_hex = models.CharField(max_length=6, blank=True)
     # !!!!!!!!!!!!!!!!!!!!!!!!
 
     # full size images
@@ -58,6 +55,37 @@ class Swatch(models.Model):
 
     def save(self, *args, **kwargs):
 
+        def get_rgb(hex: str) -> tuple:
+            return tuple(int(hex[i:i + 2], 16) for i in (0, 2, 4))
+
+        def get_hex(rgb: tuple) -> str:
+            return (
+                "{R}{G}{B}".format(
+                R = "%0.2X" % int(rgb[0]),
+                G = "%0.2X" % int(rgb[1]),
+                B = "%0.2X" % int(rgb[2])
+                )
+            )
+
+        def rgb_hilo(a, b, c):
+            # courtesy of https://stackoverflow.com/a/40234924
+            if c < b: b, c = c, b
+            if b < a: a, b = b, a
+            if c < b: b, c = c, b
+            return a + c
+
+        def get_complement(hex):
+            r, g, b = get_rgb(hex)
+            # courtesy of https://stackoverflow.com/a/40234924
+            k = rgb_hilo(r, g, b)
+            return get_hex(tuple(k - u for u in (r, g, b)))
+
+
+        if self.card_img:
+            # we already have a card image, so just save everything and abort.
+            super(Swatch, self).save(*args, **kwargs)
+            return
+
         # https://stackoverflow.com/a/24380132
         if self.card_img_jpeg:
             try:
@@ -66,7 +94,7 @@ class Swatch(models.Model):
                 if this.card_img_jpeg != self.card_img_jpeg:
                     this.card_img_jpeg.delete(save=False)
             except:
-                pass  # when new photo
+                pass
 
             # Process:
             #
@@ -102,16 +130,17 @@ class Swatch(models.Model):
             criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
             flags = cv2.KMEANS_RANDOM_CENTERS
 
-            # this line is super painful in computation time
+            # this line is super painful in computation time. We kind of get
+            # around that by only having it parse the resized small card image;
+            # if it runs on the full-size image, it could take a minute or two
+            # to complete.
             _, labels, palette = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
             _, counts = np.unique(labels, return_counts=True)
             dominant = palette[np.argmax(counts)]
 
-            self.hex_color = "{R}{G}{B}".format(
-                R = "%0.2X" % int(dominant[0]),
-                G = "%0.2X" % int(dominant[1]),
-                B = "%0.2X" % int(dominant[2])
-            )
+            self.hex_color = get_hex(dominant)
+            self.complement_hex = get_complement(self.hex_color)
+
         super(Swatch, self).save(*args, **kwargs)
 
 

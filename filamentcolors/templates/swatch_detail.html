@@ -1,31 +1,93 @@
 {% include 'partials/bootstrap.partial' %}
+{% include 'partials/navbar.partial' %}
 
-<section class="gallery-block grid-gallery">
-    <div class="container">
-        <div class="heading">
-            <h2>{{obj.manufacturer}} - {{ obj.color_name }}</h2>
-            <p>{{ obj.hex_color }}</p>
+<div class="container">
+    <div class="row border-between">
+        <div class="col-md-9 text-center">
+            <p></p>
+            <h2>{{ swatch.manufacturer }} - {{ swatch.color_name }} {{ swatch.filament_type }}</h2>
+            <div class="big-color-cube" style="background-color:{{ swatch.hex_color }};"></div>
+            <p>#{{ swatch.hex_color }}</p>
+            <section class="gallery-block grid-gallery">
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-lg-4 text-left">
+                        <p></p>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Printing Info</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td scope="row">Hot end temp</td>
+                                <td>{{ swatch.hot_end_temp }}</td>
+                            </tr>
+                            <tr>
+                                <td scope="row">Bed temp</td>
+                                <td>{{ swatch.bed_temp }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-8 col-md-8 col-lg-6 item">
+                        <a class="lightbox" href="{{ swatch.image_front.url }}">
+                            <img class="img-fluid image scale-on-hover" src="{{ swatch.image_front.url }}"
+                                 alt="An image of the front of the color swatch.">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-3"></div>
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-lg-4">
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-2 item">
+                        <a class="lightbox" href="{{ swatch.image_back.url }}">
+                            <img class="img-fluid image scale-on-hover" src="{{ swatch.image_back.url }}"
+                                 alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
+                        </a>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-2 item">
+                        <a class="lightbox" href="{{ swatch.image_side.url }}">
+                            <img class="img-fluid image scale-on-hover" src="{{ swatch.image_side.url }}"
+                                 alt="An image of a small object printed with the filament.">
+                        </a>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-4">
+                    </div>
+                </div>
+            </section>
+            <section>
+                {{ swatch.notes }}
+            </section>
         </div>
-        <div class="row">
-            <div class="col-md-6 col-lg-4 item">
-                <a class="lightbox" href="{{ obj.image_front.url }}">
-                    <img class="img-fluid image scale-on-hover" src="{{ obj.image_front.url }}" alt="An image of the front of the color swatch.">
-                </a>
-            </div>
-            <div class="col-md-6 col-lg-4 item">
-                <a class="lightbox" href="{{ obj.image_back.url }}">
-                    <img class="img-fluid image scale-on-hover" src="{{ obj.image_back.url }}" alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
-                </a>
-            </div>
-            <div class="col-md-6 col-lg-4 item">
-                <a class="lightbox" href="{{ obj.image_side.url }}">
-                    <img class="img-fluid image scale-on-hover" src="{{ obj.image_side.url }}" alt="An image of the side of a color swatch, showing the layer lines of the printed object.">
-                </a>
-            </div>
+
+        <div class="col-md-3">
+            <p></p>
+            <h4>Related colors</h4>
+            Pure complement to #{{ swatch.hex_color }}:<p></p>
+            <div class="color-cube" style="background-color:{{ swatch.complement_hex }};"></div>
+            - #{{ swatch.complement_hex }}
+            {% if c_swatch %}
+                <p></p>
+                Closest filament swatch from the library (apologies if this is wildly inaccurate):
+                <p></p>
+                <a href="/swatch/{{ c_swatch.id }}"><h6>{{ c_swatch.manufacturer }} - {{ c_swatch.color_name }}</h6></a>
+                <div class="color-cube" style="background-color:{{ c_swatch.hex_color }};"></div>
+                - #{{ c_swatch.hex_color }}
+            {% endif %}
+            {% if not c_swatch %}
+                <p></p>
+                No swatch was found in the library that comes close to this color. Sorry!
+            {% endif %}
         </div>
     </div>
-</section>
+</div>
+
 
 <script>
     baguetteBox.run('.grid-gallery', {animation: 'slideIn'});
 </script>
+
+{% include 'partials/footer.partial' %}

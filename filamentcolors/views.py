@@ -2,8 +2,8 @@ from django.shortcuts import render
 from filamentcolors.models import Swatch
 from filamentcolors.models import Printer
 from django.utils import timezone
-
-import colorsys
+from filamentcolors.helpers import get_hsv
+from filamentcolors.helpers import get_complement_swatch
 
 def homepage(request):
     html = 'home.html'
@@ -35,16 +35,8 @@ def librarysort(request, method: str):
     :param method: the string which determines how to sort the results.
     :return:
     """
-
-    def get_hsv(item):
-        # TODO: I have NO idea if this works. Need to actually get some
-        # samples up in here to check.
-        hexrgb = item.hex_color
-        r, g, b = (int(hexrgb[i:i + 2], 16) / 255.0 for i in range(0, 5, 2))
-        return colorsys.rgb_to_hsv(r, g, b)
-
     items = Swatch.objects.all()
-    if method == 'alphabetically':
+    if method == 'type':
         items.order_by('filament_type')
 
     elif method == 'manufacturer':
@@ -59,14 +51,18 @@ def librarysort(request, method: str):
     return render(request, 'library.html', {'swatches': items})
 
 
-
 def swatch_detail(request, id):
     html = 'swatch_detail.html'
     swatch = Swatch.objects.filter(id=id).first()
+
+    c_swatch = get_complement_swatch(swatch)
+
     if not swatch:
         return render(request, html, {'error': 'Swatch ID not found!'})
     else:
-        return render(request, html, {'swatch': swatch})
+        return render(
+            request, html, {'swatch': swatch, 'c_swatch': c_swatch}
+        )
 
 
 def printer_detail(request, id):

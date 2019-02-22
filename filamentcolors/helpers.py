@@ -1,7 +1,16 @@
 import colorsys
 
+from django.http import request
+
 from filamentcolors.models import Swatch
 from filamentcolors.colors import Color
+
+
+cookie_name = "f"
+
+
+def show_welcome_modal(r: request):
+    return False if r.COOKIES.get(cookie_name) else True
 
 
 def get_complement_swatch(s: Swatch) -> [None, Swatch]:

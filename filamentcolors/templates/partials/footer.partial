@@ -1,23 +1,24 @@
+<footer class="page-footer pt-4">
 <div class="container my-3">
     <hr>
 
     <div class="row">
-        <div class="col-sm-3 text-center">
+        <div class="col-sm-3 text-center bump-down">
             <a href="/about">about</a>
         </div>
-        <div class="col-sm-3 text-center">
+        <div class="col-sm-3 text-center bump-down">
             © Joe Kaufeld,
             <script type="text/javascript">document.write((new Date()).getFullYear());</script>
         </div>
-        <div class="col-sm-3 text-center">
-            Going to #MRRF 2019? Come say hi!
+        <div class="col-sm-3 text-center bump-down">
+            <a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank">source code (github)</a>
         </div>
-        <div class="col-sm-3 text-center kofi-button">
+        <div class="col-sm-3 text-center kofi-button bump-down">
             <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script>
-            <script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee', '#46b798', 'C0C2QOVZ');
+            <script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee', '#007bff', 'C0C2QOVZ');
             kofiwidget2.draw();</script>
         </div>
     </div>
 
 </div>
-
+</footer>

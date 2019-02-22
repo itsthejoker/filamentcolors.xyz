@@ -1,21 +1,29 @@
 from django.shortcuts import render
+from django.shortcuts import reverse
+from django.shortcuts import render_to_response
+from django.shortcuts import HttpResponseRedirect
 from filamentcolors.models import Swatch
 from filamentcolors.models import Printer
 from django.utils import timezone
 from filamentcolors.helpers import get_hsv
 from filamentcolors.helpers import get_complement_swatch
+from filamentcolors.helpers import show_welcome_modal
+from filamentcolors.helpers import cookie_name
 
 def homepage(request):
-    html = 'home.html'
-
-    recents = list(Swatch.objects.order_by('-pk'))
-    # we don't need all of them, so trim the list to the 4 most recent.
-    del recents[4:]
-
-    return render(request, html, {'recents': recents})
+    return HttpResponseRedirect(reverse('library'))
 
 def library(request):
     html = 'library.html'
+
+    if show_welcome_modal(request):
+        response = render_to_response(
+            html,
+            {'swatches': Swatch.objects.all(), 'launch_welcome_modal': True}
+        )
+        year = 365*24*60*60
+        response.set_cookie(cookie_name, 'tasty_cookies', max_age=year)
+        return response
 
     return render(request, html, {'swatches': Swatch.objects.all()})
 
@@ -55,11 +63,10 @@ def swatch_detail(request, id):
     html = 'swatch_detail.html'
     swatch = Swatch.objects.filter(id=id).first()
 
-    c_swatch = get_complement_swatch(swatch)
-
     if not swatch:
         return render(request, html, {'error': 'Swatch ID not found!'})
     else:
+        c_swatch = get_complement_swatch(swatch)
         return render(
             request, html, {'swatch': swatch, 'c_swatch': c_swatch}
         )
@@ -79,20 +86,46 @@ def swatch_search(request):
     pass
 
 
-def swatch_collection(request):
+def swatch_collection(request, ids):
     """
     What I'm imagining for this is a way for people to select swatches and
     put them into a link that will just pull those items so that they can
     send options to other people. For example, maybe something like
-    /library/collection/?swatches=1&34&23&7
+    /library/collection/?swatches=1,34,23,7
 
     :param request: the Django request.
     :return: ¯\_(ツ)_/¯
     """
+    # filter out bad input
+    cleaned_ids = list()
+    for item in ids.split(','):
+        try:
+            cleaned_ids.append(int(item))
+        except ValueError:
+            continue
 
-    pass
+    swatch_collection = list()
+
+    for item in cleaned_ids:
+        result = Swatch.objects.filter(id=item).first()
+        if result:
+            swatch_collection.append(result)
+
+    return render(request, 'library.html', {'swatches': swatch_collection})
 
 
 def about_page(request):
     html = 'about.html'
     return render(request, html)
+
+
+def handler404(request, exception, template_name="404.html"):
+    response = render_to_response("404.html")
+    response.status_code = 404
+    return response
+
+
+def handler500(request, exception, template_name="500.html"):
+    response = render_to_response("500.html")
+    response.status_code = 500
+    return response

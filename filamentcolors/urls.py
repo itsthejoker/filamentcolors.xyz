@@ -25,13 +25,18 @@ from filamentcolors import views
 admin.site.register(Swatch)
 admin.site.register(Printer)
 
+# Django magic
+handler404 = 'filamentcolors.views.handler404'
+handler500 = 'filamentcolors.views.handler500'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.homepage, name='homepage'),
     path('library/sort/<str:method>/', views.librarysort, name='librarysort'),
+    path('library/collection/<str:ids>/', views.swatch_collection, name='swatchcollection'),
     path('library/', views.library, name='library'),
     path('swatch/<int:id>', views.swatch_detail, name='swatchdetail'),
-    path('printer/<int:id>', views.printer_detail, name='printerdetail'),
+    # path('printer/<int:id>', views.printer_detail, name='printerdetail'),
     path('about/', views.about_page, name='about'),
 ]
 

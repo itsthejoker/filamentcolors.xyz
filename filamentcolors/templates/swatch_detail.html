@@ -1,21 +1,67 @@
 {% include 'partials/bootstrap.partial' %}
 {% include 'partials/navbar.partial' %}
 
-<div class="container">
-    <div class="row border-between">
-        <div class="col-md-9 text-center">
-            <p></p>
-            <h2>{{ swatch.manufacturer }} - {{ swatch.color_name }} {{ swatch.filament_type }}</h2>
-            <div class="big-color-cube" style="background-color:{{ swatch.hex_color }};"></div>
-            <p>#{{ swatch.hex_color }}</p>
-            <section class="gallery-block grid-gallery">
+<div class="container mt-3">
+    {% if error %}
+        <div class="text-center">
+            <h4>{{ error }}</h4>
+        </div>
+    {% endif %}
+    {% if not error %}
+        <div class="row border-between">
+            <div class="col-md-6">
+                <section class="gallery-block grid-gallery">
+                    <div class="item">
+                        <a class="lightbox" href="{{ swatch.image_front.url }}" title="Swatch Front">
+                            <img class="img-fluid image scale-on-hover" src="{{ swatch.image_front.url }}"
+                                 alt="An image of the front of the color swatch.">
+                        </a>
+                    </div>
+                    {% if swatch.image_other %}
+                        <div class="row">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-3 item">
+                                <a class="lightbox" href="{{ swatch.image_back.url }}" title="Swatch Back">
+                                    <img class="img-fluid image scale-on-hover" src="{{ swatch.image_back.url }}"
+                                         alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
+                                </a>
+                            </div>
+                            <div class="col-sm-3 item">
+                                <a class="lightbox" href="{{ swatch.image_other.url }}">
+                                    <img class="img-fluid image scale-on-hover" src="{{ swatch.image_other.url }}"
+                                         alt="An image of a small object printed with the filament.">
+                                </a>
+                            </div>
+                            <div class="col-sm-3"></div>
+                        </div>
+                    {% endif %}
+                    {% if not swatch.image_other %}
+                        <div class="row">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4">
+                                <a class="lightbox" href="{{ swatch.image_back.url }}" title="Swatch Back">
+                                    <img class="img-fluid image scale-on-hover" src="{{ swatch.image_back.url }}"
+                                         alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
+                                </a>
+                            </div>
+                            <div class="col-sm-4"></div>
+                        </div>
+                    {% endif %}
+                </section>
+            </div>
+            <div class="col-md-6 ">
+                <div class="text-center">
+                    <h2>{{ swatch.manufacturer }} - {{ swatch.color_name }} {{ swatch.filament_type }}</h2>
+                    <div class="big-color-cube" style="background-color:{{ swatch.hex_color }};"></div>
+                    <p>#{{ swatch.hex_color }}</p>
+                </div>
                 <div class="row">
-                    <div class="col-sm-3 col-md-3 col-lg-4 text-left">
-                        <p></p>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10 gray-background">
                         <table class="table">
                             <thead>
                             <tr>
-                                <th scope="col">Printing Info</th>
+                                <th scope="col" colspan="2">General Info</th>
                                 <th scope="col"></th>
                             </tr>
                             </thead>
@@ -28,63 +74,68 @@
                                 <td scope="row">Bed temp</td>
                                 <td>{{ swatch.bed_temp }}</td>
                             </tr>
+                            <tr>
+                                <td scope="row">Filament type</td>
+                                <td>{{ swatch.filament_type }}</td>
+                            </tr>
+                            <tr>
+                                <td scope="row">Date added</td>
+                                <td>{{ swatch.date_added_date }}</td>
+                            </tr>
                             </tbody>
                         </table>
+                        {% if swatch.purchase_link %}
+                            <a class="btn btn-block btn-info" href="{{ swatch.purchase_link }}" target="_blank"
+                               role="button">Buy on
+                                Amazon!</a>
+                        {% endif %}
+                        <p></p>
                     </div>
-                    <div class="col-sm-8 col-md-8 col-lg-6 item">
-                        <a class="lightbox" href="{{ swatch.image_front.url }}">
-                            <img class="img-fluid image scale-on-hover" src="{{ swatch.image_front.url }}"
-                                 alt="An image of the front of the color swatch.">
-                        </a>
-                    </div>
+                    <div class="col-md-1"></div>
                 </div>
-                <div class="col-sm-2 col-md-2 col-lg-3"></div>
-                <div class="row">
-                    <div class="col-sm-3 col-md-3 col-lg-4">
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-2 item">
-                        <a class="lightbox" href="{{ swatch.image_back.url }}">
-                            <img class="img-fluid image scale-on-hover" src="{{ swatch.image_back.url }}"
-                                 alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
-                        </a>
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-2 item">
-                        <a class="lightbox" href="{{ swatch.image_side.url }}">
-                            <img class="img-fluid image scale-on-hover" src="{{ swatch.image_side.url }}"
-                                 alt="An image of a small object printed with the filament.">
-                        </a>
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-4">
-                    </div>
+                <div class="mt-3">
+                    {{ swatch.notes }}
                 </div>
-            </section>
-            <section>
-                {{ swatch.notes }}
-            </section>
-        </div>
+                <div class="mt-3">
+                    <h5>Related colors</h5>
+                    <hr>
+                </div>
+                <div class="row border-between">
+                    <div class="col-sm-6">
+                        Pure complement:
+                        <div class="container text-center">
+                            <div class="big-color-cube" style="background-color:{{ swatch.complement_hex }};"></div>
+                            <div>#{{ swatch.complement_hex }}</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        {% if c_swatch %}
+                            Closest match:
+                            <div class="container text-center bump-down">
+                                <a style="display:block" class="complement-box" href="/swatch/{{ c_swatch.id }}">
+                                    <h6>{{ c_swatch.manufacturer }} - {{ c_swatch.color_name }}</h6>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="big-color-cube"
+                                                 style="background-color:{{ c_swatch.hex_color }}; float:right; left: 1em; bottom: 0.5em;"></div>
+                                        </div>
+                                        <div class="col-6 text-left">
+                                            #{{ c_swatch.hex_color }}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
 
-        <div class="col-md-3">
-            <p></p>
-            <h4>Related colors</h4>
-            Pure complement to #{{ swatch.hex_color }}:<p></p>
-            <div class="color-cube" style="background-color:{{ swatch.complement_hex }};"></div>
-            - #{{ swatch.complement_hex }}
-            {% if c_swatch %}
-                <p></p>
-                Closest filament swatch from the library (apologies if this is wildly inaccurate):
-                <p></p>
-                <a href="/swatch/{{ c_swatch.id }}"><h6>{{ c_swatch.manufacturer }} - {{ c_swatch.color_name }}</h6></a>
-                <div class="color-cube" style="background-color:{{ c_swatch.hex_color }};"></div>
-                - #{{ c_swatch.hex_color }}
-            {% endif %}
-            {% if not c_swatch %}
-                <p></p>
-                No swatch was found in the library that comes close to this color. Sorry!
-            {% endif %}
+                        {% endif %}
+                        {% if not c_swatch %}
+                            No swatch was found in the library that comes close to this color. Sorry!
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    {% endif %}
 </div>
-
 
 <script>
     baguetteBox.run('.grid-gallery', {animation: 'slideIn'});

@@ -45,13 +45,17 @@ class Swatch(models.Model):
     # full size images
     image_back = models.ImageField(null=True, blank=True)
     image_front = models.ImageField(null=True, blank=True)
-    image_side = models.ImageField(null=True, blank=True)
+    image_other = models.ImageField(null=True, blank=True)
 
     printed_on = models.ForeignKey(Printer, on_delete=models.CASCADE)
     maker = models.ForeignKey(User, on_delete=models.CASCADE)
     date_added = models.DateTimeField(default=timezone.now)
     notes = models.TextField(max_length=4000, null=True, blank=True)
+    purchase_link = models.URLField(null=True, blank=True)
 
+    @property
+    def date_added_date(self):
+        return self.date_added.strftime("%b %d, %Y")
 
     def save(self, *args, **kwargs):
 

@@ -1,13 +1,13 @@
-<div class="container">
-    <a href="/swatch/{{ obj.id }}" class="card shadow" style="width: 18rem;">
-        <img class="card-img-top" src="{{ obj.card_img.url }}" alt="Card image cap">
-        <div class="card-body">
+<div class="col-md-6 col-lg-4" align="center">
+    <a href="/swatch/{{ obj.id }}" class="card mb-4 shadow" style="width: 18rem;">
+        <img class="card-img-top img-fluid" src="{{ obj.card_img.url }}" alt="Card image cap">
+        <div class="card-body" align="left">
             <div class="color-cube" style="background-color:{{ obj.hex_color }};"></div>
             <h5 class="card-title">#{{ obj.hex_color }}</h5>
             <p class="card-text">{{ obj.manufacturer }} - {{ obj.color_name }}</p>
         </div>
         <div class="card-footer">
-            <small class="text-muted">Uploaded {{ obj.date_added }}</small>
+            <small class="text-muted">Uploaded {{ obj.date_added_date }}</small>
         </div>
     </a>
 </div>

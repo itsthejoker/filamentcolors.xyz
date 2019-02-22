@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% include 'partials/bootstrap.partial' %}
+    <title>FilamentColors</title>
+</head>
+<body>
+
+{% include 'partials/navbar.partial' %}
+
+<div class="container text-center mt-5">
+    <h4>Something went horribly wrong.</h4>
+    <p>
+        Please try your action again -- if it continues to happen, please send
+        me an email at joe@filamentcolors.xyz explaining how the error triggered
+        and I'll do my best to take a look. Cheers!
+    </p>
+    <a class="btn btn-primary btn-lg" href="/library" role="button">Back to the library!</a>
+</div>
+
+{% include 'partials/footer.partial' %}
+</body>
+</html>

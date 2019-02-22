@@ -5,12 +5,77 @@
 
 {% include 'partials/navbar.partial' %}
 
-<div class="container">
+<div class="container mt-4">
+    <h4>Problem:</h4>
     <p>
-        this is the about page
+        One of the most annoying things in 3D printing is ordering filament,
+        waiting for it to arrive, and then finding out that it's completely the
+        wrong color for the project you wanted it for. Some manufacturers try to
+        get around this by putting Pantone colors on their spools, but certainly
+        not everyone does this. (If they did, this website probably wouldn't exist.)
+    <p></p>
+    <p>
+        Every filament manufacturer has pictures of their product online. It's always
+        super easy to compare and contrast different filament colors to make sure
+        they'll work for whatever you're planning... as long as you're buying
+        everything from the same manufacturer. What do you do if you want to buy
+        from two different places?
     </p>
 
-
+    <h4>Solution:</h4>
+    <p>
+        Get filaments from lots of different manufacturers, print with them, and
+        photograph the results under similar conditions. The point of this website
+        is not to show the "true color" of any given filament -- that requires far
+        more equipment than I have the budget for. What this site does is allow you
+        to compare and contrast different filament colors from different manufacturers
+        using pictures taken under similar lighting conditions and similar equipment.
+        It's an easy way to find that <i>perfect</i> blue you've been looking for
+        that looks great with your favorite brand of gold filament.
+    </p>
+    <h4>How does it work?</h4>
+    <p>
+        All the images are taken in the same basic way using the same setup and same
+        equipment. For every swatch, the image of the front is cropped, then the average
+        color in the image (called the 'dominant color') is extracted from the image.
+        This is used to create the "pure" hex color, and the hex color is what's used
+        to compare to other swatches and help you figure out which filaments you like.
+    </p>
+    <p>
+        If you're interested in seeing how all this comes together into a website (and
+        some of the crazy awesome math that I learned while putting this together), all
+        of the source code for the site is publicly available on Github. Just click the
+        link in the footer on any page of the site.
+    </p>
+    <h4>Dear God, why?</h4>
+    <p>
+        It was very frustrating to me that I couldn't tell ahead of time how different
+        filaments would look when I was getting ready to purchase something specifically
+        for a project. After all, like most of us, I'm not made of money and 3D printing
+        is not a cheap hobby. Buying a color that defies expectations is not fun, so I
+        designed this site to help out my own projects and also help others with planning
+        their upcoming projects.
+    </p>
+    <h4>Where do the samples come from?</h4>
+    <p>
+        All the samples on this site are printed by me and the vast majority are from
+        subscription services like Makerbox and Mondo Box. Others are from spools that
+        I've purchased over the years and others are spools or color samples that were
+        gifted to me. I take care to not recommend or disparage any specific filament
+        here; other places can do a far better job of reviewing filament than I ever
+        could.
+    </p>
+    <h4>What runs this site?</h4>
+    <p>
+        The hardware for this site is a Raspberry Pi on my home network connected to a
+        small NAS for image storage. The backend is written in Python's Django framework
+        and the HTML / CSS is lovingly hand-written using Bootstrap as a guide. Cost wise,
+        it doesn't take much -- just a few dollars every now and again. To offset that,
+        I'm a member of the Amazon Affiliate program. Clicking on any of the "Buy on Amazon"
+        links scattered throughout the site will provide a small kickback that I use
+        solely for keeping the site running and occasionally buying sample packs to
+        add new materials to the site.
+    </p>
 </div>
 
 {% include 'partials/footer.partial' %}

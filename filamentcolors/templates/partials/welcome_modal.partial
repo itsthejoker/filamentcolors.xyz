@@ -1,0 +1,46 @@
+<div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="welcomeModalTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Welcome to FilamentColors.xyz!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Please take a moment to read this; it will only appear on your first
+                    visit (or whenever you clear your cookies). This site lets you to take
+                    a look at different 3D printer filaments in all sorts of colors from
+                    lots of different manufacturers so you can get a better idea of how
+                    the colors you buy will look together.
+                </p>
+                <p>
+                    <b>IMPORTANT NOTE</b>: This site does not attempt to show you the "true
+                    color" of any given filament. The goal is to show you how colors of
+                    different filaments interact under the same light.
+                </p>
+                <p>
+                    There are no tracking scripts, ads, or anything of the type on this
+                    site and I don't save visitor information. In order to support the site,
+                    almost all the individual entries on this site have a purchase link on
+                    Amazon if available; these are all Amazon Affiliate links that enable
+                    me to receive a small portion of your purchases. This site doesn't take
+                    much to run, but what I receive from this program allows me to keep the
+                    site ad-free. If you like something that you see here, please consider
+                    using one of the embedded purchase links. Cheers!
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(window).on('load',function(){
+        $('#welcomeModal').modal('show');
+    });
+</script>

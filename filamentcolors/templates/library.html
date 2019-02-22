@@ -5,14 +5,17 @@
 
 {% include 'partials/navbar.partial' %}
 
-<div class="container">
+{% if launch_welcome_modal %}
+    {% include 'partials/welcome_modal.partial' %}
+{% endif %}
 
-This is the library!
+<div class="container mt-4">
 
-<div class="card-deck">
-{% for s in swatches %}
-    {% include 'partials/card.partial' with obj=s %}
-{% endfor %}
+    <div class="card-deck">
+        {% for s in swatches %}
+            {% include 'partials/card.partial' with obj=s %}
+        {% endfor %}
+    </div>
 </div>
 
-</div>
+{% include 'partials/footer.partial' %}

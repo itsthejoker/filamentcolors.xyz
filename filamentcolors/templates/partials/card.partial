@@ -2,7 +2,7 @@
     <a href="/swatch/{{ obj.id }}" class="card mb-4 shadow" style="width: 18rem;">
         <img class="card-img-top img-fluid" src="{{ obj.card_img.url }}" alt="Card image cap">
         <div class="card-body" align="left">
-            <div class="color-cube" style="background-color:{{ obj.hex_color }};"></div>
+            <div class="color-cube" style="background-color:#{{ obj.hex_color }};"></div>
             <h5 class="card-title">#{{ obj.hex_color }}</h5>
             <p class="card-text">{{ obj.manufacturer }} - {{ obj.color_name }} {{ obj.filament_type }}</p>
         </div>

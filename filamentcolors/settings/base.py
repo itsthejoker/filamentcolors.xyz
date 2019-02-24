@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'ssssh I\'m hunting wabbits')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.filamentcolors.xyz']
+ALLOWED_HOSTS = ['.filamentcolors.xyz', '134.209.72.203']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -89,7 +89,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'filamentcolors',
-        'USER': 'filamentcolors',
+        'USER': 'colors',
         'PASSWORD': os.getenv('DJANGO_DB_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '',

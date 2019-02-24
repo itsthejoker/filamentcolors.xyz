@@ -37,9 +37,15 @@ class Swatch(models.Model):
     # !!!!!!!!!!!!!!!!!!!!!!!!
     # DO NOT PUT ANYTHING IN THESE FIELDS!
     # They are computed and added automatically!
-    card_img = models.ImageField(blank=True)
-    hex_color = models.CharField(max_length=6, blank=True)
-    complement_hex = models.CharField(max_length=6, blank=True)
+    card_img = models.ImageField(
+        blank=True, verbose_name="DO NOT ADD! Computed Card Image"
+    )
+    hex_color = models.CharField(
+        max_length=6, blank=True, verbose_name="DO NOT ADD! Computed Hex Color"
+    )
+    complement_hex = models.CharField(
+        max_length=6, blank=True, verbose_name="DO NOT ADD! Computed Complement Hex"
+    )
     # !!!!!!!!!!!!!!!!!!!!!!!!
 
     # full size images

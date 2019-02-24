@@ -89,7 +89,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'filamentcolors',
-        'USER': 'filamentcolors',
+        'USER': 'colors',
         'PASSWORD': os.getenv('DJANGO_DB_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '',

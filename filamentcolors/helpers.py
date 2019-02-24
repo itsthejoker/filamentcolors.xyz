@@ -35,8 +35,10 @@ def get_complement_swatch(s: Swatch) -> [None, Swatch]:
 
     sorted_distance_list = sorted(distance_dict.items(), key=lambda kv: kv[1])
 
-    return sorted_distance_list[0][0]
-
+    try:
+        return sorted_distance_list[0][0]
+    except IndexError:
+        return None
 
 def get_hsv(item):
     # TODO: I have NO idea if this works. Need to actually get some

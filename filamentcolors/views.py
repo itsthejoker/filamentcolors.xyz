@@ -45,16 +45,16 @@ def librarysort(request, method: str):
     """
     items = Swatch.objects.all()
     if method == 'type':
-        items.order_by('filament_type')
+        items = items.order_by('filament_type')
 
     elif method == 'manufacturer':
-        items.order_by('-manufacturer')
+        items = items.order_by('manufacturer')
 
     elif method == 'color':
         items = sorted(items, key=get_hsv)
 
     else:
-        items.order_by('-date_added')
+        items = items.order_by('-date_added')
 
     return render(request, 'library.html', {'swatches': items})
 

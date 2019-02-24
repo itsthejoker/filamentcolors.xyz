@@ -52,7 +52,7 @@
             <div class="col-md-6 ">
                 <div class="text-center">
                     <h2>{{ swatch.manufacturer }} - {{ swatch.color_name }} {{ swatch.filament_type }}</h2>
-                    <div class="big-color-cube" style="background-color:{{ swatch.hex_color }};"></div>
+                    <div class="big-color-cube" style="background-color:#{{ swatch.hex_color }};"></div>
                     <p>#{{ swatch.hex_color }}</p>
                 </div>
                 <div class="row">
@@ -104,7 +104,7 @@
                     <div class="col-sm-6">
                         Pure complement:
                         <div class="container text-center">
-                            <div class="big-color-cube" style="background-color:{{ swatch.complement_hex }};"></div>
+                            <div class="big-color-cube" style="background-color:#{{ swatch.complement_hex }};"></div>
                             <div>#{{ swatch.complement_hex }}</div>
                         </div>
                     </div>
@@ -117,7 +117,7 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="big-color-cube"
-                                                 style="background-color:{{ c_swatch.hex_color }}; float:right; left: 1em; bottom: 0.5em;"></div>
+                                                 style="background-color:#{{ c_swatch.hex_color }}; float:right; left: 1em; bottom: 0.5em;"></div>
                                         </div>
                                         <div class="col-6 text-left">
                                             #{{ c_swatch.hex_color }}

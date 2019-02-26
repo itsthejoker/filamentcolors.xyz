@@ -1,4 +1,4 @@
-<div class="col-md-6 col-lg-4" align="center">
+<div class="col-md-6 col-lg-4 cardBox" align="center">
     <a href="/swatch/{{ obj.id }}" class="card mb-4 shadow" style="width: 18rem;">
         <img class="card-img-top img-fluid" src="{{ obj.card_img.url }}" alt="Card image cap">
         <div class="card-body" align="left">

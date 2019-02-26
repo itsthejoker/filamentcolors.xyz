@@ -1,6 +1,10 @@
 {% include 'partials/bootstrap.partial' %}
 {% include 'partials/navbar.partial' %}
 
+{% if launch_welcome_modal %}
+    {% include 'partials/welcome_modal.partial' %}
+{% endif %}
+
 <div class="container mt-3">
     {% if error %}
         <div class="text-center">

@@ -48,3 +48,7 @@ def get_hsv(item):
     hexrgb = item.hex_color
     r, g, b = (int(hexrgb[i:i + 2], 16) / 255.0 for i in range(0, 5, 2))
     return colorsys.rgb_to_hsv(r, g, b)
+
+def set_tasty_cookies(response):
+    year = 365 * 24 * 60 * 60
+    response.set_cookie(cookie_name, 'tasty_cookies', max_age=year)

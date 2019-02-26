@@ -9,6 +9,7 @@ from filamentcolors.helpers import get_hsv
 from filamentcolors.helpers import get_complement_swatch
 from filamentcolors.helpers import show_welcome_modal
 from filamentcolors.helpers import cookie_name
+from filamentcolors.helpers import set_tasty_cookies
 
 def homepage(request):
     return HttpResponseRedirect(reverse('library'))
@@ -21,8 +22,7 @@ def library(request):
             html,
             {'swatches': Swatch.objects.all(), 'launch_welcome_modal': True}
         )
-        year = 365*24*60*60
-        response.set_cookie(cookie_name, 'tasty_cookies', max_age=year)
+        set_tasty_cookies(response)
         return response
 
     return render(request, html, {'swatches': Swatch.objects.all()})
@@ -56,6 +56,14 @@ def librarysort(request, method: str):
     else:
         items = items.order_by('-date_added')
 
+    if show_welcome_modal(request):
+        response = render_to_response(
+            'library.html',
+            {'swatches': items, 'launch_welcome_modal': True}
+        )
+        set_tasty_cookies(response)
+        return response
+
     return render(request, 'library.html', {'swatches': items})
 
 
@@ -67,8 +75,20 @@ def swatch_detail(request, id):
         return render(request, html, {'error': 'Swatch ID not found!'})
     else:
         c_swatch = get_complement_swatch(swatch)
+
+        response_data = {'swatch': swatch, 'c_swatch': c_swatch}
+
+        if show_welcome_modal(request):
+            response_data.update({'launch_welcome_modal': True})
+            response = render_to_response(
+                html,
+                response_data
+            )
+            set_tasty_cookies(response)
+            return response
+
         return render(
-            request, html, {'swatch': swatch, 'c_swatch': c_swatch}
+            request, html, response_data
         )
 
 
@@ -79,11 +99,6 @@ def printer_detail(request, id):
         return render(request, html, {'error': 'Printer ID not found!'})
     else:
         return render(request, html, {'printer': printer})
-
-
-def swatch_search(request):
-    # TODO: create form for this sucker
-    pass
 
 
 def swatch_collection(request, ids):

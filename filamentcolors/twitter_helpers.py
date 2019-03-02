@@ -48,7 +48,6 @@ outro_phrases = [
 
 
 def send_tweet(swatch):
-    import ipdb; ipdb.set_trace()
     plural = "'" if swatch.manufacturer.endswith("s") else "'s"
     api.PostUpdate(
         f'{random.choice(intro_phrases)} {swatch.manufacturer}{plural} {swatch.color_name}'

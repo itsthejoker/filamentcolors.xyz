@@ -18,6 +18,7 @@ readline = "^6.2"
 gunicorn = "^19.9"
 psycopg2-binary = "^2.7"
 python-dotenv = "^0.10.1"
+python-twitter = "^3.5"
 
 [tool.poetry.dev-dependencies]
 better-exceptions = "^0.2.1"

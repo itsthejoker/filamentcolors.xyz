@@ -13,6 +13,8 @@ from django.db import models
 from django.utils import timezone
 from skimage import io
 
+from filamentcolors.twitter_helpers import send_tweet
+
 
 class Printer(models.Model):
     name = models.CharField(max_length=50)
@@ -90,6 +92,7 @@ class Swatch(models.Model):
             k = rgb_hilo(r, g, b)
             return get_hex(tuple(k - u for u in (r, g, b)))
 
+        post_tweet = False
 
         if self.card_img:
             # we already have a card image, so just save everything and abort.
@@ -130,6 +133,7 @@ class Swatch(models.Model):
 
         # sanity check
         if self.card_img:
+            post_tweet = True
             # lovingly ripped from https://stackoverflow.com/a/43111221
             self.card_img.file.seek(0)
             img = io.imread(self.card_img.file)
@@ -151,8 +155,15 @@ class Swatch(models.Model):
             self.hex_color = get_hex(dominant)
             self.complement_hex = get_complement(self.hex_color)
 
+
         super(Swatch, self).save(*args, **kwargs)
+
+        if post_tweet:
+            send_tweet(self)
 
 
     def __str__(self):
         return f"{self.manufacturer} - {self.color_name}"
+
+    class Meta:
+        verbose_name_plural = "swatches"

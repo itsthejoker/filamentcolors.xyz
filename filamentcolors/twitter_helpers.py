@@ -27,6 +27,9 @@ intro_phrases = [
     "More plastic has arrived!",
     "Where'd this come from?",
     "A new swatch!",
+    "A new color!",
+    "Colors ahoy!",
+    "Swatches abound!",
 ]
 
 outro_phrases = [
@@ -36,8 +39,8 @@ outro_phrases = [
     'now available!',
     'is now available!',
     'now listed!',
-    'has been added!'
-    'has been added here:'
+    'has been added!',
+    'has been added here:',
     'now listed!',
     'is now listed!',
     'is now in the library!',

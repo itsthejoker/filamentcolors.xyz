@@ -206,6 +206,10 @@ body {
     color: #fff !important;
 }
 
+.btn-success {
+    color: #fff !important;
+}
+
 .complement-box {
     padding: 8px;
     border-width: 2px;

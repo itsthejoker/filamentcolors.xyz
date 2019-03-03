@@ -30,6 +30,7 @@ intro_phrases = [
     "A new color!",
     "Colors ahoy!",
     "Swatches abound!",
+    "A new color!",
 ]
 
 outro_phrases = [
@@ -37,7 +38,7 @@ outro_phrases = [
     'can be seen here:',
     'joins the library!',
     'now available!',
-    'is now available!',
+    'is now available in the library!',
     'now listed!',
     'has been added!',
     'has been added here:',
@@ -47,13 +48,14 @@ outro_phrases = [
     'can be found in the library!',
     'appears here:',
     'is listed here:',
+    ''
 ]
 
 
 def send_tweet(swatch):
     plural = "'" if swatch.manufacturer.endswith("s") else "'s"
     api.PostUpdate(
-        f'{random.choice(intro_phrases)} {swatch.manufacturer}{plural} {swatch.color_name}'
-        f' {swatch.filament_type} {random.choice(outro_phrases)}'
+        f'{random.choice(intro_phrases)} {swatch.manufacturer.name}{plural} {swatch.color_name}'
+        f' {swatch.filament_type.name} {random.choice(outro_phrases)}'
         f' https://filamentcolors.xyz/swatch/{swatch.id}'
     )

@@ -30,11 +30,17 @@ class Manufacturer(models.Model):
     name = models.CharField(max_length=160)
     website = models.URLField(null=True, blank=True)
 
+    def __str__(self):
+        return self.name
+
 
 class FilamentType(models.Model):
     name = models.CharField(max_length=24, default="PLA")
     hot_end_temp = models.IntegerField(default=205)
     bed_temp = models.IntegerField(default=60)
+
+    def __str__(self):
+        return self.name
 
 
 class Swatch(models.Model):

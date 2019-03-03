@@ -46,7 +46,7 @@ class Swatch(models.Model):
 
     # PLA, PETG, etc.
     filament_type = models.ForeignKey(
-        FilamentType, on_delete=models.SET_DEFAULT, default="PLA"
+        FilamentType, on_delete=models.SET_DEFAULT, default=1
     )
     filament_type_str = models.CharField(max_length=10, default='PLA')
     hot_end_temp_str = models.IntegerField(default=205)

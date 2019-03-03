@@ -180,7 +180,7 @@ class Swatch(models.Model):
 
 
     def __str__(self):
-        return f"{self.manufacturer} - {self.color_name}"
+        return f"{self.manufacturer.name} - {self.color_name} {self.filament_type.name}"
 
     class Meta:
         verbose_name_plural = "swatches"

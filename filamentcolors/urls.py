@@ -20,10 +20,14 @@ from django.conf.urls.static import static
 
 from filamentcolors.models import Swatch
 from filamentcolors.models import Printer
+from filamentcolors.models import Manufacturer
+from filamentcolors.models import FilamentType
 from filamentcolors import views
 
 admin.site.register(Swatch)
 admin.site.register(Printer)
+admin.site.register(Manufacturer)
+admin.site.register(FilamentType)
 
 # Django magic
 handler404 = 'filamentcolors.views.handler404'

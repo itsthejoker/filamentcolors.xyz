@@ -26,14 +26,31 @@ class Printer(models.Model):
         return f"{self.owner.username} - {self.name}"
 
 
+class Manufacturer(models.Model):
+    name = models.CharField(max_length=160)
+    website = models.URLField(null=True, blank=True)
+
+
+class FilamentType(models.Model):
+    name = models.CharField(max_length=24, default="PLA")
+    hot_end_temp = models.IntegerField(default=205)
+    bed_temp = models.IntegerField(default=60)
+
+
 class Swatch(models.Model):
-    manufacturer = models.CharField(max_length=160)
+    manufacturer_str = models.CharField(max_length=160)
+    # manufacturer = models.ForeignKey(
+    #     Manufacturer, on_delete=models.SET_DEFAULT, default="Unknown"
+    # )
     color_name = models.CharField(max_length=240)
 
     # PLA, PETG, etc.
-    filament_type = models.CharField(max_length=10, default='PLA')
-    hot_end_temp = models.IntegerField(default=205)
-    bed_temp = models.IntegerField(default=60)
+    filament_type = models.ForeignKey(
+        FilamentType, on_delete=models.SET_DEFAULT, default="PLA"
+    )
+    filament_type_str = models.CharField(max_length=10, default='PLA')
+    hot_end_temp_str = models.IntegerField(default=205)
+    bed_temp_str = models.IntegerField(default=60)
     card_img_jpeg = models.ImageField(upload_to="card_img", blank=True)
 
     # !!!!!!!!!!!!!!!!!!!!!!!!
@@ -59,7 +76,8 @@ class Swatch(models.Model):
     maker = models.ForeignKey(User, on_delete=models.CASCADE)
     date_added = models.DateTimeField(default=timezone.now)
     notes = models.TextField(max_length=4000, null=True, blank=True)
-    purchase_link = models.URLField(null=True, blank=True)
+    amazon_purchase_link = models.URLField(null=True, blank=True)
+    mfr_purchase_link = models.URLField(null=True, blank=True)
 
     @property
     def date_added_date(self):

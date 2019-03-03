@@ -4,7 +4,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:creator" content="@filamentcolors">
 <meta name="twitter:site" content="@filamentcolors">
-<meta name="twitter:title" content="{{ swatch.manufacturer }} - {{ swatch.color_name }} {{ swatch.filament_type }}">
+<meta name="twitter:title" content="{{ swatch.manufacturer_str }} - {{ swatch.color_name }} {{ swatch.filament_type_str }}">
 <meta name="twitter:description" content="{{ swatch.notes }}">
 <meta name="twitter:image:src" content="https://filamentcolors.xyz{{ swatch.card_img.url }}">
 <meta name="twitter:image:width" content="280">
@@ -64,7 +64,7 @@
             </div>
             <div class="col-md-6 ">
                 <div class="text-center">
-                    <h2>{{ swatch.manufacturer }} - {{ swatch.color_name }} {{ swatch.filament_type }}</h2>
+                    <h2>{{ swatch.manufacturer_str }} - {{ swatch.color_name }} {{ swatch.filament_type_str }}</h2>
                     <div class="big-color-cube" style="background-color:#{{ swatch.hex_color }};"></div>
                     <p>#{{ swatch.hex_color }}</p>
                 </div>
@@ -81,15 +81,15 @@
                             <tbody>
                             <tr>
                                 <td scope="row">Hot end temp</td>
-                                <td>{{ swatch.hot_end_temp }}</td>
+                                <td>{{ swatch.hot_end_temp_str }}</td>
                             </tr>
                             <tr>
                                 <td scope="row">Bed temp</td>
-                                <td>{{ swatch.bed_temp }}</td>
+                                <td>{{ swatch.bed_temp_str }}</td>
                             </tr>
                             <tr>
                                 <td scope="row">Filament type</td>
-                                <td>{{ swatch.filament_type }}</td>
+                                <td>{{ swatch.filament_type_str }}</td>
                             </tr>
                             <tr>
                                 <td scope="row">Date added</td>
@@ -98,7 +98,7 @@
                             </tbody>
                         </table>
                         {% if swatch.purchase_link %}
-                            <a class="btn btn-block btn-info" href="{{ swatch.purchase_link }}" target="_blank"
+                            <a class="btn btn-block btn-info" href="{{ swatch.amazon_purchase_link }}" target="_blank"
                                role="button">Buy on
                                 Amazon!</a>
                         {% endif %}
@@ -126,7 +126,7 @@
                             Closest match:
                             <div class="container text-center bump-down">
                                 <a style="display:block" class="complement-box" href="/swatch/{{ c_swatch.id }}">
-                                    <h6>{{ c_swatch.manufacturer }} - {{ c_swatch.color_name }}</h6>
+                                    <h6>{{ c_swatch.manufacturer_str }} - {{ c_swatch.color_name }}</h6>
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="big-color-cube"

@@ -180,7 +180,16 @@ class Swatch(models.Model):
 
 
     def __str__(self):
-        return f"{self.manufacturer.name} - {self.color_name} {self.filament_type.name}"
+        try:
+            mfr = self.manufacturer.name
+        except:
+            mfr = "NOT ADDED"
+
+        try:
+            ft = self.filament_type.name
+        except:
+            ft = "NOT ADDED"
+        return f"{mfr} - {self.color_name} {ft}"
 
     class Meta:
         verbose_name_plural = "swatches"

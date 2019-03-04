@@ -44,19 +44,15 @@ class FilamentType(models.Model):
 
 
 class Swatch(models.Model):
-    manufacturer_str = models.CharField(max_length=160)
     manufacturer = models.ForeignKey(
         Manufacturer, on_delete=models.CASCADE, null=True, blank=True
     )
     color_name = models.CharField(max_length=240)
 
     # PLA, PETG, etc.
-    filament_type_str = models.CharField(max_length=10, default='PLA')
     filament_type = models.ForeignKey(
         FilamentType, on_delete=models.CASCADE, null=True, blank=True
     )
-    hot_end_temp_str = models.IntegerField(default=205)
-    bed_temp_str = models.IntegerField(default=60)
     card_img_jpeg = models.ImageField(upload_to="card_img", blank=True)
     # !!!!!!!!!!!!!!!!!!!!!!!!
     # DO NOT PUT ANYTHING IN THESE FIELDS!

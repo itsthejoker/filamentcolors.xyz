@@ -4,7 +4,7 @@
         <div class="card-body" align="left">
             <div class="color-cube" style="background-color:#{{ obj.hex_color }};"></div>
             <h5 class="card-title">#{{ obj.hex_color }}</h5>
-            <p class="card-text">{{ obj.manufacturer_str }} - {{ obj.color_name }} {{ obj.filament_type_str }}</p>
+            <p class="card-text">{{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}</p>
         </div>
         <div class="card-footer">
             <small class="text-muted">Uploaded {{ obj.date_added_date }}</small>

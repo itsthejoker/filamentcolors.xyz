@@ -43,7 +43,10 @@ def ColorDistance(rgb1: Union[Tuple, List], rgb2: Union[Tuple, List]) -> float:
     """
     This function calculates and returns the relative distance between two
     RGB colors. It's up for debate how accurate or useful this is, but it's
-    better than nothing and also I have no idea what I'm doing.
+    better than nothing and also I have no idea what I'm doing. It's worth
+    noting that this is Euclidean distance, which uses the true value of the
+    colors and is only barely better than nothing when it comes to actually
+    comparing two colors.
     See https://stackoverflow.com/a/14097641 for the origin of this
     function and also some more explanations of exactly what's going on and why
     this is probably a bad idea. More info: https://www.compuphase.com/cmetric.htm

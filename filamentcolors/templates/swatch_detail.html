@@ -131,7 +131,8 @@
                             Closest match:
                             <div class="container text-center bump-down">
                                 <a style="display:block" class="complement-box" href="/swatch/{{ c_swatch.id }}">
-                                    <h6>{{ c_swatch.manufacturer.name }} - {{ c_swatch.color_name }} {{ c_swatch.filament_type.name }}</h6>
+                                    <h6>{{ c_swatch.manufacturer.name }}
+                                        - {{ c_swatch.color_name }} {{ c_swatch.filament_type.name }}</h6>
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="big-color-cube"
@@ -142,6 +143,8 @@
                                         </div>
                                     </div>
                                 </a>
+                                <div style="font-size: smaller;"><a href="/about/#why-is-color-hard"
+                                                                    style="color: LightGray"><u>why is this probably wrong?</u></a></div>
                             </div>
 
                         {% endif %}

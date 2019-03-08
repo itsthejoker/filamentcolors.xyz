@@ -6,7 +6,7 @@
 {% include 'partials/navbar.partial' %}
 
 <div class="container mt-4">
-    <h4>Problem:</h4>
+    <h4 id="problem">Problem:</h4>
     <p>
         One of the most annoying things in 3D printing is ordering filament,
         waiting for it to arrive, and then finding out that it's completely the
@@ -22,7 +22,7 @@
         from two different places?
     </p>
 
-    <h4>Solution:</h4>
+    <h4 id="solution">Solution:</h4>
     <p>
         Get filaments from lots of different manufacturers, print with them, and
         photograph the results under similar conditions. The point of this website
@@ -37,7 +37,7 @@
         Looking for the file I use? Find it here:
         <a href="https://www.thingiverse.com/thing:664377" target="_blank">https://www.thingiverse.com/thing:664377</a>
     </p>
-    <h4>How does it work?</h4>
+    <h4 id="how-does-it-work">How does it work?</h4>
     <p>
         All the images are taken in the same basic way using the same setup and same
         equipment. For every swatch, the image of the front is cropped, then the average
@@ -51,7 +51,7 @@
         of the source code for the site is publicly available on Github. Just click the
         link in the footer on any page of the site.
     </p>
-    <h4>Dear God, why?</h4>
+    <h4 id="dear-god-why">Dear God, why?</h4>
     <p>
         It was very frustrating to me that I couldn't tell ahead of time how different
         filaments would look when I was getting ready to purchase something specifically
@@ -60,13 +60,19 @@
         designed this site to help out my own projects and also help others with planning
         their upcoming projects.
     </p>
-    <h4>Why are the complement sections hilariously wrong?</h4>
+    <h4 id="why-is-color-hard">Why are the complement sections hilariously wrong?</h4>
     <p>
         Computers don't see color the same way humans do; there are many very long and
         very involved research papers on the subject, none of which I'm qualified to
         speak on. Suffice it to say that you're lucky it works as often as it does.
+        <a href="https://www.ludd.ltu.se/~vk/docs/about_colours.shtml"><u>Some</u></a>
+        <a href="https://www.compuphase.com/cmetric.htm"><u>resources</u></a>
+        <a href="http://hanzratech.in/2015/01/16/color-difference-between-2-colors-using-python.html"><u>that</u></a>
+        <a href="https://stackoverflow.com/questions/8863810/python-find-similar-colors-best-way"><u>might</u></a>
+        <a href="http://answers.opencv.org/question/127885/how-can-i-best-compare-two-bgr-colors-to-determine-how-similardifferent-they-are/"><u>be</u></a>
+        <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/"><u>interesting</u></a>.
     </p>
-    <h4>Where do the samples come from?</h4>
+    <h4 id="where-do-the-samples-come-from">Where do the samples come from?</h4>
     <p>
         All the samples on this site are printed by me and the vast majority are from
         subscription services like Makerbox and Mondo Box. Others are from spools that
@@ -74,7 +80,7 @@
         gifted to me. I try to not recommend or disparage any specific filament here;
         other places can do a far better job of reviewing filament than I ever could.
     </p>
-    <h4>What runs this site?</h4>
+    <h4 id="what-runs-this-site">What runs this site?</h4>
     <p>
         This site is served on Digital Ocean, the backend is written in Python's Django
         framework, and the HTML / CSS is lovingly hand-written using Bootstrap as a guide.

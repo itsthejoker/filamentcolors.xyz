@@ -44,6 +44,11 @@ def librarysort(request, method: str):
     :return:
     """
     items = Swatch.objects.all()
+    show_color_warning = False
+    html = 'library.html'
+
+    data = {'swatches': items}
+
     if method == 'type':
         items = items.order_by('filament_type')
 
@@ -52,19 +57,18 @@ def librarysort(request, method: str):
 
     elif method == 'color':
         items = sorted(items, key=get_hsv)
+        data.update({'show_color_warning': True})
 
     else:
         items = items.order_by('-date_added')
 
     if show_welcome_modal(request):
-        response = render_to_response(
-            'library.html',
-            {'swatches': items, 'launch_welcome_modal': True}
-        )
+        data.update({'launch_welcome_modal': True})
+        response = render_to_response(html, data)
         set_tasty_cookies(response)
         return response
 
-    return render(request, 'library.html', {'swatches': items})
+    return render(request, html, data)
 
 
 def swatch_detail(request, id):

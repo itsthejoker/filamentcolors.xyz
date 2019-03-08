@@ -53,7 +53,7 @@ outro_phrases = [
 
 
 def send_tweet(swatch):
-    plural = "'" if swatch.manufacturer.endswith("s") else "'s"
+    plural = "'" if swatch.manufacturer.name.endswith("s") else "'s"
     api.PostUpdate(
         f'{random.choice(intro_phrases)} {swatch.manufacturer.name}{plural} {swatch.color_name}'
         f' {swatch.filament_type.name} {random.choice(outro_phrases)}'

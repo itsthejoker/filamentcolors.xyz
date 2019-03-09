@@ -44,10 +44,9 @@ def librarysort(request, method: str):
     :return:
     """
     items = Swatch.objects.all()
-    show_color_warning = False
     html = 'library.html'
 
-    data = {'swatches': items}
+    data = {}
 
     if method == 'type':
         items = items.order_by('filament_type')
@@ -61,6 +60,8 @@ def librarysort(request, method: str):
 
     else:
         items = items.order_by('-date_added')
+
+    data.update({'swatches': items})
 
     if show_welcome_modal(request):
         data.update({'launch_welcome_modal': True})

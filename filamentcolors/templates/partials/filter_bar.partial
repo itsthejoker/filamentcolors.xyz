@@ -4,7 +4,7 @@
         <div class="col-1 col-md-3"></div>
         <div class="col-10 col-md-6">
             <div class="md-form active-purple-2 my-0">
-                <input class="form-control" id="filterInput" type="text" onkeyup="filterStuff()" placeholder="Filter Library..."
+                <input class="form-control" id="filterInput" type="text" oninput="filterStuff()" placeholder="Filter Library..."
                        aria-label="Search">
             </div>
         </div>
@@ -31,4 +31,7 @@
             }
         }
     }
+    $( document ).ready(function() {
+        filterStuff();
+    });
 </script>

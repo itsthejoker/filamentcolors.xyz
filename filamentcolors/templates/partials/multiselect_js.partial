@@ -1,0 +1,26 @@
+<script>
+    const eventContract = new jsaction.EventContract();
+
+    // Events will be handled for all elements under this container.
+    eventContract.addContainer(document.getElementById('deck-of-many-things'));
+
+    // Register the event types we care about.
+    eventContract.addEvent('click');
+    eventContract.addEvent('mousedown');
+
+    // Create the dispatcher and connect it to the event contract. The event contract queues events
+    // while the dispatcher takes events and dispatches them to the correct handler.
+    const dispatcher = new jsaction.Dispatcher();
+    eventContract.dispatchTo(dispatcher.dispatch.bind(dispatcher));
+
+    const doStuff = function (flow) {
+        alert('doStuff called!');
+    };
+
+    dispatcher.registerHandlers(
+        'card',                          // the namespace
+        null,                            // handler object
+        {                                // action map
+            'select': doStuff,
+        });
+</script>

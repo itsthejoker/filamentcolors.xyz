@@ -53,10 +53,26 @@ class Swatch(models.Model):
     filament_type = models.ForeignKey(
         FilamentType, on_delete=models.CASCADE, null=True, blank=True
     )
-    card_img_jpeg = models.ImageField(upload_to="card_img", blank=True)
+
+    # full size images
+    image_front = models.ImageField(null=True, blank=True)
+    image_back = models.ImageField(null=True, blank=True)
+    image_other = models.ImageField(null=True, blank=True)
+
+    printed_on = models.ForeignKey(Printer, on_delete=models.CASCADE)
+    maker = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_added = models.DateTimeField(default=timezone.now)
+    notes = models.TextField(max_length=4000, null=True, blank=True)
+    amazon_purchase_link = models.URLField(null=True, blank=True)
+    mfr_purchase_link = models.URLField(null=True, blank=True)
+
     # !!!!!!!!!!!!!!!!!!!!!!!!
     # DO NOT PUT ANYTHING IN THESE FIELDS!
     # They are computed and added automatically!
+    card_img_jpeg = models.ImageField(
+        upload_to="card_img", blank=True, null=True,
+        verbose_name="DO NOT ADD! Computed card original"
+    )
     card_img = models.ImageField(
         blank=True, verbose_name="DO NOT ADD! Computed Card Image"
     )
@@ -68,17 +84,6 @@ class Swatch(models.Model):
     )
     # !!!!!!!!!!!!!!!!!!!!!!!!
 
-    # full size images
-    image_back = models.ImageField(null=True, blank=True)
-    image_front = models.ImageField(null=True, blank=True)
-    image_other = models.ImageField(null=True, blank=True)
-
-    printed_on = models.ForeignKey(Printer, on_delete=models.CASCADE)
-    maker = models.ForeignKey(User, on_delete=models.CASCADE)
-    date_added = models.DateTimeField(default=timezone.now)
-    notes = models.TextField(max_length=4000, null=True, blank=True)
-    amazon_purchase_link = models.URLField(null=True, blank=True)
-    mfr_purchase_link = models.URLField(null=True, blank=True)
 
     @property
     def date_added_date(self):
@@ -111,6 +116,19 @@ class Swatch(models.Model):
             k = rgb_hilo(r, g, b)
             return get_hex(tuple(k - u for u in (r, g, b)))
 
+        def save_image(i, image_type: str) -> str:
+            # do we even need to do it this way? Need to learn more about byte streams
+            # and verify that this is actually a valid way to handle this.
+            output = BytesIO()
+            i.save(output, format='JPEG', quality=75)
+            output.seek(0)
+            # remove the file type so that we can modify the filename
+            filename_str = self.image_front.name[:self.image_front.name.rindex('.')]
+            filename = default_storage.save(
+                f'{filename_str}-{image_type}.jpg', ContentFile(output.read())
+            )
+            return filename
+
         post_tweet = False
 
         if self.card_img:
@@ -119,32 +137,57 @@ class Swatch(models.Model):
             return
 
         # https://stackoverflow.com/a/24380132
-        if self.card_img_jpeg:
+        if self.image_front:
             try:
                 # first let's see if we even need to work on it
                 this = Swatch.objects.get(id=self.id)
-                if this.card_img_jpeg != self.card_img_jpeg:
-                    this.card_img_jpeg.delete(save=False)
+                if this.image_front != self.image_front:
+                    this.image_front.delete(save=False)
             except:
                 pass
 
             # Process:
             #
-            # Take the image file, create a thumbnail, save the thumbnail to disk,
+            # Take the front image and crop it twice. The first time for the card image,
+            # the second time for the regular front image.
+            #
+            # Take the card image file, create a thumbnail, save the thumbnail to disk,
             # then add that file to the self.card_img attribute.
+
+            # card image
+            cs_x = 150
+            cs_y = 900
+
+            # regular front image
+            cs_two_x = 0
+            cs_two_y = 50
+
+            image = Img.open(self.image_front)
+            back_image = Img.open(self.image_back)
+            img_card = image.crop((cs_x, cs_y, cs_x+3396, cs_y+1056))
+            img_front = image.crop((cs_two_x, cs_two_y, cs_two_x+3731, cs_two_y+2798))
+            img_back = back_image.crop((cs_two_x, cs_two_y, cs_two_x+3731, cs_two_y+2798))
+
+            filename_card = save_image(img_card, 'card')
+            filename_front = save_image(img_front, 'front')
+            filename_back = save_image(img_back, 'back')
+
+            path = os.path.join(settings.MEDIA_ROOT, filename_card)
+            self.card_img_jpeg = ImageFile(open(path, 'rb'))
+            self.card_img_jpeg.name = filename_card
+
+            path = os.path.join(settings.MEDIA_ROOT, filename_front)
+            self.image_front = ImageFile(open(path, 'rb'))
+            self.image_front.name = filename_front
+
+            path = os.path.join(settings.MEDIA_ROOT, filename_back)
+            self.image_back = ImageFile(open(path, 'rb'))
+            self.image_back.name = filename_back
 
             image = Img.open(self.card_img_jpeg)
             image.thumbnail((200, 200), Img.ANTIALIAS)
-            # do we even need to do it this way? Need to learn more about byte streams
-            # and verify that this is actually a valid way to handle this.
-            output = BytesIO()
-            image.save(output, format='JPEG', quality=75)
-            output.seek(0)
-            # remove the file type so that we can modify the filename
-            filename_str = self.card_img_jpeg.name[:self.card_img_jpeg.name.rindex('.')]
-            filename = default_storage.save(
-                f'{filename_str}-thumb.jpg', ContentFile(output.read())
-            )
+
+            filename = save_image(image, 'thumb')
 
             path = os.path.join(settings.MEDIA_ROOT, filename)
             self.card_img = ImageFile(open(path, 'rb'))

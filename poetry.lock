@@ -62,6 +62,31 @@ version = "0.4.1"
 
 [[package]]
 category = "main"
+description = "imprement some of color correction algorithms"
+name = "colorcorrect"
+optional = false
+python-versions = "*"
+version = "0.8"
+
+[package.dependencies]
+Pillow = "*"
+numpy = "*"
+six = "*"
+
+[[package]]
+category = "main"
+description = "Color math and conversion library."
+name = "colormath"
+optional = false
+python-versions = "*"
+version = "3.0.0"
+
+[package.dependencies]
+networkx = ">=2.0"
+numpy = "*"
+
+[[package]]
+category = "main"
 description = "Composable style cycles"
 name = "cycler"
 optional = false
@@ -502,7 +527,7 @@ python-versions = "*"
 version = "0.1.7"
 
 [metadata]
-content-hash = "a0a1b477f532b2284ed9a818b4313d33bf78e4dab20caf3da183a4e9a1f2a289"
+content-hash = "44757286d8810ca99e33d97bb457ab751118ceffd92803413436171e2679ecfa"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -513,6 +538,8 @@ certifi = ["47f9c83ef4c0c621eaef743f133f09fa8a74a9b75f037e8624f83bd1b6626cb7", "
 chardet = ["84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae", "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"]
 cloudpickle = ["f169a8523a40eb0a3452e1878aac31da6759409fbafa51dd50d89d4a6b42bcf1", "fac8deaad55cd9e6cc11bb1d61c66da730f3f602ea8433698ef10ce664e520ec"]
 colorama = ["05eed71e2e327246ad6b38c540c4a3117230b19679b875190486ddd2d721422d", "f8ac84de7840f5b9c4e3347b3c1eaa50f7e49c2b07596221daec5edaabbd7c48"]
+colorcorrect = ["23e1e8296e75b9233e5f0a380407cc91d14f00d645d7d0a7ce1a9229410ba992"]
+colormath = ["3d4605af344527da0e4f9f504fad7ddbebda35322c566a6c72e28edb1ff31217"]
 cycler = ["1d8a5ae1ff6c5cf9b93e8811e581232ad8920aeec647c37316ceac982b08cb2d", "cd7b2d1018258d7247a71425e9f26463dfb444d411c39569972f4ce586b0c9d8"]
 dask = ["8a2c151d5862627c71fdc725760d710b7c037ec57730f453f392b896febfd0d5", "a1fa4a3b2d7ce4dd0c68db4b68dadf2c283ff54d98bd72c556fc462000449ff7"]
 decorator = ["2c51dff8ef3c447388fe5e4453d24a2bf128d3a4c32af3fabef1f01c6851ab82", "c39efa13fbdeb4506c476c9b3babf6a718da943dab7811c206005a4a956c080c"]

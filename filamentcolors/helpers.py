@@ -1,10 +1,13 @@
 import colorsys
 
+from colormath.color_conversions import convert_color
+from colormath.color_diff import delta_e_cmc
+from colormath.color_objects import LabColor
+from colormath.color_objects import sRGBColor
 from django.http import request
 
-from filamentcolors.models import Swatch
 from filamentcolors.colors import Color
-
+from filamentcolors.models import Swatch
 
 cookie_name = "f"
 
@@ -20,16 +23,23 @@ def get_complement_swatch(s: Swatch) -> [None, Swatch]:
     will fail miserably and hilariously, because color is really, really hard.
     """
     complement = Color(s.hex_color).complementary()[1]
+    complement = convert_color(
+        sRGBColor.new_from_rgb_hex(str(complement)), LabColor
+    )
 
     distance_dict = dict()
     swatches = Swatch.objects.all()
     for item in swatches:
-        possible_color = Color(item.hex_color)
-        distance = complement.distance_to(possible_color)
+        possible_color = convert_color(
+            sRGBColor.new_from_rgb_hex(item.hex_color), LabColor
+        )
+
+        distance = delta_e_cmc(complement, possible_color)
+
         distance_dict.update({item: distance})
 
     distance_dict = {
-        i:distance_dict[i] for i in distance_dict
+        i: distance_dict[i] for i in distance_dict
         if distance_dict[i] is not None
     }
 
@@ -40,6 +50,7 @@ def get_complement_swatch(s: Swatch) -> [None, Swatch]:
     except IndexError:
         return None
 
+
 def get_hsv(item):
     # TODO: I have NO idea if this works. Need to actually get some
     # samples up in here to check.
@@ -48,6 +59,7 @@ def get_hsv(item):
     hexrgb = item.hex_color
     r, g, b = (int(hexrgb[i:i + 2], 16) / 255.0 for i in range(0, 5, 2))
     return colorsys.rgb_to_hsv(r, g, b)
+
 
 def set_tasty_cookies(response):
     year = 365 * 24 * 60 * 60

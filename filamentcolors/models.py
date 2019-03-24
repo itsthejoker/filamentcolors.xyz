@@ -59,6 +59,8 @@ class Swatch(models.Model):
     image_back = models.ImageField(null=True, blank=True)
     image_other = models.ImageField(null=True, blank=True)
 
+    regenerate_info = models.BooleanField(default=False)
+
     printed_on = models.ForeignKey(Printer, on_delete=models.CASCADE)
     maker = models.ForeignKey(User, on_delete=models.CASCADE)
     date_added = models.DateTimeField(default=timezone.now)
@@ -130,6 +132,11 @@ class Swatch(models.Model):
             return filename
 
         post_tweet = False
+
+        # and now, the fun begins
+        if self.regenerate_info:
+            self.regenerate_info = False
+            self.card_img = None
 
         if self.card_img:
             # we already have a card image, so just save everything and abort.

@@ -14,18 +14,21 @@ from filamentcolors.helpers import set_tasty_cookies
 def homepage(request):
     return HttpResponseRedirect(reverse('library'))
 
+
 def library(request):
     html = 'library.html'
+    data = {
+        'swatches': Swatch.objects.all().order_by('-date_added'),
+        'search_prefill': request.GET.get('q', '')
+    }
 
     if show_welcome_modal(request):
-        response = render_to_response(
-            html,
-            {'swatches': Swatch.objects.all(), 'launch_welcome_modal': True}
-        )
+        data.update({'launch_welcome_modal': True})
+        response = render_to_response(html, data)
         set_tasty_cookies(response)
         return response
 
-    return render(request, html, {'swatches': Swatch.objects.all()})
+    return render(request, html, data)
 
 
 def librarysort(request, method: str):

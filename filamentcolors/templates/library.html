@@ -13,15 +13,17 @@
     {% include 'partials/color-warning.partial' %}
 {% endif %}
 
-{% include 'partials/filter_bar.partial' %}
+{% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
 
 <div class="container mt-4">
 
-    <div class="card-deck">
+    <div class="card-deck" id="deck-of-many-things">
         {% for s in swatches %}
             {% include 'partials/card.partial' with obj=s %}
         {% endfor %}
     </div>
 </div>
+
+{#{% include 'partials/multiselect_js.partial' %}#}
 
 {% include 'partials/footer.partial' %}

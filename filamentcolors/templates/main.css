@@ -252,8 +252,8 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
     z-index: 10;
     opacity: 0;
     transition: visibility 0s 0.1s, opacity 0.1s linear;
@@ -261,6 +261,15 @@ body {
 
 .card-img-container {
     z-index: 0;
+}
+
+
+.layer {
+    /*position: absolute;*/
+    /*top: 0px;*/
+    /*left: 0px;*/
+    /*height: 400px;*/
+    /*width: 400px;*/
 }
 
 .card-img-top {
@@ -272,7 +281,7 @@ body {
     pointer-events: none;
     display: none;
     transition: opacity 0.1s linear;
-    background-image: url("https://img.icons8.com/material-outlined/24/000000/unchecked-circle.png"),
+    background-image: url("https://img.icons8.com/cotton/30/000000/plus.png"),
     linear-gradient(
             to bottom,
             rgba(0, 0, 0, 0.26),
@@ -368,11 +377,16 @@ body {
     position: fixed;
     bottom: 50%;
     left: 40px;
-    width: 175px;
+    width: 160px;
 }
 
 #go-button {
     width: 100%;
+}
+
+#multiselect-badge {
+    width: 100%;
+    height: 38px;
 }
 
 #clear-button {

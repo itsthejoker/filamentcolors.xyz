@@ -1,4 +1,16 @@
+<div class="collection-buttons way-off-screen" id="collection-buttons">
+    <button type="button" id="go-button" class="btn shadow-lg btn-primary">Create Collection</button>
+    <p></p>
+    <button type="button" id="clear-button" class="btn shadow-lg btn-outline-primary">Unselect All</button>
+</div>
+
 <script>
+
+    function getID(flow) {
+        h = flow.s.parentElement.parentElement.href;
+        return h.slice(h.lastIndexOf('/') + 1);
+    }
+
     const eventContract = new jsaction.EventContract();
 
     // Events will be handled for all elements under this container.
@@ -6,21 +18,95 @@
 
     // Register the event types we care about.
     eventContract.addEvent('click');
-    eventContract.addEvent('mousedown');
+    {#eventContract.addEvent('mousedown');#}
 
     // Create the dispatcher and connect it to the event contract. The event contract queues events
     // while the dispatcher takes events and dispatches them to the correct handler.
     const dispatcher = new jsaction.Dispatcher();
     eventContract.dispatchTo(dispatcher.dispatch.bind(dispatcher));
 
-    const doStuff = function (flow) {
-        alert('doStuff called!');
+    const handleSelection = function (flow) {
+        flow.C.preventDefault();
+        if (
+            flow.s.getAttribute('aria-checked') === "false"
+        ) {
+            window.multiselectArray.push(getID(flow));
+            flow.s.setAttribute('aria-checked', 'true');
+            flow.s.nextElementSibling.style.backgroundImage = "url('https://img.icons8.com/material/24/000000/checked.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
+            flow.s.nextElementSibling.style.color = "#007bff";
+            flow.s.parentElement.parentElement.style.transform = "translateZ(0px) scale3d(0.95, 0.95, 1)";
+            flow.s.parentElement.parentElement.className = "card mb-4 anim big-shadow";
+        } else {
+
+            flow.s.setAttribute('aria-checked', 'false');
+            flow.s.nextElementSibling.style.backgroundImage = "url('https://img.icons8.com/material-outlined/24/000000/unchecked-circle.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
+            flow.s.nextElementSibling.style.color = "";
+            flow.s.parentElement.parentElement.className = "card mb-4 anim shadow";
+            flow.s.parentElement.parentElement.style.transform = '';
+            id = getID(flow);
+            result = window.multiselectArray.filter(item => item !== id);
+            window.multiselectArray = result;
+        }
+        b = document.getElementById("collection-buttons");
+        fs = document.getElementsByClassName("card-img-overlay");
+        if (
+            window.multiselectArray.length > 0
+        ) {
+            if (!(b.getAttribute('class').includes('slide-in-left'))) {
+                b.setAttribute('class', 'collection-buttons slide-in-left');
+                for (i = 0; i < fs.length; i++) {
+                    fs[i].style.display = 'block';
+                    fs[i].previousElementSibling.style.width = 300;
+                    fs[i].previousElementSibling.style.height = 305;
+                    fs[i].previousElementSibling.style.top = -5;
+                    fs[i].previousElementSibling.style.left = -7;
+                }
+            }
+        } else {
+            b.setAttribute('class', 'collection-buttons slide-out-left');
+            for (i = 0; i < fs.length; i++) {
+                fs[i].style.display = '';
+                fs[i].previousElementSibling.style.width = 30;
+                fs[i].previousElementSibling.style.height = 30;
+                fs[i].previousElementSibling.style.top = 0;
+                fs[i].previousElementSibling.style.left = 0;
+            }
+        }
     };
 
     dispatcher.registerHandlers(
         'card',                          // the namespace
         null,                            // handler object
         {                                // action map
-            'select': doStuff,
+            'select': handleSelection,
         });
+
+    $('#go-button').on('click', function (evt) {
+        url = window.location.origin + "/library/collection/" + window.multiselectArray.join();
+        window.location.assign(url);
+    });
+
+    $('#clear-button').on('click', function (evt) {
+        fs = document.getElementsByClassName("card-img-overlay");
+        for (i = 0; i < fs.length; i++) {
+            fs[i].style.display = '';
+            fs[i].previousElementSibling.style.width = 30;
+            fs[i].previousElementSibling.style.height = 30;
+            fs[i].previousElementSibling.style.top = 0;
+            fs[i].previousElementSibling.style.left = 0;
+            fs[i].previousElementSibling.setAttribute('aria-checked', 'false');
+            fs[i].style.backgroundImage = "url('https://img.icons8.com/material-outlined/24/000000/unchecked-circle.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
+            fs[i].style.color = "";
+            fs[i].parentElement.parentElement.className = "card mb-4 anim shadow";
+            fs[i].parentElement.parentElement.style.transform = '';
+        }
+        window.multiselectArray = [];
+        d = document.getElementById("collection-buttons");
+        d.setAttribute('class', 'collection-buttons slide-out-left');
+    });
+
+    $(document).ready(function () {
+        window.multiselectArray = [];
+        filterStuff();
+    });
 </script>

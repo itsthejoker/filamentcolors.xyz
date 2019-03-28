@@ -11,6 +11,7 @@ from filamentcolors.helpers import show_welcome_modal
 from filamentcolors.helpers import cookie_name
 from filamentcolors.helpers import set_tasty_cookies
 
+
 def homepage(request):
     return HttpResponseRedirect(reverse('library'))
 
@@ -114,7 +115,7 @@ def swatch_collection(request, ids):
     What I'm imagining for this is a way for people to select swatches and
     put them into a link that will just pull those items so that they can
     send options to other people. For example, maybe something like
-    /library/collection/?swatches=1,34,23,7
+    /library/collection/1,34,23,7
 
     :param request: the Django request.
     :return: ¯\_(ツ)_/¯

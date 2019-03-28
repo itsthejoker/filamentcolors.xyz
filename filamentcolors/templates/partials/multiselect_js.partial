@@ -1,4 +1,6 @@
 <div class="collection-buttons way-off-screen" id="collection-buttons">
+    <h2><span id="multiselect-badge" class="badge badge-secondary">0</span></h2>
+    <p></p>
     <button type="button" id="go-button" class="btn shadow-lg btn-primary">Create Collection</button>
     <p></p>
     <button type="button" id="clear-button" class="btn shadow-lg btn-outline-primary">Unselect All</button>
@@ -9,6 +11,9 @@
     function getID(flow) {
         h = flow.s.parentElement.parentElement.href;
         return h.slice(h.lastIndexOf('/') + 1);
+    }
+    function updateCounter() {
+        document.getElementById("multiselect-badge").innerText = window.multiselectArray.length;
     }
 
     const eventContract = new jsaction.EventContract();
@@ -32,20 +37,22 @@
         ) {
             window.multiselectArray.push(getID(flow));
             flow.s.setAttribute('aria-checked', 'true');
-            flow.s.nextElementSibling.style.backgroundImage = "url('https://img.icons8.com/material/24/000000/checked.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
+            flow.s.nextElementSibling.style.backgroundImage = "url('https://img.icons8.com/dusk/30/000000/checked.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
             flow.s.nextElementSibling.style.color = "#007bff";
             flow.s.parentElement.parentElement.style.transform = "translateZ(0px) scale3d(0.95, 0.95, 1)";
             flow.s.parentElement.parentElement.className = "card mb-4 anim big-shadow";
+            updateCounter();
         } else {
 
             flow.s.setAttribute('aria-checked', 'false');
-            flow.s.nextElementSibling.style.backgroundImage = "url('https://img.icons8.com/material-outlined/24/000000/unchecked-circle.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
+            flow.s.nextElementSibling.style.backgroundImage = "url('https://img.icons8.com/cotton/30/000000/plus.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
             flow.s.nextElementSibling.style.color = "";
             flow.s.parentElement.parentElement.className = "card mb-4 anim shadow";
             flow.s.parentElement.parentElement.style.transform = '';
             id = getID(flow);
             result = window.multiselectArray.filter(item => item !== id);
             window.multiselectArray = result;
+            updateCounter();
         }
         b = document.getElementById("collection-buttons");
         fs = document.getElementsByClassName("card-img-overlay");
@@ -66,8 +73,8 @@
             b.setAttribute('class', 'collection-buttons slide-out-left');
             for (i = 0; i < fs.length; i++) {
                 fs[i].style.display = '';
-                fs[i].previousElementSibling.style.width = 30;
-                fs[i].previousElementSibling.style.height = 30;
+                fs[i].previousElementSibling.style.width = 36;
+                fs[i].previousElementSibling.style.height = 36;
                 fs[i].previousElementSibling.style.top = 0;
                 fs[i].previousElementSibling.style.left = 0;
             }
@@ -95,7 +102,7 @@
             fs[i].previousElementSibling.style.top = 0;
             fs[i].previousElementSibling.style.left = 0;
             fs[i].previousElementSibling.setAttribute('aria-checked', 'false');
-            fs[i].style.backgroundImage = "url('https://img.icons8.com/material-outlined/24/000000/unchecked-circle.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
+            fs[i].style.backgroundImage = "url('https://img.icons8.com/cotton/30/000000/plus.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
             fs[i].style.color = "";
             fs[i].parentElement.parentElement.className = "card mb-4 anim shadow";
             fs[i].parentElement.parentElement.style.transform = '';

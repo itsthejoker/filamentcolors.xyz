@@ -91,46 +91,127 @@ class Swatch(models.Model):
     def date_added_date(self):
         return self.date_added.strftime("%b %d, %Y")
 
+    def get_rgb(self, hex: str) -> tuple:
+        return tuple(int(hex[i:i + 2], 16) for i in (0, 2, 4))
+
+    def get_hex(self, rgb: tuple) -> str:
+        return (
+            "{R}{G}{B}".format(
+                R="%0.2X" % int(rgb[0]),
+                G="%0.2X" % int(rgb[1]),
+                B="%0.2X" % int(rgb[2])
+            )
+        )
+
+    def rgb_hilo(self, a, b, c):
+        # courtesy of https://stackoverflow.com/a/40234924
+        if c < b:
+            b, c = c, b
+        if b < a:
+            a, b = b, a
+        if c < b:
+            b, c = c, b
+        return a + c
+
+    def get_complement(self, hex):
+        r, g, b = self.get_rgb(hex)
+        # courtesy of https://stackoverflow.com/a/40234924
+        k = self.rgb_hilo(r, g, b)
+        return self.get_hex(tuple(k - u for u in (r, g, b)))
+
+    def _save_image(self, i, image_type: str) -> str:
+        # https://stackoverflow.com/a/24380132
+
+        # do we even need to do it this way? Need to learn more about byte streams
+        # and verify that this is actually a valid way to handle this.
+        output = BytesIO()
+        i.save(output, format='JPEG', quality=75)
+        output.seek(0)
+        # remove the file type so that we can modify the filename
+        filename_str = self.image_front.name[:self.image_front.name.rindex('.')]
+        filename = default_storage.save(
+            f'{filename_str}-{image_type}.jpg', ContentFile(output.read())
+        )
+        return filename
+
+    def crop_and_save_images(self):
+        try:
+            # first let's see if we even need to work on it
+            this = Swatch.objects.get(id=self.id)
+            if this.image_front != self.image_front:
+                this.image_front.delete(save=False)
+        except:
+            pass
+
+        # Process:
+        #
+        # Take the front image and crop it twice. The first time for the card image,
+        # the second time for the regular front image.
+        #
+        # Take the card image file, create a thumbnail, save the thumbnail to disk,
+        # then add that file to the self.card_img attribute.
+
+        # card image
+        cs_x = 150
+        cs_y = 900
+
+        # regular front image
+        cs_two_x = 0
+        cs_two_y = 50
+
+        image = Img.open(self.image_front)
+        back_image = Img.open(self.image_back)
+        img_card = image.crop((cs_x, cs_y, cs_x + 3396, cs_y + 1056))
+        img_front = image.crop((cs_two_x, cs_two_y, cs_two_x + 3731, cs_two_y + 2798))
+        img_back = back_image.crop((cs_two_x, cs_two_y, cs_two_x + 3731, cs_two_y + 2798))
+
+        filename_card = self._save_image(img_card, 'card')
+        filename_front = self._save_image(img_front, 'front')
+        filename_back = self._save_image(img_back, 'back')
+
+        path = os.path.join(settings.MEDIA_ROOT, filename_card)
+        self.card_img_jpeg = ImageFile(open(path, 'rb'))
+        self.card_img_jpeg.name = filename_card
+
+        path = os.path.join(settings.MEDIA_ROOT, filename_front)
+        self.image_front = ImageFile(open(path, 'rb'))
+        self.image_front.name = filename_front
+
+        path = os.path.join(settings.MEDIA_ROOT, filename_back)
+        self.image_back = ImageFile(open(path, 'rb'))
+        self.image_back.name = filename_back
+
+        image = Img.open(self.card_img_jpeg)
+        image.thumbnail((200, 200), Img.ANTIALIAS)
+
+        filename = self._save_image(image, 'thumb')
+
+        path = os.path.join(settings.MEDIA_ROOT, filename)
+        self.card_img = ImageFile(open(path, 'rb'))
+        self.card_img.name = filename
+
+    def generate_hex_info(self):
+        self.card_img.file.seek(0)
+        img = io.imread(self.card_img.file)
+
+        pixels = np.float32(img.reshape(-1, 3))
+
+        n_colors = 5
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
+        flags = cv2.KMEANS_RANDOM_CENTERS
+
+        # this line is super painful in computation time. We kind of get
+        # around that by only having it parse the resized small card image;
+        # if it runs on the full-size image, it could take a minute or two
+        # to complete.
+        _, labels, palette = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
+        _, counts = np.unique(labels, return_counts=True)
+        dominant = palette[np.argmax(counts)]
+
+        self.hex_color = self.get_hex(dominant)
+        self.complement_hex = self.get_complement(self.hex_color)
+
     def save(self, *args, **kwargs):
-
-        def get_rgb(hex: str) -> tuple:
-            return tuple(int(hex[i:i + 2], 16) for i in (0, 2, 4))
-
-        def get_hex(rgb: tuple) -> str:
-            return (
-                "{R}{G}{B}".format(
-                R = "%0.2X" % int(rgb[0]),
-                G = "%0.2X" % int(rgb[1]),
-                B = "%0.2X" % int(rgb[2])
-                )
-            )
-
-        def rgb_hilo(a, b, c):
-            # courtesy of https://stackoverflow.com/a/40234924
-            if c < b: b, c = c, b
-            if b < a: a, b = b, a
-            if c < b: b, c = c, b
-            return a + c
-
-        def get_complement(hex):
-            r, g, b = get_rgb(hex)
-            # courtesy of https://stackoverflow.com/a/40234924
-            k = rgb_hilo(r, g, b)
-            return get_hex(tuple(k - u for u in (r, g, b)))
-
-        def save_image(i, image_type: str) -> str:
-            # do we even need to do it this way? Need to learn more about byte streams
-            # and verify that this is actually a valid way to handle this.
-            output = BytesIO()
-            i.save(output, format='JPEG', quality=75)
-            output.seek(0)
-            # remove the file type so that we can modify the filename
-            filename_str = self.image_front.name[:self.image_front.name.rindex('.')]
-            filename = default_storage.save(
-                f'{filename_str}-{image_type}.jpg', ContentFile(output.read())
-            )
-            return filename
-
         post_tweet = False
 
         # and now, the fun begins
@@ -143,91 +224,19 @@ class Swatch(models.Model):
             super(Swatch, self).save(*args, **kwargs)
             return
 
-        # https://stackoverflow.com/a/24380132
         if self.image_front:
-            try:
-                # first let's see if we even need to work on it
-                this = Swatch.objects.get(id=self.id)
-                if this.image_front != self.image_front:
-                    this.image_front.delete(save=False)
-            except:
-                pass
-
-            # Process:
-            #
-            # Take the front image and crop it twice. The first time for the card image,
-            # the second time for the regular front image.
-            #
-            # Take the card image file, create a thumbnail, save the thumbnail to disk,
-            # then add that file to the self.card_img attribute.
-
-            # card image
-            cs_x = 150
-            cs_y = 900
-
-            # regular front image
-            cs_two_x = 0
-            cs_two_y = 50
-
-            image = Img.open(self.image_front)
-            back_image = Img.open(self.image_back)
-            img_card = image.crop((cs_x, cs_y, cs_x+3396, cs_y+1056))
-            img_front = image.crop((cs_two_x, cs_two_y, cs_two_x+3731, cs_two_y+2798))
-            img_back = back_image.crop((cs_two_x, cs_two_y, cs_two_x+3731, cs_two_y+2798))
-
-            filename_card = save_image(img_card, 'card')
-            filename_front = save_image(img_front, 'front')
-            filename_back = save_image(img_back, 'back')
-
-            path = os.path.join(settings.MEDIA_ROOT, filename_card)
-            self.card_img_jpeg = ImageFile(open(path, 'rb'))
-            self.card_img_jpeg.name = filename_card
-
-            path = os.path.join(settings.MEDIA_ROOT, filename_front)
-            self.image_front = ImageFile(open(path, 'rb'))
-            self.image_front.name = filename_front
-
-            path = os.path.join(settings.MEDIA_ROOT, filename_back)
-            self.image_back = ImageFile(open(path, 'rb'))
-            self.image_back.name = filename_back
-
-            image = Img.open(self.card_img_jpeg)
-            image.thumbnail((200, 200), Img.ANTIALIAS)
-
-            filename = save_image(image, 'thumb')
-
-            path = os.path.join(settings.MEDIA_ROOT, filename)
-            self.card_img = ImageFile(open(path, 'rb'))
-            self.card_img.name = filename
+            self.crop_and_save_images()
 
         # sanity check
         if self.card_img:
             post_tweet = True
             # lovingly ripped from https://stackoverflow.com/a/43111221
-            self.card_img.file.seek(0)
-            img = io.imread(self.card_img.file)
-
-            pixels = np.float32(img.reshape(-1, 3))
-
-            n_colors = 5
-            criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
-            flags = cv2.KMEANS_RANDOM_CENTERS
-
-            # this line is super painful in computation time. We kind of get
-            # around that by only having it parse the resized small card image;
-            # if it runs on the full-size image, it could take a minute or two
-            # to complete.
-            _, labels, palette = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
-            _, counts = np.unique(labels, return_counts=True)
-            dominant = palette[np.argmax(counts)]
-
-            self.hex_color = get_hex(dominant)
-            self.complement_hex = get_complement(self.hex_color)
+            self.generate_hex_info()
 
 
         super(Swatch, self).save(*args, **kwargs)
 
-        if post_tweet:
+        if post_tweet and not settings.DEBUG:
             send_tweet(self)
 
 

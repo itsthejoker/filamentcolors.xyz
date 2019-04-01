@@ -9,9 +9,10 @@
 <script>
 
     function getID(flow) {
-        h = flow.s.parentElement.parentElement.href;
+        h = flow.s.parentElement.href;
         return h.slice(h.lastIndexOf('/') + 1);
     }
+
     function updateCounter() {
         document.getElementById("multiselect-badge").innerText = window.multiselectArray.length;
     }
@@ -37,18 +38,20 @@
         ) {
             window.multiselectArray.push(getID(flow));
             flow.s.setAttribute('aria-checked', 'true');
-            flow.s.nextElementSibling.style.backgroundImage = "url('https://img.icons8.com/dusk/30/000000/checked.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
-            flow.s.nextElementSibling.style.color = "#007bff";
-            flow.s.parentElement.parentElement.style.transform = "translateZ(0px) scale3d(0.95, 0.95, 1)";
-            flow.s.parentElement.parentElement.className = "card mb-4 anim big-shadow";
+            el = flow.s.nextElementSibling.getElementsByClassName('card-img-overlay')[0];
+            el.style.backgroundImage = "url('https://img.icons8.com/dusk/30/000000/checked.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
+            el.style.color = "#007bff";
+            flow.s.parentElement.style.transform = "translateZ(0px) scale3d(0.95, 0.95, 1)";
+            flow.s.parentElement.className = "card mb-4 anim big-shadow";
             updateCounter();
         } else {
 
             flow.s.setAttribute('aria-checked', 'false');
-            flow.s.nextElementSibling.style.backgroundImage = "url('https://img.icons8.com/cotton/30/000000/plus.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
-            flow.s.nextElementSibling.style.color = "";
-            flow.s.parentElement.parentElement.className = "card mb-4 anim shadow";
-            flow.s.parentElement.parentElement.style.transform = '';
+            el = flow.s.nextElementSibling.getElementsByClassName('card-img-overlay')[0];
+            el.style.backgroundImage = "url('https://img.icons8.com/cotton/30/000000/plus.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
+            el.style.color = "";
+            flow.s.parentElement.className = "card mb-4 anim shadow";
+            flow.s.parentElement.style.transform = '';
             id = getID(flow);
             result = window.multiselectArray.filter(item => item !== id);
             window.multiselectArray = result;
@@ -63,20 +66,20 @@
                 b.setAttribute('class', 'collection-buttons slide-in-left');
                 for (i = 0; i < fs.length; i++) {
                     fs[i].style.display = 'block';
-                    fs[i].previousElementSibling.style.width = 300;
-                    fs[i].previousElementSibling.style.height = 305;
-                    fs[i].previousElementSibling.style.top = -5;
-                    fs[i].previousElementSibling.style.left = -7;
+                    fs[i].parentElement.previousElementSibling.style.width = 300;
+                    fs[i].parentElement.previousElementSibling.style.height = "105%";
+                    fs[i].parentElement.previousElementSibling.style.top = -5;
+                    fs[i].parentElement.previousElementSibling.style.left = -7;
                 }
             }
         } else {
             b.setAttribute('class', 'collection-buttons slide-out-left');
             for (i = 0; i < fs.length; i++) {
                 fs[i].style.display = '';
-                fs[i].previousElementSibling.style.width = 36;
-                fs[i].previousElementSibling.style.height = 36;
-                fs[i].previousElementSibling.style.top = 0;
-                fs[i].previousElementSibling.style.left = 0;
+                fs[i].parentElement.previousElementSibling.style.width = 36;
+                fs[i].parentElement.previousElementSibling.style.height = 36;
+                fs[i].parentElement.previousElementSibling.style.top = 0;
+                fs[i].parentElement.previousElementSibling.style.left = 0;
             }
         }
     };
@@ -97,11 +100,11 @@
         fs = document.getElementsByClassName("card-img-overlay");
         for (i = 0; i < fs.length; i++) {
             fs[i].style.display = '';
-            fs[i].previousElementSibling.style.width = 30;
-            fs[i].previousElementSibling.style.height = 30;
-            fs[i].previousElementSibling.style.top = 0;
-            fs[i].previousElementSibling.style.left = 0;
-            fs[i].previousElementSibling.setAttribute('aria-checked', 'false');
+            fs[i].parentElement.previousElementSibling.style.width = 30;
+            fs[i].parentElement.previousElementSibling.style.height = 30;
+            fs[i].parentElement.previousElementSibling.style.top = 0;
+            fs[i].parentElement.previousElementSibling.style.left = 0;
+            fs[i].parentElement.previousElementSibling.setAttribute('aria-checked', 'false');
             fs[i].style.backgroundImage = "url('https://img.icons8.com/cotton/30/000000/plus.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
             fs[i].style.color = "";
             fs[i].parentElement.parentElement.className = "card mb-4 anim shadow";

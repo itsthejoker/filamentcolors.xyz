@@ -89,7 +89,7 @@ body {
     position: absolute;
     bottom: 0;
     left: 0;
-    z-index: 100
+    z-index: 9
 }
 
 .app-card .item-info {
@@ -121,6 +121,7 @@ body {
     position: relative;
     top: -3px;
     right: 5px;
+    z-index: 0;
 }
 
 .color-cube-center {
@@ -296,7 +297,7 @@ body {
     display: block;
 }
 
-.multiselector:hover ~ .card-img-overlay {
+.multiselector:hover ~ .card-img-container .card-img-overlay {
     display: block
 }
 
@@ -375,9 +376,10 @@ body {
 
 .collection-buttons {
     position: fixed;
-    bottom: 50%;
+    bottom: 60%;
     left: 40px;
     width: 160px;
+    z-index: 100;
 }
 
 #go-button {

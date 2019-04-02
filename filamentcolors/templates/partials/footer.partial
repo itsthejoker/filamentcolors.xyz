@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-1"></div>
             <div class="col-sm-2 text-center bump-down">
-                <a href="/about">about</a>
+                <u><a href="/about">about</a></u>
             </div>
             <div class="col-sm-2 text-center bump-down">
                 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -13,11 +13,12 @@
                          src="https://i.creativecommons.org/l/by/4.0/88x31.png"/>
                 </a>
             </div>
-            <div class="col-sm-2 text-center bump-down"><a href="https://twitter.com/filamentcolors" target="_blank">@filamentcolors</a>
+            <div class="col-sm-2 text-center bump-down">
+                <u><a href="https://twitter.com/filamentcolors" target="_blank">@filamentcolors</a></u>
             </div>
             <div class="col-sm-2 text-center bump-down">
-                <a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank">source code
-                    (github)</a>
+                <u><a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank">source code
+                    (github)</a></u>
             </div>
             <div class="col-sm-3 text-center kofi-button bump-down">
                 <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script>

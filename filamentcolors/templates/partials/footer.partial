@@ -7,8 +7,11 @@
                 <a href="/about">about</a>
             </div>
             <div class="col-sm-2 text-center bump-down">
-                © Joe Kaufeld,
-                <script type="text/javascript">document.write((new Date()).getFullYear());</script>
+                <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+                    <img alt="Creative Commons License"
+                         style="border-width:0"
+                         src="https://i.creativecommons.org/l/by/4.0/88x31.png"/>
+                </a>
             </div>
             <div class="col-sm-2 text-center bump-down"><a href="https://twitter.com/filamentcolors" target="_blank">@filamentcolors</a>
             </div>

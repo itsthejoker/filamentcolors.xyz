@@ -415,3 +415,9 @@ body {
     -moz-transition: 75ms ease-in-out;
     -o-transition: 75ms ease-in-out;
 }
+
+/*For the navbar*/
+
+.dropdown-toggle.active-dropdown::after {
+    transform: rotate(-90deg);
+}

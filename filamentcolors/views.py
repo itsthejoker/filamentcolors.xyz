@@ -1,15 +1,16 @@
-from django.shortcuts import render
-from django.shortcuts import reverse
-from django.shortcuts import render_to_response
 from django.shortcuts import HttpResponseRedirect
-from filamentcolors.models import Swatch
-from filamentcolors.models import Printer
-from django.utils import timezone
-from filamentcolors.helpers import get_hsv
+from django.shortcuts import render
+from django.shortcuts import render_to_response
+from django.shortcuts import reverse
+from django.http import Http404
+
 from filamentcolors.helpers import get_complement_swatch
-from filamentcolors.helpers import show_welcome_modal
-from filamentcolors.helpers import cookie_name
+from filamentcolors.helpers import get_hsv
 from filamentcolors.helpers import set_tasty_cookies
+from filamentcolors.helpers import show_welcome_modal
+from filamentcolors.models import Printer
+from filamentcolors.models import Swatch
+from filamentcolors.helpers import build_data_dict
 
 
 def homepage(request):
@@ -18,10 +19,11 @@ def homepage(request):
 
 def library(request):
     html = 'library.html'
-    data = {
+    data = build_data_dict(request)
+
+    data.update({
         'swatches': Swatch.objects.all().order_by('-date_added'),
-        'search_prefill': request.GET.get('q', '')
-    }
+    })
 
     if show_welcome_modal(request):
         data.update({'launch_welcome_modal': True})
@@ -50,7 +52,7 @@ def librarysort(request, method: str):
     items = Swatch.objects.all()
     html = 'library.html'
 
-    data = {}
+    data = build_data_dict(request)
 
     if method == 'type':
         items = items.order_by('filament_type')
@@ -76,29 +78,49 @@ def librarysort(request, method: str):
     return render(request, html, data)
 
 
+def manufacturersort(request, id):
+    items = Swatch.objects.all()
+    html = 'library.html'
+
+    data = build_data_dict(request)
+
+    s = Swatch.objects.filter(manufacturer_id=id)
+
+    if len(s) == 0:
+        # No filaments found, and we shouldn't have a manufacturer
+        # with no filaments.
+        raise Http404
+
+    data.update({'swatches': s})
+
+    if show_welcome_modal(request):
+        data.update({'launch_welcome_modal': True})
+        response = render_to_response(html, data)
+        set_tasty_cookies(response)
+        return response
+
+    return render(request, html, data)
+
+
 def swatch_detail(request, id):
     html = 'swatch_detail.html'
     swatch = Swatch.objects.filter(id=id).first()
+    data = build_data_dict(request)
 
     if not swatch:
-        return render(request, html, {'error': 'Swatch ID not found!'})
+        raise Http404
     else:
         c_swatch = get_complement_swatch(swatch)
 
-        response_data = {'swatch': swatch, 'c_swatch': c_swatch}
+        data.update({'swatch': swatch, 'c_swatch': c_swatch})
 
         if show_welcome_modal(request):
-            response_data.update({'launch_welcome_modal': True})
-            response = render_to_response(
-                html,
-                response_data
-            )
+            data.update({'launch_welcome_modal': True})
+            response = render_to_response(html, data)
             set_tasty_cookies(response)
             return response
 
-        return render(
-            request, html, response_data
-        )
+        return render(request, html, data)
 
 
 def printer_detail(request, id):
@@ -120,6 +142,8 @@ def swatch_collection(request, ids):
     :param request: the Django request.
     :return: ¯\_(ツ)_/¯
     """
+    data = build_data_dict(request)
+
     # filter out bad input
     cleaned_ids = list()
     for item in ids.split(','):
@@ -135,21 +159,23 @@ def swatch_collection(request, ids):
         if result:
             swatch_collection.append(result)
 
-    return render(request, 'library.html', {'swatches': swatch_collection})
+    data.update({'swatches': swatch_collection})
+
+    return render(request, 'library.html', data)
 
 
 def about_page(request):
     html = 'about.html'
-    return render(request, html)
+    return render(request, html, build_data_dict(request))
 
 
 def handler404(request, exception, template_name="404.html"):
-    response = render_to_response("404.html")
+    response = render_to_response("404.html", build_data_dict(request))
     response.status_code = 404
     return response
 
 
 def handler500(request, exception, template_name="500.html"):
-    response = render_to_response("500.html")
+    response = render_to_response("500.html", build_data_dict(request))
     response.status_code = 500
     return response

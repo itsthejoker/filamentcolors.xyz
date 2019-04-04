@@ -31,6 +31,7 @@ urlpatterns = [
     path('library/collection/<str:ids>/', views.swatch_collection, name='swatchcollection'),
     path('library/', views.library, name='library'),
     path('swatch/<int:id>', views.swatch_detail, name='swatchdetail'),
+    path('library/manufacturer/<int:id>', views.manufacturersort, name='manufacturersort'),
     # path('printer/<int:id>', views.printer_detail, name='printerdetail'),
     path('about/', views.about_page, name='about'),
 ]

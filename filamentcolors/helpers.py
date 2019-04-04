@@ -4,9 +4,11 @@ from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cmc
 from colormath.color_objects import LabColor
 from colormath.color_objects import sRGBColor
+from django.db.models.functions import Lower
 from django.http import request
 
 from filamentcolors.colors import Color
+from filamentcolors.models import Manufacturer
 from filamentcolors.models import Swatch
 
 cookie_name = "f"
@@ -64,3 +66,10 @@ def get_hsv(item):
 def set_tasty_cookies(response):
     year = 365 * 24 * 60 * 60
     response.set_cookie(cookie_name, 'tasty_cookies', max_age=year)
+
+
+def build_data_dict(request):
+    return {
+        'search_prefill': request.GET.get('q', ''),
+        'manufacturers': Manufacturer.objects.all().order_by(Lower('name'))
+    }

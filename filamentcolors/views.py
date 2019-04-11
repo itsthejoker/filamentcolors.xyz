@@ -10,6 +10,7 @@ from filamentcolors.helpers import set_tasty_cookies
 from filamentcolors.helpers import show_welcome_modal
 from filamentcolors.models import Printer
 from filamentcolors.models import Swatch
+from filamentcolors.models import FilamentType
 from filamentcolors.helpers import build_data_dict
 
 
@@ -101,6 +102,27 @@ def manufacturersort(request, id):
 
     return render(request, html, data)
 
+
+def typesort(request, id):
+    html = 'library.html'
+    data = build_data_dict(request)
+
+    f_type = FilamentType.objects.filter(id=id).first()
+
+    if not f_type:
+        raise Http404
+
+    s = Swatch.objects.filter(filament_type=f_type)
+
+    data.update({'swatches': s})
+
+    if show_welcome_modal(request):
+        data.update({'launch_welcome_modal': True})
+        response = render_to_response(html, data)
+        set_tasty_cookies(response)
+        return response
+
+    return render(request, html, data)
 
 def swatch_detail(request, id):
     html = 'swatch_detail.html'

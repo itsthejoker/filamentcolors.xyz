@@ -216,7 +216,6 @@ class Swatch(models.Model):
 
         # and now, the fun begins
         if self.regenerate_info:
-            self.regenerate_info = False
             self.card_img = None
 
         if self.card_img:
@@ -233,11 +232,13 @@ class Swatch(models.Model):
             # lovingly ripped from https://stackoverflow.com/a/43111221
             self.generate_hex_info()
 
+        if post_tweet and not settings.DEBUG and not self.regenerate_info:
+            send_tweet(self)
+
+        if self.regenerate_info:
+            self.regenerate_info = False
 
         super(Swatch, self).save(*args, **kwargs)
-
-        if post_tweet and not settings.DEBUG:
-            send_tweet(self)
 
 
     def __str__(self):

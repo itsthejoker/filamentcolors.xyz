@@ -32,6 +32,7 @@ urlpatterns = [
     path('library/', views.library, name='library'),
     path('swatch/<int:id>', views.swatch_detail, name='swatchdetail'),
     path('library/manufacturer/<int:id>', views.manufacturersort, name='manufacturersort'),
+    path('library/filament_type/<int:id>', views.typesort, name='typesort'),
     # path('printer/<int:id>', views.printer_detail, name='printerdetail'),
     path('about/', views.about_page, name='about'),
 ]

@@ -22,7 +22,12 @@
                             <li><a class="dropdown-item" href="/library/manufacturer/{{ m.id }}">{{ m.name }}</a></li>
                         {% endfor %}
                     </ul>
-                    <a class="dropdown-item" href="/library/sort/type">Filament Type</a>
+                    <a class="dropdown-item dropdown-toggle" href="#">Filament Type</a>
+                    <ul class="dropdown-menu">
+                        {% for t in filament_types %}
+                            <li><a class="dropdown-item" href="/library/filament_type/{{ t.id }}">{{ t.name }}</a></li>
+                        {% endfor %}
+                    </ul>
                     <a class="dropdown-item" href="/library/sort/color">Color</a>
                 </div>
             </li>

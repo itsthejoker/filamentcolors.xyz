@@ -10,6 +10,7 @@ from django.http import request
 from filamentcolors.colors import Color
 from filamentcolors.models import Manufacturer
 from filamentcolors.models import Swatch
+from filamentcolors.models import FilamentType
 
 cookie_name = "f"
 
@@ -71,5 +72,6 @@ def set_tasty_cookies(response):
 def build_data_dict(request):
     return {
         'search_prefill': request.GET.get('q', ''),
-        'manufacturers': Manufacturer.objects.all().order_by(Lower('name'))
+        'manufacturers': Manufacturer.objects.all().order_by(Lower('name')),
+        'filament_types': FilamentType.objects.all().order_by(Lower('name'))
     }

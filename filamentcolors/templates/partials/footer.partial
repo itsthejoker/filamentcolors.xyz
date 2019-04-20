@@ -1,26 +1,32 @@
+{% include 'partials/patreon_modal.partial' %}
+
 <footer class="page-footer pt-4">
     <div class="container my-3">
         <hr>
         <div class="row">
-            <div class="col-1"></div>
-            <div class="col-sm-2 text-center bump-down">
+            <div class="col-md-6 col-lg-2 text-center">
+                <button type="button" class="btn btn-secondary" data-toggle="modal" style="background: #f96854; border-color: #f96854; color: #ffffff" data-target="#patreonModal">
+                    I'm on Patreon!
+                </button>
+            </div>
+            <div class="col-md-6 col-lg-2 text-center bump-down">
                 <u><a href="/about">about</a></u>
             </div>
-            <div class="col-sm-2 text-center bump-down">
+            <div class="col-md-6 col-lg-2 text-center bump-down">
                 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
                     <img alt="Creative Commons License"
                          style="border-width:0"
                          src="https://i.creativecommons.org/l/by/4.0/88x31.png"/>
                 </a>
             </div>
-            <div class="col-sm-2 text-center bump-down">
+            <div class="col-md-6 col-lg-2 text-center bump-down">
                 <u><a href="https://twitter.com/filamentcolors" target="_blank">@filamentcolors</a></u>
             </div>
-            <div class="col-sm-2 text-center bump-down">
+            <div class="col-md-6 col-lg-2 text-center bump-down">
                 <u><a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank">source code
                     (github)</a></u>
             </div>
-            <div class="col-sm-3 text-center kofi-button bump-down">
+            <div class="col-md-6 col-lg-2 text-center kofi-button bump-down">
                 <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script>
                 <script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee', '#007bff', 'C0C2QOVZ');
                 kofiwidget2.draw();</script>

@@ -1,0 +1,42 @@
+<div class="modal fade" id="patreonModal" tabindex="-1" role="dialog" aria-labelledby="patreonModal"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Support the site on Patreon!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Through donations, I can continue to add filaments to this site and
+                    keep it running. It doesn't require much -- just a few dollars every
+                    now and then -- so everything beyond what I need for the servers goes
+                    towards finding new filaments to add, either ones that I just don't
+                    have or ones that are recommended to me.
+                </p>
+                <p>
+                    If you like this site and the service that I provide enough, I ask that
+                    you consider a small donation or perhaps subscribing to my Patreon.
+                    Everything helps, and I won't bore you with the same spiel you've likely
+                    heard a million times; just know that I appreciate the fact that you're
+                    even reading this.
+                </p>
+                <p>
+                    Awesome Supporters List:
+                    <ul>
+                        <li>Barry Edwards, Baer's Garage</li>
+                    </ul>
+                </p>
+                <p>
+                    <a href="https://www.patreon.com/bePatron?u=19146975" target="_blank" class="btn btn-block btn-secondary"
+                       style="background: #f96854; border-color: #f96854; color: #ffffff">Join me on Patreon!</a>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -43,6 +43,16 @@ class FilamentType(models.Model):
         return self.name
 
 
+class GenericFile(models.Model):
+    # used for storing files like PDFs so that I can link to them
+    # from other parts of the site
+
+    file = models.FileField()
+
+    def __str__(self):
+        return self.file.name
+
+
 class Swatch(models.Model):
     manufacturer = models.ForeignKey(
         Manufacturer, on_delete=models.CASCADE, null=True, blank=True

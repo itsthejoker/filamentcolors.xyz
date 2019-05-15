@@ -412,6 +412,7 @@ class Swatch(models.Model):
             self.update_tetradic_swatches()
             self.update_square_swatches()
             self.last_cache_update = timezone.now()
+            self.save()
 
     def save(self, *args, **kwargs):
         post_tweet = False

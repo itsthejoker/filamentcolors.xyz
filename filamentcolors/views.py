@@ -4,7 +4,6 @@ from django.shortcuts import render_to_response
 from django.shortcuts import reverse
 from django.http import Http404
 
-from filamentcolors.helpers import get_complement_swatch
 from filamentcolors.helpers import get_hsv
 from filamentcolors.helpers import set_tasty_cookies
 from filamentcolors.helpers import show_welcome_modal
@@ -132,9 +131,12 @@ def swatch_detail(request, id):
     if not swatch:
         raise Http404
     else:
-        c_swatch = get_complement_swatch(swatch)
 
-        data.update({'swatch': swatch, 'c_swatch': c_swatch})
+        swatch.refresh_cache_if_needed()
+
+        data.update(
+            {'swatch': swatch}
+        )
 
         if show_welcome_modal(request):
             data.update({'launch_welcome_modal': True})

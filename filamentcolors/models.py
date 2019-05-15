@@ -3,7 +3,12 @@ from io import BytesIO
 
 import cv2
 import numpy as np
+import pytz
 from PIL import Image as Img
+from colormath.color_conversions import convert_color
+from colormath.color_diff import delta_e_cmc
+from colormath.color_objects import LabColor
+from colormath.color_objects import sRGBColor
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
@@ -13,6 +18,7 @@ from django.db import models
 from django.utils import timezone
 from skimage import io
 
+from filamentcolors.colors import Color
 from filamentcolors.twitter_helpers import send_tweet
 
 
@@ -74,9 +80,72 @@ class Swatch(models.Model):
     printed_on = models.ForeignKey(Printer, on_delete=models.CASCADE)
     maker = models.ForeignKey(User, on_delete=models.CASCADE)
     date_added = models.DateTimeField(default=timezone.now)
+    last_cache_update = models.DateTimeField(
+        default=pytz.timezone('UTC').localize(
+            timezone.datetime(year=1969, month=1, day=1)
+        )
+    )
     notes = models.TextField(max_length=4000, null=True, blank=True)
     amazon_purchase_link = models.URLField(null=True, blank=True)
     mfr_purchase_link = models.URLField(null=True, blank=True)
+
+    complement = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE,
+        related_name="complement_swatch"
+    )
+
+    analogous_1 = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE,
+        related_name="analogous_one_swatch"
+    )
+    analogous_2 = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE,
+        related_name="analogous_two_swatch"
+    )
+
+    triadic_1 = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE,
+        related_name="triadic_one_swatch"
+    )
+    triadic_2 = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE,
+        related_name="triadic_two_swatch"
+    )
+
+    split_complement_1 = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE,
+        related_name="split_complement_one_swatch"
+    )
+    split_complement_2 = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE,
+        related_name="split_complement_two_swatch"
+    )
+
+    tetradic_1 = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE,
+        related_name="tetradic_one_swatch"
+    )
+    tetradic_2 = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE,
+        related_name="tetradic_two_swatch"
+    )
+    tetradic_3 = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE,
+        related_name="tetradic_three_swatch"
+    )
+
+    square_1 = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE,
+        related_name="square_one_swatch"
+    )
+    square_2 = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE,
+        related_name="square_two_swatch"
+    )
+    square_3 = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE,
+        related_name="square_three_swatch"
+    )
 
     # !!!!!!!!!!!!!!!!!!!!!!!!
     # DO NOT PUT ANYTHING IN THESE FIELDS!
@@ -94,8 +163,8 @@ class Swatch(models.Model):
     complement_hex = models.CharField(
         max_length=6, blank=True, verbose_name="DO NOT ADD! Computed Complement Hex"
     )
-    # !!!!!!!!!!!!!!!!!!!!!!!!
 
+    # !!!!!!!!!!!!!!!!!!!!!!!!
 
     @property
     def date_added_date(self):
@@ -221,6 +290,129 @@ class Swatch(models.Model):
         self.hex_color = self.get_hex(dominant)
         self.complement_hex = self.get_complement(self.hex_color)
 
+    def _get_closest_color_swatch(self, color_to_match: LabColor):
+        distance_dict = dict()
+        swatches = Swatch.objects.all()
+        for item in swatches:
+            possible_color = convert_color(
+                sRGBColor.new_from_rgb_hex(item.hex_color), LabColor
+            )
+
+            distance = delta_e_cmc(color_to_match, possible_color)
+
+            distance_dict.update({item: distance})
+
+        distance_dict = {
+            i: distance_dict[i] for i in distance_dict
+            if distance_dict[i] is not None
+        }
+
+        sorted_distance_list = sorted(distance_dict.items(), key=lambda kv: kv[1])
+
+        try:
+            return sorted_distance_list[0][0]
+        except IndexError:
+            return None
+
+    def update_complement_swatch(self):
+        """
+        It's important to note that this will attempt to find the closest swatch
+        in the library to the complement color. It is entirely possible that this
+        will fail miserably and hilariously, because color is really, really hard.
+        """
+        complement = Color(self.hex_color).complementary()[1]
+        complement = convert_color(
+            sRGBColor.new_from_rgb_hex(str(complement)), LabColor
+        )
+
+        self.complement = self._get_closest_color_swatch(complement)
+
+    def update_analogous_swatches(self):
+        analogous = Color(self.hex_color).analagous()
+        a_1 = convert_color(
+            sRGBColor.new_from_rgb_hex(str(analogous[1])), LabColor
+        )
+        a_2 = convert_color(
+            sRGBColor.new_from_rgb_hex(str(analogous[2])), LabColor
+        )
+
+        self.analogous_1 = self._get_closest_color_swatch(a_1)
+        self.analogous_2 = self._get_closest_color_swatch(a_2)
+
+    def update_triadic_swatches(self):
+        triadic = Color(self.hex_color).triadic()
+        t_1 = convert_color(
+            sRGBColor.new_from_rgb_hex(str(triadic[1])), LabColor
+        )
+        t_2 = convert_color(
+            sRGBColor.new_from_rgb_hex(str(triadic[2])), LabColor
+        )
+
+        self.triadic_1 = self._get_closest_color_swatch(t_1)
+        self.triadic_2 = self._get_closest_color_swatch(t_2)
+
+    def update_split_complement_swatches(self):
+        split_c = Color(self.hex_color).split_complementary()
+        s_1 = convert_color(
+            sRGBColor.new_from_rgb_hex(str(split_c[1])), LabColor
+        )
+        s_2 = convert_color(
+            sRGBColor.new_from_rgb_hex(str(split_c[2])), LabColor
+        )
+
+        self.split_complement_1 = self._get_closest_color_swatch(s_1)
+        self.split_complement_2 = self._get_closest_color_swatch(s_2)
+
+    def update_tetradic_swatches(self):
+        tetradic = Color(self.hex_color).tetradic()
+        t_1 = convert_color(
+            sRGBColor.new_from_rgb_hex(str(tetradic[1])), LabColor
+        )
+        t_2 = convert_color(
+            sRGBColor.new_from_rgb_hex(str(tetradic[2])), LabColor
+        )
+        t_3 = convert_color(
+            sRGBColor.new_from_rgb_hex(str(tetradic[3])), LabColor
+        )
+
+        self.tetradic_1 = self._get_closest_color_swatch(t_1)
+        self.tetradic_2 = self._get_closest_color_swatch(t_2)
+        self.tetradic_3 = self._get_closest_color_swatch(t_3)
+
+    def update_square_swatches(self):
+        square = Color(self.hex_color).square()
+        s_1 = convert_color(
+            sRGBColor.new_from_rgb_hex(str(square[1])), LabColor
+        )
+        s_2 = convert_color(
+            sRGBColor.new_from_rgb_hex(str(square[2])), LabColor
+        )
+        s_3 = convert_color(
+            sRGBColor.new_from_rgb_hex(str(square[3])), LabColor
+        )
+
+        self.square_1 = self._get_closest_color_swatch(s_1)
+        self.square_2 = self._get_closest_color_swatch(s_2)
+        self.square_3 = self._get_closest_color_swatch(s_3)
+
+    def refresh_cache_if_needed(self) -> None:
+        """
+        Because we're caching all the color swatches on every entry in the db,
+        we need to know if we should refresh these from time to time. We can
+        check by seeing the last time we added a swatch to the library; if the
+        cache hasn't been updated since we've added a new swatch, go ahead and
+        update all the entries.
+        """
+        latest_swatch = Swatch.objects.latest('date_added')
+        if latest_swatch.date_added > self.last_cache_update:
+            self.update_complement_swatch()
+            self.update_analogous_swatches()
+            self.update_triadic_swatches()
+            self.update_split_complement_swatches()
+            self.update_tetradic_swatches()
+            self.update_square_swatches()
+            self.last_cache_update = timezone.now()
+
     def save(self, *args, **kwargs):
         post_tweet = False
 
@@ -249,7 +441,6 @@ class Swatch(models.Model):
             self.regenerate_info = False
 
         super(Swatch, self).save(*args, **kwargs)
-
 
     def __str__(self):
         try:

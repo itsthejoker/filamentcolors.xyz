@@ -109,3 +109,6 @@ migrations/
 static/
 images/
 .DS_Store
+
+filamentcolors/tools/*
+filamentcolors/*.jpg

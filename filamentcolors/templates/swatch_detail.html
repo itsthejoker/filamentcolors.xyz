@@ -4,7 +4,8 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:creator" content="@filamentcolors">
 <meta name="twitter:site" content="@filamentcolors">
-<meta name="twitter:title" content="{{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}">
+<meta name="twitter:title"
+      content="{{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}">
 <meta name="twitter:description" content="{{ swatch.notes }}">
 <meta name="twitter:image:src" content="https://filamentcolors.xyz{{ swatch.card_img.url }}">
 <meta name="twitter:image:width" content="280">
@@ -119,47 +120,59 @@
                     <hr>
                 </div>
                 <div class="row border-between">
-                    <div class="col-sm-6">
+                    <div class="col-lg-6">
                         Pure complement:
                         <div class="container text-center">
                             <div class="big-color-cube" style="background-color:#{{ swatch.complement_hex }};"></div>
                             <div>#{{ swatch.complement_hex }}</div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        {% if c_swatch %}
+                    <div class="col-lg-6">
+                        {% if swatch.complement %}
                             Closest match:
                             <div class="container text-center bump-down">
-                                <a style="display:block" class="complement-box" href="/swatch/{{ c_swatch.id }}">
-                                    <h6>{{ c_swatch.manufacturer.name }}
-                                        - {{ c_swatch.color_name }} {{ c_swatch.filament_type.name }}</h6>
+                                <a style="display:block" class="complement-box"
+                                   href="/swatch/{{ swatch.complement.id }}">
+                                    <h6>{{ swatch.complement.manufacturer.name }}
+                                        - {{ swatch.complement.color_name }} {{ swatch.complement.filament_type.name }}</h6>
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="big-color-cube"
-                                                 style="background-color:#{{ c_swatch.hex_color }}; float:right; left: 1em; bottom: 0.5em;"></div>
+                                                 style="background-color:#{{ swatch.complement.hex_color }}; float:right; left: 1em; bottom: 0.5em;"></div>
                                         </div>
                                         <div class="col-6 text-left">
-                                            #{{ c_swatch.hex_color }}
+                                            #{{ swatch.complement.hex_color }}
                                         </div>
                                     </div>
                                 </a>
-                                <div style="font-size: smaller;"><a href="/about/#why-is-color-hard"
-                                                                    style="color: LightGray"><u>why is this probably wrong?</u></a></div>
+                                <div style="font-size: smaller;">
+                                    <a href="/about/#why-is-color-hard" style="color: LightGray">
+                                        <u>why is this probably wrong?</u>
+                                    </a>
+                                </div>
                             </div>
-
                         {% endif %}
-                        {% if not c_swatch %}
+                        {% if not swatch.complement %}
                             No swatch was found in the library that comes close to this color. Sorry!
                         {% endif %}
                     </div>
                 </div>
+                <div class="row bump-down">
+                    <div class="col-1"></div>
+                    <div class="col-10 bump-down">
+                        <button type="button" class="btn btn-outline-secondary btn-block bump-down" data-toggle="modal"
+                                data-target=".bd-example-modal-lg">Click here for more color combinations!
+                        </button>
+                    </div>
+                    <div class="col-1"></div>
+                </div>
             </div>
         </div>
     {% endif %}
-</div>
 
-<script>
-    baguetteBox.run('.grid-gallery', {animation: 'slideIn'});
-</script>
+    <script>
+        baguetteBox.run('.grid-gallery', {animation: 'slideIn'});
+    </script>
 
-{% include 'partials/footer.partial' %}
+    {% include 'partials/color-scheme-modal.partial' %}
+    {% include 'partials/footer.partial' %}

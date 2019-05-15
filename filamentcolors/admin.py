@@ -9,6 +9,21 @@ from filamentcolors.models import Swatch
 
 class SwatchAdmin(admin.ModelAdmin):
     ordering = ('manufacturer__name',)
+    exclude = (
+        'complement',
+        'analogous_1',
+        'analogous_2',
+        'triadic_1',
+        'triadic_2',
+        'split_complement_1',
+        'split_complement_2',
+        'tetradic_1',
+        'tetradic_2',
+        'tetradic_3',
+        'square_1',
+        'square_2',
+        'square_3',
+    )
 
 
 class PrinterAdmin(admin.ModelAdmin):

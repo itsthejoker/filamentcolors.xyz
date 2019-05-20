@@ -11,6 +11,7 @@ from filamentcolors.models import Printer
 from filamentcolors.models import Swatch
 from filamentcolors.models import FilamentType
 from filamentcolors.helpers import build_data_dict
+from filamentcolors.helpers import clean_collection_ids
 
 
 def homepage(request):
@@ -168,13 +169,7 @@ def swatch_collection(request, ids):
     """
     data = build_data_dict(request)
 
-    # filter out bad input
-    cleaned_ids = list()
-    for item in ids.split(','):
-        try:
-            cleaned_ids.append(int(item))
-        except ValueError:
-            continue
+    cleaned_ids = clean_collection_ids(ids)
 
     swatch_collection = list()
 
@@ -183,10 +178,33 @@ def swatch_collection(request, ids):
         if result:
             swatch_collection.append(result)
 
-    data.update({'swatches': swatch_collection})
+    data.update(
+        {
+            'swatches': swatch_collection,
+            'collection_ids': ','.join([str(i) for i in cleaned_ids])
+        }
+    )
 
     return render(request, 'library.html', data)
 
+
+def edit_swatch_collection(request, ids):
+    html = 'library.html'
+    data = build_data_dict(request)
+    cleaned_ids = clean_collection_ids(ids)
+
+    data.update({'preselect_collection': cleaned_ids})
+    data.update({
+        'swatches': Swatch.objects.all().order_by('-date_added'),
+    })
+
+    if show_welcome_modal(request):
+        data.update({'launch_welcome_modal': True})
+        response = render_to_response(html, data)
+        set_tasty_cookies(response)
+        return response
+
+    return render(request, html, data)
 
 def about_page(request):
     html = 'about.html'

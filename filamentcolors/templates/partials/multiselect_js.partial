@@ -1,7 +1,14 @@
 <div class="collection-buttons way-off-screen" id="collection-buttons">
     <h2><span id="multiselect-badge" class="badge badge-secondary">0</span></h2>
     <p></p>
-    <button type="button" id="go-button" class="btn shadow-lg btn-primary">Create Collection</button>
+    <button type="button" id="go-button" class="btn shadow-lg btn-primary">
+        {% if preselect_collection %}
+            Update Collection
+        {% endif %}
+        {% if not preselect_collection %}
+            Create Collection
+        {% endif %}
+    </button>
     <p></p>
     <button type="button" id="clear-button" class="btn shadow-lg btn-outline-primary">Unselect All</button>
 </div>
@@ -15,6 +22,11 @@
 
     function updateCounter() {
         document.getElementById("multiselect-badge").innerText = window.multiselectArray.length;
+    }
+
+    function preselect_items(ids) {
+        console.log(ids);
+        ids.forEach(item => $('#'+item+' .multiselector')[0].click());
     }
 
     const eventContract = new jsaction.EventContract();
@@ -114,9 +126,10 @@
         d = document.getElementById("collection-buttons");
         d.setAttribute('class', 'collection-buttons slide-out-left');
     });
-
     $(document).ready(function () {
         window.multiselectArray = [];
-        filterStuff();
+        {% if preselect_collection %}
+            preselect_items({{ preselect_collection }});
+        {% endif %}
     });
 </script>

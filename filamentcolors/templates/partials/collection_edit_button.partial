@@ -1,0 +1,12 @@
+<div class="container ">
+    <p></p>
+    <div class="row">
+        <div class="col-1 col-md-3"></div>
+        <div class="col-10 col-md-6">
+            <a href="/library/collection/edit/{{ collection_ids }}"
+               class="btn bump-down btn-outline-primary btn-block">Edit this collection!</a>
+        </div>
+        <div class="col-1 col-md-3"></div>
+
+    </div>
+</div>

@@ -1,4 +1,5 @@
 import colorsys
+from typing import List
 
 from django.db.models.functions import Lower
 from django.http import request
@@ -34,3 +35,13 @@ def build_data_dict(request):
         'manufacturers': Manufacturer.objects.all().order_by(Lower('name')),
         'filament_types': FilamentType.objects.all().order_by(Lower('name'))
     }
+
+def clean_collection_ids(ids: str) -> List:
+    # filter out bad input
+    cleaned_ids = list()
+    for item in ids.split(','):
+        try:
+            cleaned_ids.append(int(item))
+        except ValueError:
+            continue
+    return cleaned_ids

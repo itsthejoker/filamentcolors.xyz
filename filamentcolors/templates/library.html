@@ -15,6 +15,10 @@
 
 {% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
 
+{% if collection_ids %}
+    {% include 'partials/collection_edit_button.partial' %}
+{% endif %}
+
 <div class="container mt-4">
 
     <div class="card-deck" id="deck-of-many-things">

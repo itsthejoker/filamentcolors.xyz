@@ -28,6 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.homepage, name='homepage'),
     path('library/sort/<str:method>/', views.librarysort, name='librarysort'),
+    path('library/collection/edit/<str:ids>/', views.edit_swatch_collection, name='edit_collection'),
     path('library/collection/<str:ids>/', views.swatch_collection, name='swatchcollection'),
     path('library/', views.library, name='library'),
     path('swatch/<int:id>', views.swatch_detail, name='swatchdetail'),

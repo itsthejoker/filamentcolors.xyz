@@ -231,18 +231,39 @@ class Swatch(models.Model):
         # then add that file to the self.card_img attribute.
 
         # card image
-        cs_x = 150
-        cs_y = 900
+        cs_x = 1698
+        cs_y = 528
 
         # regular front image
-        cs_two_x = 0
-        cs_two_y = 50
+        cs_two_x = 1865
+        cs_two_y = 1399
 
         image = Img.open(self.image_front)
         back_image = Img.open(self.image_back)
-        img_card = image.crop((cs_x, cs_y, cs_x + 3396, cs_y + 1056))
-        img_front = image.crop((cs_two_x, cs_two_y, cs_two_x + 3731, cs_two_y + 2798))
-        img_back = back_image.crop((cs_two_x, cs_two_y, cs_two_x + 3731, cs_two_y + 2798))
+        img_card = image.crop(
+            (
+                (image.width - cs_x) / 2,
+                (image.height - cs_y) / 2,
+                cs_x + (image.width - cs_x) / 2,
+                cs_y + (image.height - cs_y) / 2
+            )
+        )
+        img_front = image.crop(
+            (
+                (image.width - cs_two_x) / 2,
+                (image.height - cs_two_y) / 2,
+                cs_two_x + (image.width - cs_two_x) / 2,
+                cs_two_y + (image.height - cs_two_y) / 2
+            )
+        )
+        img_back = back_image.crop(
+            (
+                (back_image.width - cs_two_x) / 2,
+                (back_image.height - cs_two_y) / 2,
+                cs_two_x + (back_image.width - cs_two_x) / 2,
+                cs_two_y + (back_image.height - cs_two_y) / 2
+            )
+        )
 
         filename_card = self._save_image(img_card, 'card')
         filename_front = self._save_image(img_front, 'front')

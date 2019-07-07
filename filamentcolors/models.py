@@ -231,8 +231,8 @@ class Swatch(models.Model):
         # then add that file to the self.card_img attribute.
 
         # card image
-        cs_x = 1698
-        cs_y = 528
+        cs_x = 1783
+        cs_y = 554
 
         # regular front image
         cs_two_x = 1865

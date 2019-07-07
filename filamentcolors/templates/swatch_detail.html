@@ -1,6 +1,7 @@
 {% include 'partials/bootstrap.partial' %}
 {% include 'partials/navbar.partial' %}
 
+{# twitter #}
 <meta name="twitter:card" content="summary">
 <meta name="twitter:creator" content="@filamentcolors">
 <meta name="twitter:site" content="@filamentcolors">
@@ -10,6 +11,13 @@
 <meta name="twitter:image:src" content="https://filamentcolors.xyz{{ swatch.card_img.url }}">
 <meta name="twitter:image:width" content="280">
 <meta name="twitter:image:height" content="150">
+
+{# facebook #}
+<meta property="og:title"
+      content="{{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}">
+<meta property="og:image" content="https://filamentcolors.xyz{{ swatch.card_img.url }}">
+<meta name="og:image:width" content="280">
+<meta name="og:image:height" content="150">
 
 {% if launch_welcome_modal %}
     {% include 'partials/welcome_modal.partial' %}

@@ -25,6 +25,7 @@ colormath = "^3.0"
 [tool.poetry.dev-dependencies]
 better-exceptions = "^0.2.1"
 ipdb = "^0.11.0"
+beautifulsoup4 = "^4.7"
 
 [build-system]
 requires = ["poetry>=0.12"]

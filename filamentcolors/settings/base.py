@@ -37,6 +37,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
 MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'appstatic')
+]
 
 
 # Application definition
@@ -131,3 +134,8 @@ USE_TZ = True
 
 # for smartfields
 SITE_ID = 1
+
+# see https://github.com/django-compressor/django-compressor/issues/720#issuecomment-211633171
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+)

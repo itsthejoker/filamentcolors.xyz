@@ -31,6 +31,7 @@ intro_phrases = [
     "Colors ahoy!",
     "Swatches abound!",
     "A new color!",
+    "Gadzooks!",
 ]
 
 outro_phrases = [

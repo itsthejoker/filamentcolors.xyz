@@ -456,13 +456,24 @@ class Swatch(models.Model):
             # lovingly ripped from https://stackoverflow.com/a/43111221
             self.generate_hex_info()
 
-        if post_tweet and not settings.DEBUG and not self.regenerate_info:
-            send_tweet(self)
-
         if self.regenerate_info:
+            # the joys of using flags on the models themselves. Because
+            # this is only triggered from the admin panel, we treat it
+            # like a button. If it's pushed, we do stuff. We have to reset
+            # regenerate_info back to false before we save the model,
+            # otherwise it will get stuck like that and the tweet will
+            # never fire.
             self.regenerate_info = False
+            regenerate_info_tweet_bypass = True
+        else:
+            regenerate_info_tweet_bypass = False
 
         super(Swatch, self).save(*args, **kwargs)
+
+        if post_tweet and not settings.DEBUG and not regenerate_info_tweet_bypass:
+            # have to save the model before we can send the tweet, otherwise
+            # we won't have a swatch ID.
+            send_tweet(self)
 
     def __str__(self):
         try:

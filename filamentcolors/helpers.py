@@ -5,7 +5,10 @@ from django.db.models.functions import Lower
 from django.http import request
 
 from filamentcolors.models import Manufacturer
-from filamentcolors.models import FilamentType
+from filamentcolors.models import GenericFilamentType
+from filamentcolors.models import Swatch
+from filamentcolors.models import GenericFile
+
 
 cookie_name = "f"
 
@@ -33,7 +36,13 @@ def build_data_dict(request):
     return {
         'search_prefill': request.GET.get('q', ''),
         'manufacturers': Manufacturer.objects.all().order_by(Lower('name')),
-        'filament_types': FilamentType.objects.all().order_by(Lower('name'))
+        'filament_types': GenericFilamentType.objects.all().order_by(Lower('name')),
+        'color_family': Swatch.BASE_COLOR_OPTIONS,
+        'welcome_experience_images': [
+            GenericFile.objects.filter(file__startswith=X).first() for X in [
+                'step1', 'step2', 'step3', 'step4'
+            ]
+        ]
     }
 
 def clean_collection_ids(ids: str) -> List:

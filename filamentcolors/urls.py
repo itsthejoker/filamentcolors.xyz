@@ -30,10 +30,11 @@ urlpatterns = [
     path('library/sort/<str:method>/', views.librarysort, name='librarysort'),
     path('library/collection/edit/<str:ids>/', views.edit_swatch_collection, name='edit_collection'),
     path('library/collection/<str:ids>/', views.swatch_collection, name='swatchcollection'),
-    path('library/', views.library, name='library'),
+    path('library/', views.librarysort, name='library'),
     path('swatch/<int:id>', views.swatch_detail, name='swatchdetail'),
     path('library/manufacturer/<int:id>', views.manufacturersort, name='manufacturersort'),
     path('library/filament_type/<int:id>', views.typesort, name='typesort'),
+    path('library/color_family/<str:family_id>', views.colorfamilysort, name='color_family_sort'),
     # path('printer/<int:id>', views.printer_detail, name='printerdetail'),
     path('about/', views.about_page, name='about'),
 ]

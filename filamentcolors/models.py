@@ -17,6 +17,7 @@ from django.core.files.storage import default_storage
 from django.db import models
 from django.utils import timezone
 from skimage import io
+from taggit.managers import TaggableManager
 
 from filamentcolors.colors import Color
 from filamentcolors.twitter_helpers import send_tweet
@@ -40,10 +41,20 @@ class Manufacturer(models.Model):
         return self.name
 
 
+class GenericFilamentType(models.Model):
+    name = models.CharField(max_length=24, default="PLA")
+
+    def __str__(self):
+        return self.name
+
+
 class FilamentType(models.Model):
     name = models.CharField(max_length=24, default="PLA")
     hot_end_temp = models.IntegerField(default=205)
     bed_temp = models.IntegerField(default=60)
+    parent_type = models.ForeignKey(
+        GenericFilamentType, blank=True, null=True, on_delete=models.DO_NOTHING
+    )
 
     def __str__(self):
         return self.name
@@ -60,6 +71,32 @@ class GenericFile(models.Model):
 
 
 class Swatch(models.Model):
+    WHITE = "WHT"
+    BLACK = "BLK"
+    RED = "RED"
+    GREEN = "GRN"
+    YELLOW = "YLW"
+    BLUE = "BLU"
+    BROWN = "BRN"
+    PURPLE = "PPL"
+    PINK = "PNK"
+    ORANGE = "RNG"
+    GREY = "GRY"
+
+    BASE_COLOR_OPTIONS = [
+        (WHITE, "White"),
+        (BLACK, "Black"),
+        (RED, "Red"),
+        (GREEN, "Green"),
+        (YELLOW, "Yellow"),
+        (BLUE, "Blue"),
+        (BROWN, "Brown"),
+        (PURPLE, "Purple"),
+        (PINK, "Pink"),
+        (ORANGE, "Orange"),
+        (GREY, "Grey")
+    ]
+
     manufacturer = models.ForeignKey(
         Manufacturer, on_delete=models.CASCADE, null=True, blank=True
     )
@@ -68,6 +105,10 @@ class Swatch(models.Model):
     # PLA, PETG, etc.
     filament_type = models.ForeignKey(
         FilamentType, on_delete=models.CASCADE, null=True, blank=True
+    )
+
+    color_parent = models.CharField(
+        max_length=3, choices=BASE_COLOR_OPTIONS, null=True, blank=True, default=WHITE
     )
 
     # full size images
@@ -90,62 +131,64 @@ class Swatch(models.Model):
     mfr_purchase_link = models.URLField(null=True, blank=True)
 
     complement = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE,
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
         related_name="complement_swatch"
     )
 
     analogous_1 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE,
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
         related_name="analogous_one_swatch"
     )
     analogous_2 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE,
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
         related_name="analogous_two_swatch"
     )
 
     triadic_1 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE,
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
         related_name="triadic_one_swatch"
     )
     triadic_2 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE,
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
         related_name="triadic_two_swatch"
     )
 
     split_complement_1 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE,
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
         related_name="split_complement_one_swatch"
     )
     split_complement_2 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE,
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
         related_name="split_complement_two_swatch"
     )
 
     tetradic_1 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE,
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
         related_name="tetradic_one_swatch"
     )
     tetradic_2 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE,
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
         related_name="tetradic_two_swatch"
     )
     tetradic_3 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE,
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
         related_name="tetradic_three_swatch"
     )
 
     square_1 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE,
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
         related_name="square_one_swatch"
     )
     square_2 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE,
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
         related_name="square_two_swatch"
     )
     square_3 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE,
+        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
         related_name="square_three_swatch"
     )
+
+    tags = TaggableManager()
 
     # !!!!!!!!!!!!!!!!!!!!!!!!
     # DO NOT PUT ANYTHING IN THESE FIELDS!

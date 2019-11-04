@@ -1,3 +1,5 @@
+import random
+
 from django.shortcuts import HttpResponseRedirect
 from django.shortcuts import render
 from django.shortcuts import render_to_response
@@ -9,7 +11,7 @@ from filamentcolors.helpers import set_tasty_cookies
 from filamentcolors.helpers import show_welcome_modal
 from filamentcolors.models import Printer
 from filamentcolors.models import Swatch
-from filamentcolors.models import FilamentType
+from filamentcolors.models import GenericFilamentType
 from filamentcolors.helpers import build_data_dict
 from filamentcolors.helpers import clean_collection_ids
 
@@ -18,30 +20,14 @@ def homepage(request):
     return HttpResponseRedirect(reverse('library'))
 
 
-def library(request):
-    html = 'library.html'
-    data = build_data_dict(request)
-
-    data.update({
-        'swatches': Swatch.objects.all().order_by('-date_added'),
-    })
-
-    if show_welcome_modal(request):
-        data.update({'launch_welcome_modal': True})
-        response = render_to_response(html, data)
-        set_tasty_cookies(response)
-        return response
-
-    return render(request, html, data)
-
-
-def librarysort(request, method: str):
+def librarysort(request, method: str=None):
     """
     Available options:
 
     'type'
     'date added' <-- default
     'manufacturer'
+    'random'
     'color'
 
     Credit for color sort: https://stackoverflow.com/a/8915267
@@ -61,6 +47,10 @@ def librarysort(request, method: str):
     elif method == 'manufacturer':
         items = items.order_by('manufacturer')
 
+    elif method == 'random':
+        items = list(items)
+        random.shuffle(items)
+
     elif method == 'color':
         items = sorted(items, key=get_hsv)
         data.update({'show_color_warning': True})
@@ -79,8 +69,25 @@ def librarysort(request, method: str):
     return render(request, html, data)
 
 
+def colorfamilysort(request, family_id):
+    html = 'library.html'
+
+    data = build_data_dict(request)
+
+    s = Swatch.objects.filter(color_parent=family_id)
+
+    data.update({'swatches': s})
+
+    if show_welcome_modal(request):
+        data.update({'launch_welcome_modal': True})
+        response = render_to_response(html, data)
+        set_tasty_cookies(response)
+        return response
+
+    return render(request, html, data)
+
+
 def manufacturersort(request, id):
-    items = Swatch.objects.all()
     html = 'library.html'
 
     data = build_data_dict(request)
@@ -107,12 +114,12 @@ def typesort(request, id):
     html = 'library.html'
     data = build_data_dict(request)
 
-    f_type = FilamentType.objects.filter(id=id).first()
+    f_type = GenericFilamentType.objects.filter(id=id).first()
 
     if not f_type:
         raise Http404
 
-    s = Swatch.objects.filter(filament_type=f_type)
+    s = Swatch.objects.filter(filament_type__parent_type=f_type)
 
     data.update({'swatches': s})
 

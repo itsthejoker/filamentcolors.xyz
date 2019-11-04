@@ -76,6 +76,10 @@ def colorfamilysort(request, family_id):
 
     s = Swatch.objects.filter(color_parent=family_id)
 
+    if len(s) == 0:
+        # There's no color family that matches the input. Something is wrong.
+        raise Http404
+
     data.update({'swatches': s})
 
     if show_welcome_modal(request):

@@ -190,7 +190,7 @@ class Swatch(models.Model):
         related_name="square_three_swatch"
     )
 
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     # !!!!!!!!!!!!!!!!!!!!!!!!
     # DO NOT PUT ANYTHING IN THESE FIELDS!

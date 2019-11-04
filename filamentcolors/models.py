@@ -82,6 +82,7 @@ class Swatch(models.Model):
     PINK = "PNK"
     ORANGE = "RNG"
     GREY = "GRY"
+    TRANSPARENT = "TRN"
 
     BASE_COLOR_OPTIONS = [
         (WHITE, "White"),
@@ -94,7 +95,8 @@ class Swatch(models.Model):
         (PURPLE, "Purple"),
         (PINK, "Pink"),
         (ORANGE, "Orange"),
-        (GREY, "Grey")
+        (GREY, "Grey"),
+        (TRANSPARENT, "Transparent")
     ]
 
     manufacturer = models.ForeignKey(

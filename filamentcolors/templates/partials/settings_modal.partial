@@ -25,11 +25,11 @@
                 </div>
                 <hr>
                 <div class="container">
-                    <h5>Show discontinued filaments?</h5>
+                    <h5>Show unavailable filaments?</h5>
                     <div class="btn-group btn-group-toggle container d-flex"
                          role="group"
                          data-toggle="buttons"
-                         id="showDiscontinuedSetting"
+                         id="showUnavailableSetting"
                     >
                         <label class="btn btn-outline-secondary active w-100" id="showDC">
                             <input type="radio" name="options" autocomplete="off" checked>Show
@@ -78,8 +78,8 @@
             $.cookie('show-types', fs, {path: '/', expires: 365});
 
             {# the radio selector #}
-            $.cookie('show-dc',
-                $("#showDiscontinuedSetting").children()[0].classList.contains("active"),
+            $.cookie('show-un',
+                $("#showUnavailableSetting").children()[0].classList.contains("active"),
                 {path: '/', expires: 365}
             );
 
@@ -98,7 +98,7 @@
 
     function loadSettings() {
         fsettings = $.cookie('show-types');
-        dsetting = $.cookie('show-dc');
+        dsetting = $.cookie('show-un');
 
         if (fsettings !== null) {
             $.each(fsettings.split("_").slice(0, -1), function (count, value) {

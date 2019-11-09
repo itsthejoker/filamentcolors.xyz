@@ -13,7 +13,7 @@ from filamentcolors.models import Swatch
 
 have_visited_before_cookie = "f"
 filament_type_settings_cookie = "show-types"
-show_discontinued_cookie = "show-dc"
+show_unavailable_cookie = "show-un"
 
 
 def show_welcome_modal(r: request):
@@ -67,7 +67,7 @@ def clean_collection_ids(ids: str) -> List:
 def get_settings_cookies(r: request) -> Dict:
     # both of these cookies are set by the javascript in the frontend.
     type_settings = r.COOKIES.get(filament_type_settings_cookie)
-    show_dc = r.COOKIES.get(show_discontinued_cookie)
+    show_dc = r.COOKIES.get(show_unavailable_cookie)
 
     if type_settings:
         # It will be in this format: `1-true_2-true_3-true_6-false_9-false_`
@@ -89,7 +89,7 @@ def get_settings_cookies(r: request) -> Dict:
 
     return {
         'types': types,
-        'show_discontinued': True if show_dc == "true" else False
+        'show_unavailable': True if show_dc == "true" else False
     }
 
 
@@ -106,7 +106,7 @@ def generate_custom_library(data: Dict):
     return not (
             len(data['user_settings']['types']) ==
             GenericFilamentType.objects.count() and
-            data['user_settings']['show_discontinued']
+            data['user_settings']['show_unavailable']
     )
 
 
@@ -115,8 +115,8 @@ def get_custom_library(data: Dict) -> QuerySet:
         filament_type__parent_type__in=data['user_settings']['types']
     )
     # TODO: THIS DOES NOT WORK
-    if data['user_settings']['show_discontinued'] is False:
-        s = s.filter(~Q(tags__name="discontinued"))
+    if data['user_settings']['show_unavailable'] is False:
+        s = s.filter(~Q(tags__name="unavailable"))
 
     return s
 

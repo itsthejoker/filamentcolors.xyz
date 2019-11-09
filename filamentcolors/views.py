@@ -9,11 +9,14 @@ from django.http import Http404
 from filamentcolors.helpers import get_hsv
 from filamentcolors.helpers import set_tasty_cookies
 from filamentcolors.helpers import show_welcome_modal
+from filamentcolors.helpers import get_custom_library
 from filamentcolors.models import Printer
 from filamentcolors.models import Swatch
 from filamentcolors.models import GenericFilamentType
 from filamentcolors.helpers import build_data_dict
 from filamentcolors.helpers import clean_collection_ids
+from filamentcolors.helpers import generate_custom_library
+from filamentcolors.helpers import get_swatches
 
 
 def homepage(request):
@@ -36,10 +39,10 @@ def librarysort(request, method: str=None):
     :param method: the string which determines how to sort the results.
     :return:
     """
-    items = Swatch.objects.all()
     html = 'library.html'
 
     data = build_data_dict(request)
+    items = get_swatches(data)
 
     if method == 'type':
         items = items.order_by('filament_type')
@@ -73,12 +76,9 @@ def colorfamilysort(request, family_id):
     html = 'library.html'
 
     data = build_data_dict(request)
+    s = get_swatches(data)
 
-    s = Swatch.objects.filter(color_parent=family_id)
-
-    if len(s) == 0:
-        # There's no color family that matches the input. Something is wrong.
-        raise Http404
+    s = s.filter(color_parent=family_id)
 
     data.update({'swatches': s})
 
@@ -95,8 +95,9 @@ def manufacturersort(request, id):
     html = 'library.html'
 
     data = build_data_dict(request)
+    s = get_swatches(data)
 
-    s = Swatch.objects.filter(manufacturer_id=id)
+    s = s.filter(manufacturer_id=id)
 
     if len(s) == 0:
         # No filaments found, and we shouldn't have a manufacturer
@@ -123,7 +124,12 @@ def typesort(request, id):
     if not f_type:
         raise Http404
 
-    s = Swatch.objects.filter(filament_type__parent_type=f_type)
+    if generate_custom_library(data):
+        s = get_custom_library(data)
+    else:
+        s = Swatch.objects.all()
+
+    s = s.filter(filament_type__parent_type=f_type)
 
     data.update({'swatches': s})
 
@@ -145,6 +151,8 @@ def swatch_detail(request, id):
     else:
 
         swatch.refresh_cache_if_needed()
+        if generate_custom_library(data):
+            swatch.update_all_color_matches(get_custom_library(data))
 
         data.update(
             {'swatch': swatch}

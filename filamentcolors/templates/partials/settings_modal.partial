@@ -1,0 +1,122 @@
+<div class="modal fade" tabindex="-1" role="dialog" id="settingsModal" aria-labelledby="Settings Menu">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Settings</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Whatever you change here will be saved locally; remember that whenever your browser
+                    cookies are cleared, these will have to be set again.
+                </p>
+                <hr>
+                <div class="container">
+                    <h5>Types of filament to display:</h5>
+                    <div class="btn-group-toggle container" data-toggle="button" id="filamentTypeSettings">
+                        {% for t in settings_buttons %}
+                            <label class="btn btn-outline-secondary active btn-block" id="{{ t.id }}">
+                                <input type="checkbox" checked autocomplete="off">{{ t.name }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <hr>
+                <div class="container">
+                    <h5>Show discontinued filaments?</h5>
+                    <div class="btn-group btn-group-toggle container d-flex"
+                         role="group"
+                         data-toggle="buttons"
+                         id="showDiscontinuedSetting"
+                    >
+                        <label class="btn btn-outline-secondary active w-100" id="showDC">
+                            <input type="radio" name="options" autocomplete="off" checked>Show
+                        </label>
+                        <label class="btn btn-outline-secondary w-100" id="hideDC">
+                            <input type="radio" name="options" autocomplete="off">Hide
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-primary"
+                        onclick="saveSettings()">
+                    Save changes
+                </button>
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="(function(){window.location.reload()})()"
+                        data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function saveSettings() {
+        el = $("#filamentTypeSettings");
+        let fs = "";
+        $.each(
+            el.children(), function (count, value) {
+                fs = fs + value.id + "-" + value.classList.contains("active") + "_";
+            });
+
+        if (fs.includes('true') === false) {
+            $.toast({
+                title: 'Error!',
+                content: 'It looks like all filament types have been disabled.' +
+                    ' Please enable at least one type.',
+                type: 'error',
+                delay: 3000
+            });
+        } else {
+            $.cookie('show-types', fs, {path: '/', expires: 365});
+
+            {# the radio selector #}
+            $.cookie('show-dc',
+                $("#showDiscontinuedSetting").children()[0].classList.contains("active"),
+                {path: '/', expires: 365}
+            );
+
+            $.toast({
+                title: 'Success!',
+                content: 'Settings updated!',
+                type: 'success',
+                delay: 3000
+            });
+        }
+    }
+
+    function updateSettings() {
+        console.log('updateSettings called')
+    }
+
+    function loadSettings() {
+        fsettings = $.cookie('show-types');
+        dsetting = $.cookie('show-dc');
+
+        if (fsettings !== null) {
+            $.each(fsettings.split("_").slice(0, -1), function (count, value) {
+                var [id, bool] = value.split('-');
+                if (bool === "false") {
+                    $("#filamentTypeSettings #" + id).button('toggle')
+                }
+            })
+        }
+
+        if (dsetting !== null) {
+            if (dsetting === "false") {
+                a = $("#showDC");
+                a.toggleClass('active');
+                a.siblings().toggleClass('active');
+            }
+        }
+    }
+
+    $(document).ready(loadSettings());
+</script>

@@ -1,6 +1,6 @@
-{% include 'partials/bootstrap.partial' %}
-{% include 'partials/navbar.partial' %}
+{% extends "base.html" %}
 
+{% block content %}
 {# twitter #}
 <meta name="twitter:card" content="summary">
 <meta name="twitter:creator" content="@filamentcolors">
@@ -18,10 +18,6 @@
 <meta property="og:image" content="https://filamentcolors.xyz{{ swatch.card_img.url }}">
 <meta name="og:image:width" content="280">
 <meta name="og:image:height" content="150">
-
-{% if launch_welcome_modal %}
-    {% include 'partials/welcome_modal.partial' %}
-{% endif %}
 
 <div class="container mt-3">
     {% if error %}
@@ -161,19 +157,25 @@
                             </div>
                         {% endif %}
                         {% if not swatch.complement %}
+                            <p></p>
                             No swatch was found in the library that comes close to this color. Sorry!
                         {% endif %}
                     </div>
                 </div>
-                <div class="row bump-down">
-                    <div class="col-1"></div>
-                    <div class="col-10 bump-down">
-                        <button type="button" class="btn btn-outline-secondary btn-block bump-down" data-toggle="modal"
-                                data-target=".bd-example-modal-lg">Click here for more color combinations!
-                        </button>
+                {% if swatch.complement %}
+                    {# This is just to make sure that if someone modifies their library to 0 #}
+                    {# swatches then the "show more colors" section won't explode. #}
+                    <div class="row bump-down">
+                        <div class="col-1"></div>
+                        <div class="col-10 bump-down">
+                            <button type="button" class="btn btn-outline-secondary btn-block bump-down"
+                                    data-toggle="modal"
+                                    data-target=".bd-example-modal-lg">Click here for more color combinations!
+                            </button>
+                        </div>
+                        <div class="col-1"></div>
                     </div>
-                    <div class="col-1"></div>
-                </div>
+                {% endif %}
             </div>
         </div>
     {% endif %}
@@ -183,4 +185,4 @@
     </script>
 
     {% include 'partials/color-scheme-modal.partial' %}
-    {% include 'partials/footer.partial' %}
+{% endblock content %}

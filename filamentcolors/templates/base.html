@@ -1,0 +1,23 @@
+<head>
+    {% include 'partials/bootstrap.partial' %}
+    <title>FilamentColors</title>
+</head>
+
+{% include 'partials/navbar.partial' %}
+
+{% if launch_welcome_modal %}
+    {% include 'partials/welcome_modal.partial' %}
+{% endif %}
+
+{% if show_color_warning %}
+    {% include 'partials/color-warning.partial' %}
+{% endif %}
+
+{% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
+
+{% block content %}
+{% endblock content %}
+
+{% include 'partials/multiselect_js.partial' %}
+
+{% include 'partials/footer.partial' %}

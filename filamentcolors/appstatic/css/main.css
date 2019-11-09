@@ -436,3 +436,13 @@ body {
 .clickable {
     cursor: pointer;
 }
+
+.btn-outline-secondary:not(.active):hover:active {
+    background-color: white !important;
+    color: #6c757d;
+}
+
+.btn-outline-secondary:not(.active):hover {
+    background-color: white !important;
+    color: #6c757d;
+}

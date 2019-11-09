@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% include 'partials/bootstrap.partial' %}
-    <title>FilamentColors</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-{% include 'partials/navbar.partial' %}
-
+{% block content %}
 <div class="container text-center mt-5">
     <h4>Something went horribly wrong.</h4>
     <p>
@@ -18,7 +10,4 @@
     </p>
     <a class="btn btn-primary btn-lg" href="/library" role="button">Back to the library!</a>
 </div>
-
-{% include 'partials/footer.partial' %}
-</body>
-</html>
+{% endblock content %}

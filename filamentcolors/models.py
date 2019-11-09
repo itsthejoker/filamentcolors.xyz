@@ -1,5 +1,6 @@
 import os
 from io import BytesIO
+from typing import Dict, Tuple
 
 import cv2
 import numpy as np
@@ -15,6 +16,7 @@ from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
 from django.core.files.storage import default_storage
 from django.db import models
+from django.db.models.query import QuerySet
 from django.utils import timezone
 from skimage import io
 from taggit.managers import TaggableManager
@@ -212,10 +214,10 @@ class Swatch(models.Model):
     # !!!!!!!!!!!!!!!!!!!!!!!!
 
     @property
-    def date_added_date(self):
+    def date_added_date(self) -> str:
         return self.date_added.strftime("%b %d, %Y")
 
-    def get_rgb(self, hex: str) -> tuple:
+    def get_rgb(self, hex: str) -> Tuple[int, ...]:
         return tuple(int(hex[i:i + 2], 16) for i in (0, 2, 4))
 
     def get_hex(self, rgb: tuple) -> str:
@@ -227,7 +229,7 @@ class Swatch(models.Model):
             )
         )
 
-    def rgb_hilo(self, a, b, c):
+    def rgb_hilo(self, a: int, b: int, c: int) -> int:
         # courtesy of https://stackoverflow.com/a/40234924
         if c < b:
             b, c = c, b
@@ -237,7 +239,7 @@ class Swatch(models.Model):
             b, c = c, b
         return a + c
 
-    def get_complement(self, hex):
+    def get_complement(self, hex: str) -> str:
         r, g, b = self.get_rgb(hex)
         # courtesy of https://stackoverflow.com/a/40234924
         k = self.rgb_hilo(r, g, b)
@@ -258,7 +260,7 @@ class Swatch(models.Model):
         )
         return filename
 
-    def crop_and_save_images(self):
+    def crop_and_save_images(self) -> None:
         try:
             # first let's see if we even need to work on it
             this = Swatch.objects.get(id=self.id)
@@ -335,7 +337,7 @@ class Swatch(models.Model):
         self.card_img = ImageFile(open(path, 'rb'))
         self.card_img.name = filename
 
-    def generate_hex_info(self):
+    def generate_hex_info(self) -> None:
         self.card_img.file.seek(0)
         img = io.imread(self.card_img.file)
 
@@ -356,10 +358,10 @@ class Swatch(models.Model):
         self.hex_color = self.get_hex(dominant)
         self.complement_hex = self.get_complement(self.hex_color)
 
-    def _get_closest_color_swatch(self, color_to_match: LabColor):
+    def _get_closest_color_swatch(self, library: QuerySet, color_to_match: LabColor):
         distance_dict = dict()
-        swatches = Swatch.objects.all()
-        for item in swatches:
+
+        for item in library:
             possible_color = convert_color(
                 sRGBColor.new_from_rgb_hex(item.hex_color), LabColor
             )
@@ -380,20 +382,15 @@ class Swatch(models.Model):
         except IndexError:
             return None
 
-    def update_complement_swatch(self):
-        """
-        It's important to note that this will attempt to find the closest swatch
-        in the library to the complement color. It is entirely possible that this
-        will fail miserably and hilariously, because color is really, really hard.
-        """
+    def update_complement_swatch(self, l):
         complement = Color(self.hex_color).complementary()[1]
         complement = convert_color(
             sRGBColor.new_from_rgb_hex(str(complement)), LabColor
         )
 
-        self.complement = self._get_closest_color_swatch(complement)
+        self.complement = self._get_closest_color_swatch(l, complement)
 
-    def update_analogous_swatches(self):
+    def update_analogous_swatches(self, l):
         analogous = Color(self.hex_color).analagous()
         a_1 = convert_color(
             sRGBColor.new_from_rgb_hex(str(analogous[1])), LabColor
@@ -402,10 +399,10 @@ class Swatch(models.Model):
             sRGBColor.new_from_rgb_hex(str(analogous[2])), LabColor
         )
 
-        self.analogous_1 = self._get_closest_color_swatch(a_1)
-        self.analogous_2 = self._get_closest_color_swatch(a_2)
+        self.analogous_1 = self._get_closest_color_swatch(l, a_1)
+        self.analogous_2 = self._get_closest_color_swatch(l, a_2)
 
-    def update_triadic_swatches(self):
+    def update_triadic_swatches(self, l):
         triadic = Color(self.hex_color).triadic()
         t_1 = convert_color(
             sRGBColor.new_from_rgb_hex(str(triadic[1])), LabColor
@@ -414,10 +411,10 @@ class Swatch(models.Model):
             sRGBColor.new_from_rgb_hex(str(triadic[2])), LabColor
         )
 
-        self.triadic_1 = self._get_closest_color_swatch(t_1)
-        self.triadic_2 = self._get_closest_color_swatch(t_2)
+        self.triadic_1 = self._get_closest_color_swatch(l, t_1)
+        self.triadic_2 = self._get_closest_color_swatch(l, t_2)
 
-    def update_split_complement_swatches(self):
+    def update_split_complement_swatches(self, l):
         split_c = Color(self.hex_color).split_complementary()
         s_1 = convert_color(
             sRGBColor.new_from_rgb_hex(str(split_c[1])), LabColor
@@ -426,10 +423,10 @@ class Swatch(models.Model):
             sRGBColor.new_from_rgb_hex(str(split_c[2])), LabColor
         )
 
-        self.split_complement_1 = self._get_closest_color_swatch(s_1)
-        self.split_complement_2 = self._get_closest_color_swatch(s_2)
+        self.split_complement_1 = self._get_closest_color_swatch(l, s_1)
+        self.split_complement_2 = self._get_closest_color_swatch(l, s_2)
 
-    def update_tetradic_swatches(self):
+    def update_tetradic_swatches(self, l):
         tetradic = Color(self.hex_color).tetradic()
         t_1 = convert_color(
             sRGBColor.new_from_rgb_hex(str(tetradic[1])), LabColor
@@ -441,11 +438,11 @@ class Swatch(models.Model):
             sRGBColor.new_from_rgb_hex(str(tetradic[3])), LabColor
         )
 
-        self.tetradic_1 = self._get_closest_color_swatch(t_1)
-        self.tetradic_2 = self._get_closest_color_swatch(t_2)
-        self.tetradic_3 = self._get_closest_color_swatch(t_3)
+        self.tetradic_1 = self._get_closest_color_swatch(l, t_1)
+        self.tetradic_2 = self._get_closest_color_swatch(l, t_2)
+        self.tetradic_3 = self._get_closest_color_swatch(l, t_3)
 
-    def update_square_swatches(self):
+    def update_square_swatches(self, l):
         square = Color(self.hex_color).square()
         s_1 = convert_color(
             sRGBColor.new_from_rgb_hex(str(square[1])), LabColor
@@ -457,9 +454,9 @@ class Swatch(models.Model):
             sRGBColor.new_from_rgb_hex(str(square[3])), LabColor
         )
 
-        self.square_1 = self._get_closest_color_swatch(s_1)
-        self.square_2 = self._get_closest_color_swatch(s_2)
-        self.square_3 = self._get_closest_color_swatch(s_3)
+        self.square_1 = self._get_closest_color_swatch(l, s_1)
+        self.square_2 = self._get_closest_color_swatch(l, s_2)
+        self.square_3 = self._get_closest_color_swatch(l, s_3)
 
     def refresh_cache_if_needed(self) -> None:
         """
@@ -468,17 +465,28 @@ class Swatch(models.Model):
         check by seeing the last time we added a swatch to the library; if the
         cache hasn't been updated since we've added a new swatch, go ahead and
         update all the entries.
+
+        These will only be used if the user has the default settings on the
+        front end.
         """
         latest_swatch = Swatch.objects.latest('date_added')
         if latest_swatch.date_added > self.last_cache_update:
-            self.update_complement_swatch()
-            self.update_analogous_swatches()
-            self.update_triadic_swatches()
-            self.update_split_complement_swatches()
-            self.update_tetradic_swatches()
-            self.update_square_swatches()
+            library = Swatch.objects.all()
+            self.update_all_color_matches(library)
             self.last_cache_update = timezone.now()
             self.save()
+
+    def update_all_color_matches(self, library: QuerySet) -> None:
+        # NOTE: This does not save to the database!!! This is deliberate -
+        # we only want to save it if we're updating the defaults. Otherwise
+        # this allows us to modify the defaults out of any given library, built
+        # from the settings that the end user has requested.
+        self.update_complement_swatch(library)
+        self.update_analogous_swatches(library)
+        self.update_triadic_swatches(library)
+        self.update_split_complement_swatches(library)
+        self.update_tetradic_swatches(library)
+        self.update_square_swatches(library)
 
     def save(self, *args, **kwargs):
         post_tweet = False

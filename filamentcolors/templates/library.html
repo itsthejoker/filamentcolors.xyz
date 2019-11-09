@@ -1,33 +1,26 @@
-<head>
-    {% include 'partials/bootstrap.partial' %}
-    <title>FilamentColors</title>
-</head>
+{% extends "base.html" %}
 
-{% include 'partials/navbar.partial' %}
-
-{% if launch_welcome_modal %}
-    {% include 'partials/welcome_modal.partial' %}
-{% endif %}
-
-{% if show_color_warning %}
-    {% include 'partials/color-warning.partial' %}
-{% endif %}
-
-{% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
-
-{% if collection_ids %}
-    {% include 'partials/collection_edit_button.partial' %}
-{% endif %}
-
+{% block content %}
 <div class="container mt-4">
+    {% if swatches %}
+        <div class="card-deck" id="deck-of-many-things">
+            {% for s in swatches %}
+                {% include 'partials/card.partial' with obj=s %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="container text-center mt-5">
+            <h4>Hmm... there doesn't appear to be anything here.</h4>
+            <p></p>
+            <h4>Did you change your settings?
+                Try adjusting the types that are shown in the library.</h4>
+            <p></p>
+            <div class="btn btn-primary btn-lg"
+                 onclick="(function(){ $('#settingsModal').modal('show')})();" role="button">
+                Open Settings
+            </div>
+        </div>
+    {% endif %}
 
-    <div class="card-deck" id="deck-of-many-things">
-        {% for s in swatches %}
-            {% include 'partials/card.partial' with obj=s %}
-        {% endfor %}
-    </div>
 </div>
-
-{% include 'partials/multiselect_js.partial' %}
-
-{% include 'partials/footer.partial' %}
+{% endblock content %}

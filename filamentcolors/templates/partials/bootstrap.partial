@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="/static/css/main.css">
+<link rel="stylesheet" href="/static/js/toast/toast.min.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
@@ -12,6 +13,8 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 <script src="https://www.gstatic.com/jsaction/contract.js"></script>
 <script src="https://www.gstatic.com/jsaction/dispatcher.js"></script>
+<script src="/static/js/toast/toast.min.js"></script>
+<script src="/static/js/cookies/jquery.cookie.js"></script>
 
 <link rel="apple-touch-icon" sizes="180x180" href="/static/favicons/apple-touch-icon.png?v=QEJXGyWNR2">
 <link rel="icon" type="image/png" sizes="32x32" href="/static/favicons/favicon-32x32.png?v=QEJXGyWNR2">

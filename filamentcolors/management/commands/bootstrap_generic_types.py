@@ -10,10 +10,7 @@ class Command(BaseCommand):
             'PLA',
             'PETG',
             'ABS',
-            'ASA',
-            'TPU/TPE',
-            'Copolyester',
-            'PMMA',
+            'TPU / TPE',
             'Exotics'
         ]
 

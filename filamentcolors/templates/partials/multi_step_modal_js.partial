@@ -2,7 +2,6 @@
     let el = $('#welcomeExperienceContent');
     let steps = el.children();
     const parent = $('#welcomeExperience');
-    console.log(steps.length);
 
     function goToStep(num) {
         $.each(steps, function (index, item) {

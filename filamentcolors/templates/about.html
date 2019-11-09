@@ -1,10 +1,6 @@
-<head>
-    {% include 'partials/bootstrap.partial' %}
-    <title>FilamentColors</title>
-</head>
+{% extends "base.html" %}
 
-{% include 'partials/navbar.partial' %}
-
+{% block content %}
 <div class="container mt-4">
     <h4 id="problem">Problem:</h4>
     <p>
@@ -121,5 +117,4 @@
         under <u><a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a></u>.
     </p>
 </div>
-
-{% include 'partials/footer.partial' %}
+{% endblock content %}

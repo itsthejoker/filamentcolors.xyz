@@ -446,3 +446,8 @@ body {
     background-color: white !important;
     color: #6c757d;
 }
+
+.fix-margin {
+    margin-left: 0;
+    margin-right: 0;
+}

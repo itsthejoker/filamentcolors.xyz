@@ -14,6 +14,7 @@ from filamentcolors.models import Swatch
 have_visited_before_cookie = "f"
 filament_type_settings_cookie = "show-types"
 show_unavailable_cookie = "show-un"
+mfr_whitelist_cookie = "mfr-whitelist"
 
 
 def show_welcome_modal(r: request):
@@ -68,6 +69,7 @@ def get_settings_cookies(r: request) -> Dict:
     # both of these cookies are set by the javascript in the frontend.
     type_settings = r.COOKIES.get(filament_type_settings_cookie)
     show_dc = r.COOKIES.get(show_unavailable_cookie)
+    mfr_whitelist = r.COOKIES.get(mfr_whitelist_cookie)
 
     if type_settings:
         # It will be in this format: `1-true_2-true_3-true_6-false_9-false_`
@@ -87,9 +89,21 @@ def get_settings_cookies(r: request) -> Dict:
     else:
         types = GenericFilamentType.objects.all()
 
+    if mfr_whitelist:
+        # in this format: 1-2-3-12-5-8-
+        mfr_whitelist = mfr_whitelist.split('-')
+        if mfr_whitelist[-1] == '':
+            mfr_whitelist.pop()
+        mfr_whitelist = [
+            Manufacturer.objects.get(id=x) for x in mfr_whitelist
+        ]
+    else:
+        mfr_whitelist = Manufacturer.objects.all()
+
     return {
         'types': types,
-        'show_unavailable': True if show_dc == "true" else False
+        'show_unavailable': True if show_dc == "true" else False,
+        'mfr_whitelist': mfr_whitelist
     }
 
 
@@ -106,7 +120,9 @@ def generate_custom_library(data: Dict):
     return not (
             len(data['user_settings']['types']) ==
             GenericFilamentType.objects.count() and
-            data['user_settings']['show_unavailable']
+            data['user_settings']['show_unavailable'] and
+            len(data['user_settings']['mfr_whitelist']) ==
+            Manufacturer.objects.count()
     )
 
 
@@ -114,9 +130,10 @@ def get_custom_library(data: Dict) -> QuerySet:
     s = Swatch.objects.filter(
         filament_type__parent_type__in=data['user_settings']['types']
     )
-    # TODO: THIS DOES NOT WORK
     if data['user_settings']['show_unavailable'] is False:
         s = s.filter(~Q(tags__name="unavailable"))
+
+    s = s.filter(manufacturer__in=data['user_settings']['mfr_whitelist'])
 
     return s
 

@@ -124,10 +124,7 @@ def typesort(request, id):
     if not f_type:
         raise Http404
 
-    if generate_custom_library(data):
-        s = get_custom_library(data)
-    else:
-        s = Swatch.objects.all()
+    s = get_swatches(data)
 
     s = s.filter(filament_type__parent_type=f_type)
 

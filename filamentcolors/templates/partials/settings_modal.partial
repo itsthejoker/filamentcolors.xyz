@@ -39,18 +39,33 @@
                         </label>
                     </div>
                 </div>
+                <div id="advancedSettingsContainer">
+                    <hr>
+                    <div class="container">
+                        <h5>Show / Hide Specific Manufacturers</h5>
+                        <div class="row container fix-margin">
+                            {% for m in manufacturers %}
+                                <div class="btn-group-toggle col-sm-6 text-xs-center bump-down mfrSettings"
+                                     data-toggle="buttons">
+                                    <label class="btn btn-outline-secondary active btn-block" id="{{ m.id }}">
+                                        <input type="checkbox" checked="" autocomplete="off">{{ m.name }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-outline-secondary mr-auto"
+                        id="advancedSettingsButton"
+                        onclick="showHideAdvanced()">
+                    Advanced
+                </button>
                 <button type="button"
                         class="btn btn-primary"
                         onclick="saveSettings()">
                     Save changes
-                </button>
-                <button type="button"
-                        class="btn btn-secondary"
-                        onclick="(function(){window.location.reload()})()"
-                        data-dismiss="modal">
-                    Close
                 </button>
             </div>
         </div>
@@ -58,12 +73,30 @@
 </div>
 
 <script>
+    function showHideAdvanced() {
+        el = $("#advancedSettingsContainer");
+        el.toggle();
+        btn = $("#advancedSettingsButton");
+        btn.toggleClass("active")
+    }
+
     function saveSettings() {
         el = $("#filamentTypeSettings");
         let fs = "";
+
+        mfr = $(".mfrSettings");
+        let mfr_list = "";
+
         $.each(
             el.children(), function (count, value) {
                 fs = fs + value.id + "-" + value.classList.contains("active") + "_";
+            });
+
+        $.each(
+            mfr.children(), function (count, value) {
+                if (value.classList.contains("active")) {
+                    mfr_list = mfr_list + value.id + "-"
+                }
             });
 
         if (fs.includes('true') === false) {
@@ -74,31 +107,37 @@
                 type: 'error',
                 delay: 3000
             });
-        } else {
-            $.cookie('show-types', fs, {path: '/', expires: 365});
+            return
+        }
 
-            {# the radio selector #}
-            $.cookie('show-un',
-                $("#showUnavailableSetting").children()[0].classList.contains("active"),
-                {path: '/', expires: 365}
-            );
-
+        if (mfr_list === "") {
             $.toast({
-                title: 'Success!',
-                content: 'Settings updated!',
-                type: 'success',
+                title: 'Error!',
+                content: 'It looks like all manufacturers have been disabled.' +
+                    ' Please enable at least one.',
+                type: 'error',
                 delay: 3000
             });
+            return
         }
-    }
+        $.cookie('show-types', fs, {path: '/', expires: 365});
 
-    function updateSettings() {
-        console.log('updateSettings called')
+        // the radio selector
+        $.cookie('show-un',
+            $("#showUnavailableSetting").children()[0].classList.contains("active"),
+            {path: '/', expires: 365}
+        );
+
+        $.cookie('mfr-whitelist', mfr_list, {path: '/', expires: 365});
+
+        // settings have been saved, time to actually load them
+        window.location.reload();
     }
 
     function loadSettings() {
         fsettings = $.cookie('show-types');
         dsetting = $.cookie('show-un');
+        msettings = $.cookie('mfr-whitelist');
 
         if (fsettings !== null) {
             $.each(fsettings.split("_").slice(0, -1), function (count, value) {
@@ -116,7 +155,23 @@
                 a.siblings().toggleClass('active');
             }
         }
+
+        if (msettings !== null) {
+            // a hyphen separated list of ids
+            console.log(msettings);
+            ids = msettings.split("-").slice(0, -1);
+            console.log(ids);
+            $.each($(".mfrSettings").children(), function (count, value) {
+                if (ids.indexOf(value.id) === -1) {
+                    $(".mfrSettings").find('#' + value.id).button('toggle')
+                }
+            })
+        }
     }
 
-    $(document).ready(loadSettings());
+    $(document).ready(function () {
+        loadSettings();
+        // hide the advanced settings
+        $("#advancedSettingsContainer").toggle()
+    });
 </script>

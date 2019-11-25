@@ -155,9 +155,10 @@
                 a.siblings().toggleClass('active');
             }
         }
-
-        if (msettings !== null || msettings !== undefined) {
-            // a hyphen separated list of ids
+        {# Using a single equals kills me here, but it CANNOT be a !== because #}
+        {# javascript sucks and it breaks. #}
+        if (msettings != null) {
+            {# a hyphen separated list of ids #}
             console.log(msettings);
             ids = msettings.split("-").slice(0, -1);
             console.log(ids);

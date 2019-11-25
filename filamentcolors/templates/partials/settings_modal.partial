@@ -156,7 +156,7 @@
             }
         }
 
-        if (msettings !== null) {
+        if (msettings !== null || true) {
             // a hyphen separated list of ids
             console.log(msettings);
             ids = msettings.split("-").slice(0, -1);

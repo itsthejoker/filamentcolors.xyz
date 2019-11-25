@@ -159,9 +159,7 @@
         {# javascript sucks and it breaks. #}
         if (msettings != null) {
             {# a hyphen separated list of ids #}
-            console.log(msettings);
             ids = msettings.split("-").slice(0, -1);
-            console.log(ids);
             $.each($(".mfrSettings").children(), function (count, value) {
                 if (ids.indexOf(value.id) === -1) {
                     $(".mfrSettings").find('#' + value.id).button('toggle')

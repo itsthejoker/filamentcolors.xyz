@@ -105,7 +105,6 @@ venv.bak/
 
 db.sqlite3
 .idea/
-migrations/
 static/
 images/
 .DS_Store

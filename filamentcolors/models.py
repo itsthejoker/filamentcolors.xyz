@@ -122,8 +122,6 @@ class Swatch(models.Model):
 
     regenerate_info = models.BooleanField(default=False)
 
-    printed_on = models.ForeignKey(Printer, on_delete=models.CASCADE)
-    maker = models.ForeignKey(User, on_delete=models.CASCADE)
     date_added = models.DateTimeField(default=timezone.now)
     last_cache_update = models.DateTimeField(
         default=pytz.timezone('UTC').localize(

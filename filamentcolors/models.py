@@ -1,15 +1,14 @@
 import os
 from io import BytesIO
-from typing import Dict, Tuple
+from typing import Tuple
 
-import cv2
-import numpy as np
 import pytz
 from PIL import Image as Img
 from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cmc
 from colormath.color_objects import LabColor
 from colormath.color_objects import sRGBColor
+from colorthief import ColorThief
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
@@ -18,7 +17,6 @@ from django.core.files.storage import default_storage
 from django.db import models
 from django.db.models.query import QuerySet
 from django.utils import timezone
-from skimage import io
 from taggit.managers import TaggableManager
 
 from filamentcolors.colors import Color
@@ -336,24 +334,8 @@ class Swatch(models.Model):
         self.card_img.name = filename
 
     def generate_hex_info(self) -> None:
-        self.card_img.file.seek(0)
-        img = io.imread(self.card_img.file)
-
-        pixels = np.float32(img.reshape(-1, 3))
-
-        n_colors = 5
-        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
-        flags = cv2.KMEANS_RANDOM_CENTERS
-
-        # this line is super painful in computation time. We kind of get
-        # around that by only having it parse the resized small card image;
-        # if it runs on the full-size image, it could take a minute or two
-        # to complete.
-        _, labels, palette = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
-        _, counts = np.unique(labels, return_counts=True)
-        dominant = palette[np.argmax(counts)]
-
-        self.hex_color = self.get_hex(dominant)
+        ct_image = ColorThief(self.card_img.path)
+        self.hex_color = self.get_hex(ct_image.get_color(quality=1))
         self.complement_hex = self.get_complement(self.hex_color)
 
     def _get_closest_color_swatch(self, library: QuerySet, color_to_match: LabColor):

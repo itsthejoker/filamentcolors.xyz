@@ -17,7 +17,7 @@ show_unavailable_cookie = "show-un"
 mfr_whitelist_cookie = "mfr-whitelist"
 
 
-def show_welcome_modal(r: request):
+def show_welcome_modal(r: request) -> bool:
     return False if r.COOKIES.get(have_visited_before_cookie) else True
 
 
@@ -31,13 +31,29 @@ def get_hsv(item):
     return colorsys.rgb_to_hsv(r, g, b)
 
 
-def set_tasty_cookies(response):
+def set_tasty_cookies(response) -> None:
     year = 365 * 24 * 60 * 60
     response.set_cookie(have_visited_before_cookie, 'tasty_cookies', max_age=year)
 
 
-def build_data_dict(request):
-    cookie_data = get_settings_cookies(request)
+def build_data_dict(request, library: bool=False) -> Dict:
+    """
+    Here's what these keys are used for:
+
+    search_prefill              |   prepopulate the filter bar at top of page
+    manufacturers               |   used to populate dropdown from navbar
+    filament_types              |   ...
+    color_family                |   ...
+    welcome_experience_images   |   the urls for the example images shown in
+                                |       "how to use the site" modals.
+    settings_buttons            |   model objects that power the settings page
+    user_settings               |   a dict pulled from the user's browser
+    is_library_view             |   a boolean; only show search bar on the library.
+
+    :param request: Request
+    :param library: bool
+    :return: dict
+    """
 
     return {
         'search_prefill': request.GET.get('q', ''),
@@ -51,6 +67,7 @@ def build_data_dict(request):
         ],
         'settings_buttons': GenericFilamentType.objects.all(),
         'user_settings': get_settings_cookies(request),
+        'is_library_view': library
     }
 
 
@@ -110,9 +127,12 @@ def get_settings_cookies(r: request) -> Dict:
 def generate_custom_library(data: Dict):
     """
     Return a boolean based on whether or not we actually need to generate
-    our own queryset to do matching from. The checks verify that nothing has
-    changed, so we need to return the inverse of that (for example, false
-    to show that we don't need to take any further action).
+    our own queryset to do matching from. The data here is from the user's
+    cookies that they send with the request, and their personal settings
+    for the site may be different from the way we natively want to render
+    it. The checks verify that nothing has changed, so we need to return
+    the inverse of that (for example, false to show that we don't need to
+    take any further action).
 
     :param data: Dict; the actual dict we'll use to build the templates.
     :return:

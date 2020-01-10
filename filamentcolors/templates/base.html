@@ -13,7 +13,9 @@
     {% include 'partials/color-warning.partial' %}
 {% endif %}
 
-{% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
+{% if is_library_view %}
+    {% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
+{% endif %}
 
 {% block content %}
 {% endblock content %}

@@ -41,7 +41,7 @@ def librarysort(request, method: str=None):
     """
     html = 'library.html'
 
-    data = build_data_dict(request)
+    data = build_data_dict(request, library=True)
     items = get_swatches(data)
 
     if method == 'type':
@@ -75,7 +75,7 @@ def librarysort(request, method: str=None):
 def colorfamilysort(request, family_id):
     html = 'library.html'
 
-    data = build_data_dict(request)
+    data = build_data_dict(request, library=True)
     s = get_swatches(data)
 
     s = s.filter(color_parent=family_id)
@@ -94,7 +94,7 @@ def colorfamilysort(request, family_id):
 def manufacturersort(request, id):
     html = 'library.html'
 
-    data = build_data_dict(request)
+    data = build_data_dict(request, library=True)
     s = get_swatches(data)
 
     s = s.filter(manufacturer_id=id)
@@ -117,7 +117,7 @@ def manufacturersort(request, id):
 
 def typesort(request, id):
     html = 'library.html'
-    data = build_data_dict(request)
+    data = build_data_dict(request, library=True)
 
     f_type = GenericFilamentType.objects.filter(id=id).first()
 
@@ -183,7 +183,7 @@ def swatch_collection(request, ids):
     :param request: the Django request.
     :return: ¯\_(ツ)_/¯
     """
-    data = build_data_dict(request)
+    data = build_data_dict(request, library=True)
 
     cleaned_ids = clean_collection_ids(ids)
 
@@ -206,7 +206,7 @@ def swatch_collection(request, ids):
 
 def edit_swatch_collection(request, ids):
     html = 'library.html'
-    data = build_data_dict(request)
+    data = build_data_dict(request, library=True)
     cleaned_ids = clean_collection_ids(ids)
 
     data.update({'preselect_collection': cleaned_ids})

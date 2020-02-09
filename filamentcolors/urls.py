@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from filamentcolors import views
+from filamentcolors.api.urls import urlpatterns as api_urls
 
 # Django magic
 handler404 = 'filamentcolors.views.handler404'
@@ -42,3 +43,5 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += api_urls

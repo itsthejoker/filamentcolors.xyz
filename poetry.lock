@@ -150,6 +150,17 @@ Django = ">=1.11"
 
 [[package]]
 category = "main"
+description = "Web APIs for Django, made easy."
+name = "djangorestframework"
+optional = false
+python-versions = ">=3.5"
+version = "3.11.0"
+
+[package.dependencies]
+django = ">=1.11"
+
+[[package]]
+category = "main"
 description = "Clean single-source support for Python 3 and 2"
 name = "future"
 optional = false
@@ -507,7 +518,7 @@ python-versions = "*"
 version = "0.1.7"
 
 [metadata]
-content-hash = "3227a43ab18be4e174ed7d1f16b36685971911a1709e09156aae399154df8212"
+content-hash = "a53ee57c1020cd3707fad2aaadabb16a6b124f5d0fcb7b398eb730c56730dde4"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -564,6 +575,10 @@ django-smartfields = [
 django-taggit = [
     {file = "django-taggit-1.1.0.tar.gz", hash = "sha256:01bf163f66f385de3777378f43338aba93aae8673891d8ba9a20695b2ffb8e10"},
     {file = "django_taggit-1.1.0-py3-none-any.whl", hash = "sha256:c13dfc1808a3084b64898e591af1d2f49b672d108388654804b170ee0ac5caf0"},
+]
+djangorestframework = [
+    {file = "djangorestframework-3.11.0-py3-none-any.whl", hash = "sha256:05809fc66e1c997fd9a32ea5730d9f4ba28b109b9da71fccfa5ff241201fd0a4"},
+    {file = "djangorestframework-3.11.0.tar.gz", hash = "sha256:e782087823c47a26826ee5b6fa0c542968219263fb3976ec3c31edab23a4001f"},
 ]
 future = [
     {file = "future-0.17.1.tar.gz", hash = "sha256:67045236dcfd6816dc439556d009594abf643e5eb48992e36beac09c2ca659b8"},

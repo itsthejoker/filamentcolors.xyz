@@ -15,7 +15,7 @@
             <p class="card-text">{{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}</p>
         </div>
         <div class="card-footer">
-            <small class="text-muted">Uploaded {{ obj.date_added_date }}</small>
+            <small class="text-muted">Uploaded {{ obj.human_readable_date }}</small>
         </div>
     </a>
 </div>

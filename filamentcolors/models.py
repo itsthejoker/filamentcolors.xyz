@@ -210,7 +210,7 @@ class Swatch(models.Model):
     # !!!!!!!!!!!!!!!!!!!!!!!!
 
     @property
-    def date_added_date(self) -> str:
+    def human_readable_date(self) -> str:
         return self.date_added.strftime("%b %d, %Y")
 
     def get_rgb(self, hex: str) -> Tuple[int, ...]:

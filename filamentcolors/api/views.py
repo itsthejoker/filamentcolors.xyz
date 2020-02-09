@@ -15,7 +15,7 @@ class SwatchViewSet(ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = Swatch.objects.all()
-        # localhost:8000/library/?m=filament_type
+        # localhost:8000/api/swatch/?m=type
         method = self.request.query_params.get('m')  # for method
         if method == 'type':
             queryset = queryset.order_by('filament_type')

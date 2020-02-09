@@ -227,7 +227,7 @@ def about_page(request):
     return render(request, html, build_data_dict(request))
 
 
-def handler404(request):
+def handler404(request, exception):
     response = render_to_response("404.html", build_data_dict(request))
     response.status_code = 404
     return response

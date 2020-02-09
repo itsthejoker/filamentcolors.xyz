@@ -227,13 +227,13 @@ def about_page(request):
     return render(request, html, build_data_dict(request))
 
 
-def handler404(request, exception, template_name="404.html"):
+def handler404(request):
     response = render_to_response("404.html", build_data_dict(request))
     response.status_code = 404
     return response
 
 
-def handler500(request, exception, template_name="500.html"):
+def handler500(request):
     response = render_to_response("500.html", build_data_dict(request))
     response.status_code = 500
     return response

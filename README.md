@@ -4,6 +4,8 @@ The source code for a small website to compare pieces of printed filament.
 Public API
 ---
 
+Please give credit if you use my work for your project! Let me know if you do use this for something; I always love to see how this information is used!
+
 https://filamentcolors.xyz/api/
 
 API notes:

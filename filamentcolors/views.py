@@ -222,9 +222,13 @@ def edit_swatch_collection(request, ids):
 
     return render(request, html, data)
 
+
 def about_page(request):
-    html = 'about.html'
-    return render(request, html, build_data_dict(request))
+    return render(request, 'about.html', build_data_dict(request))
+
+
+def donation_page(request):
+    return render(request, 'donations.html', build_data_dict(request))
 
 
 def handler404(request, exception):

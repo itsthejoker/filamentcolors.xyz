@@ -46,6 +46,9 @@
                     work?
                 </div>
             </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'donations' %}">Filament Donations</a>
+            </li>
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">

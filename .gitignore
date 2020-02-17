@@ -111,3 +111,11 @@ images/
 
 filamentcolors/tools/*
 filamentcolors/*.jpg
+filamentcolors/appstatic/admin
+filamentcolors/appstatic/assets
+filamentcolors/appstatic/build
+filamentcolors/appstatic/loading.gif
+filamentcolors/appstatic/rest_framework
+filamentcolors/frontend
+node_modules
+package-lock.json

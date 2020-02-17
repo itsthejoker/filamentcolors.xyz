@@ -6,12 +6,11 @@ authors = ["Joe Kaufeld <joe.kaufeld@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 django = "^2.1"
 Pillow = "^5.3"
 django-smartfields = "^1.0"
 sorl-thumbnail = "^12.5"
-readline = "^6.2"
 gunicorn = "^19.9"
 psycopg2-binary = "^2.7"
 python-dotenv = "^0.10.1"

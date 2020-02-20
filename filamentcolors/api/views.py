@@ -1,12 +1,14 @@
-from rest_framework.viewsets import ReadOnlyModelViewSet
 from django.db.models.functions import Lower
-from filamentcolors.models import Swatch, Manufacturer, FilamentType
+from django.http import JsonResponse
+from rest_framework.viewsets import ReadOnlyModelViewSet
+
 from filamentcolors.api.serializers import (
     SwatchSerializer,
     ManufacturerSerializer,
     FilamentTypeSerializer
 )
 from filamentcolors.helpers import get_hsv
+from filamentcolors.models import Swatch, Manufacturer, FilamentType
 
 
 class SwatchViewSet(ReadOnlyModelViewSet):
@@ -37,7 +39,17 @@ class ManufacturerViewSet(ReadOnlyModelViewSet):
     basename = 'manufacturer'
     queryset = Manufacturer.objects.all().order_by(Lower('name'))
 
+
 class FilamentTypeViewSet(ReadOnlyModelViewSet):
     serializer_class = FilamentTypeSerializer
     basename = 'filament_type'
     queryset = FilamentType.objects.all().order_by(Lower('name'))
+
+
+def db_version(request):
+    last_update_time = int(
+        Swatch.objects.latest('date_added').date_added.timestamp()
+    )
+    return JsonResponse({
+        "db_version": 1, "db_last_modified": last_update_time
+    })

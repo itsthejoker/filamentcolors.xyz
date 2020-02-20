@@ -1,36 +1,61 @@
 {% include 'partials/patreon_modal.partial' %}
+{% load static %}
 
 <footer class="page-footer pt-4">
     <div class="container my-3">
         <hr>
         <div class="row">
-            <div class="col-md-6 col-lg-2 text-center">
-                <button type="button" class="btn btn-secondary" data-toggle="modal" style="background: #f96854; border-color: #f96854; color: #ffffff" data-target="#patreonModal">
+            <div class="col-sm-0 col-lg-3"></div>
+            <div class="col-sm-4 col-md-4 col-lg-2 text-center bump-down">
+                <a href="{% url 'about' %}">
+                    <img title="About this site!"
+                         alt="about this site"
+                         src="https://img.icons8.com/material/32/000000/help--v1.png">
+                </a>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-2 text-center bump-down">
+                <a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank">
+                    <img title="Source code (github!)"
+                         src="{% static "GitHub-Mark-32px.png" %}"
+                         alt="source code (github)"></a>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-2 text-center bump-down">
+                <a href="https://twitter.com/filamentcolors" target="_blank">
+                    <img title="Follow me on Twitter!"
+                         width="32" height="32" src="{% static "Twitter_Social_Icon_Circle_Color.png" %}"
+                         alt="@filamentcolors on Twitter">
+                </a>
+            </div>
+            <div class="col-sm-0 col-lg-3"></div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6 col-lg-3 text-center mb-2">
+                <button type="button" class="btn btn-secondary" data-toggle="modal"
+                        style="background: #f96854; border-color: #f96854; color: #ffffff" data-target="#patreonModal">
                     I'm on Patreon!
                 </button>
             </div>
-            <div class="col-md-6 col-lg-2 text-center bump-down">
-                <u><a href="/about">about</a></u>
+            <div class="col-md-6 col-lg-3 text-center kofi-button mt-1">
+                <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script>
+                <script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee', '#007bff', 'C0C2QOVZ');
+                kofiwidget2.draw();</script>
             </div>
-            <div class="col-md-6 col-lg-2 text-center bump-down">
+            <div class="col-md-6 col-lg-3 text-center bump-down">
                 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
                     <img alt="Creative Commons License"
                          style="border-width:0"
                          src="https://i.creativecommons.org/l/by/4.0/88x31.png"/>
                 </a>
             </div>
-            <div class="col-md-6 col-lg-2 text-center bump-down">
-                <u><a href="https://twitter.com/filamentcolors" target="_blank">@filamentcolors</a></u>
+            <div class="col-md-6 col-lg-3 text-center">
+                <a href="https://www.3dgeeks.app" target="_blank">
+                    <button type="button" class="btn btn-secondary" data-toggle="modal"
+                            style="background: #000000; border-color: #444444; color: #ffffff">
+                        3D Geeks App
+                    </button>
+                </a>
             </div>
-            <div class="col-md-6 col-lg-2 text-center bump-down">
-                <u><a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank">source code
-                    (github)</a></u>
-            </div>
-            <div class="col-md-6 col-lg-2 text-center kofi-button bump-down">
-                <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script>
-                <script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee', '#007bff', 'C0C2QOVZ');
-                kofiwidget2.draw();</script>
-            </div>
+
         </div>
     </div>
 </footer>

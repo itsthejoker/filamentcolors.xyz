@@ -7,9 +7,8 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-django = "^2.1"
-Pillow = "^5.3"
-django-smartfields = "^1.0"
+django = "^3.0.4"
+Pillow = "^7.0.0"
 sorl-thumbnail = "^12.5"
 gunicorn = "^19.9"
 psycopg2-binary = "^2.7"

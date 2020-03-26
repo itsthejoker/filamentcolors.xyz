@@ -47,7 +47,7 @@
                          src="https://i.creativecommons.org/l/by/4.0/88x31.png"/>
                 </a>
             </div>
-            <div class="col-md-6 col-lg-3 text-center">
+            <div class="col-md-6 col-lg-3 text-center bump-down">
                 <a href="https://www.3dgeeks.app" target="_blank">
                     <button type="button" class="btn btn-secondary" data-toggle="modal"
                             style="background: #000000; border-color: #444444; color: #ffffff">

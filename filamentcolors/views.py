@@ -2,7 +2,6 @@ import random
 
 from django.shortcuts import HttpResponseRedirect
 from django.shortcuts import render
-from django.shortcuts import render_to_response
 from django.shortcuts import reverse
 from django.http import Http404
 
@@ -65,7 +64,8 @@ def librarysort(request, method: str=None):
 
     if show_welcome_modal(request):
         data.update({'launch_welcome_modal': True})
-        response = render_to_response(html, data)
+        # https://stackoverflow.com/a/38798861
+        response = render(None, html, data)
         set_tasty_cookies(response)
         return response
 
@@ -84,7 +84,7 @@ def colorfamilysort(request, family_id):
 
     if show_welcome_modal(request):
         data.update({'launch_welcome_modal': True})
-        response = render_to_response(html, data)
+        response = render(None, html, data)
         set_tasty_cookies(response)
         return response
 
@@ -108,7 +108,7 @@ def manufacturersort(request, id):
 
     if show_welcome_modal(request):
         data.update({'launch_welcome_modal': True})
-        response = render_to_response(html, data)
+        response = render(None, html, data)
         set_tasty_cookies(response)
         return response
 
@@ -132,7 +132,7 @@ def typesort(request, id):
 
     if show_welcome_modal(request):
         data.update({'launch_welcome_modal': True})
-        response = render_to_response(html, data)
+        response = render(None, html, data)
         set_tasty_cookies(response)
         return response
 
@@ -157,7 +157,7 @@ def swatch_detail(request, id):
 
         if show_welcome_modal(request):
             data.update({'launch_welcome_modal': True})
-            response = render_to_response(html, data)
+            response = render(None, html, data)
             set_tasty_cookies(response)
             return response
 
@@ -216,7 +216,7 @@ def edit_swatch_collection(request, ids):
 
     if show_welcome_modal(request):
         data.update({'launch_welcome_modal': True})
-        response = render_to_response(html, data)
+        response = render(None, html, data)
         set_tasty_cookies(response)
         return response
 
@@ -229,15 +229,3 @@ def about_page(request):
 
 def donation_page(request):
     return render(request, 'donations.html', build_data_dict(request))
-
-
-def handler404(request, exception):
-    response = render_to_response("404.html", build_data_dict(request))
-    response.status_code = 404
-    return response
-
-
-def handler500(request):
-    response = render_to_response("500.html", build_data_dict(request))
-    response.status_code = 500
-    return response

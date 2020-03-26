@@ -21,10 +21,6 @@ from django.conf.urls.static import static
 from filamentcolors import views
 from filamentcolors.api.urls import urlpatterns as api_urls
 
-# Django magic
-handler404 = 'filamentcolors.views.handler404'
-handler500 = 'filamentcolors.views.handler500'
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.homepage, name='homepage'),

@@ -94,7 +94,7 @@
 
         $.each(
             mfr.children(), function (count, value) {
-                if (value.classList.contains("active")) {
+                if (!(value.classList.contains("active"))) {
                     mfr_list = mfr_list + value.id + "-"
                 }
             });
@@ -110,7 +110,7 @@
             return
         }
 
-        if (mfr_list === "") {
+        if (mfr_list.split("-").slice(0, -1).length === mfr.children().length) {
             $.toast({
                 title: 'Error!',
                 content: 'It looks like all manufacturers have been disabled.' +
@@ -128,7 +128,7 @@
             {path: '/', expires: 365}
         );
 
-        $.cookie('mfr-whitelist', mfr_list, {path: '/', expires: 365});
+        $.cookie('mfr-blacklist', mfr_list, {path: '/', expires: 365});
 
         // settings have been saved, time to actually load them
         window.location.reload();
@@ -137,7 +137,7 @@
     function loadSettings() {
         fsettings = $.cookie('show-types');
         dsetting = $.cookie('show-un');
-        msettings = $.cookie('mfr-whitelist');
+        msettings = $.cookie('mfr-blacklist');
 
         {# Using a single equals for all of these kills me here, but it #}
         {# CANNOT be a !== because javascript sucks and it breaks. #}
@@ -166,8 +166,11 @@
         if (msettings != null) {
             {# a hyphen separated list of ids #}
             ids = msettings.split("-").slice(0, -1);
+            console.log(ids)
             $.each($(".mfrSettings").children(), function (count, value) {
-                if (ids.indexOf(value.id) === -1) {
+                console.log(value.id);
+                console.log(ids.includes(value.id.toString()));
+                if (ids.includes(value.id.toString())) {
                     $(".mfrSettings").find('#' + value.id).button('toggle')
                 }
             })

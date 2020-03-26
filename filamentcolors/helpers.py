@@ -14,7 +14,7 @@ from filamentcolors.models import Swatch
 have_visited_before_cookie = "f"
 filament_type_settings_cookie = "show-types"
 show_unavailable_cookie = "show-un"
-mfr_whitelist_cookie = "mfr-whitelist"
+mfr_blacklist_cookie = "mfr-blacklist"
 
 
 def show_welcome_modal(r: request) -> bool:
@@ -86,7 +86,7 @@ def get_settings_cookies(r: request) -> Dict:
     # both of these cookies are set by the javascript in the frontend.
     type_settings = r.COOKIES.get(filament_type_settings_cookie)
     show_dc = r.COOKIES.get(show_unavailable_cookie)
-    mfr_whitelist = r.COOKIES.get(mfr_whitelist_cookie)
+    mfr_blacklist = r.COOKIES.get(mfr_blacklist_cookie)
 
     if type_settings:
         # It will be in this format: `1-true_2-true_3-true_6-false_9-false_`
@@ -106,21 +106,19 @@ def get_settings_cookies(r: request) -> Dict:
     else:
         types = GenericFilamentType.objects.all()
 
-    if mfr_whitelist:
+    if mfr_blacklist:
         # in this format: 1-2-3-12-5-8-
-        mfr_whitelist = mfr_whitelist.split('-')
-        if mfr_whitelist[-1] == '':
-            mfr_whitelist.pop()
-        mfr_whitelist = [
-            Manufacturer.objects.get(id=x) for x in mfr_whitelist
-        ]
+        mfr_blacklist = mfr_blacklist.split('-')
+        if mfr_blacklist[-1] == '':
+            mfr_blacklist.pop()
+        mfr_blacklist_objects = Manufacturer.objects.all().exclude(id__in=mfr_blacklist)
     else:
-        mfr_whitelist = Manufacturer.objects.all()
+        mfr_blacklist_objects = Manufacturer.objects.all()
 
     return {
         'types': types,
         'show_unavailable': True if show_dc == "true" else False,
-        'mfr_whitelist': mfr_whitelist
+        'mfr_whitelist': mfr_blacklist_objects
     }
 
 

@@ -166,10 +166,7 @@
         if (msettings != null) {
             {# a hyphen separated list of ids #}
             ids = msettings.split("-").slice(0, -1);
-            console.log(ids)
             $.each($(".mfrSettings").children(), function (count, value) {
-                console.log(value.id);
-                console.log(ids.includes(value.id.toString()));
                 if (ids.includes(value.id.toString())) {
                     $(".mfrSettings").find('#' + value.id).button('toggle')
                 }

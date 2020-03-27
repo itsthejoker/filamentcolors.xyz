@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.shortcuts import HttpResponseRedirect
 
 from filamentcolors.models import FilamentType
 from filamentcolors.models import GenericFilamentType
@@ -10,6 +11,7 @@ from filamentcolors.models import Swatch
 
 class SwatchAdmin(admin.ModelAdmin):
     ordering = ('manufacturer__name',)
+    search_fields = ['color_name', 'manufacturer__name']
     exclude = (
         'complement',
         'analogous_1',
@@ -25,6 +27,13 @@ class SwatchAdmin(admin.ModelAdmin):
         'square_2',
         'square_3',
     )
+
+    def response_change(self, request, obj):
+        res = super().response_change(request, obj)
+        if "_preview" in request.POST:
+            return HttpResponseRedirect(f'/swatch/{obj.id}')
+        else:
+            return res
 
 
 class PrinterAdmin(admin.ModelAdmin):

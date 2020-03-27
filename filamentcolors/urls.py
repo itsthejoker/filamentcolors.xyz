@@ -35,6 +35,7 @@ urlpatterns = [
     # path('printer/<int:id>', views.printer_detail, name='printerdetail'),
     path('donating', views.donation_page, name='donations'),
     path('about/', views.about_page, name='about'),
+    path('logout/', views.logout_view, name='logout'),
 ]
 
 if settings.DEBUG:

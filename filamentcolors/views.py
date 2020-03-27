@@ -1,9 +1,10 @@
 import random
 
-from django.shortcuts import HttpResponseRedirect
+from django.shortcuts import HttpResponseRedirect, redirect
 from django.shortcuts import render
 from django.shortcuts import reverse
 from django.http import Http404
+from django.contrib.auth import logout
 
 from filamentcolors.helpers import get_hsv
 from filamentcolors.helpers import set_tasty_cookies
@@ -229,3 +230,12 @@ def about_page(request):
 
 def donation_page(request):
     return render(request, 'donations.html', build_data_dict(request))
+
+
+def logout_view(request):
+    logout(request)
+    if path := request.META.get('HTTP_REFERER'):
+        # reload the page we came from
+        return redirect(path)
+    else:
+        return redirect(reverse('library'))

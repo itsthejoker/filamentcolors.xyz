@@ -518,7 +518,8 @@ class Swatch(models.Model):
             # regenerate_info back to false before we save the model,
             # otherwise it will get stuck like that and the tweet will
             # never fire.
-            self.crop_and_save_images()
+            if not self.card_img:
+                self.crop_and_save_images()
             self.generate_hex_info()
             self.regenerate_info = False
 

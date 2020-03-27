@@ -19,6 +19,9 @@ colormath = "^3.0"
 django-taggit = "^1.1"
 colorthief = "^0.2.1"
 djangorestframework = "^3.11.0"
+scikit-image = "^0.16.2"
+numpy = "^1.18.2"
+opencv-python = "^4.2.0"
 
 [tool.poetry.dev-dependencies]
 better-exceptions = "^0.2.1"

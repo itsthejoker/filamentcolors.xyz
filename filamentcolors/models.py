@@ -2,6 +2,8 @@ import os
 from io import BytesIO
 from typing import Tuple
 
+import cv2
+import numpy as np
 import pytz
 from PIL import Image as Img
 from colormath.color_conversions import convert_color
@@ -17,6 +19,7 @@ from django.core.files.storage import default_storage
 from django.db import models
 from django.db.models.query import QuerySet
 from django.utils import timezone
+from skimage import io
 from taggit.managers import TaggableManager
 
 from filamentcolors.colors import Color
@@ -118,7 +121,16 @@ class Swatch(models.Model):
     image_back = models.ImageField(null=True, blank=True)
     image_other = models.ImageField(null=True, blank=True)
 
-    regenerate_info = models.BooleanField(default=False)
+    rebuild_long_way = models.BooleanField(
+        default=False,
+        verbose_name=(
+            "Regenerate the color information using the long way for increased"
+            " accuracy."
+        )
+    )
+    regenerate_info = models.BooleanField(
+        default=False, verbose_name="Rebuild all the information related to this swatch."
+    )
 
     date_added = models.DateTimeField(default=timezone.now)
     last_cache_update = models.DateTimeField(
@@ -333,9 +345,36 @@ class Swatch(models.Model):
         self.card_img = ImageFile(open(path, 'rb'))
         self.card_img.name = filename
 
-    def generate_hex_info(self) -> None:
-        ct_image = ColorThief(self.card_img.path)
-        self.hex_color = self.get_hex(ct_image.get_color(quality=1))
+    def generate_hex_info(self, long_way: bool=False) -> None:
+        if long_way:
+            # This method is much more computationally intensive and much more
+            # difficult to debug, but it's generally more accurate and doesn't
+            # fail as much as colorthief does. We can optionally trigger this
+            # method through the admin panel if colorthief returns a result that
+            # is wildly wrong.
+            # lovingly ripped from https://stackoverflow.com/a/43111221
+            self.card_img.file.seek(0)
+            img = io.imread(self.card_img.file)
+
+            pixels = np.float32(img.reshape(-1, 3))
+
+            n_colors = 5
+            criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
+            flags = cv2.KMEANS_RANDOM_CENTERS
+
+            # this line is super painful in computation time. We kind of get
+            # around that by only having it parse the resized small card image;
+            # if it runs on the full-size image, it could take a minute or two
+            # to complete.
+            _, labels, palette = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
+            _, counts = np.unique(labels, return_counts=True)
+            dominant = palette[np.argmax(counts)]
+
+            self.hex_color = self.get_hex(dominant)
+        else:
+            ct_image = ColorThief(self.card_img.path)
+            self.hex_color = self.get_hex(ct_image.get_color(quality=1))
+
         self.complement_hex = self.get_complement(self.hex_color)
 
     def _get_closest_color_swatch(self, library: QuerySet, color_to_match: LabColor):
@@ -469,25 +508,8 @@ class Swatch(models.Model):
         self.update_square_swatches(library)
 
     def save(self, *args, **kwargs):
+        # default action is to not post to social media
         post_tweet = False
-
-        # and now, the fun begins
-        if self.regenerate_info:
-            self.card_img = None
-
-        if self.card_img:
-            # we already have a card image, so just save everything and abort.
-            super(Swatch, self).save(*args, **kwargs)
-            return
-
-        if self.image_front:
-            self.crop_and_save_images()
-
-        # sanity check
-        if self.card_img:
-            post_tweet = True
-            # lovingly ripped from https://stackoverflow.com/a/43111221
-            self.generate_hex_info()
 
         if self.regenerate_info:
             # the joys of using flags on the models themselves. Because
@@ -496,17 +518,31 @@ class Swatch(models.Model):
             # regenerate_info back to false before we save the model,
             # otherwise it will get stuck like that and the tweet will
             # never fire.
+            self.crop_and_save_images()
+            self.generate_hex_info()
             self.regenerate_info = False
-            regenerate_info_tweet_bypass = True
+
+        if self.rebuild_long_way:
+            self.generate_hex_info(long_way=True)
+            self.rebuild_long_way = False
+
+        if self.card_img:
+            # we already have a card image, so just save everything and abort.
+            super(Swatch, self).save(*args, **kwargs)
+            return
         else:
-            regenerate_info_tweet_bypass = False
+            # Ooh, a new swatch!
+            post_tweet = True
 
-        super(Swatch, self).save(*args, **kwargs)
+            self.crop_and_save_images()
+            self.generate_hex_info()
 
-        if post_tweet and not settings.DEBUG and not regenerate_info_tweet_bypass:
-            # have to save the model before we can send the tweet, otherwise
-            # we won't have a swatch ID.
-            send_tweet(self)
+            super(Swatch, self).save(*args, **kwargs)
+
+            if post_tweet and not settings.DEBUG:
+                # have to save the model before we can send the tweet, otherwise
+                # we won't have a swatch ID.
+                send_tweet(self)
 
     def __str__(self):
         try:

@@ -34,6 +34,7 @@ urlpatterns = [
     path('library/color_family/<str:family_id>', views.colorfamilysort, name='color_family_sort'),
     # path('printer/<int:id>', views.printer_detail, name='printerdetail'),
     path('donating', views.donation_page, name='donations'),
+    path('vrrf', views.vrrf, name='vrrf'),
     path('about/', views.about_page, name='about'),
     path('logout/', views.logout_view, name='logout'),
 ]

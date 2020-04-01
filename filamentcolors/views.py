@@ -232,6 +232,10 @@ def donation_page(request):
     return render(request, 'donations.html', build_data_dict(request))
 
 
+def vrrf(request):
+    return render(request, 'vrrf.html', build_data_dict(request))
+
+
 def logout_view(request):
     logout(request)
     if path := request.META.get('HTTP_REFERER'):

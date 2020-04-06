@@ -198,7 +198,8 @@ def swatch_collection(request, ids):
     data.update(
         {
             'swatches': swatch_collection,
-            'collection_ids': ','.join([str(i) for i in cleaned_ids])
+            'collection_ids': ','.join([str(i) for i in cleaned_ids]),
+            'show_collection_edit_button': True
         }
     )
 

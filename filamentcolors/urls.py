@@ -22,6 +22,7 @@ from filamentcolors import views
 from filamentcolors.api.urls import urlpatterns as api_urls
 
 urlpatterns = [
+    # Primary site URLs
     path('admin/', admin.site.urls),
     path('', views.homepage, name='homepage'),
     path('library/sort/<str:method>/', views.librarysort, name='librarysort'),
@@ -34,9 +35,15 @@ urlpatterns = [
     path('library/color_family/<str:family_id>', views.colorfamilysort, name='color_family_sort'),
     # path('printer/<int:id>', views.printer_detail, name='printerdetail'),
     path('donating', views.donation_page, name='donations'),
-    path('vrrf', views.vrrf, name='vrrf'),
     path('about/', views.about_page, name='about'),
     path('logout/', views.logout_view, name='logout'),
+
+    # Event / Special URLs
+    # ...
+
+    # Old links that need to exist for a while and just redirect.
+    # Remove each of them after a reasonable amount of time has passed -- probably a few months.
+    path('vrrf', views.homepage),  # Added 4/5/2020
 ]
 
 if settings.DEBUG:

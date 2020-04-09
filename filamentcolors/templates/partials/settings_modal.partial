@@ -42,7 +42,15 @@
                 <div id="advancedSettingsContainer">
                     <hr>
                     <div class="container">
-                        <h5>Show / Hide Specific Manufacturers</h5>
+                        <h5>Toggle Specific Manufacturers</h5>
+                        <div class="container">
+                            <button type="button"
+                                    id="showHideMfrsButton"
+                                    class="btn btn-block btn-secondary showall"
+                                    onclick="toggleShowHideMfrs()"
+                            >Unselect All
+                            </button>
+                        </div>
                         <div class="row container fix-margin">
                             {% for m in manufacturers %}
                                 <div class="btn-group-toggle col-sm-6 text-xs-center bump-down mfrSettings"
@@ -73,6 +81,25 @@
 </div>
 
 <script>
+    function toggleShowHideMfrs() {
+        mfr = $(".mfrSettings");
+        btn = $("#showHideMfrsButton");
+
+        var showAllBool = btn.hasClass('showall');
+
+        btn[0].innerText = (showAllBool ? "Select All" : "Deselect All")
+
+        mfr.children().each(
+            function (_, a) {
+                a = $(a);
+                if (a.hasClass('active') === showAllBool) {
+                    a.button('toggle')
+                }
+            }
+        );
+        btn.toggleClass('showall');
+    }
+
     function showHideAdvanced() {
         el = $("#advancedSettingsContainer");
         el.toggle();

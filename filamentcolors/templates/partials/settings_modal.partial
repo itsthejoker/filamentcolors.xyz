@@ -82,7 +82,7 @@
 
 <script>
     function toggleShowHideMfrs() {
-        mfr = $(".mfrSettings");
+        mfr = $($(".mfrSettings").get().reverse());
         btn = $("#showHideMfrsButton");
 
         var showAllBool = btn.hasClass('showall');
@@ -94,6 +94,9 @@
                 a = $(a);
                 if (a.hasClass('active') === showAllBool) {
                     a.button('toggle')
+                }
+                if (a.hasClass('focus')) {
+                    a.removeClass('focus')
                 }
             }
         );

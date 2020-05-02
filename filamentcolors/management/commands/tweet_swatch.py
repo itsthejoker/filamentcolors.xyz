@@ -1,21 +1,16 @@
-from django.core.management.base import BaseCommand
-from filamentcolors.twitter_helpers import generate_daily_swatch_tweet, send_tweet
 import random
-from django.db.models import Max
+from time import sleep
+
+from django.core.management.base import BaseCommand
+from django.db.models import Q
 from django.utils import timezone
+
 from filamentcolors.models import Swatch
+from filamentcolors.twitter_helpers import generate_daily_swatch_tweet, send_tweet
 
 
 def get_random_swatch() -> Swatch:
-    max_id = Swatch.objects.all().aggregate(max_id=Max("id"))['max_id']
-    while True:
-        try:
-            new_id = random.choice(range(1, max_id))
-            the_chosen_swatch = Swatch.objects.get(id=new_id)
-            if the_chosen_swatch:
-                return the_chosen_swatch
-        except Swatch.DoesNotExist:
-            pass
+    return random.choice(Swatch.objects.filter(~Q(tags__name="unavailable")))
 
 
 def get_tweet_content(swatch_of_the_day) -> str:
@@ -37,9 +32,10 @@ class Command(BaseCommand):
             # up a little.
             self.stdout.write("Not the right day... not sending the tweet.")
             return
+
+        # Don't want it to feel too robotic...
+        sleep_count = random.choice(range(7200))  # two hour window
+        self.stdout.write(f"Sleeping for {sleep_count}")
+        sleep(sleep_count)
+
         send_tweet(get_tweet_content(get_random_swatch()))
-
-
-
-
-

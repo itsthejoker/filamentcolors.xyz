@@ -50,6 +50,11 @@ def db_version(request):
     last_update_time = int(
         Swatch.objects.latest('date_added').date_added.timestamp()
     )
+    # db_version is a schema check. If the current schema provided to the API
+    # ever changes, this number should be incremented by one. At this time,
+    # there are no plans to support backwards compatible APIs, though I will
+    # make an effort to communicate breaking changes well in advance as best
+    # I can.
     return JsonResponse({
         "db_version": 1, "db_last_modified": last_update_time
     })

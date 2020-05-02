@@ -1,5 +1,6 @@
 import os
 import random
+import string
 
 from dotenv import load_dotenv
 
@@ -52,15 +53,20 @@ outro_phrases = [
     ''
 ]
 
-
-def send_tweet(swatch):
+def generate_swatch_upload_tweet(swatch) -> str:
     plural = "'" if swatch.manufacturer.name.endswith("s") else "'s"
-    api.PostUpdate(
+    return (
         f'{random.choice(intro_phrases)} {swatch.manufacturer.name}{plural}'
         f' {swatch.color_name} {swatch.filament_type.name}'
         f' {random.choice(outro_phrases)}'
         f' https://filamentcolors.xyz/swatch/{swatch.id}'
     )
+
+
+def send_tweet(message: str=None, swatch=None) -> None:
+    if not message:
+        message = generate_swatch_upload_tweet(swatch)
+    api.PostUpdate(message)
 
 
 daily_tweet_intro = [
@@ -72,7 +78,7 @@ daily_tweet_intro = [
     "A quick scroll through the archives unearthed this!",
     "[insert clickbait intro here]",
     "Remember, filaments in the mirror may be closer than they appear.",
-    "This tweet may be automated, but at least it's more reliable than some printers I've worked on.",
+    "This tweet may be automated, but it's more reliable than some printers I've worked on.",
     "Maybe you've seen this one before, maybe you haven't.",
     "Maybe this one's new to you, maybe it's not!",
     "Wanted: 3D-printing-related one-liners to put as intros to these tweets. Apply within.",
@@ -80,14 +86,36 @@ daily_tweet_intro = [
     "",
     "The history books pulled this swatch for your perusal.",
     "A website sending its own tweets? That's preposterous. Let's look at swatches instead!",
-    "Is it just me or is the interrobang criminally underrated‽ But anyway, back to swatches."
+    "Is it just me or is the interrobang criminally underrated‽ But anyway, back to swatches.",
+    "Today's fashion-forward color is brought to you by Python! Python: not just a snake!",
+    '"Swatches?! Why does it always have to be swatches???"',
+    "Is it just me or were the commercials we had as kids _really weird_? Anyway!",
+    "Fun fact: this system is incompatible with Pantone!",
+    "🎶 Do you hear the swatches print? Swatches are printing all the time... 🎵",
+    "Looking for some new colors? The librarian has some recommendations!",
+    "I asked the Magic 8-Ball for your favorite color and it gave me something!",
+    "I've always wondered why my copy of Gray's Anatomy is tan. Hmm.",
+    "🎶 Voulez-vous coloriez avec moi, ce soir? 🎵",
+    "If a print fails and no one is around to hear it, does it still spaghetti? Anyway..."
+    "Did you see that clip of {famous_person} doing {totally_normal_thing}??? Anyway...",
+    f"This tweet is brought to you by the number {random.choice(string.digits)}!",
+    "Heeeere's Swatchy!"
 ]
 
 
-def send_daily_swatch_tweet(swatch):
+def generate_daily_swatch_tweet(swatch):
     plural = "'" if swatch.manufacturer.name.endswith("s") else "'s"
-    api.PostUpdate(
-        f'{random.choice(daily_tweet_intro)} Have you seen this one yet? {swatch.manufacturer.name}{plural}'
+    intro = random.choice(daily_tweet_intro)
+    have_you_seen_this_one = "have you seen this one yet?"
+
+    if "..." not in intro:
+        # we want the lowercase version if it's grammatically correct!
+        have_you_seen_this_one = have_you_seen_this_one.capitalize()
+
+    full_update = (
+        f'{intro} {have_you_seen_this_one} {swatch.manufacturer.name}{plural}'
         f' {swatch.color_name} {swatch.filament_type.name} can be found here:'
         f' https://filamentcolors.xyz/swatch/{swatch.id}'
     )
+
+    return full_update

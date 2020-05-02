@@ -543,7 +543,7 @@ class Swatch(models.Model):
             if post_tweet and not settings.DEBUG:
                 # have to save the model before we can send the tweet, otherwise
                 # we won't have a swatch ID.
-                send_tweet(self)
+                send_tweet(swatch=self)
 
     def __str__(self):
         try:

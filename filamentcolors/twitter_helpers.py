@@ -71,7 +71,7 @@ def send_tweet(message: str=None, swatch=None) -> None:
 
 daily_tweet_intro = [
     "There are colors we know and colors we have yet to know!",
-    "Let's take a stroll through the archives.",
+    "Let's take a stroll through the archives!",
     "Spin the wheel of random selection to see what we get!",
     "It's always fun to find colors we may not have seen before.",
     "`return random.choice(Swatch.objects.all())`",
@@ -83,7 +83,6 @@ daily_tweet_intro = [
     "Maybe this one's new to you, maybe it's not!",
     "Wanted: 3D-printing-related one-liners to put as intros to these tweets. Apply within.",
     "Pick a color, any color... nevermind, I guessed wrong. But!",
-    "",
     "The history books pulled this swatch for your perusal.",
     "A website sending its own tweets? That's preposterous. Let's look at swatches instead!",
     "Is it just me or is the interrobang criminally underrated‽ But anyway, back to swatches.",
@@ -94,7 +93,7 @@ daily_tweet_intro = [
     "🎶 Do you hear the swatches print? Swatches are printing all the time... 🎵",
     "Looking for some new colors? The librarian has some recommendations!",
     "I asked the Magic 8-Ball for your favorite color and it gave me something!",
-    "I've always wondered why my copy of Gray's Anatomy is tan. Hmm.",
+    "I've always wondered why my copy of Gray's Anatomy is tan... hmm...",
     "🎶 Voulez-vous coloriez avec moi, ce soir? 🎵",
     "If a print fails and no one is around to hear it, does it still spaghetti? Anyway..."
     "Did you see that clip of {famous_person} doing {totally_normal_thing}??? Anyway...",
@@ -106,16 +105,11 @@ daily_tweet_intro = [
 def generate_daily_swatch_tweet(swatch):
     plural = "'" if swatch.manufacturer.name.endswith("s") else "'s"
     intro = random.choice(daily_tweet_intro)
-    have_you_seen_this_one = "have you seen this one yet?"
-
-    if "..." not in intro:
-        # we want the lowercase version if it's grammatically correct!
-        have_you_seen_this_one = have_you_seen_this_one.capitalize()
 
     full_update = (
-        f'{intro} {have_you_seen_this_one} {swatch.manufacturer.name}{plural}'
+        f'{intro}\n\nHave you seen this one yet? {swatch.manufacturer.name}{plural}'
         f' {swatch.color_name} {swatch.filament_type.name} can be found here:'
-        f' https://filamentcolors.xyz/swatch/{swatch.id}'
+        f' https://filamentcolors.xyz/swatch/{swatch.id}?ref=autotweet'
     )
 
     return full_update

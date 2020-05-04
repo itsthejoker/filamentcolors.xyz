@@ -59,7 +59,7 @@ def generate_swatch_upload_tweet(swatch) -> str:
         f'{random.choice(intro_phrases)} {swatch.manufacturer.name}{plural}'
         f' {swatch.color_name} {swatch.filament_type.name}'
         f' {random.choice(outro_phrases)}'
-        f' https://filamentcolors.xyz/swatch/{swatch.id}'
+        f' https://filamentcolors.xyz/swatch/{swatch.id}?ref=newswatchtweet'
     )
 
 

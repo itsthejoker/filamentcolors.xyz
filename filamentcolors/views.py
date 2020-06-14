@@ -5,7 +5,7 @@ from django.http import Http404
 from django.shortcuts import HttpResponseRedirect, redirect
 from django.shortcuts import render
 from django.shortcuts import reverse
-from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
 from filamentcolors.helpers import build_data_dict
 from filamentcolors.helpers import clean_collection_ids
@@ -17,6 +17,7 @@ from filamentcolors.helpers import set_tasty_cookies
 from filamentcolors.helpers import show_welcome_modal
 from filamentcolors.models import GenericFilamentType
 from filamentcolors.models import Swatch
+from filamentcolors.forms import SwatchForm
 
 
 def homepage(request):
@@ -217,9 +218,26 @@ def edit_swatch_collection(request, ids):
     return render(request, html, data)
 
 
-@login_required
+@staff_member_required
 def upload_swatch(request):
-    pass
+    html = "generic_form.html"
+    data = build_data_dict(request)
+    data.update({
+        "header": "Swatch Add Form",
+        "subheader": "A new splash of color!"
+    })
+
+    if request.method == "POST":
+        form = SwatchForm(request.POST, request.FILES)
+        new_swatch = form.save()
+        return HttpResponseRedirect(
+            reverse("swatchdetail", kwargs={"id": new_swatch.id})
+        )
+    else:
+        form = SwatchForm()
+        data.update({"form": form})
+
+    return render(request, html, data)
 
 
 def about_page(request):

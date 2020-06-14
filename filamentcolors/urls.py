@@ -36,7 +36,7 @@ urlpatterns = [
     path('donating', views.donation_page, name='donations'),
     path('about/', views.about_page, name='about'),
     path('logout/', views.logout_view, name='logout'),
-
+    path('upload/swatch/', views.upload_swatch, name='upload_swatch'),
     # Event / Special URLs
     # ...
 

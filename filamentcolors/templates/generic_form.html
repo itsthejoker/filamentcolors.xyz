@@ -2,12 +2,19 @@
 {% load widget_tweaks %}
 
 {% block content %}
-    <h1>{{ header }}</h1>
-    <h4>{{ subheader }}</h4>
+    <div class="container mt-4">
+        <h1>{{ header }}</h1>
+        <h4>{{ subheader }}</h4>
 
-    <div class="container">
-        {# Lifted from https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html#}
-        <form method="post">
+        <div class="container">
+            {# Lifted from https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html#}
+            {% if form.is_multipart %}
+                {# properly handle the file uploads #}
+                <form novalidate enctype="multipart/form-data" method="post" action="">
+            {% else %}
+                <form novalidate method="post" action="">
+            {% endif %}
+            <div class="errorMessages"></div>
             {% csrf_token %}
             {% for hidden_field in form.hidden_fields %}
                 {{ hidden_field }}
@@ -37,7 +44,15 @@
                             {% render_field field class="form-control is-valid" %}
                         {% endif %}
                     {% else %}
-                        {% render_field field class="form-control" %}
+                        {% if field.field.widget.input_type == 'file' %}
+                            <div class="btn-group-toggle">
+                                <label for="{{ field.auto_id }}"
+                                       class="form-control-file btn btn-secondary">browse</label>
+                                {% render_field field class="inputfile" style="visibility:hidden;margin-top:-30px" %}
+                            </div>
+                        {% else %}
+                            {% render_field field class="form-control" %}
+                        {% endif %}
                     {% endif %}
 
                     {% if field.help_text %}
@@ -46,6 +61,74 @@
                 </div>
             {% endfor %}
             <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+            </form>
+        </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            var inputs = document.querySelectorAll('.inputfile');
+            Array.prototype.forEach.call(inputs, function (input) {
+                var label = input.previousElementSibling
+
+                input.addEventListener('change', function (e) {
+                    var fileName = '';
+
+                    fileName = e.target.value.split('\\').pop();
+
+                    if (fileName)
+                        label.innerText = fileName;
+                    else
+                        label.innerText = "browse";
+                });
+            });
+            // from https://www.tjvantoll.com/2012/08/05/html5-form-validation-showing-all-error-messages/
+            var createAllErrors = function () {
+                var form = $(this)
+                var errorList = $(".errorMessages");
+
+                var showAllErrorMessages = function () {
+                    errorList.innerHTML = "";
+
+                    // Find all invalid fields within the form.
+                    var invalidFields = form.find(":invalid").each(function (index, node) {
+
+                        // Find the field's corresponding label
+                        var label = $("label[for=" + node.id + "] "),
+                            // Opera incorrectly does not fill the validationMessage property.
+                            message = node.validationMessage || 'Invalid value.';
+
+                        // jquery won't add the same class multiple times, so we can have
+                        // addClass run for each loop.
+                        errorList.addClass("mt-3");
+                        errorList.append(
+                            '<div class="alert alert-danger" role="alert">\n' + label.html() + " " + message + '\n</div>'
+                        )
+                    });
+                };
+
+                // Support Safari
+                form.on("submit", function (event) {
+                    if (this.checkValidity && !this.checkValidity()) {
+                        $(this).find(":invalid").first().focus();
+                        event.preventDefault();
+                    }
+                });
+
+                $("input[type=submit], button:not([type=button])", form)
+                    .on("click", showAllErrorMessages);
+
+                $("input", form).on("keypress", function (event) {
+                    var type = $(this).attr("type");
+                    if (/date|email|month|number|search|tel|text|time|url|week/.test(type)
+                        && event.keyCode === 13) {
+                        showAllErrorMessages();
+                    }
+                });
+            };
+
+            $("form").each(createAllErrors);
+        })
+    </script>
+
 {% endblock %}

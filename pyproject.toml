@@ -22,6 +22,7 @@ djangorestframework = "^3.11.0"
 scikit-image = "^0.16.2"
 numpy = "^1.18.2"
 opencv-python = "^4.2.0"
+django-widget-tweaks = "^1.4.8"
 
 [tool.poetry.dev-dependencies]
 better-exceptions = "^0.2.1"

@@ -24,6 +24,7 @@ class ManufacturerSerializer(HyperlinkedModelSerializer):
         fields = (
             'id',
             'name',
+            'website'
         )
 
 

@@ -1,29 +1,30 @@
 import random
 
+from django.contrib.auth import logout
+from django.http import Http404
 from django.shortcuts import HttpResponseRedirect, redirect
 from django.shortcuts import render
 from django.shortcuts import reverse
-from django.http import Http404
-from django.contrib.auth import logout
+from django.contrib.admin.views.decorators import staff_member_required
 
-from filamentcolors.helpers import get_hsv
-from filamentcolors.helpers import set_tasty_cookies
-from filamentcolors.helpers import show_welcome_modal
-from filamentcolors.helpers import get_custom_library
-from filamentcolors.models import Printer
-from filamentcolors.models import Swatch
-from filamentcolors.models import GenericFilamentType
 from filamentcolors.helpers import build_data_dict
 from filamentcolors.helpers import clean_collection_ids
 from filamentcolors.helpers import generate_custom_library
+from filamentcolors.helpers import get_custom_library
+from filamentcolors.helpers import get_hsv
 from filamentcolors.helpers import get_swatches
+from filamentcolors.helpers import set_tasty_cookies
+from filamentcolors.helpers import show_welcome_modal
+from filamentcolors.models import GenericFilamentType
+from filamentcolors.models import Swatch
+from filamentcolors.forms import FilamentTypeForm, SwatchForm, ManufacturerForm
 
 
 def homepage(request):
     return HttpResponseRedirect(reverse('library'))
 
 
-def librarysort(request, method: str=None):
+def librarysort(request, method: str = None):
     """
     Available options:
 
@@ -139,6 +140,7 @@ def typesort(request, id):
 
     return render(request, html, data)
 
+
 def swatch_detail(request, id):
     html = 'swatch_detail.html'
     swatch = Swatch.objects.filter(id=id).first()
@@ -163,15 +165,6 @@ def swatch_detail(request, id):
             return response
 
         return render(request, html, data)
-
-
-def printer_detail(request, id):
-    html = 'printer_detail.html'
-    printer = Printer.objects.filter(id=id).first()
-    if not printer:
-        return render(request, html, {'error': 'Printer ID not found!'})
-    else:
-        return render(request, html, {'printer': printer})
 
 
 def swatch_collection(request, ids):
@@ -225,16 +218,89 @@ def edit_swatch_collection(request, ids):
     return render(request, html, data)
 
 
+@staff_member_required
+def add_swatch(request):
+    if request.method == "POST":
+        form = SwatchForm(request.POST, request.FILES)
+        new_swatch = form.save()
+        return HttpResponseRedirect(
+            reverse("swatchdetail", kwargs={"id": new_swatch.id})
+        )
+    else:
+        form = SwatchForm()
+        data = build_data_dict(request)
+        data.update({
+            "header": "Swatch Add Form",
+            "subheader": "A new splash of color!",
+            "form": form
+        })
+        data.update(
+            {
+                "header_js_buttons": [
+                    {
+                        "text": "Manufacturer Site",
+                        "onclick": "loadMfrSite()"
+                    },
+                    {
+                        "text": "Amazon Search",
+                        "onclick": "loadAmazonSearch()"
+                    }
+                ],
+                "header_link_buttons": [
+                    {
+                        "text": "Add New Manufacturer",
+                        "reverse_url": "add_mfr"
+                    },
+                    {
+                        "text": "Add Filament Type",
+                        "reverse_url": "add_filament_type"
+                    }
+                ]
+            }
+        )
+    return render(request, "generic_form.html", data)
+
+
+@staff_member_required
+def add_manufacturer(request):
+    if request.method == "POST":
+        form = ManufacturerForm(request.POST)
+        form.save()
+        return HttpResponseRedirect(reverse("add_swatch"))
+    else:
+        data = build_data_dict(request)
+        form = ManufacturerForm()
+        data.update({
+            "header": "Manufacturer Add Form",
+            "subheader": "A new source of color!",
+            "form": form
+        })
+        return render(request, "generic_form.html", data)
+
+
+@staff_member_required
+def add_filament_type(request):
+    if request.method == "POST":
+        form = FilamentTypeForm(request.POST)
+        form.save()
+        return HttpResponseRedirect(reverse("add_swatch"))
+    else:
+        data = build_data_dict(request)
+        form = FilamentTypeForm()
+        data.update({
+            "header": "Filament Type Add Form",
+            "subheader": "A new type of color!",
+            "form": form
+        })
+        return render(request, "generic_form.html", data)
+
+
 def about_page(request):
     return render(request, 'about.html', build_data_dict(request))
 
 
 def donation_page(request):
     return render(request, 'donations.html', build_data_dict(request))
-
-
-def vrrf(request):
-    return render(request, 'vrrf.html', build_data_dict(request))
 
 
 def logout_view(request):

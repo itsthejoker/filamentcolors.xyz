@@ -51,20 +51,31 @@
                 <a class="nav-link" href="{% url 'donations' %}">Filament Donations</a>
             </li>
             {% if request.user.is_authenticated %}
-                {% if 'swatch' in request.path %}
-                    <li class="nav-item active">
-                        <a class="btn navbar-btn btn-outline-info"
-                           href="/admin/filamentcolors/swatch/{{ swatch.id }}/change/">EDIT</a>
-                    </li>
-                {% endif %}
+                <li class="nav-item active dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Admin
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        {% if 'swatch' in request.path and 'add' not in request.path %}
+                            <a class="dropdown-item"
+                               href="/admin/filamentcolors/swatch/{{ swatch.id }}/change/">Edit Swatch</a>
+                            <div class="dropdown-divider"></div>
+                        {% endif %}
+                        <a class="dropdown-item"
+                           href="{% url 'add_swatch' %}">Upload New</a>
+                        <a class="dropdown-item"
+                           href="{% url 'add_mfr' %}">Add Manufacturer</a>
+                        <a class="dropdown-item"
+                           href="{% url 'add_filament_type' %}">Add Filament Type</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </li>
             {% endif %}
         </ul>
         <ul class="navbar-nav ml-auto">
-            {% if request.user.is_authenticated %}
-                <li class="nav-item active">
-                    <a class="btn navbar-btn btn-outline-danger" href="{% url 'logout' %}">LOGOUT</a>
-                </li>
-            {% endif %}
             <li class="nav-item">
                 <div class="nav-link clickable" onclick="showSettings()" data-toggle="collapse"
                      data-target="#navbarSupportedContent">Settings

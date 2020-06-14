@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'taggit',
+    'widget_tweaks',
     'filamentcolors',
     'rest_framework'
 ]

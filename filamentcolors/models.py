@@ -26,16 +26,6 @@ from filamentcolors.colors import Color
 from filamentcolors.twitter_helpers import send_tweet
 
 
-class Printer(models.Model):
-    name = models.CharField(max_length=50)
-    notes = models.TextField(max_length=4000, null=True, blank=True)
-    image = models.ImageField(null=True, blank=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.owner.username} - {self.name}"
-
-
 class Manufacturer(models.Model):
     name = models.CharField(max_length=160)
     website = models.URLField(null=True, blank=True)

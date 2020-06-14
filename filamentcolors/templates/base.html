@@ -20,6 +20,8 @@
 {% block content %}
 {% endblock content %}
 
-{% include 'partials/multiselect_js.partial' %}
+{% if "swatch" not in request.path %}
+    {% include 'partials/multiselect_js.partial' %}
+{% endif %}
 
 {% include 'partials/footer.partial' %}

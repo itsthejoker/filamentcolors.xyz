@@ -5,7 +5,6 @@ from filamentcolors.models import FilamentType
 from filamentcolors.models import GenericFilamentType
 from filamentcolors.models import GenericFile
 from filamentcolors.models import Manufacturer
-from filamentcolors.models import Printer
 from filamentcolors.models import Swatch
 
 
@@ -36,10 +35,6 @@ class SwatchAdmin(admin.ModelAdmin):
             return res
 
 
-class PrinterAdmin(admin.ModelAdmin):
-    ordering = ('name',)
-
-
 class ManufacturerAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
@@ -49,7 +44,6 @@ class FilamentTypeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Swatch, SwatchAdmin)
-admin.site.register(Printer, PrinterAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(FilamentType, FilamentTypeAdmin)
 admin.site.register(GenericFile)

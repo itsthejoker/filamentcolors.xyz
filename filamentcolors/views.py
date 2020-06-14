@@ -17,7 +17,7 @@ from filamentcolors.helpers import set_tasty_cookies
 from filamentcolors.helpers import show_welcome_modal
 from filamentcolors.models import GenericFilamentType
 from filamentcolors.models import Swatch
-from filamentcolors.forms import SwatchForm
+from filamentcolors.forms import FilamentTypeForm, SwatchForm, ManufacturerForm
 
 
 def homepage(request):
@@ -219,14 +219,7 @@ def edit_swatch_collection(request, ids):
 
 
 @staff_member_required
-def upload_swatch(request):
-    html = "generic_form.html"
-    data = build_data_dict(request)
-    data.update({
-        "header": "Swatch Add Form",
-        "subheader": "A new splash of color!"
-    })
-
+def add_swatch(request):
     if request.method == "POST":
         form = SwatchForm(request.POST, request.FILES)
         new_swatch = form.save()
@@ -235,9 +228,71 @@ def upload_swatch(request):
         )
     else:
         form = SwatchForm()
-        data.update({"form": form})
+        data = build_data_dict(request)
+        data.update({
+            "header": "Swatch Add Form",
+            "subheader": "A new splash of color!",
+            "form": form
+        })
+        data.update(
+            {
+                "header_js_buttons": [
+                    {
+                        "text": "Manufacturer Site",
+                        "onclick": "loadMfrSite()"
+                    },
+                    {
+                        "text": "Amazon Search",
+                        "onclick": "loadAmazonSearch()"
+                    }
+                ],
+                "header_link_buttons": [
+                    {
+                        "text": "Add New Manufacturer",
+                        "reverse_url": "add_mfr"
+                    },
+                    {
+                        "text": "Add Filament Type",
+                        "reverse_url": "add_filament_type"
+                    }
+                ]
+            }
+        )
+    return render(request, "generic_form.html", data)
 
-    return render(request, html, data)
+
+@staff_member_required
+def add_manufacturer(request):
+    if request.method == "POST":
+        form = ManufacturerForm(request.POST)
+        form.save()
+        return HttpResponseRedirect(reverse("add_swatch"))
+    else:
+        data = build_data_dict(request)
+        form = ManufacturerForm()
+        data.update({
+            "header": "Manufacturer Add Form",
+            "subheader": "A new source of color!",
+            "form": form
+        })
+        return render(request, "generic_form.html", data)
+
+
+@staff_member_required
+def add_filament_type(request):
+    if request.method == "POST":
+        form = FilamentTypeForm(request.POST)
+        form.save()
+        return HttpResponseRedirect(reverse("add_swatch"))
+    else:
+        data = build_data_dict(request)
+        form = FilamentTypeForm()
+        data.update({
+            "header": "Filament Type Add Form",
+            "subheader": "A new type of color!",
+            "form": form
+        })
+        return render(request, "generic_form.html", data)
 
 
 def about_page(request):
@@ -246,10 +301,6 @@ def about_page(request):
 
 def donation_page(request):
     return render(request, 'donations.html', build_data_dict(request))
-
-
-def vrrf(request):
-    return render(request, 'vrrf.html', build_data_dict(request))
 
 
 def logout_view(request):

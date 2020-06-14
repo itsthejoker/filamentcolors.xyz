@@ -23,7 +23,6 @@ from filamentcolors.api.urls import urlpatterns as api_urls
 
 urlpatterns = [
     # Primary site URLs
-    path('admin/', admin.site.urls),
     path('', views.homepage, name='homepage'),
     path('library/sort/<str:method>/', views.librarysort, name='librarysort'),
     path('library/collection/edit/<str:ids>/', views.edit_swatch_collection, name='edit_collection'),
@@ -35,8 +34,13 @@ urlpatterns = [
     path('library/color_family/<str:family_id>', views.colorfamilysort, name='color_family_sort'),
     path('donating', views.donation_page, name='donations'),
     path('about/', views.about_page, name='about'),
+
+    # Admin urls
+    path('admin/', admin.site.urls),
     path('logout/', views.logout_view, name='logout'),
-    path('upload/swatch/', views.upload_swatch, name='upload_swatch'),
+    path('add/swatch/', views.add_swatch, name='add_swatch'),
+    path('add/manufacturer/', views.add_manufacturer, name='add_mfr'),
+    path('add/filamenttype/', views.add_filament_type, name='add_filament_type'),
     # Event / Special URLs
     # ...
 

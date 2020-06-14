@@ -58,12 +58,17 @@
                         Admin
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item"
-                           href="{% url 'upload_swatch' %}">Upload New</a>
-                        {% if 'swatch' in request.path and 'upload' not in request.path %}
+                        {% if 'swatch' in request.path and 'add' not in request.path %}
                             <a class="dropdown-item"
                                href="/admin/filamentcolors/swatch/{{ swatch.id }}/change/">Edit Swatch</a>
+                            <div class="dropdown-divider"></div>
                         {% endif %}
+                        <a class="dropdown-item"
+                           href="{% url 'add_swatch' %}">Upload New</a>
+                        <a class="dropdown-item"
+                           href="{% url 'add_mfr' %}">Add Manufacturer</a>
+                        <a class="dropdown-item"
+                           href="{% url 'add_filament_type' %}">Add Filament Type</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                     </div>

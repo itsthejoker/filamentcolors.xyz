@@ -1,0 +1,54 @@
+<script>
+    function loadMfrSite() {
+        mfrID = document.getElementById("id_manufacturer").value;
+        if (mfrID === "") {
+            $.toast({
+                title: 'Error!',
+                content: 'No manufacturer selected!',
+                type: 'error',
+                delay: 3000
+            });
+            return;
+        }
+
+        fetch("/api/manufacturer/" + mfrID)
+            .then(response => response.json())
+            .then(data => {
+                if (data.website === null) {
+                    $.toast({
+                        title: 'Error!',
+                        content: "API says there's no website!",
+                        type: 'error',
+                        delay: 3000
+                    });
+                    return
+                }
+                window.open(data.website, '_blank').focus()
+            })
+    }
+
+    function loadAmazonSearch() {
+        mfr = document.getElementById("id_manufacturer");
+        mfrName = mfr.options[mfr.selectedIndex].text;
+        colorName = document.getElementById("id_color_name").value;
+        if (mfrName === "---------") {
+            $.toast({
+                title: 'Error!',
+                content: 'No manufacturer selected!',
+                type: 'error',
+                delay: 3000
+            });
+            return
+        } else if (colorName === "") {
+            $.toast({
+                title: 'Error!',
+                content: 'No color name retrieved!',
+                type: 'error',
+                delay: 3000
+            });
+            return
+        }
+        searchstring = encodeURI(mfrName + " " + colorName)
+        window.open("https://www.amazon.com/s?k=" + searchstring, '_blank').focus()
+    }
+</script>

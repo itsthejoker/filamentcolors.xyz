@@ -1,11 +1,18 @@
 from django import forms
-from filamentcolors.models import Swatch
+from django.db.models.functions import Lower
+
+from filamentcolors.models import Swatch, Manufacturer, FilamentType
+
 
 class SwatchForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['image_front'].required = True
         self.fields['image_back'].required = True
+
+    manufacturer = forms.ModelChoiceField(
+        queryset=Manufacturer.objects.all().order_by(Lower('name'))
+    )
 
     class Meta:
         model = Swatch
@@ -22,3 +29,15 @@ class SwatchForm(forms.ModelForm):
             "mfr_purchase_link",
             "tags"
         ]
+
+
+class ManufacturerForm(forms.ModelForm):
+    class Meta:
+        model = Manufacturer
+        fields = ["name", "website"]
+
+
+class FilamentTypeForm(forms.ModelForm):
+    class Meta:
+        model = FilamentType
+        fields = ["name", "hot_end_temp", "bed_temp", "parent_type"]

@@ -6,7 +6,24 @@
         <h1>{{ header }}</h1>
         <h4>{{ subheader }}</h4>
 
-        <div class="container">
+        {% if header_js_buttons or header_link_buttons %}
+            <div class="row">
+                {% for item in header_js_buttons %}
+                    <div class="col mt-2">
+                        <button class="btn btn-info btn-block"
+                                onclick="{{ item.onclick }}">{{ item.text }}</button>
+                    </div>
+                {% endfor %}
+                {% for item in header_link_buttons %}
+                    <div class="col mt-2">
+                        <a href="{% url item.reverse_url %}"
+                           class="btn btn-info btn-block">{{ item.text }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="container mt-3">
             {# Lifted from https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html#}
             {% if form.is_multipart %}
                 {# properly handle the file uploads #}
@@ -130,5 +147,8 @@
             $("form").each(createAllErrors);
         })
     </script>
+
+    {# Put application-specific imports down here. #}
+    {% include "partials/swatch_add_js.partial" %}
 
 {% endblock %}

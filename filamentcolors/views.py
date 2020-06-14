@@ -5,6 +5,7 @@ from django.http import Http404
 from django.shortcuts import HttpResponseRedirect, redirect
 from django.shortcuts import render
 from django.shortcuts import reverse
+from django.contrib.auth.decorators import login_required
 
 from filamentcolors.helpers import build_data_dict
 from filamentcolors.helpers import clean_collection_ids
@@ -15,7 +16,6 @@ from filamentcolors.helpers import get_swatches
 from filamentcolors.helpers import set_tasty_cookies
 from filamentcolors.helpers import show_welcome_modal
 from filamentcolors.models import GenericFilamentType
-from filamentcolors.models import Printer
 from filamentcolors.models import Swatch
 
 
@@ -23,7 +23,7 @@ def homepage(request):
     return HttpResponseRedirect(reverse('library'))
 
 
-def librarysort(request, method: str=None):
+def librarysort(request, method: str = None):
     """
     Available options:
 
@@ -139,6 +139,7 @@ def typesort(request, id):
 
     return render(request, html, data)
 
+
 def swatch_detail(request, id):
     html = 'swatch_detail.html'
     swatch = Swatch.objects.filter(id=id).first()
@@ -163,15 +164,6 @@ def swatch_detail(request, id):
             return response
 
         return render(request, html, data)
-
-
-def printer_detail(request, id):
-    html = 'printer_detail.html'
-    printer = Printer.objects.filter(id=id).first()
-    if not printer:
-        return render(request, html, {'error': 'Printer ID not found!'})
-    else:
-        return render(request, html, {'printer': printer})
 
 
 def swatch_collection(request, ids):
@@ -223,6 +215,11 @@ def edit_swatch_collection(request, ids):
         return response
 
     return render(request, html, data)
+
+
+@login_required
+def upload_swatch(request):
+    pass
 
 
 def about_page(request):

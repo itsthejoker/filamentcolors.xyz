@@ -33,7 +33,6 @@ urlpatterns = [
     path('library/manufacturer/<int:id>', views.manufacturersort, name='manufacturersort'),
     path('library/filament_type/<int:id>', views.typesort, name='typesort'),
     path('library/color_family/<str:family_id>', views.colorfamilysort, name='color_family_sort'),
-    # path('printer/<int:id>', views.printer_detail, name='printerdetail'),
     path('donating', views.donation_page, name='donations'),
     path('about/', views.about_page, name='about'),
     path('logout/', views.logout_view, name='logout'),

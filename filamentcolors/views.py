@@ -1,22 +1,22 @@
 import random
 
+from django.contrib.auth import logout
+from django.http import Http404
 from django.shortcuts import HttpResponseRedirect, redirect
 from django.shortcuts import render
 from django.shortcuts import reverse
-from django.http import Http404
-from django.contrib.auth import logout
 
-from filamentcolors.helpers import get_hsv
-from filamentcolors.helpers import set_tasty_cookies
-from filamentcolors.helpers import show_welcome_modal
-from filamentcolors.helpers import get_custom_library
-from filamentcolors.models import Printer
-from filamentcolors.models import Swatch
-from filamentcolors.models import GenericFilamentType
 from filamentcolors.helpers import build_data_dict
 from filamentcolors.helpers import clean_collection_ids
 from filamentcolors.helpers import generate_custom_library
+from filamentcolors.helpers import get_custom_library
+from filamentcolors.helpers import get_hsv
 from filamentcolors.helpers import get_swatches
+from filamentcolors.helpers import set_tasty_cookies
+from filamentcolors.helpers import show_welcome_modal
+from filamentcolors.models import GenericFilamentType
+from filamentcolors.models import Printer
+from filamentcolors.models import Swatch
 
 
 def homepage(request):

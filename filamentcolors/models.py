@@ -12,7 +12,6 @@ from colormath.color_objects import LabColor
 from colormath.color_objects import sRGBColor
 from colorthief import ColorThief
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
 from django.core.files.storage import default_storage

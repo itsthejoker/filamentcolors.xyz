@@ -10,7 +10,6 @@
             });
             return;
         }
-
         fetch("/api/manufacturer/" + mfrID)
             .then(response => response.json())
             .then(data => {
@@ -31,6 +30,8 @@
         mfr = document.getElementById("id_manufacturer");
         mfrName = mfr.options[mfr.selectedIndex].text;
         colorName = document.getElementById("id_color_name").value;
+        ftype = document.getElementById("id_filament_type");
+        ftypeName = ftype.options[ftype.selectedIndex].text;
         if (mfrName === "---------") {
             $.toast({
                 title: 'Error!',
@@ -47,8 +48,16 @@
                 delay: 3000
             });
             return
+        } else if (ftypeName === "---------") {
+            $.toast({
+                title: 'Error!',
+                content: 'No color type specified!',
+                type: 'error',
+                delay: 3000
+            });
+            return
         }
-        searchstring = encodeURI(mfrName + " " + colorName)
+        searchstring = encodeURI(mfrName + " " + colorName + " " + ftypeName)
         window.open("https://www.amazon.com/s?k=" + searchstring, '_blank').focus()
     }
 </script>

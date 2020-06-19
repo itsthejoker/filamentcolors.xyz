@@ -146,12 +146,12 @@ def get_custom_library(data: Dict) -> QuerySet:
 
     s = s.filter(manufacturer__in=data["user_settings"]["mfr_whitelist"])
 
-    return s
+    return s.exclude(published=False)
 
 
 def get_swatches(data: Dict) -> QuerySet:
     if generate_custom_library(data):
         queryset = get_custom_library(data)
     else:
-        queryset = Swatch.objects.all()
-    return queryset.exclude(published=False)
+        queryset = Swatch.objects.exclude(published=False)
+    return queryset

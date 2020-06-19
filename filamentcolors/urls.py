@@ -47,6 +47,7 @@ urlpatterns = [
         name="color_family_sort",
     ),
     path("donating", views.donation_page, name="donations"),
+    path("inventory", views.inventory_page, name="inventory"),
     path("about/", views.about_page, name="about"),
     # Admin urls
     path("admin/", admin.site.urls),

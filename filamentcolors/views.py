@@ -212,6 +212,14 @@ def edit_swatch_collection(request, ids):
     return render(request, html, data)
 
 
+def inventory_page(request):
+    data = build_data_dict(request)
+    data.update({
+        "swatches": Swatch.objects.all(),
+    })
+    return render(request, "inventory.html", data)
+
+
 def about_page(request):
     return render(request, "about.html", build_data_dict(request))
 

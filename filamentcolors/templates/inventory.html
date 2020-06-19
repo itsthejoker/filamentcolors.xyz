@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Inventory / Backlog</h1>
+        <p>
+            If you're looking at donating, use this page as a reference for what is
+            both currently added and what's in the pipeline to be added. If you have
+            a filament that isn't represented on this page, then it <i>probably</i>
+            is one that I don't already have; I'm still adding filaments from my backlog
+            so it will be a little while before this page is fully up to date.
+        </p>
+        <p>
+            Note: if a swatch is listed as unavailable, that means that it's unavailable
+            for purchase and is not offered anymore (or never was; there are several
+            prototypes listed in the library). If a swatch is listed as not published,
+            it's in the backlog and will eventually be added.
+        </p>
+        <p>
+            If you're on mobile, this page works best in landscape mode.
+        </p>
+        <h3>Inventory</h3>
+        <div class="table-responsive">
+            <table id="inventoryTable" class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col" class="text-center">Manufacturer</th>
+                    <th scope="col" class="text-center">Color Name</th>
+                    <th scope="col" class="text-center">Type</th>
+                    <th scope="col" class="text-center">Available?</th>
+                    <th scope="col" class="text-center">Published?</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in swatches %}
+                    <tr>
+                        <td class="text-left">{{ item.manufacturer }}</td>
+                        <td class="text-left">{{ item.color_name }}</td>
+                        <td class="text-left">{{ item.filament_type.name }}</td>
+                        {% if item.is_available %}
+                            <td>✓</td>
+                        {% else %}
+                            <td>✗</td>
+                        {% endif %}
+                        {% if item.published %}
+                            <td>✓</td>
+                        {% else %}
+                            <td>✗</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#inventoryTable').DataTable();
+        });
+    </script>
+{% endblock %}

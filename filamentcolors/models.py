@@ -514,9 +514,9 @@ class Swatch(models.Model):
         These will only be used if the user has the default settings on the
         front end.
         """
-        latest_swatch = Swatch.objects.latest("date_added")
+        latest_swatch = Swatch.objects.exclude(published=False).latest("date_added")
         if latest_swatch.date_added > self.last_cache_update:
-            library = Swatch.objects.all().exclude(published=False)
+            library = Swatch.objects.exclude(published=False)
             self.update_all_color_matches(library)
             self.last_cache_update = timezone.now()
             self.save()
@@ -532,6 +532,9 @@ class Swatch(models.Model):
         self.update_split_complement_swatches(library)
         self.update_tetradic_swatches(library)
         self.update_square_swatches(library)
+
+    def is_available(self):
+        return False if self.tags.filter(name='unavailable').first() else True
 
     def save(self, *args, **kwargs):
         # default action is to not post to social media

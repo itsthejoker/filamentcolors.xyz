@@ -1,14 +1,11 @@
 import colorsys
-from typing import List, Dict
+from typing import Dict, List
 
 from django.db.models.functions import Lower
 from django.db.models.query import QuerySet
 from django.http import request
 
-from filamentcolors.models import GenericFilamentType
-from filamentcolors.models import GenericFile
-from filamentcolors.models import Manufacturer
-from filamentcolors.models import Swatch
+from filamentcolors.models import GenericFilamentType, GenericFile, Manufacturer, Swatch
 
 have_visited_before_cookie = "f"
 filament_type_settings_cookie = "show-types"
@@ -26,16 +23,16 @@ def get_hsv(item):
 
     # update: seems to work but I don't know why or how
     hexrgb = item.hex_color
-    r, g, b = (int(hexrgb[i:i + 2], 16) / 255.0 for i in range(0, 5, 2))
+    r, g, b = (int(hexrgb[i : i + 2], 16) / 255.0 for i in range(0, 5, 2))
     return colorsys.rgb_to_hsv(r, g, b)
 
 
 def set_tasty_cookies(response) -> None:
     year = 365 * 24 * 60 * 60
-    response.set_cookie(have_visited_before_cookie, 'tasty_cookies', max_age=year)
+    response.set_cookie(have_visited_before_cookie, "tasty_cookies", max_age=year)
 
 
-def build_data_dict(request, library: bool=False) -> Dict:
+def build_data_dict(request, library: bool = False) -> Dict:
     """
     Here's what these keys are used for:
 
@@ -55,25 +52,24 @@ def build_data_dict(request, library: bool=False) -> Dict:
     """
 
     return {
-        'search_prefill': request.GET.get('q', ''),
-        'manufacturers': Manufacturer.objects.all().order_by(Lower('name')),
-        'filament_types': GenericFilamentType.objects.all().order_by(Lower('name')),
-        'color_family': Swatch.BASE_COLOR_OPTIONS,
-        'welcome_experience_images': [
-            GenericFile.objects.filter(file__startswith=X).first() for X in [
-                'step1', 'step2', 'step3', 'step4'
-            ]
+        "search_prefill": request.GET.get("q", ""),
+        "manufacturers": Manufacturer.objects.all().order_by(Lower("name")),
+        "filament_types": GenericFilamentType.objects.all().order_by(Lower("name")),
+        "color_family": Swatch.BASE_COLOR_OPTIONS,
+        "welcome_experience_images": [
+            GenericFile.objects.filter(file__startswith=X).first()
+            for X in ["step1", "step2", "step3", "step4"]
         ],
-        'settings_buttons': GenericFilamentType.objects.all(),
-        'user_settings': get_settings_cookies(request),
-        'is_library_view': library
+        "settings_buttons": GenericFilamentType.objects.all(),
+        "user_settings": get_settings_cookies(request),
+        "is_library_view": library,
     }
 
 
 def clean_collection_ids(ids: str) -> List:
     # filter out bad input
     cleaned_ids = list()
-    for item in ids.split(','):
+    for item in ids.split(","):
         try:
             cleaned_ids.append(int(item))
         except ValueError:
@@ -93,31 +89,31 @@ def get_settings_cookies(r: request) -> Dict:
         # the goal is to identify whether the user wants to see that particular
         # type in the library view and what types to exclude when doing a
         # modified color wheel search.
-        type_settings = type_settings.split('_')
-        if type_settings[-1] == '':
+        type_settings = type_settings.split("_")
+        if type_settings[-1] == "":
             type_settings.pop()
 
         types = [
-            GenericFilamentType.objects.get(id=x.split('-')[0])
+            GenericFilamentType.objects.get(id=x.split("-")[0])
             for x in type_settings
-            if x.split('-')[1] == 'true'
+            if x.split("-")[1] == "true"
         ]
     else:
         types = GenericFilamentType.objects.all()
 
     if mfr_blacklist:
         # in this format: 1-2-3-12-5-8-
-        mfr_blacklist = mfr_blacklist.split('-')
-        if mfr_blacklist[-1] == '':
+        mfr_blacklist = mfr_blacklist.split("-")
+        if mfr_blacklist[-1] == "":
             mfr_blacklist.pop()
         mfr_blacklist_objects = Manufacturer.objects.all().exclude(id__in=mfr_blacklist)
     else:
         mfr_blacklist_objects = Manufacturer.objects.all()
 
     return {
-        'types': types,
-        'show_unavailable': True if show_dc == "true" else False,
-        'mfr_whitelist': mfr_blacklist_objects
+        "types": types,
+        "show_unavailable": True if show_dc == "true" else False,
+        "mfr_whitelist": mfr_blacklist_objects,
     }
 
 
@@ -135,22 +131,20 @@ def generate_custom_library(data: Dict):
     :return:
     """
     return not (
-            len(data['user_settings']['types']) ==
-            GenericFilamentType.objects.count() and
-            data['user_settings']['show_unavailable'] and
-            len(data['user_settings']['mfr_whitelist']) ==
-            Manufacturer.objects.count()
+        len(data["user_settings"]["types"]) == GenericFilamentType.objects.count()
+        and data["user_settings"]["show_unavailable"]
+        and len(data["user_settings"]["mfr_whitelist"]) == Manufacturer.objects.count()
     )
 
 
 def get_custom_library(data: Dict) -> QuerySet:
     s = Swatch.objects.filter(
-        filament_type__parent_type__in=data['user_settings']['types']
+        filament_type__parent_type__in=data["user_settings"]["types"]
     )
-    if data['user_settings']['show_unavailable'] is False:
+    if data["user_settings"]["show_unavailable"] is False:
         s = s.exclude(tags__name="unavailable")
 
-    s = s.filter(manufacturer__in=data['user_settings']['mfr_whitelist'])
+    s = s.filter(manufacturer__in=data["user_settings"]["mfr_whitelist"])
 
     return s
 

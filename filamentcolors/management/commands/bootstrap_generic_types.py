@@ -3,16 +3,10 @@ from filamentcolors.models import GenericFilamentType
 
 
 class Command(BaseCommand):
-    help = 'Creates the base types used for navigation'
+    help = "Creates the base types used for navigation"
 
     def handle(self, *args, **options):
-        TYPES = [
-            'PLA',
-            'PETG',
-            'ABS',
-            'TPU / TPE',
-            'Exotics'
-        ]
+        TYPES = ["PLA", "PETG", "ABS", "TPU / TPE", "Exotics"]
 
         created_types = list()
 
@@ -23,14 +17,10 @@ class Command(BaseCommand):
                 created_types.append(t)
 
         if len(created_types) == 0:
-            self.stdout.write(
-                self.style.SUCCESS('No types created; all present.')
-            )
+            self.stdout.write(self.style.SUCCESS("No types created; all present."))
         else:
             self.stdout.write(
                 self.style.SUCCESS(
-                    'Created the following types: {}'.format(
-                        ', '.join(created_types)
-                    )
+                    "Created the following types: {}".format(", ".join(created_types))
                 )
             )

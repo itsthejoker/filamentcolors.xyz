@@ -23,7 +23,7 @@ def get_tweet_content(swatch_of_the_day) -> str:
 
 
 class Command(BaseCommand):
-    help = 'Send a tweet about a random swatch in the library.'
+    help = "Send a tweet about a random swatch in the library."
 
     def handle(self, *args, **options):
         today = timezone.now().isoweekday()

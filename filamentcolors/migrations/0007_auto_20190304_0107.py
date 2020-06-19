@@ -6,24 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0006_auto_20190303_1936'),
+        ("filamentcolors", "0006_auto_20190303_1936"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='swatch',
-            name='bed_temp_str',
-        ),
-        migrations.RemoveField(
-            model_name='swatch',
-            name='filament_type_str',
-        ),
-        migrations.RemoveField(
-            model_name='swatch',
-            name='hot_end_temp_str',
-        ),
-        migrations.RemoveField(
-            model_name='swatch',
-            name='manufacturer_str',
-        ),
+        migrations.RemoveField(model_name="swatch", name="bed_temp_str",),
+        migrations.RemoveField(model_name="swatch", name="filament_type_str",),
+        migrations.RemoveField(model_name="swatch", name="hot_end_temp_str",),
+        migrations.RemoveField(model_name="swatch", name="manufacturer_str",),
     ]

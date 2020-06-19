@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0016_delete_printer'),
+        ("filamentcolors", "0016_delete_printer"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='swatch',
-            name='published',
-            field=models.BooleanField(default=True, help_text='Is the swatch visible on the homepage?'),
+            model_name="swatch",
+            name="published",
+            field=models.BooleanField(
+                default=True, help_text="Is the swatch visible on the homepage?"
+            ),
         ),
     ]

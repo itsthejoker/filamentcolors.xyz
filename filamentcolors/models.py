@@ -5,11 +5,9 @@ from typing import Tuple
 import cv2
 import numpy as np
 import pytz
-from PIL import Image as Img
 from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cmc
-from colormath.color_objects import LabColor
-from colormath.color_objects import sRGBColor
+from colormath.color_objects import LabColor, sRGBColor
 from colorthief import ColorThief
 from django.conf import settings
 from django.core.files.base import ContentFile
@@ -18,6 +16,7 @@ from django.core.files.storage import default_storage
 from django.db import models
 from django.db.models.query import QuerySet
 from django.utils import timezone
+from PIL import Image as Img
 from skimage import io
 from taggit.managers import TaggableManager
 
@@ -38,6 +37,7 @@ class GenericFilamentType(models.Model):
     This is to keep track of the basics: PLA, ABS, etc. Searching by type is
     performed off of these generic types.
     """
+
     name = models.CharField(max_length=24, default="PLA")
 
     def __str__(self):
@@ -49,6 +49,7 @@ class FilamentType(models.Model):
     This is for the specialty subtypes: PLA2, HTPLA, etc. Both of those are
     still PLAs, so we want them to be included when searching by PLA.
     """
+
     name = models.CharField(max_length=24, default="PLA")
     hot_end_temp = models.IntegerField(default=205)
     bed_temp = models.IntegerField(default=60)
@@ -81,6 +82,7 @@ class Swatch(models.Model):
 
     If it's published, then it's ready to go and visible on the homepage.
     """
+
     WHITE = "WHT"
     BLACK = "BLK"
     RED = "RED"
@@ -106,7 +108,7 @@ class Swatch(models.Model):
         (PINK, "Pink"),
         (ORANGE, "Orange"),
         (GREY, "Grey"),
-        (TRANSPARENT, "Transparent")
+        (TRANSPARENT, "Transparent"),
     ]
 
     manufacturer = models.ForeignKey(
@@ -133,7 +135,7 @@ class Swatch(models.Model):
         help_text=(
             "Regenerate the color information using the long way for increased"
             " accuracy."
-        )
+        ),
     )
     regenerate_info = models.BooleanField(
         default=False, help_text="Rebuild all the information related to this swatch."
@@ -146,7 +148,7 @@ class Swatch(models.Model):
 
     date_added = models.DateTimeField(default=timezone.now)
     last_cache_update = models.DateTimeField(
-        default=pytz.timezone('UTC').localize(
+        default=pytz.timezone("UTC").localize(
             timezone.datetime(year=1969, month=1, day=1)
         )
     )
@@ -155,61 +157,100 @@ class Swatch(models.Model):
     mfr_purchase_link = models.URLField(null=True, blank=True)
 
     complement = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
-        related_name="complement_swatch"
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="complement_swatch",
     )
 
     analogous_1 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
-        related_name="analogous_one_swatch"
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="analogous_one_swatch",
     )
     analogous_2 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
-        related_name="analogous_two_swatch"
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="analogous_two_swatch",
     )
 
     triadic_1 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
-        related_name="triadic_one_swatch"
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="triadic_one_swatch",
     )
     triadic_2 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
-        related_name="triadic_two_swatch"
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="triadic_two_swatch",
     )
 
     split_complement_1 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
-        related_name="split_complement_one_swatch"
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="split_complement_one_swatch",
     )
     split_complement_2 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
-        related_name="split_complement_two_swatch"
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="split_complement_two_swatch",
     )
 
     tetradic_1 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
-        related_name="tetradic_one_swatch"
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="tetradic_one_swatch",
     )
     tetradic_2 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
-        related_name="tetradic_two_swatch"
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="tetradic_two_swatch",
     )
     tetradic_3 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
-        related_name="tetradic_three_swatch"
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="tetradic_three_swatch",
     )
 
     square_1 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
-        related_name="square_one_swatch"
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="square_one_swatch",
     )
     square_2 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
-        related_name="square_two_swatch"
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="square_two_swatch",
     )
     square_3 = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.DO_NOTHING,
-        related_name="square_three_swatch"
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="square_three_swatch",
     )
 
     tags = TaggableManager(blank=True)
@@ -218,8 +259,10 @@ class Swatch(models.Model):
     # DO NOT PUT ANYTHING IN THESE FIELDS!
     # They are computed and added automatically!
     card_img_jpeg = models.ImageField(
-        upload_to="card_img", blank=True, null=True,
-        verbose_name="DO NOT ADD! Computed card original"
+        upload_to="card_img",
+        blank=True,
+        null=True,
+        verbose_name="DO NOT ADD! Computed card original",
     )
     card_img = models.ImageField(
         blank=True, verbose_name="DO NOT ADD! Computed Card Image"
@@ -238,15 +281,11 @@ class Swatch(models.Model):
         return self.date_added.strftime("%b %d, %Y")
 
     def get_rgb(self, hex: str) -> Tuple[int, ...]:
-        return tuple(int(hex[i:i + 2], 16) for i in (0, 2, 4))
+        return tuple(int(hex[i : i + 2], 16) for i in (0, 2, 4))
 
     def get_hex(self, rgb: tuple) -> str:
-        return (
-            "{R}{G}{B}".format(
-                R="%0.2X" % int(rgb[0]),
-                G="%0.2X" % int(rgb[1]),
-                B="%0.2X" % int(rgb[2])
-            )
+        return "{R}{G}{B}".format(
+            R="%0.2X" % int(rgb[0]), G="%0.2X" % int(rgb[1]), B="%0.2X" % int(rgb[2])
         )
 
     def rgb_hilo(self, a: int, b: int, c: int) -> int:
@@ -271,12 +310,12 @@ class Swatch(models.Model):
         # do we even need to do it this way? Need to learn more about byte streams
         # and verify that this is actually a valid way to handle this.
         output = BytesIO()
-        i.save(output, format='JPEG', quality=75)
+        i.save(output, format="JPEG", quality=75)
         output.seek(0)
         # remove the file type so that we can modify the filename
-        filename_str = self.image_front.name[:self.image_front.name.rindex('.')]
+        filename_str = self.image_front.name[: self.image_front.name.rindex(".")]
         filename = default_storage.save(
-            f'{filename_str}-{image_type}.jpg', ContentFile(output.read())
+            f"{filename_str}-{image_type}.jpg", ContentFile(output.read())
         )
         return filename
 
@@ -312,7 +351,7 @@ class Swatch(models.Model):
                 (image.width - cs_x) / 2,
                 (image.height - cs_y) / 2,
                 cs_x + (image.width - cs_x) / 2,
-                cs_y + (image.height - cs_y) / 2
+                cs_y + (image.height - cs_y) / 2,
             )
         )
         img_front = image.crop(
@@ -320,7 +359,7 @@ class Swatch(models.Model):
                 (image.width - cs_two_x) / 2,
                 (image.height - cs_two_y) / 2,
                 cs_two_x + (image.width - cs_two_x) / 2,
-                cs_two_y + (image.height - cs_two_y) / 2
+                cs_two_y + (image.height - cs_two_y) / 2,
             )
         )
         img_back = back_image.crop(
@@ -328,36 +367,36 @@ class Swatch(models.Model):
                 (back_image.width - cs_two_x) / 2,
                 (back_image.height - cs_two_y) / 2,
                 cs_two_x + (back_image.width - cs_two_x) / 2,
-                cs_two_y + (back_image.height - cs_two_y) / 2
+                cs_two_y + (back_image.height - cs_two_y) / 2,
             )
         )
 
-        filename_card = self._save_image(img_card, 'card')
-        filename_front = self._save_image(img_front, 'front')
-        filename_back = self._save_image(img_back, 'back')
+        filename_card = self._save_image(img_card, "card")
+        filename_front = self._save_image(img_front, "front")
+        filename_back = self._save_image(img_back, "back")
 
         path = os.path.join(settings.MEDIA_ROOT, filename_card)
-        self.card_img_jpeg = ImageFile(open(path, 'rb'))
+        self.card_img_jpeg = ImageFile(open(path, "rb"))
         self.card_img_jpeg.name = filename_card
 
         path = os.path.join(settings.MEDIA_ROOT, filename_front)
-        self.image_front = ImageFile(open(path, 'rb'))
+        self.image_front = ImageFile(open(path, "rb"))
         self.image_front.name = filename_front
 
         path = os.path.join(settings.MEDIA_ROOT, filename_back)
-        self.image_back = ImageFile(open(path, 'rb'))
+        self.image_back = ImageFile(open(path, "rb"))
         self.image_back.name = filename_back
 
         image = Img.open(self.card_img_jpeg)
         image.thumbnail((200, 200), Img.ANTIALIAS)
 
-        filename = self._save_image(image, 'thumb')
+        filename = self._save_image(image, "thumb")
 
         path = os.path.join(settings.MEDIA_ROOT, filename)
-        self.card_img = ImageFile(open(path, 'rb'))
+        self.card_img = ImageFile(open(path, "rb"))
         self.card_img.name = filename
 
-    def generate_hex_info(self, long_way: bool=False) -> None:
+    def generate_hex_info(self, long_way: bool = False) -> None:
         if long_way:
             # This method is much more computationally intensive and much more
             # difficult to debug, but it's generally more accurate and doesn't
@@ -371,7 +410,7 @@ class Swatch(models.Model):
             pixels = np.float32(img.reshape(-1, 3))
 
             n_colors = 5
-            criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
+            criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, 0.1)
             flags = cv2.KMEANS_RANDOM_CENTERS
 
             # this line is super painful in computation time. We kind of get
@@ -402,8 +441,7 @@ class Swatch(models.Model):
             distance_dict.update({item: distance})
 
         distance_dict = {
-            i: distance_dict[i] for i in distance_dict
-            if distance_dict[i] is not None
+            i: distance_dict[i] for i in distance_dict if distance_dict[i] is not None
         }
 
         sorted_distance_list = sorted(distance_dict.items(), key=lambda kv: kv[1])
@@ -423,51 +461,33 @@ class Swatch(models.Model):
 
     def update_analogous_swatches(self, l):
         analogous = Color(self.hex_color).analagous()
-        a_1 = convert_color(
-            sRGBColor.new_from_rgb_hex(str(analogous[1])), LabColor
-        )
-        a_2 = convert_color(
-            sRGBColor.new_from_rgb_hex(str(analogous[2])), LabColor
-        )
+        a_1 = convert_color(sRGBColor.new_from_rgb_hex(str(analogous[1])), LabColor)
+        a_2 = convert_color(sRGBColor.new_from_rgb_hex(str(analogous[2])), LabColor)
 
         self.analogous_1 = self._get_closest_color_swatch(l, a_1)
         self.analogous_2 = self._get_closest_color_swatch(l, a_2)
 
     def update_triadic_swatches(self, l):
         triadic = Color(self.hex_color).triadic()
-        t_1 = convert_color(
-            sRGBColor.new_from_rgb_hex(str(triadic[1])), LabColor
-        )
-        t_2 = convert_color(
-            sRGBColor.new_from_rgb_hex(str(triadic[2])), LabColor
-        )
+        t_1 = convert_color(sRGBColor.new_from_rgb_hex(str(triadic[1])), LabColor)
+        t_2 = convert_color(sRGBColor.new_from_rgb_hex(str(triadic[2])), LabColor)
 
         self.triadic_1 = self._get_closest_color_swatch(l, t_1)
         self.triadic_2 = self._get_closest_color_swatch(l, t_2)
 
     def update_split_complement_swatches(self, l):
         split_c = Color(self.hex_color).split_complementary()
-        s_1 = convert_color(
-            sRGBColor.new_from_rgb_hex(str(split_c[1])), LabColor
-        )
-        s_2 = convert_color(
-            sRGBColor.new_from_rgb_hex(str(split_c[2])), LabColor
-        )
+        s_1 = convert_color(sRGBColor.new_from_rgb_hex(str(split_c[1])), LabColor)
+        s_2 = convert_color(sRGBColor.new_from_rgb_hex(str(split_c[2])), LabColor)
 
         self.split_complement_1 = self._get_closest_color_swatch(l, s_1)
         self.split_complement_2 = self._get_closest_color_swatch(l, s_2)
 
     def update_tetradic_swatches(self, l):
         tetradic = Color(self.hex_color).tetradic()
-        t_1 = convert_color(
-            sRGBColor.new_from_rgb_hex(str(tetradic[1])), LabColor
-        )
-        t_2 = convert_color(
-            sRGBColor.new_from_rgb_hex(str(tetradic[2])), LabColor
-        )
-        t_3 = convert_color(
-            sRGBColor.new_from_rgb_hex(str(tetradic[3])), LabColor
-        )
+        t_1 = convert_color(sRGBColor.new_from_rgb_hex(str(tetradic[1])), LabColor)
+        t_2 = convert_color(sRGBColor.new_from_rgb_hex(str(tetradic[2])), LabColor)
+        t_3 = convert_color(sRGBColor.new_from_rgb_hex(str(tetradic[3])), LabColor)
 
         self.tetradic_1 = self._get_closest_color_swatch(l, t_1)
         self.tetradic_2 = self._get_closest_color_swatch(l, t_2)
@@ -475,15 +495,9 @@ class Swatch(models.Model):
 
     def update_square_swatches(self, l):
         square = Color(self.hex_color).square()
-        s_1 = convert_color(
-            sRGBColor.new_from_rgb_hex(str(square[1])), LabColor
-        )
-        s_2 = convert_color(
-            sRGBColor.new_from_rgb_hex(str(square[2])), LabColor
-        )
-        s_3 = convert_color(
-            sRGBColor.new_from_rgb_hex(str(square[3])), LabColor
-        )
+        s_1 = convert_color(sRGBColor.new_from_rgb_hex(str(square[1])), LabColor)
+        s_2 = convert_color(sRGBColor.new_from_rgb_hex(str(square[2])), LabColor)
+        s_3 = convert_color(sRGBColor.new_from_rgb_hex(str(square[3])), LabColor)
 
         self.square_1 = self._get_closest_color_swatch(l, s_1)
         self.square_2 = self._get_closest_color_swatch(l, s_2)
@@ -500,7 +514,7 @@ class Swatch(models.Model):
         These will only be used if the user has the default settings on the
         front end.
         """
-        latest_swatch = Swatch.objects.latest('date_added')
+        latest_swatch = Swatch.objects.latest("date_added")
         if latest_swatch.date_added > self.last_cache_update:
             library = Swatch.objects.all().exclude(published=False)
             self.update_all_color_matches(library)

@@ -6,16 +6,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0013_auto_20191104_0343'),
+        ("filamentcolors", "0013_auto_20191104_0343"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='swatch',
-            name='maker',
-        ),
-        migrations.RemoveField(
-            model_name='swatch',
-            name='printed_on',
-        ),
+        migrations.RemoveField(model_name="swatch", name="maker",),
+        migrations.RemoveField(model_name="swatch", name="printed_on",),
     ]

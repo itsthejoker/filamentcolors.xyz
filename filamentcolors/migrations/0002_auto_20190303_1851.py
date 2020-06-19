@@ -6,27 +6,34 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0001_initial'),
+        ("filamentcolors", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='swatch',
-            options={'verbose_name_plural': 'swatches'},
+            name="swatch", options={"verbose_name_plural": "swatches"},
         ),
         migrations.AlterField(
-            model_name='swatch',
-            name='card_img',
-            field=models.ImageField(blank=True, upload_to='', verbose_name='DO NOT ADD! Computed Card Image'),
+            model_name="swatch",
+            name="card_img",
+            field=models.ImageField(
+                blank=True, upload_to="", verbose_name="DO NOT ADD! Computed Card Image"
+            ),
         ),
         migrations.AlterField(
-            model_name='swatch',
-            name='complement_hex',
-            field=models.CharField(blank=True, max_length=6, verbose_name='DO NOT ADD! Computed Complement Hex'),
+            model_name="swatch",
+            name="complement_hex",
+            field=models.CharField(
+                blank=True,
+                max_length=6,
+                verbose_name="DO NOT ADD! Computed Complement Hex",
+            ),
         ),
         migrations.AlterField(
-            model_name='swatch',
-            name='hex_color',
-            field=models.CharField(blank=True, max_length=6, verbose_name='DO NOT ADD! Computed Hex Color'),
+            model_name="swatch",
+            name="hex_color",
+            field=models.CharField(
+                blank=True, max_length=6, verbose_name="DO NOT ADD! Computed Hex Color"
+            ),
         ),
     ]

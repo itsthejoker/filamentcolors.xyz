@@ -6,28 +6,20 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0002_auto_20190303_1851'),
+        ("filamentcolors", "0002_auto_20190303_1851"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='swatch',
-            old_name='bed_temp',
-            new_name='bed_temp_str',
+            model_name="swatch", old_name="bed_temp", new_name="bed_temp_str",
         ),
         migrations.RenameField(
-            model_name='swatch',
-            old_name='filament_type',
-            new_name='filament_type_str',
+            model_name="swatch", old_name="filament_type", new_name="filament_type_str",
         ),
         migrations.RenameField(
-            model_name='swatch',
-            old_name='hot_end_temp',
-            new_name='hot_end_temp_str',
+            model_name="swatch", old_name="hot_end_temp", new_name="hot_end_temp_str",
         ),
         migrations.RenameField(
-            model_name='swatch',
-            old_name='manufacturer',
-            new_name='manufacturer_str',
+            model_name="swatch", old_name="manufacturer", new_name="manufacturer_str",
         ),
     ]

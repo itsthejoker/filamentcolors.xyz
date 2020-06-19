@@ -3,21 +3,20 @@ import random
 import string
 
 from dotenv import load_dotenv
-
 from twitter import Api
 
 load_dotenv()
 
 api = Api(
-    consumer_key=os.environ.get('TWITTER_CONSUMER_KEY'),
-    consumer_secret=os.environ.get('TWITTER_CONSUMER_SECRET'),
-    access_token_key=os.environ.get('TWITTER_ACCESS_TOKEN_KEY'),
-    access_token_secret=os.environ.get('TWITTER_ACCESS_TOKEN_SECRET')
+    consumer_key=os.environ.get("TWITTER_CONSUMER_KEY"),
+    consumer_secret=os.environ.get("TWITTER_CONSUMER_SECRET"),
+    access_token_key=os.environ.get("TWITTER_ACCESS_TOKEN_KEY"),
+    access_token_secret=os.environ.get("TWITTER_ACCESS_TOKEN_SECRET"),
 )
 
 intro_phrases = [
-    'Swatcheriffic!',
-    'Just added a new swatch!',
+    "Swatcheriffic!",
+    "Just added a new swatch!",
     "What's that I see? A new swatch‽",
     "New swatch ahoy!",
     "A new swatch appears!",
@@ -36,34 +35,35 @@ intro_phrases = [
 ]
 
 outro_phrases = [
-    'can be found here:',
-    'can be seen here:',
-    'joins the library!',
-    'now available!',
-    'is now available in the library!',
-    'now listed!',
-    'has been added!',
-    'has been added here:',
-    'now listed!',
-    'is now listed!',
-    'is now in the library!',
-    'can be found in the library!',
-    'appears here:',
-    'is listed here:',
-    ''
+    "can be found here:",
+    "can be seen here:",
+    "joins the library!",
+    "now available!",
+    "is now available in the library!",
+    "now listed!",
+    "has been added!",
+    "has been added here:",
+    "now listed!",
+    "is now listed!",
+    "is now in the library!",
+    "can be found in the library!",
+    "appears here:",
+    "is listed here:",
+    "",
 ]
+
 
 def generate_swatch_upload_tweet(swatch) -> str:
     plural = "'" if swatch.manufacturer.name.endswith("s") else "'s"
     return (
-        f'{random.choice(intro_phrases)} {swatch.manufacturer.name}{plural}'
-        f' {swatch.color_name} {swatch.filament_type.name}'
-        f' {random.choice(outro_phrases)}'
-        f' https://filamentcolors.xyz/swatch/{swatch.id}?ref=newswatchtweet'
+        f"{random.choice(intro_phrases)} {swatch.manufacturer.name}{plural}"
+        f" {swatch.color_name} {swatch.filament_type.name}"
+        f" {random.choice(outro_phrases)}"
+        f" https://filamentcolors.xyz/swatch/{swatch.id}?ref=newswatchtweet"
     )
 
 
-def send_tweet(message: str=None, swatch=None) -> None:
+def send_tweet(message: str = None, swatch=None) -> None:
     if not message:
         message = generate_swatch_upload_tweet(swatch)
     api.PostUpdate(message)
@@ -98,7 +98,7 @@ daily_tweet_intro = [
     "If a print fails and no one is around to hear it, does it still spaghetti? Anyway..."
     "Did you see that clip of {famous_person} doing {totally_normal_thing}??? Anyway...",
     f"This tweet is brought to you by the number {random.choice(string.digits)}!",
-    "Heeeere's Swatchy!"
+    "Heeeere's Swatchy!",
 ]
 
 
@@ -107,9 +107,9 @@ def generate_daily_swatch_tweet(swatch):
     intro = random.choice(daily_tweet_intro)
 
     full_update = (
-        f'{intro}\n\nHave you seen this one yet? {swatch.manufacturer.name}{plural}'
-        f' {swatch.color_name} {swatch.filament_type.name} can be found here:'
-        f' https://filamentcolors.xyz/swatch/{swatch.id}?ref=autotweet'
+        f"{intro}\n\nHave you seen this one yet? {swatch.manufacturer.name}{plural}"
+        f" {swatch.color_name} {swatch.filament_type.name} can be found here:"
+        f" https://filamentcolors.xyz/swatch/{swatch.id}?ref=autotweet"
     )
 
     return full_update

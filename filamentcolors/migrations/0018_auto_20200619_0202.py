@@ -6,18 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0017_swatch_published'),
+        ("filamentcolors", "0017_swatch_published"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='swatch',
-            name='rebuild_long_way',
-            field=models.BooleanField(default=False, help_text='Regenerate the color information using the long way for increased accuracy.'),
+            model_name="swatch",
+            name="rebuild_long_way",
+            field=models.BooleanField(
+                default=False,
+                help_text="Regenerate the color information using the long way for increased accuracy.",
+            ),
         ),
         migrations.AlterField(
-            model_name='swatch',
-            name='regenerate_info',
-            field=models.BooleanField(default=False, help_text='Rebuild all the information related to this swatch.'),
+            model_name="swatch",
+            name="regenerate_info",
+            field=models.BooleanField(
+                default=False,
+                help_text="Rebuild all the information related to this swatch.",
+            ),
         ),
     ]

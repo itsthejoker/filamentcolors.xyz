@@ -6,25 +6,41 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0003_auto_20190303_1928'),
+        ("filamentcolors", "0003_auto_20190303_1928"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='FilamentType',
+            name="FilamentType",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(default='PLA', max_length=24)),
-                ('hot_end_temp', models.IntegerField(default=205)),
-                ('bed_temp', models.IntegerField(default=60)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(default="PLA", max_length=24)),
+                ("hot_end_temp", models.IntegerField(default=205)),
+                ("bed_temp", models.IntegerField(default=60)),
             ],
         ),
         migrations.CreateModel(
-            name='Manufacturer',
+            name="Manufacturer",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=160)),
-                ('website', models.URLField(blank=True, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=160)),
+                ("website", models.URLField(blank=True, null=True)),
             ],
         ),
     ]

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0018_auto_20200619_0202'),
+        ("filamentcolors", "0018_auto_20200619_0202"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='swatch',
-            name='donated_by',
+            model_name="swatch",
+            name="donated_by",
             field=models.CharField(blank=True, max_length=240, null=True),
         ),
     ]

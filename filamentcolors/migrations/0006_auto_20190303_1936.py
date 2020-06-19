@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0005_auto_20190303_1933'),
+        ("filamentcolors", "0005_auto_20190303_1933"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='swatch',
-            old_name='purchase_link',
-            new_name='amazon_purchase_link',
+            model_name="swatch",
+            old_name="purchase_link",
+            new_name="amazon_purchase_link",
         ),
         migrations.AddField(
-            model_name='swatch',
-            name='mfr_purchase_link',
+            model_name="swatch",
+            name="mfr_purchase_link",
             field=models.URLField(blank=True, null=True),
         ),
     ]

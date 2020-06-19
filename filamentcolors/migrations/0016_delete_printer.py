@@ -6,11 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0015_auto_20200327_0106'),
+        ("filamentcolors", "0015_auto_20200327_0106"),
     ]
 
     operations = [
-        migrations.DeleteModel(
-            name='Printer',
-        ),
+        migrations.DeleteModel(name="Printer",),
     ]

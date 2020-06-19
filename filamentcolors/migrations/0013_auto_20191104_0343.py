@@ -7,18 +7,43 @@ import taggit.managers
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0012_auto_20191104_0316'),
+        ("filamentcolors", "0012_auto_20191104_0316"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='swatch',
-            name='color_parent',
-            field=models.CharField(blank=True, choices=[('WHT', 'White'), ('BLK', 'Black'), ('RED', 'Red'), ('GRN', 'Green'), ('YLW', 'Yellow'), ('BLU', 'Blue'), ('BRN', 'Brown'), ('PPL', 'Purple'), ('PNK', 'Pink'), ('RNG', 'Orange'), ('GRY', 'Grey'), ('TRN', 'Transparent')], default='WHT', max_length=3, null=True),
+            model_name="swatch",
+            name="color_parent",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("WHT", "White"),
+                    ("BLK", "Black"),
+                    ("RED", "Red"),
+                    ("GRN", "Green"),
+                    ("YLW", "Yellow"),
+                    ("BLU", "Blue"),
+                    ("BRN", "Brown"),
+                    ("PPL", "Purple"),
+                    ("PNK", "Pink"),
+                    ("RNG", "Orange"),
+                    ("GRY", "Grey"),
+                    ("TRN", "Transparent"),
+                ],
+                default="WHT",
+                max_length=3,
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='swatch',
-            name='tags',
-            field=taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags'),
+            model_name="swatch",
+            name="tags",
+            field=taggit.managers.TaggableManager(
+                blank=True,
+                help_text="A comma-separated list of tags.",
+                through="taggit.TaggedItem",
+                to="taggit.Tag",
+                verbose_name="Tags",
+            ),
         ),
     ]

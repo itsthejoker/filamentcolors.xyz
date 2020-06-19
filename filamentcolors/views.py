@@ -1,24 +1,23 @@
 import random
 
 from django.http import Http404
-from django.shortcuts import HttpResponseRedirect
-from django.shortcuts import render
-from django.shortcuts import reverse
+from django.shortcuts import HttpResponseRedirect, render, reverse
 
-from filamentcolors.helpers import build_data_dict
-from filamentcolors.helpers import clean_collection_ids
-from filamentcolors.helpers import generate_custom_library
-from filamentcolors.helpers import get_custom_library
-from filamentcolors.helpers import get_hsv
-from filamentcolors.helpers import get_swatches
-from filamentcolors.helpers import set_tasty_cookies
-from filamentcolors.helpers import show_welcome_modal
-from filamentcolors.models import GenericFilamentType
-from filamentcolors.models import Swatch
+from filamentcolors.helpers import (
+    build_data_dict,
+    clean_collection_ids,
+    generate_custom_library,
+    get_custom_library,
+    get_hsv,
+    get_swatches,
+    set_tasty_cookies,
+    show_welcome_modal,
+)
+from filamentcolors.models import GenericFilamentType, Swatch
 
 
 def homepage(request):
-    return HttpResponseRedirect(reverse('library'))
+    return HttpResponseRedirect(reverse("library"))
 
 
 def librarysort(request, method: str = None):
@@ -37,32 +36,32 @@ def librarysort(request, method: str = None):
     :param method: the string which determines how to sort the results.
     :return:
     """
-    html = 'library.html'
+    html = "library.html"
 
     data = build_data_dict(request, library=True)
     items = get_swatches(data)
 
-    if method == 'type':
-        items = items.order_by('filament_type')
+    if method == "type":
+        items = items.order_by("filament_type")
 
-    elif method == 'manufacturer':
-        items = items.order_by('manufacturer')
+    elif method == "manufacturer":
+        items = items.order_by("manufacturer")
 
-    elif method == 'random':
+    elif method == "random":
         items = list(items)
         random.shuffle(items)
 
-    elif method == 'color':
+    elif method == "color":
         items = sorted(items, key=get_hsv)
-        data.update({'show_color_warning': True})
+        data.update({"show_color_warning": True})
 
     else:
-        items = items.order_by('-date_added')
+        items = items.order_by("-date_added")
 
-    data.update({'swatches': items})
+    data.update({"swatches": items})
 
     if show_welcome_modal(request):
-        data.update({'launch_welcome_modal': True})
+        data.update({"launch_welcome_modal": True})
         # https://stackoverflow.com/a/38798861
         response = render(None, html, data)
         set_tasty_cookies(response)
@@ -72,17 +71,17 @@ def librarysort(request, method: str = None):
 
 
 def colorfamilysort(request, family_id):
-    html = 'library.html'
+    html = "library.html"
 
     data = build_data_dict(request, library=True)
     s = get_swatches(data)
 
     s = s.filter(color_parent=family_id)
 
-    data.update({'swatches': s})
+    data.update({"swatches": s})
 
     if show_welcome_modal(request):
-        data.update({'launch_welcome_modal': True})
+        data.update({"launch_welcome_modal": True})
         response = render(None, html, data)
         set_tasty_cookies(response)
         return response
@@ -91,7 +90,7 @@ def colorfamilysort(request, family_id):
 
 
 def manufacturersort(request, id):
-    html = 'library.html'
+    html = "library.html"
 
     data = build_data_dict(request, library=True)
     s = get_swatches(data)
@@ -103,10 +102,10 @@ def manufacturersort(request, id):
         # with no filaments.
         raise Http404
 
-    data.update({'swatches': s})
+    data.update({"swatches": s})
 
     if show_welcome_modal(request):
-        data.update({'launch_welcome_modal': True})
+        data.update({"launch_welcome_modal": True})
         response = render(None, html, data)
         set_tasty_cookies(response)
         return response
@@ -115,7 +114,7 @@ def manufacturersort(request, id):
 
 
 def typesort(request, id):
-    html = 'library.html'
+    html = "library.html"
     data = build_data_dict(request, library=True)
 
     f_type = GenericFilamentType.objects.filter(id=id).first()
@@ -127,10 +126,10 @@ def typesort(request, id):
 
     s = s.filter(filament_type__parent_type=f_type)
 
-    data.update({'swatches': s})
+    data.update({"swatches": s})
 
     if show_welcome_modal(request):
-        data.update({'launch_welcome_modal': True})
+        data.update({"launch_welcome_modal": True})
         response = render(None, html, data)
         set_tasty_cookies(response)
         return response
@@ -139,7 +138,7 @@ def typesort(request, id):
 
 
 def swatch_detail(request, id):
-    html = 'swatch_detail.html'
+    html = "swatch_detail.html"
     swatch = Swatch.objects.filter(id=id).first()
     data = build_data_dict(request)
 
@@ -151,12 +150,10 @@ def swatch_detail(request, id):
         if generate_custom_library(data):
             swatch.update_all_color_matches(get_custom_library(data))
 
-        data.update(
-            {'swatch': swatch}
-        )
+        data.update({"swatch": swatch})
 
         if show_welcome_modal(request):
-            data.update({'launch_welcome_modal': True})
+            data.update({"launch_welcome_modal": True})
             response = render(None, html, data)
             set_tasty_cookies(response)
             return response
@@ -187,27 +184,27 @@ def swatch_collection(request, ids):
 
     data.update(
         {
-            'swatches': swatch_collection,
-            'collection_ids': ','.join([str(i) for i in cleaned_ids]),
-            'show_collection_edit_button': True
+            "swatches": swatch_collection,
+            "collection_ids": ",".join([str(i) for i in cleaned_ids]),
+            "show_collection_edit_button": True,
         }
     )
 
-    return render(request, 'library.html', data)
+    return render(request, "library.html", data)
 
 
 def edit_swatch_collection(request, ids):
-    html = 'library.html'
+    html = "library.html"
     data = build_data_dict(request, library=True)
     cleaned_ids = clean_collection_ids(ids)
 
-    data.update({'preselect_collection': cleaned_ids})
-    data.update({
-        'swatches': get_swatches(data).order_by('-date_added'),
-    })
+    data.update({"preselect_collection": cleaned_ids})
+    data.update(
+        {"swatches": get_swatches(data).order_by("-date_added"),}
+    )
 
     if show_welcome_modal(request):
-        data.update({'launch_welcome_modal': True})
+        data.update({"launch_welcome_modal": True})
         response = render(None, html, data)
         set_tasty_cookies(response)
         return response
@@ -216,8 +213,8 @@ def edit_swatch_collection(request, ids):
 
 
 def about_page(request):
-    return render(request, 'about.html', build_data_dict(request))
+    return render(request, "about.html", build_data_dict(request))
 
 
 def donation_page(request):
-    return render(request, 'donations.html', build_data_dict(request))
+    return render(request, "donations.html", build_data_dict(request))

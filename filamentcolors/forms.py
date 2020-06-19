@@ -1,17 +1,17 @@
 from django import forms
 from django.db.models.functions import Lower
 
-from filamentcolors.models import Swatch, Manufacturer, FilamentType
+from filamentcolors.models import FilamentType, Manufacturer, Swatch
 
 
 class SwatchForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['image_front'].required = True
-        self.fields['image_back'].required = True
+        self.fields["image_front"].required = True
+        self.fields["image_back"].required = True
 
     manufacturer = forms.ModelChoiceField(
-        queryset=Manufacturer.objects.all().order_by(Lower('name'))
+        queryset=Manufacturer.objects.all().order_by(Lower("name"))
     )
 
     class Meta:
@@ -28,12 +28,14 @@ class SwatchForm(forms.ModelForm):
             "image_other",
             "notes",
             "donated_by",
-            "tags"
+            "tags",
         ]
 
 
 class ListSwatchInventoryForm(forms.Form):
-    unpublished_swatches = forms.ModelChoiceField(Swatch.objects.exclude(published=True))
+    unpublished_swatches = forms.ModelChoiceField(
+        Swatch.objects.exclude(published=True)
+    )
 
 
 class ManufacturerForm(forms.ModelForm):
@@ -56,5 +58,5 @@ class InventoryForm(forms.ModelForm):
             "color_name",
             "filament_type",
             "color_parent",
-            "donated_by"
+            "donated_by",
         ]

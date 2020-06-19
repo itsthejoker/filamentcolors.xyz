@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0007_auto_20190304_0107'),
+        ("filamentcolors", "0007_auto_20190304_0107"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='swatch',
-            name='card_img_jpeg',
-            field=models.ImageField(blank=True, null=True, upload_to='card_img', verbose_name='DO NOT ADD! Computed card original'),
+            model_name="swatch",
+            name="card_img_jpeg",
+            field=models.ImageField(
+                blank=True,
+                null=True,
+                upload_to="card_img",
+                verbose_name="DO NOT ADD! Computed card original",
+            ),
         ),
     ]

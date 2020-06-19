@@ -301,9 +301,16 @@ def add_swatch_landing(request):
         form = ListSwatchInventoryForm()
         data.update({
             "header": "Add a Swatch!",
-            "subheader": "Are we building from scratch or pulling from inventory?",
+            "subheader": (
+                "Are we building from scratch, pulling from inventory, or adding"
+                " a sample?"
+            ),
             "form": form,
             "header_link_buttons": [
+                {
+                    "text": "Add sample to inventory",
+                    "reverse_url": "add_inventory"
+                },
                 {
                     "text": "Add from scratch",
                     "reverse_url": "add_swatch"

@@ -38,9 +38,12 @@ urlpatterns = [
     # Admin urls
     path('admin/', admin.site.urls),
     path('logout/', views.logout_view, name='logout'),
-    path('add/swatch/', views.add_swatch, name='add_swatch'),
+    path('add/swatch/', views.add_swatch_landing, name='add_swatch_landing'),
+    path('add/swatch/inventory/<int:swatch_id>', views.add_swatch, name='add_swatch_from_inventory'),
+    path('add/swatch/new', views.add_swatch, name='add_swatch'),
     path('add/manufacturer/', views.add_manufacturer, name='add_mfr'),
     path('add/filamenttype/', views.add_filament_type, name='add_filament_type'),
+    path('add/inventory/', views.add_inventory_swatch, name='add_inventory'),
     # Event / Special URLs
     # ...
 

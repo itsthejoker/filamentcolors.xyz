@@ -16,7 +16,7 @@ class SwatchViewSet(ReadOnlyModelViewSet):
     basename = 'swatch'
 
     def get_queryset(self):
-        queryset = Swatch.objects.all()
+        queryset = Swatch.objects.all().exclude(published=False)
         # localhost:8000/api/swatch/?m=type
         method = self.request.query_params.get('m')  # for method
         if method == 'type':

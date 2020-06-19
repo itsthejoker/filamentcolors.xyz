@@ -27,8 +27,13 @@ class SwatchForm(forms.ModelForm):
             "image_back",
             "image_other",
             "notes",
+            "donated_by",
             "tags"
         ]
+
+
+class ListSwatchInventoryForm(forms.Form):
+    unpublished_swatches = forms.ModelChoiceField(Swatch.objects.exclude(published=True))
 
 
 class ManufacturerForm(forms.ModelForm):
@@ -41,3 +46,15 @@ class FilamentTypeForm(forms.ModelForm):
     class Meta:
         model = FilamentType
         fields = ["name", "hot_end_temp", "bed_temp", "parent_type"]
+
+
+class InventoryForm(forms.ModelForm):
+    class Meta:
+        model = Swatch
+        fields = [
+            "manufacturer",
+            "color_name",
+            "filament_type",
+            "color_parent",
+            "donated_by"
+        ]

@@ -34,6 +34,10 @@ class Manufacturer(models.Model):
 
 
 class GenericFilamentType(models.Model):
+    """
+    This is to keep track of the basics: PLA, ABS, etc. Searching by type is
+    performed off of these generic types.
+    """
     name = models.CharField(max_length=24, default="PLA")
 
     def __str__(self):
@@ -41,6 +45,10 @@ class GenericFilamentType(models.Model):
 
 
 class FilamentType(models.Model):
+    """
+    This is for the specialty subtypes: PLA2, HTPLA, etc. Both of those are
+    still PLAs, so we want them to be included when searching by PLA.
+    """
     name = models.CharField(max_length=24, default="PLA")
     hot_end_temp = models.IntegerField(default=205)
     bed_temp = models.IntegerField(default=60)
@@ -53,8 +61,11 @@ class FilamentType(models.Model):
 
 
 class GenericFile(models.Model):
-    # used for storing files like PDFs so that I can link to them
-    # from other parts of the site
+    """
+    Used for storing files like PDFs so that I can link to them from
+    other parts of the site. This is mostly used to power the welcome
+    experience images.
+    """
 
     file = models.FileField()
 
@@ -63,6 +74,13 @@ class GenericFile(models.Model):
 
 
 class Swatch(models.Model):
+    """
+    The swatch model is used to keep track of two states of swatch;
+    if the swatch is unpublished, then it's treated as a swatch that's
+    in inventory, probably not printed yet, but ready to add.
+
+    If it's published, then it's ready to go and visible on the homepage.
+    """
     WHITE = "WHT"
     BLACK = "BLK"
     RED = "RED"
@@ -112,14 +130,19 @@ class Swatch(models.Model):
 
     rebuild_long_way = models.BooleanField(
         default=False,
-        verbose_name=(
+        help_text=(
             "Regenerate the color information using the long way for increased"
             " accuracy."
         )
     )
     regenerate_info = models.BooleanField(
-        default=False, verbose_name="Rebuild all the information related to this swatch."
+        default=False, help_text="Rebuild all the information related to this swatch."
     )
+
+    published = models.BooleanField(
+        default=True, help_text="Is the swatch visible on the homepage?"
+    )
+    donated_by = models.CharField(max_length=240, null=True, blank=True)
 
     date_added = models.DateTimeField(default=timezone.now)
     last_cache_update = models.DateTimeField(
@@ -479,7 +502,7 @@ class Swatch(models.Model):
         """
         latest_swatch = Swatch.objects.latest('date_added')
         if latest_swatch.date_added > self.last_cache_update:
-            library = Swatch.objects.all()
+            library = Swatch.objects.all().exclude(published=False)
             self.update_all_color_matches(library)
             self.last_cache_update = timezone.now()
             self.save()
@@ -516,7 +539,7 @@ class Swatch(models.Model):
             self.generate_hex_info(long_way=True)
             self.rebuild_long_way = False
 
-        if self.card_img:
+        if self.card_img or not self.published:
             # we already have a card image, so just save everything and abort.
             super(Swatch, self).save(*args, **kwargs)
             return

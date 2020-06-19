@@ -3,7 +3,6 @@ from typing import List, Dict
 
 from django.db.models.functions import Lower
 from django.db.models.query import QuerySet
-from django.db.models import Q
 from django.http import request
 
 from filamentcolors.models import GenericFilamentType
@@ -149,7 +148,7 @@ def get_custom_library(data: Dict) -> QuerySet:
         filament_type__parent_type__in=data['user_settings']['types']
     )
     if data['user_settings']['show_unavailable'] is False:
-        s = s.filter(~Q(tags__name="unavailable"))
+        s = s.exclude(tags__name="unavailable")
 
     s = s.filter(manufacturer__in=data['user_settings']['mfr_whitelist'])
 
@@ -158,7 +157,7 @@ def get_custom_library(data: Dict) -> QuerySet:
 
 def get_swatches(data: Dict) -> QuerySet:
     if generate_custom_library(data):
-        s = get_custom_library(data)
+        queryset = get_custom_library(data)
     else:
-        s = Swatch.objects.all()
-    return s
+        queryset = Swatch.objects.all()
+    return queryset.exclude(published=False)

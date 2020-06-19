@@ -18,7 +18,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from filamentcolors import views
+from filamentcolors import views, staff_views
 from filamentcolors.api.urls import urlpatterns as api_urls
 
 urlpatterns = [
@@ -37,13 +37,13 @@ urlpatterns = [
 
     # Admin urls
     path('admin/', admin.site.urls),
-    path('logout/', views.logout_view, name='logout'),
-    path('add/swatch/', views.add_swatch_landing, name='add_swatch_landing'),
-    path('add/swatch/inventory/<int:swatch_id>', views.add_swatch, name='add_swatch_from_inventory'),
-    path('add/swatch/new', views.add_swatch, name='add_swatch'),
-    path('add/manufacturer/', views.add_manufacturer, name='add_mfr'),
-    path('add/filamenttype/', views.add_filament_type, name='add_filament_type'),
-    path('add/inventory/', views.add_inventory_swatch, name='add_inventory'),
+    path('logout/', staff_views.logout_view, name='logout'),
+    path('add/swatch/', staff_views.add_swatch_landing, name='add_swatch_landing'),
+    path('add/swatch/inventory/<int:swatch_id>', staff_views.add_swatch, name='add_swatch_from_inventory'),
+    path('add/swatch/new', staff_views.add_swatch, name='add_swatch'),
+    path('add/manufacturer/', staff_views.add_manufacturer, name='add_mfr'),
+    path('add/filamenttype/', staff_views.add_filament_type, name='add_filament_type'),
+    path('add/inventory/', staff_views.add_inventory_swatch, name='add_inventory'),
     # Event / Special URLs
     # ...
 

@@ -23,11 +23,14 @@ scikit-image = "^0.16.2"
 numpy = "^1.18.2"
 opencv-python = "^4.2.0"
 django-widget-tweaks = "^1.4.8"
+black = "^19.10b0"
 
 [tool.poetry.dev-dependencies]
 better-exceptions = "^0.2.1"
 ipdb = "^0.11.0"
 beautifulsoup4 = "^4.7"
+isort = "^4.3.21"
+seed-isort-config = "^2.2.0"
 
 [build-system]
 requires = ["poetry>=0.12"]

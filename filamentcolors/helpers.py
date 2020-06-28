@@ -62,10 +62,9 @@ def build_data_dict(request, library: bool = False) -> Dict:
                     .filter(swatch__published=False)
                     .annotate(unpublished=Count("swatch", distinct=True))
                     .filter(Q(unpublished=F("total_count")))
-                    .order_by(Lower("name"))
-                    | Manufacturer.objects.filter(swatch__isnull=True)
                 )
-            )
+            ).exclude(id__in=Manufacturer.objects.filter(swatch__isnull=True))
+            .order_by(Lower("name"))
         ),
         "filament_types": GenericFilamentType.objects.order_by(Lower("name")),
         "color_family": Swatch.BASE_COLOR_OPTIONS,

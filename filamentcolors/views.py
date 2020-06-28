@@ -226,3 +226,11 @@ def about_page(request):
 
 def donation_page(request):
     return render(request, "donations.html", build_data_dict(request))
+
+
+def error_404(request, *args, **kwargs):
+    return render(request, "404.html", build_data_dict(request), status=404)
+
+
+def error_500(request, *args, **kwargs):
+    return render(request, "500.html", build_data_dict(request), status=500)

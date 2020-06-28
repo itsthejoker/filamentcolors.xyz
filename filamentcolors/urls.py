@@ -21,6 +21,9 @@ from django.urls import path
 from filamentcolors import staff_views, views
 from filamentcolors.api.urls import urlpatterns as api_urls
 
+handler404 = 'filamentcolors.views.error_404'
+handler500 = 'filamentcolors.views.error_500'
+
 urlpatterns = [
     # Primary site URLs
     path("", views.homepage, name="homepage"),

@@ -13,6 +13,9 @@ class SwatchForm(forms.ModelForm):
     manufacturer = forms.ModelChoiceField(
         queryset=Manufacturer.objects.all().order_by(Lower("name"))
     )
+    filament_type = forms.ModelChoiceField(
+        queryset=FilamentType.objects.all().order_by(Lower("name"))
+    )
 
     class Meta:
         model = Swatch
@@ -51,12 +54,18 @@ class FilamentTypeForm(forms.ModelForm):
 
 
 class InventoryForm(forms.ModelForm):
+    manufacturer = forms.ModelChoiceField(
+        queryset=Manufacturer.objects.all().order_by(Lower("name"))
+    )
+    filament_type = forms.ModelChoiceField(
+        queryset=FilamentType.objects.all().order_by(Lower("name"))
+    )
     class Meta:
         model = Swatch
         fields = [
-            "manufacturer",
-            "color_name",
             "filament_type",
+            "color_name",
             "color_parent",
+            "manufacturer",
             "donated_by",
         ]

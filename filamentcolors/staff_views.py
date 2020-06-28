@@ -124,6 +124,10 @@ def add_inventory_swatch(request):
                 "header": "Inventory Add Form",
                 "subheader": "Unpublished swatches to pull from later!",
                 "form": form,
+                "header_link_buttons": [
+                    {"text": "Add New Manufacturer", "reverse_url": "add_mfr"},
+                    {"text": "Add Filament Type", "reverse_url": "add_filament_type"},
+                ],
             }
         )
         return render(request, "generic_form.html", data)

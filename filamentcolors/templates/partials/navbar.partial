@@ -64,7 +64,7 @@
                             <div class="dropdown-divider"></div>
                         {% endif %}
                         <a class="dropdown-item"
-                           href="{% url 'add_swatch' %}">Upload New</a>
+                           href="{% url 'add_swatch_landing' %}">Upload New</a>
                         <a class="dropdown-item"
                            href="{% url 'add_mfr' %}">Add Manufacturer</a>
                         <a class="dropdown-item"

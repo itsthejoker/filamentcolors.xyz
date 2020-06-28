@@ -53,7 +53,9 @@ def build_data_dict(request, library: bool = False) -> Dict:
 
     return {
         "search_prefill": request.GET.get("q", ""),
-        "manufacturers": Manufacturer.objects.all().order_by(Lower("name")),
+        "manufacturers": (
+            Manufacturer.objects.exclude(swatch__isnull=True).order_by(Lower("name"))
+        ),
         "filament_types": GenericFilamentType.objects.all().order_by(Lower("name")),
         "color_family": Swatch.BASE_COLOR_OPTIONS,
         "welcome_experience_images": [

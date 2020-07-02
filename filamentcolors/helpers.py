@@ -18,10 +18,7 @@ def show_welcome_modal(r: request) -> bool:
 
 
 def get_hsv(item):
-    # TODO: I have NO idea if this works. Need to actually get some
-    # samples up in here to check.
-
-    # update: seems to work but I don't know why or how
+    # This seems to work but I don't know why or how
     hexrgb = item.hex_color
     r, g, b = (int(hexrgb[i : i + 2], 16) / 255.0 for i in range(0, 5, 2))
     return colorsys.rgb_to_hsv(r, g, b)

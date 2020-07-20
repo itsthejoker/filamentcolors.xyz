@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% load martortags %}
 
 {% block content %}
 <div class="container mt-4">
      <h1>{{ post.title }}</h1>
-    {{ post.to_html | safe }}
+    {{ post.body|safe_markdown }}
 </div>
 {% endblock %}

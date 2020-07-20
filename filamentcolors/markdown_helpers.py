@@ -1,8 +1,7 @@
 # This can't be in helpers because of a circular import, so it's just easier
 # to move it to its own file.
-import mistune
-from mistune.directives import admonition
-from mistune.plugins import plugin_url
+# import mistune
+# from mistune.directives import admonition
 
 
 def bootstrap_render_html_admonition(text, name, title=None):
@@ -27,25 +26,25 @@ def bootstrap_render_html_admonition(text, name, title=None):
         )
     return html
 
-
-admonition.render_html_admonition = bootstrap_render_html_admonition
-admonition.Admonition.SUPPORTED_NAMES = {
-    "primary",
-    "secondary",
-    "success",
-    "danger",
-    "warning",
-    "info",
-    "light",
-    "dark"
-}
-
-markdown = mistune.create_markdown(
-    plugins=[
-        admonition.Admonition(),
-        'footnotes',
-        'url',
-        'strikethrough',
-        'table'
-    ]
-)
+#
+# admonition.render_html_admonition = bootstrap_render_html_admonition
+# admonition.Admonition.SUPPORTED_NAMES = {
+#     "primary",
+#     "secondary",
+#     "success",
+#     "danger",
+#     "warning",
+#     "info",
+#     "light",
+#     "dark"
+# }
+#
+# markdown = mistune.create_markdown(
+#     plugins=[
+#         admonition.Admonition(),
+#         'footnotes',
+#         'url',
+#         'strikethrough',
+#         'table'
+#     ]
+# )

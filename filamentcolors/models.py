@@ -21,10 +21,10 @@ from django.utils import timezone
 from django.utils.text import slugify
 from skimage import io
 from taggit.managers import TaggableManager
+from martor.models import MartorField
 
 from filamentcolors.colors import Color
 from filamentcolors.twitter_helpers import send_tweet
-from filamentcolors.markdown_helpers import markdown
 
 
 class Manufacturer(models.Model):
@@ -80,7 +80,7 @@ class GenericFile(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=240)
     subtitle = models.CharField(max_length=39, null=True, blank=True)
-    body = models.TextField()
+    body = MartorField()
     slug = models.SlugField(default="", editable=False, max_length=70)
     published = models.BooleanField(default=False)
     date_added = models.DateTimeField(default=timezone.now)
@@ -92,9 +92,6 @@ class Post(models.Model):
     def get_absolute_url(self):
         kwargs = {"pk": self.id, "slug": self.slug}
         return reverse("post_detail", kwargs=kwargs)
-
-    def to_html(self):
-        return markdown(self.body)
 
     def __str__(self):
         return self.title

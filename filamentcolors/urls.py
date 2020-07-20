@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from filamentcolors import staff_views, views
 from filamentcolors.api.urls import urlpatterns as api_urls
@@ -51,6 +51,7 @@ urlpatterns = [
     ),
     path("posts/", views.post_list, name="postlist"),
     path("post/<int:post_id>/", views.post_detail, name="postdetail"),
+    path('martor/', include('martor.urls')),
     path("donating", views.donation_page, name="donations"),
     path("inventory", views.inventory_page, name="inventory"),
     path("about/", views.about_page, name="about"),

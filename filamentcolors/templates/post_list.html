@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Writings, Tips, and Tricks</h1>
+        <div class="card-deck mt-5">
+            {% for obj in posts %}
+                <div id="{{ obj.id }}" class="col-md-6 col-lg-4 cardBox anim" align="center">
+                    <a href="/post/{{ obj.id }}" class="card mb-4 shadow" style="width: 18rem;">
+                        <div class="card-img-container">
+                            <div class="card-img-overlay card-img-overlay-two"></div>
+                        </div>
+
+                        <div class="card-body" align="left">
+                            <h5 class="card-title">{{ obj.title }}</h5>
+                            <p class="card-text">{{ obj.subtitle }}</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Uploaded {{ obj.date_added }}</small>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

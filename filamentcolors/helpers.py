@@ -1,8 +1,8 @@
 import colorsys
 from typing import Dict, List
 
-from django.db.models.functions import Lower
 from django.db.models import Count, F, Q, QuerySet
+from django.db.models.functions import Lower
 from django.http import request
 
 from filamentcolors.models import GenericFilamentType, GenericFile, Manufacturer, Swatch
@@ -20,7 +20,7 @@ def show_welcome_modal(r: request) -> bool:
 def get_hsv(item):
     # This seems to work but I don't know why or how
     hexrgb = item.hex_color
-    r, g, b = (int(hexrgb[i : i + 2], 16) / 255.0 for i in range(0, 5, 2))
+    r, g, b = (int(hexrgb[i: i + 2], 16) / 255.0 for i in range(0, 5, 2))
     return colorsys.rgb_to_hsv(r, g, b)
 
 
@@ -56,12 +56,12 @@ def build_data_dict(request, library: bool = False) -> Dict:
                     Manufacturer.objects.annotate(
                         total_count=Count("swatch", distinct=True)
                     )
-                    .filter(swatch__published=False)
-                    .annotate(unpublished=Count("swatch", distinct=True))
-                    .filter(Q(unpublished=F("total_count")))
+                        .filter(swatch__published=False)
+                        .annotate(unpublished=Count("swatch", distinct=True))
+                        .filter(Q(unpublished=F("total_count")))
                 )
             ).exclude(id__in=Manufacturer.objects.filter(swatch__isnull=True))
-            .order_by(Lower("name"))
+                .order_by(Lower("name"))
         ),
         "filament_types": GenericFilamentType.objects.order_by(Lower("name")),
         "color_family": Swatch.BASE_COLOR_OPTIONS,
@@ -140,9 +140,9 @@ def generate_custom_library(data: Dict):
     :return:
     """
     return not (
-        len(data["user_settings"]["types"]) == GenericFilamentType.objects.count()
-        and data["user_settings"]["show_unavailable"]
-        and len(data["user_settings"]["mfr_whitelist"]) == Manufacturer.objects.count()
+            len(data["user_settings"]["types"]) == GenericFilamentType.objects.count()
+            and data["user_settings"]["show_unavailable"]
+            and len(data["user_settings"]["mfr_whitelist"]) == Manufacturer.objects.count()
     )
 
 

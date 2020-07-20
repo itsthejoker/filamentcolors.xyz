@@ -7,6 +7,7 @@ from filamentcolors.models import (
     GenericFile,
     Manufacturer,
     Swatch,
+    Post,
 )
 
 
@@ -50,3 +51,4 @@ admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(FilamentType, FilamentTypeAdmin)
 admin.site.register(GenericFile)
 admin.site.register(GenericFilamentType)
+admin.site.register(Post)

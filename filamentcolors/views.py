@@ -1,7 +1,7 @@
 import random
 
 from django.http import Http404
-from django.shortcuts import HttpResponseRedirect, render, reverse
+from django.shortcuts import HttpResponseRedirect, render, reverse, get_object_or_404
 
 from filamentcolors.helpers import (
     build_data_dict,
@@ -13,7 +13,7 @@ from filamentcolors.helpers import (
     set_tasty_cookies,
     show_welcome_modal,
 )
-from filamentcolors.models import GenericFilamentType, Swatch
+from filamentcolors.models import GenericFilamentType, Swatch, Post
 
 
 def homepage(request):
@@ -218,6 +218,23 @@ def inventory_page(request):
         "swatches": Swatch.objects.all(),
     })
     return render(request, "inventory.html", data)
+
+
+def post_list(request):
+    data = build_data_dict(request)
+    data.update({
+        "posts": Post.objects.filter(published=True),
+    })
+    return render(request, "post_list.html", data)
+
+
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if not post.published:
+        raise Http404
+    data = build_data_dict(request)
+    data.update({"post": post})
+    return render(request, "post_detail.html", data)
 
 
 def about_page(request):

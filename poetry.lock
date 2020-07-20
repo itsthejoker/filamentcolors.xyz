@@ -412,6 +412,14 @@ python-dateutil = ">=2.1"
 
 [[package]]
 category = "main"
+description = "A sane Markdown parser with useful plugins and renderers"
+name = "mistune"
+optional = false
+python-versions = "*"
+version = "2.0.0a4"
+
+[[package]]
+category = "main"
 description = "Python package for creating and manipulating graphs and networks"
 name = "networkx"
 optional = false
@@ -787,7 +795,7 @@ python-versions = "*"
 version = "0.1.9"
 
 [metadata]
-content-hash = "16786bbaf7a5df11b3bce4f395ef71d88ed6cf5bc4993fd5bde836e1aa1400b8"
+content-hash = "435be61c9c5e8d3734b9ae1b7d23838460a875236c394c0b09937236ed3101a6"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -970,6 +978,10 @@ matplotlib = [
     {file = "matplotlib-3.2.1-cp38-cp38-win_amd64.whl", hash = "sha256:4bb50ee4755271a2017b070984bcb788d483a8ce3132fab68393d1555b62d4ba"},
     {file = "matplotlib-3.2.1-pp373-pypy36_pp73-win32.whl", hash = "sha256:7a9baefad265907c6f0b037c8c35a10cf437f7708c27415a5513cf09ac6d6ddd"},
     {file = "matplotlib-3.2.1.tar.gz", hash = "sha256:ffe2f9cdcea1086fc414e82f42271ecf1976700b8edd16ca9d376189c6d93aee"},
+]
+mistune = [
+    {file = "mistune-2.0.0a4-py2.py3-none-any.whl", hash = "sha256:ebbed6e25e342705ec30f3184bdc148229dfbae0da6136c2a6892333c9f8bc6b"},
+    {file = "mistune-2.0.0a4.tar.gz", hash = "sha256:1309e30a1846f3c1dd384e17e2dd957b024d0305b507a1546d13152a2b5dcc44"},
 ]
 networkx = [
     {file = "networkx-2.4-py3-none-any.whl", hash = "sha256:cdfbf698749a5014bf2ed9db4a07a5295df1d3a53bf80bf3cbd61edf9df05fa1"},
@@ -1184,6 +1196,7 @@ regex = [
     {file = "regex-2020.6.8.tar.gz", hash = "sha256:e9b64e609d37438f7d6e68c2546d2cb8062f3adb27e6336bc129b51be20773ac"},
 ]
 requests = [
+    {file = "requests-2.23.0-py2.7.egg", hash = "sha256:5d2d0ffbb515f39417009a46c14256291061ac01ba8f875b90cad137de83beb4"},
     {file = "requests-2.23.0-py2.py3-none-any.whl", hash = "sha256:43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee"},
     {file = "requests-2.23.0.tar.gz", hash = "sha256:b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6"},
 ]

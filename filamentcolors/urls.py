@@ -39,16 +39,18 @@ urlpatterns = [
         name="swatchcollection",
     ),
     path("library/", views.librarysort, name="library"),
-    path("swatch/<int:id>", views.swatch_detail, name="swatchdetail"),
+    path("swatch/<int:id>/", views.swatch_detail, name="swatchdetail"),
     path(
-        "library/manufacturer/<int:id>", views.manufacturersort, name="manufacturersort"
+        "library/manufacturer/<int:id>/", views.manufacturersort, name="manufacturersort"
     ),
-    path("library/filament_type/<int:id>", views.typesort, name="typesort"),
+    path("library/filament_type/<int:id>/", views.typesort, name="typesort"),
     path(
-        "library/color_family/<str:family_id>",
+        "library/color_family/<str:family_id>/",
         views.colorfamilysort,
         name="color_family_sort",
     ),
+    path("posts/", views.post_list, name="postlist"),
+    path("post/<int:post_id>/", views.post_detail, name="postdetail"),
     path("donating", views.donation_page, name="donations"),
     path("inventory", views.inventory_page, name="inventory"),
     path("about/", views.about_page, name="about"),

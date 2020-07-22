@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import time
 
 from dotenv import load_dotenv
 
@@ -149,13 +150,29 @@ REST_FRAMEWORK = {
 # Input: string boolean, `true/false`
 MARTOR_ENABLE_CONFIGS = {
     'emoji': 'true',        # to enable/disable emoji icons.
-    'imgur': 'false',        # to enable/disable imgur/custom uploader.
-    'mention': 'false',     # to enable/disable mention
+    'imgur': 'true',        # to enable/disable imgur/custom uploader.
+    'mention': 'true',     # to enable/disable mention
     'jquery': 'true',       # to include/revoke jquery (require for admin default django)
     'living': 'false',      # to enable/disable live updates in preview
     'spellcheck': 'true',  # to enable/disable spellcheck in form textareas
     'hljs': 'true',         # to enable/disable hljs highlighting in preview
 }
+
+MARTOR_MARKDOWN_EXTENSIONS = [
+    'markdown.extensions.extra',
+    'markdown.extensions.nl2br',
+    'markdown.extensions.smarty',
+    'markdown.extensions.fenced_code',
+
+    # Custom markdown extensions.
+    'martor.extensions.urlize',  # handle inline URLs
+    'martor.extensions.del_ins',  # ~~strikethrough~~ and ++underscores++
+    'filamentcolors.markdown_helpers.twitter_mention',  # to parse markdown mention
+    'martor.extensions.emoji',  # to parse markdown emoji
+    'martor.extensions.mdx_video',  # to parse embed/iframe video
+    'filamentcolors.markdown_helpers.admonition',
+    'filamentcolors.markdown_helpers.image_helper',
+]
 
 # To show the toolbar buttons
 MARTOR_TOOLBAR_BUTTONS = [
@@ -164,39 +181,22 @@ MARTOR_TOOLBAR_BUTTONS = [
     'link', 'image-link', 'image-upload', 'emoji',
     'direct-mention', 'toggle-maximize', 'help'
 ]
-
-# To setup the martor editor with title label or not (default is False)
-MARTOR_ENABLE_LABEL = False
-
-# Safe Mode
-MARTOR_MARKDOWN_SAFE_MODE = True # default
-
-# Markdownify
-MARTOR_MARKDOWNIFY_FUNCTION = 'martor.utils.markdownify' # default
-MARTOR_MARKDOWNIFY_URL = '/martor/markdownify/' # default
-
-# Markdown extensions (default)
-MARTOR_MARKDOWN_EXTENSIONS = [
-    'markdown.extensions.extra',
-    'markdown.extensions.nl2br',
-    'markdown.extensions.smarty',
-    'markdown.extensions.fenced_code',
-
-    # Custom markdown extensions.
-    'martor.extensions.urlize',
-    'martor.extensions.del_ins',    # ~~strikethrough~~ and ++underscores++
-    'martor.extensions.mention',    # to parse markdown mention
-    'martor.extensions.emoji',      # to parse markdown emoji
-    'martor.extensions.mdx_video',  # to parse embed/iframe video
-]
-
-# Markdown Extensions Configs
-MARTOR_MARKDOWN_EXTENSION_CONFIGS = {}
-
-# Markdown urls
-MARTOR_UPLOAD_URL = '/martor/uploader/' # default
 MARTOR_SEARCH_USERS_URL = '/martor/search-user/' # default
 
 # Markdown Extensions
-MARTOR_MARKDOWN_BASE_EMOJI_URL = 'https://github.githubassets.com/images/icons/emoji/'                  # default from github
+MARTOR_MARKDOWN_BASE_EMOJI_URL = 'https://github.githubassets.com/images/icons/emoji/'
 MARTOR_MARKDOWN_BASE_MENTION_URL = 'https://twitter.com/'
+
+MARTOR_UPLOAD_PATH = 'images/uploads/{}'.format(time.strftime("%Y/%m/%d/"))
+MARTOR_UPLOAD_URL = '/api/uploader/'  # change to local uploader
+
+# Maximum Upload Image
+# 2.5MB - 2621440
+# 5MB - 5242880
+# 10MB - 10485760
+# 20MB - 20971520
+# 50MB - 5242880
+# 100MB 104857600
+# 250MB - 214958080
+# 500MB - 429916160
+MAX_IMAGE_UPLOAD_SIZE = 5242880  # 5MB

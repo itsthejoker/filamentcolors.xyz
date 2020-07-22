@@ -146,7 +146,7 @@
                 </div>
                 <div class="modal-body">
                     Most projects only need two colors, so we spin the
-                    <u><a href="https://en.wikipedia.org/wiki/Color_wheel" target="_blank">color wheel</a></u>
+                    <a href="https://en.wikipedia.org/wiki/Color_wheel" target="_blank">color wheel</a>
                     180 degrees and find you the closest color in the library automatically!
                     <p></p>
                     Example:
@@ -205,10 +205,10 @@
                         <div class="col-xs-1 col-lg-2"></div>
                     </div>
                     <p></p>
-                    You can get to the above collection through this link: <u>
+                    You can get to the above collection through this link:
                     <a href="/library/collection/327,383,117,378/" target="_blank">
                         filamentcolors.xyz/library/collection/327,383,117,378/
-                    </a></u>
+                    </a>
                     <p></p>
                     Share collections you like anywhere; the same link will work for everyone!
                 </div>
@@ -230,20 +230,20 @@
                     distinctly visual phenomenon, and one we still struggle to communicate
                     to machines. The grand majority of this site is automatically generated,
                     and the site will make mistakes; there's a bunch of great resources
-                    <u><a href="/about#why-is-color-hard" target="_blank">HERE</a></u>.
+                    <a href="/about#why-is-color-hard" target="_blank">HERE</a>.
                     <p></p>
                     The absolute best resource I've seen about working with colors through math
                     alone is by
-                    <u><a href="https://twitter.com/AlanZucconi" target="_blank">Alan Zucconi</a></u>,
-                    who wrote <u><a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/" target="_blank">
+                    <a href="https://twitter.com/AlanZucconi" target="_blank">Alan Zucconi</a>,
+                    who wrote <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/" target="_blank">
                         this fantastic post
-                    </a></u> about different color sorting methods and the various issues they
+                    </a> about different color sorting methods and the various issues they
                     have.
                     <p></p>
                     There's a lot of math and educated guesswork that goes into this, so if
                     you see any bugs or other issues please let me know! Twitter is the best
                     way to reach me; DM or just ping
-                    <u><a href="https://twitter.com/filamentcolors" target="_blank">@filamentcolors</a></u>
+                    <a href="https://twitter.com/filamentcolors" target="_blank">@filamentcolors</a>
                     and I'll see it.
                     <p></p>
                     I hope you find this resource useful; if you make a project using it, please

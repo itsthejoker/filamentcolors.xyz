@@ -3,6 +3,7 @@
 {% block content %}
     <div class="container mt-4">
         <h1>Writings, Tips, and Tricks</h1>
+        {% if posts %}
         <div class="card-deck mt-5">
             {% for obj in posts %}
                 <div id="{{ obj.id }}" class="col-md-6 col-lg-4 cardBox anim" align="center">
@@ -22,5 +23,9 @@
                 </div>
             {% endfor %}
         </div>
+        {% else %}
+            <h1 class="text-center mt-5">Oops! You found this page before there are any posts on it!</h1>
+            <h3 class="text-center">There's nothing here! Come back later and there might be something 😊</h3>
+        {% endif %}
     </div>
 {% endblock %}

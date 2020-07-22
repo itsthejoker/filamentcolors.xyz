@@ -1,6 +1,12 @@
 <head>
     {% include 'partials/bootstrap.partial' %}
-    <title>FilamentColors</title>
+    {% if swatch %}
+        <title>{{ swatch.manufacturer.name }} - {{ swatch.color_name }}</title>
+    {% elif post %}
+        <title>{{ post.title }}</title>
+    {% else %}
+        <title>FilamentColors</title>
+    {% endif %}
 </head>
 
 {% include 'partials/navbar.partial' %}

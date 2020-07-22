@@ -20,6 +20,7 @@ from django.urls import path, include
 
 from filamentcolors import staff_views, views
 from filamentcolors.api.urls import urlpatterns as api_urls
+from filamentcolors.markdown_helpers.urls import urlpatterns as markdown_urls
 
 handler404 = 'filamentcolors.views.error_404'
 handler500 = 'filamentcolors.views.error_500'
@@ -50,6 +51,7 @@ urlpatterns = [
         name="color_family_sort",
     ),
     path("posts/", views.post_list, name="postlist"),
+    path("post/<int:post_id>/preview", views.post_preview, name="postpreview"),
     path("post/<int:post_id>/", views.post_detail, name="postdetail"),
     path('martor/', include('martor.urls')),
     path("donating", views.donation_page, name="donations"),
@@ -80,3 +82,4 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += api_urls
+urlpatterns += markdown_urls

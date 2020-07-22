@@ -83,10 +83,13 @@ class Post(models.Model):
     body = MartorField()
     slug = models.SlugField(default="", editable=False, max_length=70)
     published = models.BooleanField(default=False)
+    enable_preview = models.BooleanField(default=False)
     date_added = models.DateTimeField(default=timezone.now)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title, allow_unicode=True)
+        if self.published:
+            self.enable_preview = False
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):

@@ -2,8 +2,12 @@
 {% load martortags %}
 
 {% block content %}
-<div class="container mt-4">
-     <h1>{{ post.title }}</h1>
-    {{ post.body|safe_markdown }}
-</div>
+    <div class="container mt-4">
+        <h1>{{ post.title }}</h1>
+        {{ post.body|safe_markdown }}
+    </div>
+
+    <script>
+        baguetteBox.run('.photobox', {animation: 'slideIn'});
+    </script>
 {% endblock %}

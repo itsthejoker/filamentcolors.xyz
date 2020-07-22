@@ -237,6 +237,15 @@ def post_detail(request, post_id):
     return render(request, "post_detail.html", data)
 
 
+def post_preview(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if not post.enable_preview:
+        raise Http404
+    data = build_data_dict(request)
+    data.update({"post": post})
+    return render(request, "post_detail.html", data)
+
+
 def about_page(request):
     return render(request, "about.html", build_data_dict(request))
 

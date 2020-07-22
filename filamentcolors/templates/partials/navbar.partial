@@ -7,9 +7,6 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="{% url 'postlist' %}">Posts</a>
-            </li>
             <li class="nav-item active dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
@@ -42,6 +39,9 @@
                 <a class="nav-link" href="/about">About</a>
             </li>
             <li class="nav-item active">
+                <a class="nav-link" href="{% url 'postlist' %}">Posts</a>
+            </li>
+            <li class="nav-item active">
                 <div class="nav-link clickable" onclick="showWelcome()" data-toggle="collapse"
                      data-target="#navbarSupportedContent">How does this
                     work?
@@ -69,6 +69,8 @@
                            href="{% url 'add_mfr' %}">Add Manufacturer</a>
                         <a class="dropdown-item"
                            href="{% url 'add_filament_type' %}">Add Filament Type</a>
+                        <a class="dropdown-item"
+                           href="{% url 'admin:index' %}">Django Admin</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                     </div>

@@ -97,7 +97,11 @@ class Post(models.Model):
         return reverse("post_detail", kwargs=kwargs)
 
     def __str__(self):
-        return self.title
+        if self.enable_preview:
+            pub = "preview"
+        else:
+            pub = "published" if self.published else "unpublished"
+        return f"{self.id} - {self.title} - {pub}"
 
 
 class Swatch(models.Model):

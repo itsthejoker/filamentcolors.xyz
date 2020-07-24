@@ -223,7 +223,7 @@ def inventory_page(request):
 def post_list(request):
     data = build_data_dict(request)
     data.update({
-        "posts": Post.objects.filter(published=True),
+        "posts": Post.objects.filter(published=True).order_by('-date_added'),
     })
     return render(request, "post_list.html", data)
 

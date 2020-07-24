@@ -228,8 +228,8 @@ def post_list(request):
     return render(request, "post_list.html", data)
 
 
-def post_detail(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
+def post_detail(request, slug):
+    post = get_object_or_404(Post, slug=slug)
     if not post.published:
         raise Http404
     data = build_data_dict(request)
@@ -237,8 +237,8 @@ def post_detail(request, post_id):
     return render(request, "post_detail.html", data)
 
 
-def post_preview(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
+def post_preview(request, slug):
+    post = get_object_or_404(Post, slug=slug)
     if not post.enable_preview:
         raise Http404
     data = build_data_dict(request)

@@ -6,7 +6,7 @@
       integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.css"
       crossorigin="anonymous">
-<link rel="stylesheet" href="/static/css/main.css?v=2">
+<link rel="stylesheet" href="/static/css/main.css?v=3">
 <link rel="stylesheet" href="/static/js/toast/toast.min.css">
 
 <script async defer data-domain="filamentcolors.xyz" src="https://plausible.io/js/plausible.js"></script>

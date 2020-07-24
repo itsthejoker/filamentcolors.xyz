@@ -5,6 +5,7 @@ from typing import Tuple
 import cv2
 import numpy as np
 import pytz
+from PIL import Image as Img
 from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cmc
 from colormath.color_objects import LabColor, sRGBColor
@@ -13,12 +14,14 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
 from django.core.files.storage import default_storage
+from django.urls import reverse
 from django.db import models
 from django.db.models.query import QuerySet
 from django.utils import timezone
-from PIL import Image as Img
+from django.utils.text import slugify
 from skimage import io
 from taggit.managers import TaggableManager
+from martor.models import MartorField
 
 from filamentcolors.colors import Color
 from filamentcolors.twitter_helpers import send_tweet
@@ -72,6 +75,33 @@ class GenericFile(models.Model):
 
     def __str__(self):
         return self.file.name
+
+
+class Post(models.Model):
+    title = models.CharField(max_length=240)
+    subtitle = models.CharField(max_length=39, null=True, blank=True)
+    body = MartorField()
+    slug = models.SlugField(default="", editable=False, max_length=70)
+    published = models.BooleanField(default=False)
+    enable_preview = models.BooleanField(default=False)
+    date_added = models.DateTimeField(default=timezone.now)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title, allow_unicode=True)
+        if self.published:
+            self.enable_preview = False
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        kwargs = {"pk": self.id, "slug": self.slug}
+        return reverse("post_detail", kwargs=kwargs)
+
+    def __str__(self):
+        if self.enable_preview:
+            pub = "preview"
+        else:
+            pub = "published" if self.published else "unpublished"
+        return f"{self.id} - {self.title} - {pub}"
 
 
 class Swatch(models.Model):
@@ -281,7 +311,7 @@ class Swatch(models.Model):
         return self.date_added.strftime("%b %d, %Y")
 
     def get_rgb(self, hex: str) -> Tuple[int, ...]:
-        return tuple(int(hex[i : i + 2], 16) for i in (0, 2, 4))
+        return tuple(int(hex[i: i + 2], 16) for i in (0, 2, 4))
 
     def get_hex(self, rgb: tuple) -> str:
         return "{R}{G}{B}".format(
@@ -396,6 +426,7 @@ class Swatch(models.Model):
         self.card_img = ImageFile(open(path, "rb"))
         self.card_img.name = filename
 
+    # noinspection PyUnresolvedReferences
     def generate_hex_info(self, long_way: bool = False) -> None:
         if long_way:
             # This method is much more computationally intensive and much more

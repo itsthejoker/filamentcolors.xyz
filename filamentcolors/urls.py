@@ -16,10 +16,11 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from filamentcolors import staff_views, views
 from filamentcolors.api.urls import urlpatterns as api_urls
+from filamentcolors.markdown_helpers.urls import urlpatterns as markdown_urls
 
 handler404 = 'filamentcolors.views.error_404'
 handler500 = 'filamentcolors.views.error_500'
@@ -39,16 +40,20 @@ urlpatterns = [
         name="swatchcollection",
     ),
     path("library/", views.librarysort, name="library"),
-    path("swatch/<int:id>", views.swatch_detail, name="swatchdetail"),
+    path("swatch/<int:id>/", views.swatch_detail, name="swatchdetail"),
     path(
-        "library/manufacturer/<int:id>", views.manufacturersort, name="manufacturersort"
+        "library/manufacturer/<int:id>/", views.manufacturersort, name="manufacturersort"
     ),
-    path("library/filament_type/<int:id>", views.typesort, name="typesort"),
+    path("library/filament_type/<int:id>/", views.typesort, name="typesort"),
     path(
-        "library/color_family/<str:family_id>",
+        "library/color_family/<str:family_id>/",
         views.colorfamilysort,
         name="color_family_sort",
     ),
+    path("posts/", views.post_list, name="postlist"),
+    path("post/<int:post_id>/preview", views.post_preview, name="postpreview"),
+    path("post/<int:post_id>/", views.post_detail, name="postdetail"),
+    path('martor/', include('martor.urls')),
     path("donating", views.donation_page, name="donations"),
     path("inventory", views.inventory_page, name="inventory"),
     path("about/", views.about_page, name="about"),
@@ -77,3 +82,4 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += api_urls
+urlpatterns += markdown_urls

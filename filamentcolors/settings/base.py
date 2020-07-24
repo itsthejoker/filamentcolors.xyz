@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import time
 
 from dotenv import load_dotenv
 
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "filamentcolors",
     "rest_framework",
+    "martor",
 ]
 
 MIDDLEWARE = [
@@ -131,8 +133,10 @@ USE_TZ = True
 # for smartfields
 SITE_ID = 1
 
-# see https://github.com/django-compressor/django-compressor/issues/720#issuecomment-211633171
-STATICFILES_FINDERS = ("django.contrib.staticfiles.finders.FileSystemFinder",)
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+)
 
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
@@ -141,3 +145,58 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticatedOrReadOnly"
     ],
 }
+
+# Global martor settings
+# Input: string boolean, `true/false`
+MARTOR_ENABLE_CONFIGS = {
+    'emoji': 'true',        # to enable/disable emoji icons.
+    'imgur': 'true',        # to enable/disable imgur/custom uploader.
+    'mention': 'true',     # to enable/disable mention
+    'jquery': 'true',       # to include/revoke jquery (require for admin default django)
+    'living': 'false',      # to enable/disable live updates in preview
+    'spellcheck': 'true',  # to enable/disable spellcheck in form textareas
+    'hljs': 'true',         # to enable/disable hljs highlighting in preview
+}
+
+MARTOR_MARKDOWN_EXTENSIONS = [
+    'markdown.extensions.extra',
+    'markdown.extensions.nl2br',
+    'markdown.extensions.smarty',
+    'markdown.extensions.fenced_code',
+
+    # Custom markdown extensions.
+    'martor.extensions.urlize',  # handle inline URLs
+    'martor.extensions.del_ins',  # ~~strikethrough~~ and ++underscores++
+    'filamentcolors.markdown_helpers.twitter_mention',  # to parse markdown mention
+    'martor.extensions.emoji',  # to parse markdown emoji
+    'martor.extensions.mdx_video',  # to parse embed/iframe video
+    'filamentcolors.markdown_helpers.admonition',
+    'filamentcolors.markdown_helpers.image_helper',
+]
+
+# To show the toolbar buttons
+MARTOR_TOOLBAR_BUTTONS = [
+    'bold', 'italic', 'horizontal', 'heading', 'pre-code',
+    'blockquote', 'unordered-list', 'ordered-list',
+    'link', 'image-link', 'image-upload', 'emoji',
+    'direct-mention', 'toggle-maximize', 'help'
+]
+MARTOR_SEARCH_USERS_URL = '/martor/search-user/' # default
+
+# Markdown Extensions
+MARTOR_MARKDOWN_BASE_EMOJI_URL = 'https://github.githubassets.com/images/icons/emoji/'
+MARTOR_MARKDOWN_BASE_MENTION_URL = 'https://twitter.com/'
+
+MARTOR_UPLOAD_PATH = 'images/uploads/{}'.format(time.strftime("%Y/%m/%d/"))
+MARTOR_UPLOAD_URL = '/api/uploader/'  # change to local uploader
+
+# Maximum Upload Image
+# 2.5MB - 2621440
+# 5MB - 5242880
+# 10MB - 10485760
+# 20MB - 20971520
+# 50MB - 5242880
+# 100MB 104857600
+# 250MB - 214958080
+# 500MB - 429916160
+MAX_IMAGE_UPLOAD_SIZE = 5242880  # 5MB

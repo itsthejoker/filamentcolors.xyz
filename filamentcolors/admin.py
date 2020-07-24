@@ -1,5 +1,7 @@
 from django.contrib import admin
+from django.db import models
 from django.shortcuts import HttpResponseRedirect
+from martor.widgets import AdminMartorWidget
 
 from filamentcolors.models import (
     FilamentType,
@@ -7,6 +9,7 @@ from filamentcolors.models import (
     GenericFile,
     Manufacturer,
     Swatch,
+    Post,
 )
 
 
@@ -45,8 +48,15 @@ class FilamentTypeAdmin(admin.ModelAdmin):
     ordering = ("name",)
 
 
+class PostAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        models.TextField: {"widget": AdminMartorWidget},
+    }
+
+
 admin.site.register(Swatch, SwatchAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(FilamentType, FilamentTypeAdmin)
 admin.site.register(GenericFile)
 admin.site.register(GenericFilamentType)
+admin.site.register(Post, PostAdmin)

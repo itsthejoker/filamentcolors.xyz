@@ -46,7 +46,6 @@
 <script type="text/javascript">
     $(window).on('load', function () {
         $('#welcomeModal').modal('show');
-        console.log("AAAAYYYYYY")
     });
 
     function showWelcomeExperience() {

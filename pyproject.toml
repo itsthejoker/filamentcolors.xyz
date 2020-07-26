@@ -25,6 +25,7 @@ opencv-python = "^4.2.0"
 django-widget-tweaks = "^1.4.8"
 black = "^19.10b0"
 martor = "^1.5.0"
+regex = "^2020.7.14"
 
 [tool.poetry.dev-dependencies]
 better-exceptions = "^0.2.1"

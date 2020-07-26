@@ -7,7 +7,7 @@
         <div class="card-deck mt-5">
             {% for obj in posts %}
                 <div id="{{ obj.id }}" class="col-md-6 col-lg-4 cardBox anim" align="center">
-                    <a href="/post/{{ obj.id }}" class="card mb-4 shadow" style="width: 18rem;">
+                    <a href="{{ obj.get_absolute_url }}" class="card mb-4 shadow" style="width: 18rem;">
                         <div class="card-img-container">
                             <div class="card-img-overlay card-img-overlay-two"></div>
                         </div>

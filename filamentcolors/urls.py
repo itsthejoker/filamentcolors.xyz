@@ -51,11 +51,11 @@ urlpatterns = [
         name="color_family_sort",
     ),
     path("posts/", views.post_list, name="postlist"),
-    path("post/<int:post_id>/preview", views.post_preview, name="postpreview"),
-    path("post/<int:post_id>/", views.post_detail, name="postdetail"),
+    path("post/<slug:slug>/preview/", views.post_preview, name="postpreview"),
+    path("post/<slug:slug>/", views.post_detail, name="postdetail"),
     path('martor/', include('martor.urls')),
-    path("donating", views.donation_page, name="donations"),
-    path("inventory", views.inventory_page, name="inventory"),
+    path("donating/", views.donation_page, name="donations"),
+    path("inventory/", views.inventory_page, name="inventory"),
     path("about/", views.about_page, name="about"),
     # Admin urls
     path("admin/", admin.site.urls),
@@ -66,7 +66,7 @@ urlpatterns = [
         staff_views.add_swatch,
         name="add_swatch_from_inventory",
     ),
-    path("add/swatch/new", staff_views.add_swatch, name="add_swatch"),
+    path("add/swatch/new/", staff_views.add_swatch, name="add_swatch"),
     path("add/manufacturer/", staff_views.add_manufacturer, name="add_mfr"),
     path("add/filamenttype/", staff_views.add_filament_type, name="add_filament_type"),
     path("add/inventory/", staff_views.add_inventory_swatch, name="add_inventory"),
@@ -74,7 +74,7 @@ urlpatterns = [
     # ...
     # Old links that need to exist for a while and just redirect.
     # Remove each of them after a reasonable amount of time has passed -- probably a few months.
-    path("vrrf", views.homepage),  # Added 4/5/2020
+    path("vrrf/", views.homepage),  # Added 4/5/2020
 ]
 
 if settings.DEBUG:

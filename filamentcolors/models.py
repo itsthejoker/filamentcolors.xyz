@@ -93,11 +93,15 @@ class Post(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        kwargs = {"pk": self.id, "slug": self.slug}
-        return reverse("post_detail", kwargs=kwargs)
+        kwargs = {"slug": self.slug}
+        return reverse("postdetail", kwargs=kwargs)
 
     def __str__(self):
-        return self.title
+        if self.enable_preview:
+            pub = "preview"
+        else:
+            pub = "published" if self.published else "unpublished"
+        return f"{self.id} | {self.title} | {pub} | {self.get_absolute_url()}"
 
 
 class Swatch(models.Model):

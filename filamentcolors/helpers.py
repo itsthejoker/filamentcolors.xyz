@@ -1,9 +1,10 @@
 import colorsys
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from django.db.models import Count, F, Q, QuerySet
 from django.db.models.functions import Lower
-from django.http import request
+from django.http import request, HttpResponse
+from django.shortcuts import render
 
 from filamentcolors.models import GenericFilamentType, GenericFile, Manufacturer, Swatch
 
@@ -13,8 +14,27 @@ show_unavailable_cookie = "show-un"
 mfr_blacklist_cookie = "mfr-blacklist"
 
 
-def show_welcome_modal(r: request) -> bool:
+def first_time_visitor(r: request) -> bool:
     return False if r.COOKIES.get(have_visited_before_cookie) else True
+
+
+def prep_request(
+        r: request, html: str, data: Dict = None, **kwargs: Dict
+) -> HttpResponse:
+    """
+    Prepare the actual request for serving.
+
+    This allows checking every request for whether a visitor is new or not
+    and returning the welcome modal if necessary without having to remember
+    to write it into every view.
+    """
+    if first_time_visitor(r):
+        data.update({"launch_welcome_modal": True})
+
+    response = render(None, html, context=data, **kwargs)
+    response = set_tasty_cookies(response)
+
+    return response
 
 
 def get_hsv(item):
@@ -24,9 +44,15 @@ def get_hsv(item):
     return colorsys.rgb_to_hsv(r, g, b)
 
 
-def set_tasty_cookies(response) -> None:
+def set_tasty_cookies(response) -> HttpResponse:
     year = 365 * 24 * 60 * 60
-    response.set_cookie(have_visited_before_cookie, "tasty_cookies", max_age=year)
+    # Yet another chromium bug that goes unfixed. Don't enable `secure=True` or it
+    # will break chrome testing locally.
+    # https://bugs.chromium.org/p/chromium/issues/detail?id=757472
+    response.set_cookie(
+        have_visited_before_cookie, "tasty_cookies", max_age=year, samesite="lax"
+    )
+    return response
 
 
 def build_data_dict(request, library: bool = False) -> Dict:

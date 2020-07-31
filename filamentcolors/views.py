@@ -116,7 +116,7 @@ def swatch_detail(request, id):
     swatch = Swatch.objects.filter(id=id).first()
     data = build_data_dict(request)
 
-    if not swatch:
+    if not swatch or not swatch.published:
         raise Http404
     else:
         swatch.refresh_cache_if_needed()

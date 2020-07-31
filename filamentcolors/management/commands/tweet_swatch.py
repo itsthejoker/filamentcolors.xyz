@@ -10,7 +10,7 @@ from filamentcolors.twitter_helpers import generate_daily_swatch_tweet, send_twe
 
 
 def get_random_swatch() -> Swatch:
-    return random.choice(Swatch.objects.filter(~Q(tags__name="unavailable")))
+    return random.choice(Swatch.objects.filter(~Q(tags__name="unavailable"), published=True))
 
 
 def get_tweet_content(swatch_of_the_day) -> str:

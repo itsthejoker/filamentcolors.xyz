@@ -467,3 +467,11 @@ a:hover {
     margin-left: 0;
     margin-right: 0;
 }
+
+.postImg {
+    object-fit: cover;
+    object-position: 100% 0;
+
+    width: 300px;
+    height: 337px;
+}

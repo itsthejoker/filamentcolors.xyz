@@ -4,6 +4,7 @@
 {% block content %}
     <div class="container mt-4 photobox">
         <h1>{{ post.title }}</h1>
+        <h4 style="text-indent:3%" class="mb-4">{{ post.subtitle }}</h4>
         {{ post.body|safe_markdown }}
     </div>
 

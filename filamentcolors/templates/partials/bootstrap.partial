@@ -9,7 +9,9 @@
 <link rel="stylesheet" href="/static/css/main.css?v=3">
 <link rel="stylesheet" href="/static/js/toast/toast.min.css">
 
-<script async defer data-domain="filamentcolors.xyz" src="https://informatics.filamentcolors.xyz/js/index.js"></script>
+{% if not request.user.is_authenticated %}
+    <script async defer data-domain="filamentcolors.xyz" src="https://informatics.filamentcolors.xyz/js/index.js"></script>
+{% endif %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
         crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>

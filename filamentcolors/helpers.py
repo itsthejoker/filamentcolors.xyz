@@ -19,7 +19,7 @@ def first_time_visitor(r: request) -> bool:
 
 
 def prep_request(
-        r: request, html: str, data: Dict = None, **kwargs: Dict
+        r: request, html: str, data: Dict = None, *args: Any, **kwargs: Dict
 ) -> HttpResponse:
     """
     Prepare the actual request for serving.
@@ -31,7 +31,7 @@ def prep_request(
     if first_time_visitor(r):
         data.update({"launch_welcome_modal": True})
 
-    response = render(None, html, context=data, **kwargs)
+    response = render(r, html, context=data, *args, **kwargs)
     response = set_tasty_cookies(response)
 
     return response

@@ -34,7 +34,7 @@ class SwatchAdmin(admin.ModelAdmin):
 
     def response_change(self, request, obj):
         res = super().response_change(request, obj)
-        if "_preview" in request.POST:
+        if "_swatch_preview" in request.POST:
             return HttpResponseRedirect(f"/swatch/{obj.id}")
         else:
             return res
@@ -52,6 +52,15 @@ class PostAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {"widget": AdminMartorWidget},
     }
+
+    def response_change(self, request, obj):
+        res = super().response_change(request, obj)
+        if "_post_preview" in request.POST:
+            return HttpResponseRedirect(
+                f"/post/{obj.slug}{'/preview/' if obj.enable_preview else ''}"
+            )
+        else:
+            return res
 
 
 admin.site.register(Swatch, SwatchAdmin)

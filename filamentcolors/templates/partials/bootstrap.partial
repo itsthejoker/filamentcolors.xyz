@@ -1,3 +1,5 @@
+{% load static %}
+
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,6 +27,7 @@
 <script src="https://www.gstatic.com/jsaction/dispatcher.js"></script>
 <script src="/static/js/toast/toast.min.js"></script>
 <script src="/static/js/cookies/jquery.cookie.js"></script>
+<script src="{% static "js/email_magic.js" %}" async defer></script>
 
 <link rel="apple-touch-icon" sizes="180x180" href="/static/favicons/apple-touch-icon.png?v=QEJXGyWNR2">
 <link rel="icon" type="image/png" sizes="32x32" href="/static/favicons/favicon-32x32.png?v=QEJXGyWNR2">

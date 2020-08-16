@@ -1,7 +1,9 @@
 import random
+from typing import Any
 
-from django.http import Http404
-from django.shortcuts import HttpResponseRedirect, render, reverse, get_object_or_404
+from django.core.handlers.wsgi import WSGIRequest
+from django.http import Http404, HttpResponse
+from django.shortcuts import HttpResponseRedirect, reverse, get_object_or_404
 
 from filamentcolors.helpers import (
     build_data_dict,
@@ -10,16 +12,16 @@ from filamentcolors.helpers import (
     get_custom_library,
     get_hsv,
     get_swatches,
-    prep_request
+    prep_request,
 )
 from filamentcolors.models import GenericFilamentType, Swatch, Post
 
 
-def homepage(request):
+def homepage(request: WSGIRequest) -> HttpResponseRedirect:
     return HttpResponseRedirect(reverse("library"))
 
 
-def librarysort(request, method: str = None):
+def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
     """
     Available options:
 
@@ -62,7 +64,7 @@ def librarysort(request, method: str = None):
     return prep_request(request, html, data)
 
 
-def colorfamilysort(request, family_id):
+def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
     html = "library.html"
 
     data = build_data_dict(request, library=True)
@@ -75,7 +77,7 @@ def colorfamilysort(request, family_id):
     return prep_request(request, html, data)
 
 
-def manufacturersort(request, id):
+def manufacturersort(request: WSGIRequest, id: int) -> HttpResponse:
     html = "library.html"
 
     data = build_data_dict(request, library=True)
@@ -93,7 +95,7 @@ def manufacturersort(request, id):
     return prep_request(request, html, data)
 
 
-def typesort(request, id):
+def typesort(request: WSGIRequest, id: int) -> HttpResponse:
     html = "library.html"
     data = build_data_dict(request, library=True)
 
@@ -111,7 +113,7 @@ def typesort(request, id):
     return prep_request(request, html, data)
 
 
-def swatch_detail(request, id):
+def swatch_detail(request: WSGIRequest, id: int) -> HttpResponse:
     html = "swatch_detail.html"
     swatch = Swatch.objects.filter(id=id).first()
     data = build_data_dict(request)
@@ -128,16 +130,7 @@ def swatch_detail(request, id):
         return prep_request(request, html, data)
 
 
-def swatch_collection(request, ids):
-    """
-    What I'm imagining for this is a way for people to select swatches and
-    put them into a link that will just pull those items so that they can
-    send options to other people. For example, maybe something like
-    /library/collection/1,34,23,7
-
-    :param request: the Django request.
-    :return: ¯\_(ツ)_/¯
-    """
+def swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
     data = build_data_dict(request, library=True)
 
     cleaned_ids = clean_collection_ids(ids)
@@ -160,7 +153,7 @@ def swatch_collection(request, ids):
     return prep_request(request, "library.html", data)
 
 
-def edit_swatch_collection(request, ids):
+def edit_swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
     html = "library.html"
     data = build_data_dict(request, library=True)
     cleaned_ids = clean_collection_ids(ids)
@@ -173,23 +166,23 @@ def edit_swatch_collection(request, ids):
     return prep_request(request, html, data)
 
 
-def inventory_page(request):
+def inventory_page(request: WSGIRequest) -> HttpResponse:
     data = build_data_dict(request)
-    data.update({
-        "swatches": Swatch.objects.all(),
-    })
+    data.update(
+        {"swatches": Swatch.objects.all(),}
+    )
     return prep_request(request, "inventory.html", data)
 
 
-def post_list(request):
+def post_list(request: WSGIRequest) -> HttpResponse:
     data = build_data_dict(request)
-    data.update({
-        "posts": Post.objects.filter(published=True).order_by('-date_added'),
-    })
+    data.update(
+        {"posts": Post.objects.filter(published=True).order_by("-date_added"),}
+    )
     return prep_request(request, "post_list.html", data)
 
 
-def post_detail(request, slug):
+def post_detail(request: WSGIRequest, slug: str) -> HttpResponse:
     post = get_object_or_404(Post, slug=slug)
     if not post.published:
         raise Http404
@@ -198,7 +191,7 @@ def post_detail(request, slug):
     return prep_request(request, "post_detail.html", data)
 
 
-def post_preview(request, slug):
+def post_preview(request: WSGIRequest, slug: str) -> HttpResponse:
     post = get_object_or_404(Post, slug=slug)
     if not post.enable_preview:
         raise Http404
@@ -207,17 +200,17 @@ def post_preview(request, slug):
     return prep_request(request, "post_detail.html", data)
 
 
-def about_page(request):
+def about_page(request: WSGIRequest) -> HttpResponse:
     return prep_request(request, "about.html", build_data_dict(request))
 
 
-def donation_page(request):
+def donation_page(request: WSGIRequest) -> HttpResponse:
     return prep_request(request, "donations.html", build_data_dict(request))
 
 
-def error_404(request, *args, **kwargs):
+def error_404(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
     return prep_request(request, "404.html", build_data_dict(request), status=404)
 
 
-def error_500(request, *args, **kwargs):
+def error_500(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
     return prep_request(request, "500.html", build_data_dict(request), status=500)

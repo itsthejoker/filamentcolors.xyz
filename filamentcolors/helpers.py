@@ -19,7 +19,7 @@ def first_time_visitor(r: request) -> bool:
 
 
 def prep_request(
-        r: request, html: str, data: Dict = None, *args: Any, **kwargs: Dict
+        r: request, html: str, data: Dict = None, *args: Any, **kwargs: Any
 ) -> HttpResponse:
     """
     Prepare the actual request for serving.

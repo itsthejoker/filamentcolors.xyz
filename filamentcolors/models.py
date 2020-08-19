@@ -282,6 +282,20 @@ class Swatch(models.Model):
         on_delete=models.DO_NOTHING,
         related_name="square_three_swatch",
     )
+    closest_1 = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="closest_one_swatch",
+    )
+    closest_2 = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="closest_two_swatch",
+    )
 
     tags = TaggableManager(blank=True)
 
@@ -534,6 +548,13 @@ class Swatch(models.Model):
         self.square_2 = self._get_closest_color_swatch(l, s_2)
         self.square_3 = self._get_closest_color_swatch(l, s_3)
 
+    def update_closest_swatches(self, l):
+        own_color = convert_color(sRGBColor.new_from_rgb_hex(self.hex_color), LabColor)
+        l = l.exclude(self)
+        self.closest_1 = self._get_closest_color_swatch(l, own_color)
+        l = l.exclude(self.closest_1)
+        self.closest_2 = self._get_closest_color_swatch(l, own_color)
+
     def refresh_cache_if_needed(self) -> None:
         """
         Because we're caching all the color swatches on every entry in the db,
@@ -563,6 +584,7 @@ class Swatch(models.Model):
         self.update_split_complement_swatches(library)
         self.update_tetradic_swatches(library)
         self.update_square_swatches(library)
+        self.update_closest_swatches(library)
 
     def is_available(self):
         return False if self.tags.filter(name='unavailable').first() else True

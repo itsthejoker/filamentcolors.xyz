@@ -125,7 +125,7 @@ def rgb_to_hex(rgb):
     """
     Convert RGB colors to hex.
     Input should be a tuple of integers (R, G, B) where each is between 0 and 255.
-    Output is a string representing a hex numer. For instance '#FFFFFF'.
+    Output is a string representing a hex number. For instance '#FFFFFF'.
     """
     # make sure input is ok
     assert is_rgb(rgb) is True, "Error, %s is not a valid RGB color." % rgb

@@ -1,0 +1,16 @@
+<div class="container text-center bump-down">
+    <a style="display:block" class="complement-box"
+       href="/swatch/{{ s.id }}">
+        <h6>{{ s.manufacturer.name }}
+            - {{ s.color_name }} {{ s.filament_type.name }}</h6>
+        <div class="row">
+            <div class="col-6">
+                <div class="big-color-cube"
+                     style="background-color:#{{ s.hex_color }}; float:right; left: 1em; bottom: 0.5em;"></div>
+            </div>
+            <div class="col-6 text-left">
+                #{{ s.hex_color }}
+            </div>
+        </div>
+    </a>
+</div>

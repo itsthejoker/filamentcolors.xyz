@@ -31,6 +31,10 @@ class Manufacturer(models.Model):
     name = models.CharField(max_length=160)
     website = models.URLField(null=True, blank=True)
 
+    @property
+    def get_possessive_apostrophe(self):
+        return "'" if self.name.endswith("s") else "'s"
+
     def __str__(self):
         return self.name
 
@@ -550,9 +554,9 @@ class Swatch(models.Model):
 
     def update_closest_swatches(self, l):
         own_color = convert_color(sRGBColor.new_from_rgb_hex(self.hex_color), LabColor)
-        l = l.exclude(self)
+        l = l.exclude(pk=self.pk)
         self.closest_1 = self._get_closest_color_swatch(l, own_color)
-        l = l.exclude(self.closest_1)
+        l = l.exclude(pk = self.closest_1.pk)
         self.closest_2 = self._get_closest_color_swatch(l, own_color)
 
     def refresh_cache_if_needed(self) -> None:

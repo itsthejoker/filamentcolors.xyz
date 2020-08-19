@@ -30,6 +30,8 @@ class SwatchAdmin(admin.ModelAdmin):
         "square_1",
         "square_2",
         "square_3",
+        "closest_1",
+        "closest_2",
     )
 
     def response_change(self, request, obj):

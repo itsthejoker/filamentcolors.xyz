@@ -16,14 +16,30 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.sitemaps import GenericSitemap
+from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
 
 from filamentcolors import staff_views, views
 from filamentcolors.api.urls import urlpatterns as api_urls
 from filamentcolors.markdown_helpers.urls import urlpatterns as markdown_urls
+from filamentcolors.models import Post, Swatch
+from filamentcolors.sitemaps import StaticViewSitemap
 
 handler404 = 'filamentcolors.views.error_404'
 handler500 = 'filamentcolors.views.error_500'
+
+sitemaps = {
+    "static": StaticViewSitemap,
+    "swatches": GenericSitemap({
+        "queryset": Swatch.objects.filter(published=True).order_by('id'),
+        "date_field": "date_added"
+    }),
+    "posts": GenericSitemap({
+        "queryset": Post.objects.filter(published=True).order_by('id'),
+        "date_field": "date_added"
+    })
+}
 
 urlpatterns = [
     # Primary site URLs
@@ -70,6 +86,12 @@ urlpatterns = [
     path("add/manufacturer/", staff_views.add_manufacturer, name="add_mfr"),
     path("add/filamenttype/", staff_views.add_filament_type, name="add_filament_type"),
     path("add/inventory/", staff_views.add_inventory_swatch, name="add_inventory"),
+    path(
+        'sitemap.xml',
+        sitemap,
+        {'sitemaps': sitemaps},
+        name='django.contrib.sitemaps.views.sitemap'
+    ),
     # Event / Special URLs
     # ...
     # Old links that need to exist for a while and just redirect.

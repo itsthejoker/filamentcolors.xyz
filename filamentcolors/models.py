@@ -11,6 +11,7 @@ from colormath.color_diff import delta_e_cmc
 from colormath.color_objects import LabColor, sRGBColor
 from colorthief import ColorThief
 from django.conf import settings
+from django.contrib.sitemaps import ping_google
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
 from django.core.files.storage import default_storage
@@ -25,6 +26,15 @@ from martor.models import MartorField
 
 from filamentcolors.colors import Color
 from filamentcolors.twitter_helpers import send_tweet
+
+
+def update_google():
+    # Let google's search panel know that I've updated something on the site.
+    try:
+        ping_google()
+    except:
+        # bare except because so much can go wrong. It's not worth retrying.
+        pass
 
 
 class Manufacturer(models.Model):
@@ -91,6 +101,8 @@ class Post(models.Model):
         if self.published:
             self.enable_preview = False
         super().save(*args, **kwargs)
+        update_google()
+
 
     def get_absolute_url(self):
         kwargs = {"slug": self.slug}
@@ -604,6 +616,7 @@ class Swatch(models.Model):
                 # have to save the model before we can send the tweet, otherwise
                 # we won't have a swatch ID.
                 send_tweet(swatch=self)
+            update_google()
 
     def __str__(self):
         try:
@@ -616,6 +629,9 @@ class Swatch(models.Model):
         except:
             ft = "NOT ADDED"
         return f"{mfr} - {self.color_name} {ft}"
+
+    def get_absolute_url(self):
+        return reverse("swatchdetail", args=(self.id,))
 
     class Meta:
         verbose_name_plural = "swatches"

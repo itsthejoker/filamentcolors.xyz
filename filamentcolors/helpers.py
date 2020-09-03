@@ -1,6 +1,7 @@
 import colorsys
 from typing import Any, Dict, List
 
+from django.contrib.sitemaps import ping_google
 from django.db.models import Count, F, Q, QuerySet
 from django.db.models.functions import Lower
 from django.http import request, HttpResponse
@@ -179,14 +180,14 @@ def get_custom_library(data: Dict) -> QuerySet:
     if data["user_settings"]["show_unavailable"] is False:
         s = s.exclude(tags__name="unavailable")
 
-    s = s.filter(manufacturer__in=data["user_settings"]["mfr_whitelist"])
-
-    return s.exclude(published=False)
+    return s.filter(
+        manufacturer__in=data["user_settings"]["mfr_whitelist"], published=True
+    )
 
 
 def get_swatches(data: Dict) -> QuerySet:
     if generate_custom_library(data):
         queryset = get_custom_library(data)
     else:
-        queryset = Swatch.objects.exclude(published=False)
+        queryset = Swatch.objects.filter(published=True)
     return queryset

@@ -53,6 +53,8 @@ class SwatchSerializer(TaggitSerializer, HyperlinkedModelSerializer):
             "square_1",
             "square_2",
             "square_3",
+            "closest_1",
+            "closest_2",
             "tags",
             "card_img",
             "hex_color",

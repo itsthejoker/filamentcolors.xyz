@@ -88,7 +88,6 @@ daily_tweet_intro = [
     "Is it just me or is the interrobang criminally underrated‽ But anyway, back to swatches.",
     "Today's fashion-forward color is brought to you by Python! Python: not just a snake!",
     '"Swatches?! Why does it always have to be swatches???"',
-    "Is it just me or were the commercials we had as kids _really weird_? Anyway!",
     "Fun fact: this system is incompatible with Pantone!",
     "🎶 Do you hear the swatches print? Swatches are printing all the time... 🎵",
     "Looking for some new colors? The librarian has some recommendations!",
@@ -99,11 +98,14 @@ daily_tweet_intro = [
     "Did you see that clip of {famous_person} doing {totally_normal_thing}??? Anyway...",
     f"This tweet is brought to you by the number {random.choice(string.digits)}!",
     "Heeeere's Swatchy!",
+    "Fun fact: my bookshelves are (mostly!) organized by color. Ask me about it sometime!",
+    "One of these days I'll add a bunch of Sims loading messages. Reticulating splines...",
+    "Is it possible to have too many samples? Yes, but actually no.",
 ]
 
 
 def generate_daily_swatch_tweet(swatch):
-    plural = "'" if swatch.manufacturer.name.endswith("s") else "'s"
+    plural = swatch.manufacturer.get_possessive_apostrophe
     intro = random.choice(daily_tweet_intro)
 
     full_update = (

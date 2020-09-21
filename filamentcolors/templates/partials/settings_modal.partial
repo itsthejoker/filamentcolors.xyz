@@ -83,6 +83,9 @@
 <script>
     function toggleShowHideMfrs() {
         mfr = $($(".mfrSettings").get().reverse());
+        // for bootstrap 5 ditching jquery:
+        // mfr = Array.from(document.getElementsByClassName("mfrSettings")).reverse()
+
         btn = $("#showHideMfrsButton");
 
         var showAllBool = btn.hasClass('showall');
@@ -148,24 +151,24 @@
             }).showToast();
             return
         }
-        $.cookie('show-types', fs, {path: '/', expires: 365});
+        createCookie('show-types', fs, 365);
 
         // the radio selector
-        $.cookie('show-un',
-            $("#showUnavailableSetting").children()[0].classList.contains("active"),
-            {path: '/', expires: 365}
+        createCookie('show-un',
+            document.getElementById("showUnavailableSetting").children[0].classList.contains("active"),
+            365
         );
 
-        $.cookie('mfr-blacklist', mfr_list, {path: '/', expires: 365});
+        createCookie('mfr-blacklist', mfr_list, 365);
 
         // settings have been saved, time to actually load them
         window.location.reload();
     }
 
     function loadSettings() {
-        fsettings = $.cookie('show-types');
-        dsetting = $.cookie('show-un');
-        msettings = $.cookie('mfr-blacklist');
+        fsettings = readCookie('show-types');
+        dsetting = readCookie('show-un');
+        msettings = readCookie('mfr-blacklist');
 
         {# Using a single equals for all of these kills me here, but it #}
         {# CANNOT be a !== because javascript sucks and it breaks. #}

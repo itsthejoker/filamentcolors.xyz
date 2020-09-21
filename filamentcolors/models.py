@@ -175,6 +175,9 @@ class Swatch(models.Model):
     image_front = models.ImageField(null=True, blank=True)
     image_back = models.ImageField(null=True, blank=True)
     image_other = models.ImageField(null=True, blank=True)
+    image_front_webp = models.ImageField(null=True, blank=True)
+    image_back_webp = models.ImageField(null=True, blank=True)
+    image_other_webp = models.ImageField(null=True, blank=True)
 
     rebuild_long_way = models.BooleanField(
         default=False,
@@ -327,6 +330,9 @@ class Swatch(models.Model):
     card_img = models.ImageField(
         blank=True, verbose_name="DO NOT ADD! Computed Card Image"
     )
+    card_img_webp = models.ImageField(
+        blank=True, verbose_name="DO NOT ADD! WebP Computed Card Image"
+    )
     hex_color = models.CharField(
         max_length=6, blank=True, verbose_name="DO NOT ADD! Computed Hex Color"
     )
@@ -364,13 +370,24 @@ class Swatch(models.Model):
         k = self.rgb_hilo(r, g, b)
         return self.get_hex(tuple(k - u for u in (r, g, b)))
 
-    def _save_image(self, i, image_type: str) -> str:
+    def _set_image_data(self, field, filename) -> None:
+        # You can't just pass in a field reference because python won't
+        # let you write to the actual field. Instead, we need to perform
+        # some shenanigans in order to get this to work.
+        path = os.path.join(settings.MEDIA_ROOT, filename)
+        # set that image to the imagefield we have
+        setattr(self, field, ImageFile(open(path, "rb")))
+        # now actually grab a reference to the imagefield so we can modify it
+        imagefield = getattr(self, field)
+        setattr(imagefield, "name", filename)
+
+    def _save_image(self, i, image_type: str, format: str="JPEG") -> str:
         # https://stackoverflow.com/a/24380132
 
         # do we even need to do it this way? Need to learn more about byte streams
         # and verify that this is actually a valid way to handle this.
         output = BytesIO()
-        i.save(output, format="JPEG", quality=75)
+        i.save(output, format=format)
         output.seek(0)
         # remove the file type so that we can modify the filename
         filename_str = self.image_front.name[: self.image_front.name.rindex(".")]
@@ -431,30 +448,30 @@ class Swatch(models.Model):
             )
         )
 
-        filename_card = self._save_image(img_card, "card")
-        filename_front = self._save_image(img_front, "front")
-        filename_back = self._save_image(img_back, "back")
+        filename_card_jpeg = self._save_image(img_card, "card")
+        filename_front_jpeg = self._save_image(img_front, "front")
+        filename_back_jpeg = self._save_image(img_back, "back")
 
-        path = os.path.join(settings.MEDIA_ROOT, filename_card)
-        self.card_img_jpeg = ImageFile(open(path, "rb"))
-        self.card_img_jpeg.name = filename_card
+        filename_card_wepb = self._save_image(img_card, "card", format="WebP")
+        filename_front_webp = self._save_image(img_front, "front", format="WebP")
+        filename_back_webp = self._save_image(img_back, "back", format="WebP")
 
-        path = os.path.join(settings.MEDIA_ROOT, filename_front)
-        self.image_front = ImageFile(open(path, "rb"))
-        self.image_front.name = filename_front
+        self._set_image_data("card_img_jpeg", filename_card_jpeg)
+        self._set_image_data("image_front", filename_front_jpeg)
+        self._set_image_data("image_back", filename_back_jpeg)
 
-        path = os.path.join(settings.MEDIA_ROOT, filename_back)
-        self.image_back = ImageFile(open(path, "rb"))
-        self.image_back.name = filename_back
+        self._set_image_data("card_img_webp", filename_card_wepb)
+        self._set_image_data("image_front_webp", filename_front_webp)
+        self._set_image_data("image_back_webp", filename_back_webp)
 
         image = Img.open(self.card_img_jpeg)
         image.thumbnail((200, 200), Img.ANTIALIAS)
 
-        filename = self._save_image(image, "thumb")
+        filename_jpeg = self._save_image(image, "thumb")
+        filename_webp = self._save_image(image, "thumb", format="WebP")
 
-        path = os.path.join(settings.MEDIA_ROOT, filename)
-        self.card_img = ImageFile(open(path, "rb"))
-        self.card_img.name = filename
+        self._set_image_data("card_img", filename_jpeg)
+        self._set_image_data("card_img_webp", filename_webp)
 
     # noinspection PyUnresolvedReferences
     def generate_hex_info(self, long_way: bool = False) -> None:

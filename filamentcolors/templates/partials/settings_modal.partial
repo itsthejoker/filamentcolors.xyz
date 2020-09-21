@@ -130,24 +130,22 @@
             });
 
         if (fs.includes('true') === false) {
-            $.toast({
-                title: 'Error!',
-                content: 'It looks like all filament types have been disabled.' +
+            Toastify({
+                text: 'It looks like all filament types have been disabled.' +
                     ' Please enable at least one type.',
-                type: 'error',
-                delay: 3000
-            });
+                duration: 3000,
+                backgroundColor: "#d9534f"
+            }).showToast();
             return
         }
 
         if (mfr_list.split("-").slice(0, -1).length === mfr.children().length) {
-            $.toast({
-                title: 'Error!',
-                content: 'It looks like all manufacturers have been disabled.' +
+            Toastify({
+                text: 'It looks like all manufacturers have been disabled.' +
                     ' Please enable at least one.',
-                type: 'error',
-                delay: 3000
-            });
+                duration: 3000,
+                backgroundColor: "#d9534f"
+            }).showToast();
             return
         }
         $.cookie('show-types', fs, {path: '/', expires: 365});

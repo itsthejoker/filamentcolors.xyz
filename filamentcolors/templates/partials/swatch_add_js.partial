@@ -2,24 +2,22 @@
     function loadMfrSite() {
         mfrID = document.getElementById("id_manufacturer").value;
         if (mfrID === "") {
-            $.toast({
-                title: 'Error!',
-                content: 'No manufacturer selected!',
-                type: 'error',
-                delay: 3000
-            });
+            Toastify({
+                text: 'No manufacturer selected!',
+                duration: 3000,
+                backgroundColor: "#d9534f"
+            }).showToast();
             return;
         }
         fetch("/api/manufacturer/" + mfrID)
             .then(response => response.json())
             .then(data => {
                 if (data.website === null) {
-                    $.toast({
-                        title: 'Error!',
-                        content: "API says there's no website!",
-                        type: 'error',
-                        delay: 3000
-                    });
+                    Toastify({
+                        text: "API says there's no website!",
+                        duration: 3000,
+                        backgroundColor: "#d9534f"
+                    }).showToast();
                     return
                 }
                 window.open(data.website, '_blank').focus()
@@ -33,28 +31,25 @@
         ftype = document.getElementById("id_filament_type");
         ftypeName = ftype.options[ftype.selectedIndex].text;
         if (mfrName === "---------") {
-            $.toast({
-                title: 'Error!',
-                content: 'No manufacturer selected!',
-                type: 'error',
-                delay: 3000
-            });
+            Toastify({
+                text: 'No manufacturer selected!',
+                duration: 3000,
+                backgroundColor: "#d9534f"
+            }).showToast();
             return
         } else if (colorName === "") {
-            $.toast({
-                title: 'Error!',
-                content: 'No color name retrieved!',
-                type: 'error',
-                delay: 3000
-            });
+            Toastify({
+                text: 'No color name retrieved!',
+                duration: 3000,
+                backgroundColor: "#d9534f"
+            }).showToast();
             return
         } else if (ftypeName === "---------") {
-            $.toast({
-                title: 'Error!',
-                content: 'No color type specified!',
-                type: 'error',
-                delay: 3000
-            });
+            Toastify({
+                text: 'No color type specified!',
+                duration: 3000,
+                backgroundColor: "#d9534f"
+            }).showToast();
             return
         }
         searchstring = encodeURI(mfrName + " " + colorName + " " + ftypeName)

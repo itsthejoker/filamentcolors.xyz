@@ -8,8 +8,8 @@
       integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.css"
       crossorigin="anonymous">
-<link rel="stylesheet" href="/static/css/main.css?v=3">
-<link rel="stylesheet" href="/static/js/toast/toast.min.css">
+<link rel="stylesheet" href="{% static 'css/main.css' %}?v=3">
+<link rel="stylesheet" href="{% static 'js/toastify/toastify.css' %}">
 
 {% if not request.user.is_authenticated %}
     <script async defer data-domain="filamentcolors.xyz" src="https://informatics.filamentcolors.xyz/js/index.js"></script>
@@ -25,9 +25,9 @@
         crossorigin="anonymous"></script>
 <script src="https://www.gstatic.com/jsaction/contract.js"></script>
 <script src="https://www.gstatic.com/jsaction/dispatcher.js"></script>
-<script src="/static/js/toast/toast.min.js"></script>
+<script type="text/javascript" src="{% static 'js/toastify/toastify.js' %}" async defer></script>
 <script src="/static/js/cookies/jquery.cookie.js"></script>
-<script src="{% static "js/emailmagic.js" %}" async defer></script>
+<script type="text/javascript" src="{% static "js/emailmagic.js" %}" async defer></script>
 
 <link rel="apple-touch-icon" sizes="180x180" href="/static/favicons/apple-touch-icon.png?v=QEJXGyWNR2">
 <link rel="icon" type="image/png" sizes="32x32" href="/static/favicons/favicon-32x32.png?v=QEJXGyWNR2">

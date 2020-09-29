@@ -14,13 +14,13 @@
                 </a>
             </div>
             <div class="col-sm-4 col-md-4 col-lg-2 text-center bump-down">
-                <a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank">
+                <a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank" rel="noopener">
                     <img title="Source code (github!)"
                          src="{% static "GitHub-Mark-32px.png" %}"
                          alt="source code (github)"></a>
             </div>
             <div class="col-sm-4 col-md-4 col-lg-2 text-center bump-down">
-                <a href="https://twitter.com/filamentcolors" target="_blank">
+                <a href="https://twitter.com/filamentcolors" target="_blank" rel="noopener">
                     <img title="Follow me on Twitter!"
                          width="32" height="32" src="{% static "Twitter_Social_Icon_Circle_Color.png" %}"
                          alt="@filamentcolors on Twitter">
@@ -48,7 +48,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-lg-3 text-center bump-down">
-                <a href="https://www.3dgeeks.app" target="_blank">
+                <a href="https://www.3dgeeks.app" target="_blank" rel="noopener">
                     <button type="button" class="btn btn-secondary" data-toggle="modal"
                             style="background: #000000; border-color: #444444; color: #ffffff">
                         3D Geeks App

@@ -106,14 +106,18 @@
                             {% if swatch.amazon_purchase_link %}
                                 <a class="btn btn-block btn-info" href="{{ swatch.amazon_purchase_link }}"
                                    target="_blank"
-                                   role="button">Buy on
+                                   role="button"
+                                   rel="noopener"
+                                >Buy on
                                     Amazon<br><span style="font-size: smaller">(affiliate link)</span></a>
                             {% endif %}
                             {% if swatch.mfr_purchase_link %}
                                 <p></p>
                                 <a class="btn btn-block btn-success" href="{{ swatch.mfr_purchase_link }}"
                                    target="_blank"
-                                   role="button">Buy from {{ swatch.manufacturer.name }}</a>
+                                   role="button"
+                                   rel="noopener"
+                                >Buy from {{ swatch.manufacturer.name }}</a>
                             {% endif %}
                             <p></p>
                         </div>

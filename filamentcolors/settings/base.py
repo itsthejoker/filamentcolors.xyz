@@ -204,4 +204,4 @@ MARTOR_UPLOAD_URL = '/api/uploader/'  # change to local uploader
 # 500MB - 429916160
 MAX_IMAGE_UPLOAD_SIZE = 5242880  # 5MB
 
-CORS_URLS_REGEX = r'^/api/.*$'
+CORS_ALLOW_ALL_ORIGINS = True

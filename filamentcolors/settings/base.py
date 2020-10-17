@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    "corsheaders",
     "taggit",
     "widget_tweaks",
     "filamentcolors",
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -201,3 +203,5 @@ MARTOR_UPLOAD_URL = '/api/uploader/'  # change to local uploader
 # 250MB - 214958080
 # 500MB - 429916160
 MAX_IMAGE_UPLOAD_SIZE = 5242880  # 5MB
+
+CORS_ALLOW_ALL_ORIGINS = True

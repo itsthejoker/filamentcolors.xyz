@@ -397,36 +397,40 @@ class Swatch(models.Model):
         # then add that file to the self.card_img attribute.
 
         # card image
-        cs_x = 1783
-        cs_y = 554
+        # x = y * 3.218
+        cs_x = 2613
+        cs_y = 812
 
         # regular front image
-        cs_two_x = 1865
-        cs_two_y = 1399
+        # x = y * 1.3333
+        cs_two_x = 2740
+        cs_two_y = 2056
+
+
 
         image = Img.open(self.image_front)
         back_image = Img.open(self.image_back)
         img_card = image.crop(
             (
-                (image.width - cs_x) / 2,
-                (image.height - cs_y) / 2,
-                cs_x + (image.width - cs_x) / 2,
-                cs_y + (image.height - cs_y) / 2,
+                (image.width - cs_x) / 2 + 70,
+                (image.height - cs_y) / 2 - 50,
+                cs_x + (image.width - cs_x) / 2 + 70,
+                cs_y + (image.height - cs_y) / 2 - 50,
             )
         )
         img_front = image.crop(
             (
-                (image.width - cs_two_x) / 2,
+                (image.width - cs_two_x) / 2 + 50,
                 (image.height - cs_two_y) / 2,
-                cs_two_x + (image.width - cs_two_x) / 2,
+                cs_two_x + (image.width - cs_two_x) / 2 + 50,
                 cs_two_y + (image.height - cs_two_y) / 2,
             )
         )
         img_back = back_image.crop(
             (
-                (back_image.width - cs_two_x) / 2,
+                (back_image.width - cs_two_x) / 2 + 50,
                 (back_image.height - cs_two_y) / 2,
-                cs_two_x + (back_image.width - cs_two_x) / 2,
+                cs_two_x + (back_image.width - cs_two_x) / 2 + 50,
                 cs_two_y + (back_image.height - cs_two_y) / 2,
             )
         )

@@ -10,7 +10,6 @@ function updateCounter() {
 function preselect_items(ids) {
     ids.forEach(
         item => {
-
             element = $(`#s${item} .multiselector`)
             console.log(element)
             element[0].click()

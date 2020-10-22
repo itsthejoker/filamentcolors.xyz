@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="modal fade" tabindex="-1" role="dialog"
      aria-labelledby="welcome-experience-modal" aria-hidden="true"
      id="welcomeExperience">
@@ -195,7 +197,7 @@
                     <div class="row">
                         <div class="col-xs-1 col-lg-2"></div>
                         <div class="col-xs-10 col-lg-8">
-                            <a href="/library/collection/327,383,117,378/" target="_blank" rel="noopener">
+                            <a href="/library/collection/327,383,117,378/" target="_blank">
                                 <img src="{{ welcome_experience_images.3.file.url }}"
                                      alt="An image showing the complement color section."
                                      class="welcome-experience-photo"
@@ -206,7 +208,7 @@
                     </div>
                     <p></p>
                     You can get to the above collection through this link:
-                    <a href="/library/collection/327,383,117,378/" target="_blank" rel="noopener">
+                    <a href="/library/collection/327,383,117,378/" target="_blank">
                         filamentcolors.xyz/library/collection/327,383,117,378/
                     </a>
                     <p></p>
@@ -235,10 +237,10 @@
                     The absolute best resource I've seen about working with colors through math
                     alone is by
                     <a href="https://twitter.com/AlanZucconi" target="_blank" rel="noopener">Alan Zucconi</a>,
-                    who wrote <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/" target="_blank" rel="noopener">
-                        this fantastic post
-                    </a> about different color sorting methods and the various issues they
-                    have.
+                    who wrote <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/"
+                                 target="_blank"
+                                 rel="noopener">this fantastic post</a>
+                    about different color sorting methods and the various issues they have.
                     <p></p>
                     There's a lot of math and educated guesswork that goes into this, so if
                     you see any bugs or other issues please let me know! Twitter is the best
@@ -263,25 +265,4 @@
     </div>
 </div>
 
-<script>
-    // from https://stackoverflow.com/a/951057
-    // for some reason, `await sleep` doesn't work for me.
-    // Using a slightly older option to get around this. The problem here is
-    // that we need the animation to finish completing to hide the modal before
-    // resetting it, otherwise it will reset as it's closing and will look bad.
-
-    // sleep time expects milliseconds
-    function sleep(time) {
-        return new Promise((resolve) => setTimeout(resolve, time));
-    }
-
-    function finishbutton() {
-        $("#welcomeExperience").modal('hide');
-        sleep(1000).then(() => {
-            resetSteps()
-        });
-    }
-
-</script>
-
-{% include 'partials/multi_step_modal_js.partial' %}
+<script src="{% static 'js/multistepmodal.js' %}"></script>

@@ -1,4 +1,4 @@
-<div id="{{ obj.id }}" class="col-md-6 col-lg-4 cardBox anim" align="center">
+<div id="s{{ obj.id }}" class="col-md-6 col-lg-4 cardBox anim" align="center">
     <a href="/swatch/{{ obj.id }}" class="card mb-4 shadow" style="width: 18rem;">
         <div class="multiselector" role="checkbox" aria-checked="false" tabindex="0"
              jsaction="mousedown:card.select; click:card.select"

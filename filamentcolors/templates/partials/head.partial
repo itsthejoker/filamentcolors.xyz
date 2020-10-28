@@ -26,7 +26,8 @@
 <script src="https://www.gstatic.com/jsaction/contract.js"></script>
 <script src="https://www.gstatic.com/jsaction/dispatcher.js"></script>
 <script type="text/javascript" src="{% static 'js/toastify/toastify.js' %}" async defer></script>
-<script src="/static/js/cookies/jquery.cookie.js"></script>
+<script src="{% static 'js/cookies/cookie.js' %}"></script>
+
 <script type="text/javascript" src="{% static "js/emailmagic.js" %}" async defer></script>
 
 <link rel="apple-touch-icon" sizes="180x180" href="/static/favicons/apple-touch-icon.png?v=QEJXGyWNR2">

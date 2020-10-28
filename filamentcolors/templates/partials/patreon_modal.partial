@@ -26,11 +26,11 @@
                 <p>
                     Awesome Supporters List:
                     <ul>
-                        <li>Joe Podgorski - <a href="https://www.projectr3d.com" target="_blank">Project R3D</a></li>
+                        <li>Joe Podgorski - <a href="https://www.projectr3d.com" target="_blank" rel="noopener">Project R3D</a></li>
                     </ul>
                 </p>
                 <p>
-                    <a href="https://www.patreon.com/bePatron?u=19146975" target="_blank" class="btn btn-block btn-secondary"
+                    <a href="https://www.patreon.com/bePatron?u=19146975" target="_blank" rel="noopener" class="btn btn-block btn-secondary"
                        style="background: #f96854; border-color: #f96854; color: #ffffff">Join me on Patreon!</a>
                 </p>
             </div>

@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="modal fade" tabindex="-1" role="dialog"
      aria-labelledby="welcome-experience-modal" aria-hidden="true"
      id="welcomeExperience">
@@ -146,7 +148,7 @@
                 </div>
                 <div class="modal-body">
                     Most projects only need two colors, so we spin the
-                    <a href="https://en.wikipedia.org/wiki/Color_wheel" target="_blank">color wheel</a>
+                    <a href="https://en.wikipedia.org/wiki/Color_wheel" target="_blank" rel="noopener">color wheel</a>
                     180 degrees and find you the closest color in the library automatically!
                     <p></p>
                     Example:
@@ -230,20 +232,20 @@
                     distinctly visual phenomenon, and one we still struggle to communicate
                     to machines. The grand majority of this site is automatically generated,
                     and the site will make mistakes; there's a bunch of great resources
-                    <a href="/about#why-is-color-hard" target="_blank">HERE</a>.
+                    <a href="/about#why-is-color-hard" target="_blank" rel="noopener">HERE</a>.
                     <p></p>
                     The absolute best resource I've seen about working with colors through math
                     alone is by
-                    <a href="https://twitter.com/AlanZucconi" target="_blank">Alan Zucconi</a>,
-                    who wrote <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/" target="_blank">
-                        this fantastic post
-                    </a> about different color sorting methods and the various issues they
-                    have.
+                    <a href="https://twitter.com/AlanZucconi" target="_blank" rel="noopener">Alan Zucconi</a>,
+                    who wrote <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/"
+                                 target="_blank"
+                                 rel="noopener">this fantastic post</a>
+                    about different color sorting methods and the various issues they have.
                     <p></p>
                     There's a lot of math and educated guesswork that goes into this, so if
                     you see any bugs or other issues please let me know! Twitter is the best
                     way to reach me; DM or just ping
-                    <a href="https://twitter.com/filamentcolors" target="_blank">@filamentcolors</a>
+                    <a href="https://twitter.com/filamentcolors" target="_blank" rel="noopener">@filamentcolors</a>
                     and I'll see it.
                     <p></p>
                     I hope you find this resource useful; if you make a project using it, please
@@ -263,25 +265,4 @@
     </div>
 </div>
 
-<script>
-    // from https://stackoverflow.com/a/951057
-    // for some reason, `await sleep` doesn't work for me.
-    // Using a slightly older option to get around this. The problem here is
-    // that we need the animation to finish completing to hide the modal before
-    // resetting it, otherwise it will reset as it's closing and will look bad.
-
-    // sleep time expects milliseconds
-    function sleep(time) {
-        return new Promise((resolve) => setTimeout(resolve, time));
-    }
-
-    function finishbutton() {
-        $("#welcomeExperience").modal('hide');
-        sleep(1000).then(() => {
-            resetSteps()
-        });
-    }
-
-</script>
-
-{% include 'partials/multi_step_modal_js.partial' %}
+<script src="{% static 'js/multistepmodal.js' %}"></script>

@@ -37,7 +37,7 @@ class SwatchForm(forms.ModelForm):
 
 class ListSwatchInventoryForm(forms.Form):
     unpublished_swatches = forms.ModelChoiceField(
-        Swatch.objects.exclude(published=True)
+        Swatch.objects.filter(published=False).order_by(Lower("manufacturer__name"))
     )
 
 

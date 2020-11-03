@@ -31,8 +31,11 @@
                     <section class="gallery-block grid-gallery">
                         <div class="item">
                             <a class="lightbox" href="{{ swatch.image_front.url }}" title="Swatch Front">
-                                <img class="img-fluid image scale-on-hover" src="{{ swatch.image_front.url }}"
-                                     alt="An image of the front of the color swatch.">
+                                <picture>
+                                    <source srcset="{{ swatch.image_front_webp }}" type="image/webp">
+                                    <img class="img-fluid image scale-on-hover" src="{{ swatch.image_front.url }}"
+                                         alt="An image of the front of the color swatch.">
+                                </picture>
                             </a>
                         </div>
                         {% if swatch.image_other %}
@@ -40,14 +43,22 @@
                                 <div class="col-sm-3"></div>
                                 <div class="col-sm-3 item">
                                     <a class="lightbox" href="{{ swatch.image_back.url }}" title="Swatch Back">
-                                        <img class="img-fluid image scale-on-hover" src="{{ swatch.image_back.url }}"
-                                             alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
+                                        <picture>
+                                            <source srcset="{{ swatch.image_back_webp.url }}" type="image/webp">
+                                            <img class="img-fluid image scale-on-hover"
+                                                 src="{{ swatch.image_back.url }}"
+                                                 alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
+                                        </picture>
                                     </a>
                                 </div>
                                 <div class="col-sm-3 item">
                                     <a class="lightbox" href="{{ swatch.image_other.url }}">
-                                        <img class="img-fluid image scale-on-hover" src="{{ swatch.image_other.url }}"
-                                             alt="An image of a small object printed with the filament.">
+                                        <picture>
+                                            <source srcset="{{ swatch.image_other_webp.url }}" type="image/webp">
+                                            <img class="img-fluid image scale-on-hover"
+                                                 src="{{ swatch.image_other.url }}"
+                                                 alt="An image of a small object printed with the filament.">
+                                        </picture>
                                     </a>
                                 </div>
                                 <div class="col-sm-3"></div>
@@ -58,8 +69,12 @@
                                 <div class="col-sm-4"></div>
                                 <div class="col-sm-4">
                                     <a class="lightbox" href="{{ swatch.image_back.url }}" title="Swatch Back">
-                                        <img class="img-fluid image scale-on-hover" src="{{ swatch.image_back.url }}"
-                                             alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
+                                        <picture>
+                                            <source srcset="{{ swatch.image_back_webp.url }}" type="image/webp">
+                                            <img class="img-fluid image scale-on-hover"
+                                                 src="{{ swatch.image_back.url }}"
+                                                 alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
+                                        </picture>
                                     </a>
                                 </div>
                                 <div class="col-sm-4"></div>

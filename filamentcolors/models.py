@@ -28,7 +28,7 @@ from filamentcolors.colors import Color
 from filamentcolors.twitter_helpers import send_tweet
 
 
-def update_google():
+def update_google() -> None:
     # Let google's search panel know that I've updated something on the site.
     try:
         ping_google()
@@ -106,7 +106,6 @@ class Post(models.Model):
             self.enable_preview = False
         super().save(*args, **kwargs)
         update_google()
-
 
     def get_absolute_url(self):
         kwargs = {"slug": self.slug}
@@ -381,7 +380,7 @@ class Swatch(models.Model):
         imagefield = getattr(self, field)
         setattr(imagefield, "name", filename)
 
-    def _save_image(self, i, image_type: str, format: str="JPEG") -> str:
+    def _save_image(self, i, image_type: str, format: str = "JPEG") -> str:
         # https://stackoverflow.com/a/24380132
 
         # do we even need to do it this way? Need to learn more about byte streams
@@ -423,8 +422,6 @@ class Swatch(models.Model):
         cs_two_x = 2740
         cs_two_y = 2056
 
-
-
         image = Img.open(self.image_front)
         back_image = Img.open(self.image_back)
         img_card = image.crop(
@@ -456,21 +453,21 @@ class Swatch(models.Model):
         filename_front_jpeg = self._save_image(img_front, "front")
         filename_back_jpeg = self._save_image(img_back, "back")
 
-        filename_card_wepb = self._save_image(img_card, "card", format="WebP")
         filename_front_webp = self._save_image(img_front, "front", format="WebP")
         filename_back_webp = self._save_image(img_back, "back", format="WebP")
 
+        # large source card image
         self._set_image_data("card_img_jpeg", filename_card_jpeg)
+        # actual front and back images
         self._set_image_data("image_front", filename_front_jpeg)
         self._set_image_data("image_back", filename_back_jpeg)
-
-        self._set_image_data("card_img_webp", filename_card_wepb)
         self._set_image_data("image_front_webp", filename_front_webp)
         self._set_image_data("image_back_webp", filename_back_webp)
 
         image = Img.open(self.card_img_jpeg)
         image.thumbnail((200, 200), Img.ANTIALIAS)
 
+        # small resized thumbnail card images
         filename_jpeg = self._save_image(image, "thumb")
         filename_webp = self._save_image(image, "thumb", format="WebP")
 
@@ -509,6 +506,14 @@ class Swatch(models.Model):
             self.hex_color = self.get_hex(ct_image.get_color(quality=1))
 
         self.complement_hex = self.get_complement(self.hex_color)
+
+    def get_closest_to_hex(self, hex: str):
+        # Helper function to handle when somebody asks for "what's the
+        # closest plastic to X"
+        library = Swatch.objects.all()
+        hex_color = convert_color(sRGBColor.new_from_rgb_hex(hex), LabColor)
+        return self._get_closest_color_swatch(library, hex_color)
+
 
     def _get_closest_color_swatch(self, library: QuerySet, color_to_match: LabColor):
         distance_dict = dict()
@@ -589,7 +594,7 @@ class Swatch(models.Model):
         own_color = convert_color(sRGBColor.new_from_rgb_hex(self.hex_color), LabColor)
         l = l.exclude(pk=self.pk)
         self.closest_1 = self._get_closest_color_swatch(l, own_color)
-        l = l.exclude(pk = self.closest_1.pk)
+        l = l.exclude(pk=self.closest_1.pk)
         self.closest_2 = self._get_closest_color_swatch(l, own_color)
 
     def refresh_cache_if_needed(self) -> None:

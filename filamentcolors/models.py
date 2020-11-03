@@ -610,8 +610,7 @@ class Swatch(models.Model):
         return False if self.tags.filter(name='unavailable').first() else True
 
     def save(self, *args, **kwargs):
-        # default action is to not post to social media
-        post_tweet = False
+        rebuild_matches = False
 
         if self.regenerate_info:
             # the joys of using flags on the models themselves. Because
@@ -624,27 +623,29 @@ class Swatch(models.Model):
                 self.crop_and_save_images()
             self.generate_hex_info()
             self.regenerate_info = False
+            rebuild_matches = True
 
         if self.rebuild_long_way:
             self.generate_hex_info(long_way=True)
             self.rebuild_long_way = False
+            rebuild_matches = True
+
+        if rebuild_matches:
+            self.update_all_color_matches(Swatch.objects.filter(published=True))
 
         if self.card_img or not self.published:
             # we already have a card image, so just save everything and abort.
             super(Swatch, self).save(*args, **kwargs)
             return
         else:
-            # Ooh, a new swatch!
-            post_tweet = True
-
             self.crop_and_save_images()
             self.generate_hex_info()
 
             super(Swatch, self).save(*args, **kwargs)
 
-            if post_tweet and not settings.DEBUG:
-                # have to save the model before we can send the tweet, otherwise
-                # we won't have a swatch ID.
+            # have to save the model before we can send the tweet, otherwise
+            # we won't have a swatch ID.
+            if not settings.DEBUG:
                 send_tweet(swatch=self)
             update_google()
 

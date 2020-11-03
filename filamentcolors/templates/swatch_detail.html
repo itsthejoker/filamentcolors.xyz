@@ -104,7 +104,7 @@
                                 </tbody>
                             </table>
                             {% if swatch.amazon_purchase_link %}
-                                <a class="btn btn-block btn-info" href="{{ swatch.amazon_purchase_link }}"
+                                <a class="btn btn-block btn-info my-3" href="{{ swatch.amazon_purchase_link }}"
                                    target="_blank"
                                    role="button"
                                    rel="noopener"
@@ -112,13 +112,17 @@
                                     Amazon<br><span style="font-size: smaller">(affiliate link)</span></a>
                             {% endif %}
                             {% if swatch.mfr_purchase_link %}
-                                <p></p>
-                                <a class="btn btn-block btn-success" href="{{ swatch.mfr_purchase_link }}"
+                                <a class="btn btn-block btn-success my-3" href="{{ swatch.mfr_purchase_link }}"
                                    target="_blank"
                                    role="button"
                                    rel="noopener"
                                 >Buy from {{ swatch.manufacturer.name }}</a>
                             {% endif %}
+                            <small>
+                                Any printing defects visible on this swatch are solely on me and should not be
+                                interpreted as a difficult material. All swatch gcodes are pre-generated per
+                                filament type and are not tuned to specific filaments.
+                            </small>
                             <p></p>
                         </div>
                         <div class="col-md-1"></div>

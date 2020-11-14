@@ -406,8 +406,6 @@ class Swatch(models.Model):
         cs_two_x = 2740
         cs_two_y = 2056
 
-
-
         image = Img.open(self.image_front)
         back_image = Img.open(self.image_back)
         img_card = image.crop(
@@ -608,6 +606,14 @@ class Swatch(models.Model):
 
     def is_available(self):
         return False if self.tags.filter(name='unavailable').first() else True
+
+    def get_closest_swatch_from_hex(self, hex: str):
+        # This is a helper function designed to be called from the command line.
+        # Should return the closest element to a given hex string.
+        color_to_match = convert_color(sRGBColor.new_from_rgb_hex(hex), LabColor)
+        l = Swatch.objects.filter(published=True)
+        return self._get_closest_color_swatch(l, color_to_match)
+
 
     def save(self, *args, **kwargs):
         rebuild_matches = False

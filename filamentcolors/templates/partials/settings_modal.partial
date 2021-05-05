@@ -90,7 +90,7 @@
 
         var showAllBool = btn.hasClass('showall');
 
-        btn[0].innerText = (showAllBool ? "Select All" : "Deselect All")
+        btn[0].innerText = (showAllBool ? "Select All" : "Deselect All");
 
         mfr.children().each(
             function (_, a) {

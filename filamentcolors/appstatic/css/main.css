@@ -471,7 +471,5 @@ a:hover {
 .postImg {
     object-fit: cover;
     object-position: 100% 0;
-
-    width: 300px;
-    height: 337px;
+    width: 400px;
 }

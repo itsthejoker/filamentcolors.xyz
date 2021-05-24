@@ -1,7 +1,6 @@
 import colorsys
 from typing import Any, Dict, List
 
-from django.contrib.sitemaps import ping_google
 from django.db.models import Count, F, Q, QuerySet
 from django.db.models.functions import Lower
 from django.http import request, HttpResponse

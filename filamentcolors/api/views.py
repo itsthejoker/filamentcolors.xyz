@@ -60,8 +60,6 @@ class SwatchViewSet(ReadOnlyModelViewSet):
                 convert_color(sRGBColor.new_from_rgb_hex(color.strip()), LabColor),
             )
 
-        breakpoint()
-
         results = {k: SwatchSerializer(v, context={'request': request}).data for k, v in results.items()}
         return JsonResponse(results)
 

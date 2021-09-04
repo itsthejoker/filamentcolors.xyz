@@ -1,5 +1,11 @@
+from colormath.color_conversions import convert_color
+from colormath.color_objects import LabColor, sRGBColor
+from django.db.models import Q
 from django.db.models.functions import Lower
 from django.http import JsonResponse
+from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from filamentcolors.api.serializers import (
@@ -32,6 +38,32 @@ class SwatchViewSet(ReadOnlyModelViewSet):
             queryset = queryset.order_by("-date_added")
 
         return queryset
+
+    @action(detail=False)
+    def bulk_colormatch(self, request):
+        """
+        Take a comma separated list of hex colors and return the best guess for swatches.
+        """
+        hex_colors = self.request.query_params.get("colors")
+        if not hex_colors:
+            return Response(status.HTTP_422_UNPROCESSABLE_ENTITY)
+        filters = Q(published=True) & ~Q(tags__name="unavailable")
+        if filament_type_id := self.request.query_params.get("generic_type"):
+            filters = filters & Q(filament_type__parent_type__id=int(filament_type_id))
+        library = Swatch.objects.filter(filters)
+
+        results = {}
+        hex_colors = [x.strip() for x in hex_colors.split(",")]
+        for color in hex_colors:
+            results[color] = Swatch()._get_closest_color_swatch(
+                library,
+                convert_color(sRGBColor.new_from_rgb_hex(color.strip()), LabColor),
+            )
+
+        breakpoint()
+
+        results = {k: SwatchSerializer(v, context={'request': request}).data for k, v in results.items()}
+        return JsonResponse(results)
 
 
 class ManufacturerViewSet(ReadOnlyModelViewSet):

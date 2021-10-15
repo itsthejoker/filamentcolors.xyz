@@ -205,3 +205,5 @@ MARTOR_UPLOAD_URL = '/api/uploader/'  # change to local uploader
 MAX_IMAGE_UPLOAD_SIZE = 5242880  # 5MB
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

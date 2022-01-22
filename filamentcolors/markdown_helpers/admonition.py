@@ -1,9 +1,7 @@
 import markdown
 from markdown.util import AtomicString
 from xml.etree.ElementTree import Element, SubElement
-from xml import etree
 import regex
-import re
 
 # I can't quite get multiline working, but this is a start:
 # r'(?m)^(?:[ ]{4,}|\t+)*(WARNING|INFO) *\w+ .*(?:[\r\n]^([ ]{2,}|\t+)[^\s].*)*'

@@ -186,8 +186,21 @@ def post_detail(request: WSGIRequest, slug: str) -> HttpResponse:
     post = get_object_or_404(Post, slug=slug)
     if not post.published:
         raise Http404
+
     data = build_data_dict(request)
-    data.update({"post": post})
+
+    next_post = (
+        Post.objects.filter(date_added__gt=post.date_added)
+        .order_by("date_added")
+        .first()
+    )
+    prev_post = (
+        Post.objects.filter(date_added__lt=post.date_added)
+        .order_by("-date_added")
+        .first()
+    )
+
+    data.update({"post": post, "next_post": next_post, "prev_post": prev_post})
     return prep_request(request, "post_detail.html", data)
 
 

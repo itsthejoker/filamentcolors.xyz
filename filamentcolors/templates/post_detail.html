@@ -6,7 +6,25 @@
         <h1>{{ post.title }}</h1>
         <h4 style="text-indent:3%" class="mb-4">{{ post.subtitle }}</h4>
         {{ post.body|safe_markdown }}
+
+        <div class="row mt-5">
+            <div class="col-0 col-md-2 col-xl-3"></div>
+            <div class="col-6 col-md-4 col-xl-3">
+                {% if prev_post %}
+                    <div class="text-center">Previous Post</div>
+                    <a href="{{ prev_post.get_absolute_url }}" class="btn btn-primary btn-block">{{ prev_post.title }}</a>
+                {% endif %}
+            </div>
+            <div class="col-6 col-md-4 col-xl-3">
+                {% if next_post %}
+                    <div class="text-center">Next Post</div>
+                    <a href="{{ next_post.get_absolute_url }}" class="btn btn-primary btn-block">{{ next_post.title }}</a>
+                {% endif %}
+            </div>
+            <div class="col-0 col-md-2 col-xl-3"></div>
+        </div>
     </div>
+
 
     <script>
         baguetteBox.run('.photobox', {animation: 'slideIn'});

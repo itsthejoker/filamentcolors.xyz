@@ -7,7 +7,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-django = "^3.0.4"
+django = "^3.2.11"
 Pillow = "^9.0.0"
 sorl-thumbnail = "^12.5"
 gunicorn = "^19.9"

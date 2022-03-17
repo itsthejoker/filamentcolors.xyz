@@ -87,6 +87,11 @@ urlpatterns = [
     path("add/filamenttype/", staff_views.add_filament_type, name="add_filament_type"),
     path("add/inventory/", staff_views.add_inventory_swatch, name="add_inventory"),
     path(
+        "recalculate_color/<int:swatch_id>/",
+        staff_views.recalculate_color,
+        name="recalculate_color"
+    ),
+    path(
         'sitemap.xml',
         sitemap,
         {'sitemaps': sitemaps},
@@ -96,7 +101,6 @@ urlpatterns = [
     # ...
     # Old links that need to exist for a while and just redirect.
     # Remove each of them after a reasonable amount of time has passed -- probably a few months.
-    path("vrrf/", views.homepage),  # Added 4/5/2020
 ]
 
 if settings.DEBUG:

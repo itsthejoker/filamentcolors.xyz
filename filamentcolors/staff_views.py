@@ -1,6 +1,6 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
-from django.shortcuts import HttpResponseRedirect, redirect, render, reverse
+from django.shortcuts import HttpResponseRedirect, redirect, render, reverse, get_object_or_404
 
 from filamentcolors.forms import (
     FilamentTypeForm,
@@ -169,6 +169,17 @@ def add_filament_type(request):
             }
         )
         return render(request, "generic_form.html", data)
+
+
+@staff_member_required
+def recalculate_color(request, swatch_id: int):
+    """Adds a quick link for redoing the color based on the long method."""
+    swatch = get_object_or_404(Swatch, id=swatch_id)
+    swatch.rebuild_long_way = True
+    swatch.save()
+    return HttpResponseRedirect(
+        reverse("swatchdetail", kwargs={"id": swatch.id})
+    )
 
 
 @staff_member_required

@@ -410,26 +410,26 @@ class Swatch(models.Model):
         back_image = Img.open(self.image_back)
         img_card = image.crop(
             (
-                (image.width - cs_x) / 2 + 70,
-                (image.height - cs_y) / 2 - 50,
-                cs_x + (image.width - cs_x) / 2 + 70,
-                cs_y + (image.height - cs_y) / 2 - 50,
+                int((image.width - cs_x) / 2 + 70),
+                int((image.height - cs_y) / 2 - 50),
+                int(cs_x + (image.width - cs_x) / 2 + 70),
+                int(cs_y + (image.height - cs_y) / 2 - 50),
             )
         )
         img_front = image.crop(
             (
-                (image.width - cs_two_x) / 2 + 50,
-                (image.height - cs_two_y) / 2,
-                cs_two_x + (image.width - cs_two_x) / 2 + 50,
-                cs_two_y + (image.height - cs_two_y) / 2,
+                int((image.width - cs_two_x) / 2 + 50),
+                int((image.height - cs_two_y) / 2),
+                int(cs_two_x + (image.width - cs_two_x) / 2 + 50),
+                int(cs_two_y + (image.height - cs_two_y) / 2),
             )
         )
         img_back = back_image.crop(
             (
-                (back_image.width - cs_two_x) / 2 + 50,
-                (back_image.height - cs_two_y) / 2,
-                cs_two_x + (back_image.width - cs_two_x) / 2 + 50,
-                cs_two_y + (back_image.height - cs_two_y) / 2,
+                int((back_image.width - cs_two_x) / 2 + 50),
+                int((back_image.height - cs_two_y) / 2),
+                int(cs_two_x + (back_image.width - cs_two_x) / 2 + 50),
+                int(cs_two_y + (back_image.height - cs_two_y) / 2),
             )
         )
 
@@ -569,9 +569,17 @@ class Swatch(models.Model):
     def update_closest_swatches(self, l):
         own_color = convert_color(sRGBColor.new_from_rgb_hex(self.hex_color), LabColor)
         l = l.exclude(pk=self.pk)
+
         self.closest_1 = self._get_closest_color_swatch(l, own_color)
+        if not self.closest_1:
+            # correct for an empty library during testing and dev work
+            self.closest_1 = self
+
         l = l.exclude(pk = self.closest_1.pk)
         self.closest_2 = self._get_closest_color_swatch(l, own_color)
+        if not self.closest_2:
+            self.closest_2 = self
+
 
     def refresh_cache_if_needed(self) -> None:
         """

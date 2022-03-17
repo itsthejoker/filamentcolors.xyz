@@ -6,7 +6,7 @@ authors = ["Joe Kaufeld <joe.kaufeld@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.10,<3.11"
 django = "^3.2.11"
 Pillow = "^9.0.0"
 sorl-thumbnail = "^12.5"
@@ -28,6 +28,7 @@ martor = "^1.5.0"
 regex = "^2020.7.14"
 django-cors-headers = "^3.5.0"
 wheel = "^0.37.1"
+scipy = "1.8.0"
 
 [tool.poetry.dev-dependencies]
 better-exceptions = "^0.2.1"

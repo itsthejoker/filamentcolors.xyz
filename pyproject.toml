@@ -27,6 +27,7 @@ black = "^19.10b0"
 martor = "^1.5.0"
 regex = "^2020.7.14"
 django-cors-headers = "^3.5.0"
+wheel = "^0.37.1"
 
 [tool.poetry.dev-dependencies]
 better-exceptions = "^0.2.1"

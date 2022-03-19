@@ -92,6 +92,9 @@ urlpatterns = [
         name="recalculate_color"
     ),
     path(
+        "force_hex/<int:swatch_id>/", staff_views.force_hex_color, name="force_hex_color"
+    ),
+    path(
         'sitemap.xml',
         sitemap,
         {'sitemaps': sitemaps},

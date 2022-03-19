@@ -69,3 +69,10 @@ class InventoryForm(forms.ModelForm):
             "manufacturer",
             "donated_by",
         ]
+
+
+class ManualHexValueForm(forms.Form):
+    hex_color = forms.CharField(
+        max_length=7,
+        help_text="Use the color picker out of the dev tools in FF or use the eyedropper."
+    )

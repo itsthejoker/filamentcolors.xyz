@@ -398,40 +398,37 @@ class Swatch(models.Model):
 
         # card image
         # x = y * 3.218
-        cs_x = 2613
-        cs_y = 812
+        card_image_x = 2613
+        card_image_y = 812
 
-        # regular front image
+        # regular front/back image
         # x = y * 1.3333
-        cs_two_x = 2740
-        cs_two_y = 2056
+        main_image_x = 2740
+        main_image_y = 2056
 
         image = Img.open(self.image_front)
         back_image = Img.open(self.image_back)
+        card_image_x_offset = -30  # px
+        card_image_y_offset = -50  # px
         img_card = image.crop(
             (
-                int((image.width - cs_x) / 2 + 70),
-                int((image.height - cs_y) / 2 - 50),
-                int(cs_x + (image.width - cs_x) / 2 + 70),
-                int(cs_y + (image.height - cs_y) / 2 - 50),
+                int((image.width - card_image_x) / 2 + card_image_x_offset),
+                int((image.height - card_image_y) / 2 + card_image_y_offset),
+                int(card_image_x + (image.width - card_image_x) / 2 + card_image_x_offset),
+                int(card_image_y + (image.height - card_image_y) / 2 + card_image_y_offset),
             )
         )
-        img_front = image.crop(
-            (
-                int((image.width - cs_two_x) / 2 + 50),
-                int((image.height - cs_two_y) / 2),
-                int(cs_two_x + (image.width - cs_two_x) / 2 + 50),
-                int(cs_two_y + (image.height - cs_two_y) / 2),
-            )
+        main_image_x_offset = -40
+        main_image_y_offset = 0
+
+        main_image_crop_dimensions = (
+            int((image.width - main_image_x) / 2 + main_image_x_offset),
+            int((image.height - main_image_y) / 2 + main_image_y_offset),
+            int(main_image_x + (image.width - main_image_x) / 2 + main_image_x_offset),
+            int(main_image_y + (image.height - main_image_y) / 2 + main_image_y_offset),
         )
-        img_back = back_image.crop(
-            (
-                int((back_image.width - cs_two_x) / 2 + 50),
-                int((back_image.height - cs_two_y) / 2),
-                int(cs_two_x + (back_image.width - cs_two_x) / 2 + 50),
-                int(cs_two_y + (back_image.height - cs_two_y) / 2),
-            )
-        )
+        img_front = image.crop(main_image_crop_dimensions)
+        img_back = back_image.crop(main_image_crop_dimensions)
 
         filename_card = self._save_image(img_card, "card")
         filename_front = self._save_image(img_front, "front")
@@ -661,7 +658,7 @@ class Swatch(models.Model):
             # we won't have a swatch ID.
             if not settings.DEBUG:
                 send_tweet(swatch=self)
-            update_google()
+                update_google()
 
     def __str__(self):
         try:

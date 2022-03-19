@@ -7,7 +7,7 @@ from filamentcolors.forms import (
     InventoryForm,
     ListSwatchInventoryForm,
     ManufacturerForm,
-    SwatchForm,
+    SwatchForm, ManualHexValueForm,
 )
 from filamentcolors.helpers import build_data_dict
 from filamentcolors.models import Swatch
@@ -181,6 +181,25 @@ def recalculate_color(request, swatch_id: int):
         reverse("swatchdetail", kwargs={"id": swatch.id})
     )
 
+
+@staff_member_required
+def force_hex_color(request, swatch_id: int):
+    """Allow manual setting of hex color if everything else fails."""
+    swatch = get_object_or_404(Swatch, id=swatch_id)
+    if request.method == 'POST':
+        form = ManualHexValueForm(request.POST)
+        if form.is_valid():
+            value = form.cleaned_data['hex_color']
+            if value.startswith("#"):
+                value = value[1:]
+            swatch.hex_color = value
+            swatch.complement_hex = swatch.get_complement(swatch.hex_color)
+            swatch.save()
+            return HttpResponseRedirect(
+                reverse("swatchdetail", kwargs={"id": swatch.id})
+            )
+    form = ManualHexValueForm()
+    return render(request, 'generic_form.html', {'form': form, 'swatch': swatch})
 
 @staff_member_required
 def logout_view(request):

@@ -63,6 +63,8 @@
                                href="/admin/filamentcolors/swatch/{{ swatch.id }}/change/">Edit Swatch</a>
                             <a class="dropdown-item"
                                href="{% url 'recalculate_color' swatch.id %}">Recalculate Color</a>
+                            <a class="dropdown-item"
+                               href="{% url 'force_hex_color' swatch.id %}">Force Specific Color</a>
                             <div class="dropdown-divider"></div>
                         {% endif %}
                         <a class="dropdown-item"

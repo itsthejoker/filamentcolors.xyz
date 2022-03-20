@@ -5,7 +5,7 @@
              aria-label="{{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}">
         </div>
         <div class="card-img-container">
-            <img class="card-img-top img-fluid layer" src="{{ obj.card_img.url }}" alt="Card image cap">
+            <img class="card-img-top img-fluid layer" loading="lazy" src="{{ obj.card_img.url }}" alt="Card image cap">
             <div class="card-img-overlay card-img-overlay-two multi-check layer"></div>
         </div>
 

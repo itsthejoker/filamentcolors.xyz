@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
     "corsheaders",
+    # We don't use taggit anymore but removing it from the migrations is a pain
+    # so I'm shoving that off on future me. Keeping it enabled for now.
     "taggit",
     "widget_tweaks",
     "filamentcolors",
@@ -132,9 +134,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-# for smartfields
-SITE_ID = 1
 
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",

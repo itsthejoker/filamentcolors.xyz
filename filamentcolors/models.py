@@ -21,7 +21,6 @@ from django.db.models.query import QuerySet
 from django.utils import timezone
 from django.utils.text import slugify
 from skimage import io
-from taggit.managers import TaggableManager
 from martor.models import MartorField
 
 from filamentcolors.colors import Color
@@ -312,8 +311,6 @@ class Swatch(models.Model):
         on_delete=models.DO_NOTHING,
         related_name="closest_two_swatch",
     )
-
-    tags = TaggableManager(blank=True)
 
     # !!!!!!!!!!!!!!!!!!!!!!!!
     # DO NOT PUT ANYTHING IN THESE FIELDS!
@@ -610,7 +607,7 @@ class Swatch(models.Model):
         self.update_closest_swatches(library)
 
     def is_available(self):
-        return False if self.tags.filter(name='unavailable').first() else True
+        return any([self.amazon_purchase_link, self.mfr_purchase_link])
 
     def get_closest_swatch_from_hex(self, hex: str):
         # This is a helper function designed to be called from the command line.

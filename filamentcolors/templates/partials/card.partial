@@ -11,7 +11,17 @@
 
         <div class="card-body" align="left">
             <div class="color-cube" style="background-color:#{{ obj.hex_color }};"></div>
-            <h5 class="card-title">#{{ obj.hex_color }}</h5>
+            <h5 class="card-title">
+                #{{ obj.hex_color }}
+                {% if not obj.is_available %}
+                    <span
+                            class="badge badge-secondary"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="This swatch is not available for purchase from the manufacturer or Amazon."
+                    >Unavailable</span>
+                {% endif %}
+            </h5>
             <p class="card-text">{{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}</p>
         </div>
         <div class="card-footer">

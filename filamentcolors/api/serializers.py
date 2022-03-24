@@ -1,9 +1,6 @@
+from rest_framework import serializers
 from rest_framework.serializers import HyperlinkedModelSerializer
 
-from filamentcolors.api.taggit_serializer import (
-    TaggitSerializer,
-    TagListSerializerField,
-)
 from filamentcolors.models import FilamentType, Manufacturer, Swatch
 
 
@@ -19,11 +16,11 @@ class ManufacturerSerializer(HyperlinkedModelSerializer):
         fields = ("id", "name", "website")
 
 
-class SwatchSerializer(TaggitSerializer, HyperlinkedModelSerializer):
+class SwatchSerializer(HyperlinkedModelSerializer):
     manufacturer = ManufacturerSerializer(read_only=True)
     filament_type = FilamentTypeSerializer(read_only=True)
-
-    tags = TagListSerializerField()
+    # remove after 10/23/22
+    tags = serializers.ListField(default=[])
 
     class Meta:
         model = Swatch
@@ -55,9 +52,10 @@ class SwatchSerializer(TaggitSerializer, HyperlinkedModelSerializer):
             "square_3",
             "closest_1",
             "closest_2",
-            "tags",
+            "tags",  # remove after 10/23/22
             "card_img",
             "hex_color",
             "complement_hex",
             "human_readable_date",
+            "is_available",
         )

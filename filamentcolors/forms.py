@@ -31,7 +31,6 @@ class SwatchForm(forms.ModelForm):
             "image_other",
             "notes",
             "donated_by",
-            "tags",
         ]
 
 

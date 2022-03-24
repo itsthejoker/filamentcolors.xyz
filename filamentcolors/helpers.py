@@ -177,7 +177,7 @@ def get_custom_library(data: Dict) -> QuerySet:
         filament_type__parent_type__in=data["user_settings"]["types"]
     )
     if data["user_settings"]["show_unavailable"] is False:
-        s = s.exclude(tags__name="unavailable")
+        s = s.exclude(amazon_purchase_link__isnull=True, mfr_purchase_link__isnull=True)
 
     return s.filter(
         manufacturer__in=data["user_settings"]["mfr_whitelist"], published=True

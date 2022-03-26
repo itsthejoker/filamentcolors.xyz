@@ -1,13 +1,20 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
-from django.shortcuts import HttpResponseRedirect, redirect, render, reverse, get_object_or_404
+from django.shortcuts import (
+    HttpResponseRedirect,
+    redirect,
+    render,
+    reverse,
+    get_object_or_404,
+)
 
 from filamentcolors.forms import (
     FilamentTypeForm,
     InventoryForm,
     ListSwatchInventoryForm,
     ManufacturerForm,
-    SwatchForm, ManualHexValueForm,
+    SwatchForm,
+    ManualHexValueForm,
 )
 from filamentcolors.helpers import build_data_dict
 from filamentcolors.models import Swatch
@@ -177,19 +184,17 @@ def recalculate_color(request, swatch_id: int):
     swatch = get_object_or_404(Swatch, id=swatch_id)
     swatch.rebuild_long_way = True
     swatch.save()
-    return HttpResponseRedirect(
-        reverse("swatchdetail", kwargs={"id": swatch.id})
-    )
+    return HttpResponseRedirect(reverse("swatchdetail", kwargs={"id": swatch.id}))
 
 
 @staff_member_required
 def force_hex_color(request, swatch_id: int):
     """Allow manual setting of hex color if everything else fails."""
     swatch = get_object_or_404(Swatch, id=swatch_id)
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ManualHexValueForm(request.POST)
         if form.is_valid():
-            value = form.cleaned_data['hex_color']
+            value = form.cleaned_data["hex_color"]
             if value.startswith("#"):
                 value = value[1:]
             swatch.hex_color = value
@@ -199,7 +204,8 @@ def force_hex_color(request, swatch_id: int):
                 reverse("swatchdetail", kwargs={"id": swatch.id})
             )
     form = ManualHexValueForm()
-    return render(request, 'generic_form.html', {'form': form, 'swatch': swatch})
+    return render(request, "generic_form.html", {"form": form, "swatch": swatch})
+
 
 @staff_member_required
 def logout_view(request):

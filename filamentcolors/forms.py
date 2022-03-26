@@ -59,6 +59,7 @@ class InventoryForm(forms.ModelForm):
     filament_type = forms.ModelChoiceField(
         queryset=FilamentType.objects.all().order_by(Lower("name"))
     )
+
     class Meta:
         model = Swatch
         fields = [
@@ -73,5 +74,5 @@ class InventoryForm(forms.ModelForm):
 class ManualHexValueForm(forms.Form):
     hex_color = forms.CharField(
         max_length=7,
-        help_text="Use the color picker out of the dev tools in FF or use the eyedropper."
+        help_text="Use the color picker out of the dev tools in FF or use the eyedropper.",
     )

@@ -7,18 +7,30 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0021_post_enable_preview'),
+        ("filamentcolors", "0021_post_enable_preview"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='swatch',
-            name='closest_1',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='closest_one_swatch', to='filamentcolors.Swatch'),
+            model_name="swatch",
+            name="closest_1",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="closest_one_swatch",
+                to="filamentcolors.Swatch",
+            ),
         ),
         migrations.AddField(
-            model_name='swatch',
-            name='closest_2',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='closest_two_swatch', to='filamentcolors.Swatch'),
+            model_name="swatch",
+            name="closest_2",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="closest_two_swatch",
+                to="filamentcolors.Swatch",
+            ),
         ),
     ]

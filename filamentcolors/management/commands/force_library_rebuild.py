@@ -11,4 +11,3 @@ class Command(BaseCommand):
             s.update_all_color_matches(Swatch.objects.filter(published=True))
             s.save()
         self.stdout.write(self.style.SUCCESS("Rebuild complete!"))
-

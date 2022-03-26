@@ -3,6 +3,9 @@
         <div class="multiselector" role="checkbox" aria-checked="false" tabindex="0"
              jsaction="mousedown:card.select; click:card.select"
              aria-label="{{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}">
+                <span class="material-icons">
+        radio_button_unchecked
+        </span>
         </div>
         <div class="card-img-container">
             <img class="card-img-top img-fluid layer" loading="lazy" src="{{ obj.card_img.url }}" alt="Card image cap">

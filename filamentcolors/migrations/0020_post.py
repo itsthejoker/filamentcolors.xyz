@@ -8,20 +8,28 @@ import martor.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0019_swatch_donated_by'),
+        ("filamentcolors", "0019_swatch_donated_by"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Post',
+            name="Post",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=240)),
-                ('subtitle', models.CharField(blank=True, max_length=39, null=True)),
-                ('body', martor.models.MartorField()),
-                ('slug', models.SlugField(default='', editable=False, max_length=70)),
-                ('published', models.BooleanField(default=False)),
-                ('date_added', models.DateTimeField(default=django.utils.timezone.now)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=240)),
+                ("subtitle", models.CharField(blank=True, max_length=39, null=True)),
+                ("body", martor.models.MartorField()),
+                ("slug", models.SlugField(default="", editable=False, max_length=70)),
+                ("published", models.BooleanField(default=False)),
+                ("date_added", models.DateTimeField(default=django.utils.timezone.now)),
             ],
         ),
     ]

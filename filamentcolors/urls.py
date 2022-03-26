@@ -26,19 +26,23 @@ from filamentcolors.markdown_helpers.urls import urlpatterns as markdown_urls
 from filamentcolors.models import Post, Swatch
 from filamentcolors.sitemaps import StaticViewSitemap
 
-handler404 = 'filamentcolors.views.error_404'
-handler500 = 'filamentcolors.views.error_500'
+handler404 = "filamentcolors.views.error_404"
+handler500 = "filamentcolors.views.error_500"
 
 sitemaps = {
     "static": StaticViewSitemap,
-    "swatches": GenericSitemap({
-        "queryset": Swatch.objects.filter(published=True).order_by('id'),
-        "date_field": "date_added"
-    }),
-    "posts": GenericSitemap({
-        "queryset": Post.objects.filter(published=True).order_by('id'),
-        "date_field": "date_added"
-    })
+    "swatches": GenericSitemap(
+        {
+            "queryset": Swatch.objects.filter(published=True).order_by("id"),
+            "date_field": "date_added",
+        }
+    ),
+    "posts": GenericSitemap(
+        {
+            "queryset": Post.objects.filter(published=True).order_by("id"),
+            "date_field": "date_added",
+        }
+    ),
 }
 
 urlpatterns = [
@@ -58,7 +62,9 @@ urlpatterns = [
     path("library/", views.librarysort, name="library"),
     path("swatch/<int:id>/", views.swatch_detail, name="swatchdetail"),
     path(
-        "library/manufacturer/<int:id>/", views.manufacturersort, name="manufacturersort"
+        "library/manufacturer/<int:id>/",
+        views.manufacturersort,
+        name="manufacturersort",
     ),
     path("library/filament_type/<int:id>/", views.typesort, name="typesort"),
     path(
@@ -69,7 +75,7 @@ urlpatterns = [
     path("posts/", views.post_list, name="postlist"),
     path("post/<slug:slug>/preview/", views.post_preview, name="postpreview"),
     path("post/<slug:slug>/", views.post_detail, name="postdetail"),
-    path('martor/', include('martor.urls')),
+    path("martor/", include("martor.urls")),
     path("donating/", views.donation_page, name="donations"),
     path("inventory/", views.inventory_page, name="inventory"),
     path("about/", views.about_page, name="about"),
@@ -89,16 +95,18 @@ urlpatterns = [
     path(
         "recalculate_color/<int:swatch_id>/",
         staff_views.recalculate_color,
-        name="recalculate_color"
+        name="recalculate_color",
     ),
     path(
-        "force_hex/<int:swatch_id>/", staff_views.force_hex_color, name="force_hex_color"
+        "force_hex/<int:swatch_id>/",
+        staff_views.force_hex_color,
+        name="force_hex_color",
     ),
     path(
-        'sitemap.xml',
+        "sitemap.xml",
         sitemap,
-        {'sitemaps': sitemaps},
-        name='django.contrib.sitemaps.views.sitemap'
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
     ),
     # Event / Special URLs
     # ...

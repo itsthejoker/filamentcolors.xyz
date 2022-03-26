@@ -106,7 +106,6 @@ class Post(models.Model):
         super().save(*args, **kwargs)
         update_google()
 
-
     def get_absolute_url(self):
         kwargs = {"slug": self.slug}
         return reverse("postdetail", kwargs=kwargs)
@@ -338,7 +337,7 @@ class Swatch(models.Model):
         return self.date_added.strftime("%b %d, %Y")
 
     def get_rgb(self, hex: str) -> Tuple[int, ...]:
-        return tuple(int(hex[i: i + 2], 16) for i in (0, 2, 4))
+        return tuple(int(hex[i : i + 2], 16) for i in (0, 2, 4))
 
     def get_hex(self, rgb: tuple) -> str:
         return "{R}{G}{B}".format(
@@ -411,8 +410,16 @@ class Swatch(models.Model):
             (
                 int((image.width - card_image_x) / 2 + card_image_x_offset),
                 int((image.height - card_image_y) / 2 + card_image_y_offset),
-                int(card_image_x + (image.width - card_image_x) / 2 + card_image_x_offset),
-                int(card_image_y + (image.height - card_image_y) / 2 + card_image_y_offset),
+                int(
+                    card_image_x
+                    + (image.width - card_image_x) / 2
+                    + card_image_x_offset
+                ),
+                int(
+                    card_image_y
+                    + (image.height - card_image_y) / 2
+                    + card_image_y_offset
+                ),
             )
         )
         main_image_x_offset = -40
@@ -569,11 +576,10 @@ class Swatch(models.Model):
             # correct for an empty library during testing and dev work
             self.closest_1 = self
 
-        l = l.exclude(pk = self.closest_1.pk)
+        l = l.exclude(pk=self.closest_1.pk)
         self.closest_2 = self._get_closest_color_swatch(l, own_color)
         if not self.closest_2:
             self.closest_2 = self
-
 
     def refresh_cache_if_needed(self) -> None:
         """
@@ -615,7 +621,6 @@ class Swatch(models.Model):
         color_to_match = convert_color(sRGBColor.new_from_rgb_hex(hex), LabColor)
         l = Swatch.objects.filter(published=True)
         return self._get_closest_color_swatch(l, color_to_match)
-
 
     def save(self, *args, **kwargs):
         rebuild_matches = False

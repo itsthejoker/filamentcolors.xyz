@@ -66,20 +66,20 @@ const handleSelection = function (flow) {
             b.setAttribute('class', 'collection-buttons slide-in-left');
             for (i = 0; i < fs.length; i++) {
                 fs[i].style.display = 'block';
-                fs[i].parentElement.previousElementSibling.style.width = 300;
+                fs[i].parentElement.previousElementSibling.style.width = "300px";
                 fs[i].parentElement.previousElementSibling.style.height = "105%";
-                fs[i].parentElement.previousElementSibling.style.top = -5;
-                fs[i].parentElement.previousElementSibling.style.left = -7;
+                fs[i].parentElement.previousElementSibling.style.top = "-5px";
+                fs[i].parentElement.previousElementSibling.style.left = "-7px";
             }
         }
     } else {
         b.setAttribute('class', 'collection-buttons slide-out-left');
         for (i = 0; i < fs.length; i++) {
             fs[i].style.display = '';
-            fs[i].parentElement.previousElementSibling.style.width = 36;
-            fs[i].parentElement.previousElementSibling.style.height = 36;
-            fs[i].parentElement.previousElementSibling.style.top = 0;
-            fs[i].parentElement.previousElementSibling.style.left = 0;
+            fs[i].parentElement.previousElementSibling.style.width = "36px";
+            fs[i].parentElement.previousElementSibling.style.height = "36px";
+            fs[i].parentElement.previousElementSibling.style.top = "0px";
+            fs[i].parentElement.previousElementSibling.style.left = "0px";
         }
     }
 };

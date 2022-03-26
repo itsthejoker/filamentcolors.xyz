@@ -6,12 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('filamentcolors', '0023_auto_20211015_2111'),
+        ("filamentcolors", "0023_auto_20211015_2111"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='swatch',
-            name='tags',
-        ),
+        migrations.RemoveField(model_name="swatch", name="tags",),
     ]

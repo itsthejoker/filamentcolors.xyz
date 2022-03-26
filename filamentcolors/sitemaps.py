@@ -4,10 +4,10 @@ from django.urls import reverse
 
 class StaticViewSitemap(sitemaps.Sitemap):
     priority = 0.5
-    changefreq = 'daily'
+    changefreq = "daily"
 
     def items(self):
-        return ['library', 'postlist', 'donations', 'about', 'inventory']
+        return ["library", "postlist", "donations", "about", "inventory"]
 
     def location(self, item):
         return reverse(item)

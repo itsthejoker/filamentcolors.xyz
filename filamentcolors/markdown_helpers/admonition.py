@@ -5,7 +5,9 @@ import regex
 
 # I can't quite get multiline working, but this is a start:
 # r'(?m)^(?:[ ]{4,}|\t+)*(WARNING|INFO) *\w+ .*(?:[\r\n]^([ ]{2,}|\t+)[^\s].*)*'
-ADMONITION_RE = r'::(primary|secondary|success|danger|warning|info|light|dark)[ ]{1}(.*)'
+ADMONITION_RE = (
+    r"::(primary|secondary|success|danger|warning|info|light|dark)[ ]{1}(.*)"
+)
 
 
 class AdmonitionPattern(markdown.inlinepatterns.Pattern):
@@ -49,11 +51,11 @@ class AdmonitionPattern(markdown.inlinepatterns.Pattern):
 
         # ripped wholesale from the markdown package because it uses re instead
         # of regex, and regex can't use re-compiled regex
-        STX = '\u0002'  # Use STX ("Start of text") for start-of-placeholder
-        ETX = '\u0003'  # Use ETX ("End of text") for end-of-placeholder
+        STX = "\u0002"  # Use STX ("Start of text") for start-of-placeholder
+        ETX = "\u0003"  # Use ETX ("End of text") for end-of-placeholder
         INLINE_PLACEHOLDER_PREFIX = STX + "klzzwxh:"
         INLINE_PLACEHOLDER = INLINE_PLACEHOLDER_PREFIX + "%s" + ETX
-        INLINE_PLACEHOLDER_RE = regex.compile(INLINE_PLACEHOLDER % r'([0-9]+)')
+        INLINE_PLACEHOLDER_RE = regex.compile(INLINE_PLACEHOLDER % r"([0-9]+)")
 
         link_matches = [i for i in regex.finditer(INLINE_PLACEHOLDER_RE, message)]
         if len(link_matches) == 0:
@@ -61,7 +63,7 @@ class AdmonitionPattern(markdown.inlinepatterns.Pattern):
             return alert
 
         # start with up to the beginning of the first link
-        alert.text = AtomicString(message[:link_matches[0].start()])
+        alert.text = AtomicString(message[: link_matches[0].start()])
         # python markdown stashes away things that it can't process immediately.
         # The problem comes when we try to modify strings that have stashed
         # nodes in them, which for some reason completely breaks Markdown's
@@ -69,15 +71,15 @@ class AdmonitionPattern(markdown.inlinepatterns.Pattern):
         # that we have to do the whole damn process ourselves.
         # tl;dr: perform a lot of string slicing to insert links in the right
         # spots so that everything works.
-        stash = self.md.treeprocessors['inline'].stashed_nodes
+        stash = self.md.treeprocessors["inline"].stashed_nodes
         prev = None
         for link in link_matches:
             if prev:
-                prev[0].tail = AtomicString(message[prev[1].end(): link.start()])
+                prev[0].tail = AtomicString(message[prev[1].end() : link.start()])
             mylink = stash[link.group(1)]
             link_alert = SubElement(alert, "a")
-            link_alert.set("href", mylink.get('href'))
-            link_alert.set('class', 'alert-link')
+            link_alert.set("href", mylink.get("href"))
+            link_alert.set("class", "alert-link")
             link_alert.set("target", "_blank")
 
             link_alert.text = AtomicString(mylink.text)
@@ -87,9 +89,8 @@ class AdmonitionPattern(markdown.inlinepatterns.Pattern):
 
         # Now that we're done with the loop, link_alert should be the last link
         # that was created.
-        link_alert.tail = AtomicString(message[link.end():])
+        link_alert.tail = AtomicString(message[link.end() :])
         return alert
-
 
     def handleMatch(self, m):
         classname = m.group(2)
@@ -127,7 +128,7 @@ class AdmonitionExtension(markdown.Extension):
     """ Urlize Extension for Python-Markdown. """
 
     def extendMarkdown(self, md, md_globals):
-        md.inlinePatterns['admonition'] = AdmonitionPattern(ADMONITION_RE, md)
+        md.inlinePatterns["admonition"] = AdmonitionPattern(ADMONITION_RE, md)
 
 
 def makeExtension(*args, **kwargs):

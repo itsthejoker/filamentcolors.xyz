@@ -2,7 +2,7 @@ import markdown
 from markdown.util import AtomicString
 from xml.etree.ElementTree import Element
 
-IMAGE_RE = r'!\[(.*)]\((.*)\)'
+IMAGE_RE = r"!\[(.*)]\((.*)\)"
 
 
 class ImageHelperPattern(markdown.inlinepatterns.Pattern):
@@ -67,10 +67,9 @@ class ImageHelperPattern(markdown.inlinepatterns.Pattern):
 
 
 class ImageHelperExtension(markdown.Extension):
-
     def extendMarkdown(self, md, md_globals):
         # override the built-in `image_link` processor in `markdown.inlinepatterns`
-        md.inlinePatterns['image_link'] = ImageHelperPattern(IMAGE_RE, md)
+        md.inlinePatterns["image_link"] = ImageHelperPattern(IMAGE_RE, md)
 
 
 def makeExtension(*args, **kwargs):

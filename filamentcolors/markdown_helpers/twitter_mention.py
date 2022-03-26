@@ -16,31 +16,29 @@ The original use case is represented below.
 >>>
 """
 
-MENTION_RE = r'(?<!\!)\@\[([^\]]+)\]'
+MENTION_RE = r"(?<!\!)\@\[([^\]]+)\]"
 
 
 class TwitterMentionPattern(markdown.inlinepatterns.Pattern):
-
     def handleMatch(self, m):
         username = self.unescape(m.group(2))
 
         """Make sure `username` is registered and active."""
-        if settings.MARTOR_ENABLE_CONFIGS['mention'] == 'true':
-            url = '{0}{1}/'.format(settings.MARTOR_MARKDOWN_BASE_MENTION_URL, username)
-            el = markdown.util.etree.Element('a')
-            el.set('href', url)
-            el.set('class', 'direct-mention-link')
-            underline = markdown.util.etree.Element('u')
-            underline.text = markdown.util.AtomicString('@' + username)
+        if settings.MARTOR_ENABLE_CONFIGS["mention"] == "true":
+            url = "{0}{1}/".format(settings.MARTOR_MARKDOWN_BASE_MENTION_URL, username)
+            el = markdown.util.etree.Element("a")
+            el.set("href", url)
+            el.set("class", "direct-mention-link")
+            underline = markdown.util.etree.Element("u")
+            underline.text = markdown.util.AtomicString("@" + username)
             el.append(underline)
             return el
 
 
 class MentionExtension(markdown.Extension):
-
     def extendMarkdown(self, md, md_globals):
         """ Setup `mention_link` with MentionPattern """
-        md.inlinePatterns['mention_link'] = TwitterMentionPattern(MENTION_RE, md)
+        md.inlinePatterns["mention_link"] = TwitterMentionPattern(MENTION_RE, md)
 
 
 def makeExtension(*args, **kwargs):

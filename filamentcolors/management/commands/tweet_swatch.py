@@ -11,7 +11,7 @@ from filamentcolors.twitter_helpers import generate_daily_swatch_tweet, send_twe
 
 def get_random_swatch() -> Swatch:
     return random.choice(
-        [s for s in Swatch.objects.filter(published=True) if s.is_available]
+        [s for s in Swatch.objects.filter(published=True) if s.is_available()]
     )
 
 

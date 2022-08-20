@@ -32,6 +32,18 @@ intro_phrases = [
     "Swatches abound!",
     "A new color!",
     "Gadzooks!",
+    "Holy moly!",
+    "SWATCHTALITY!",
+    "I found this under the bed!",
+    "Just pushed an update!",
+    "What do you think of this one?",
+    "Can't have enough color!",
+    "🚨 New swatch alert! 🚨",
+    "Whatchamacallit alert!",
+    "Something you might be interested in!",
+    "Success!",
+    "Hey, check this out!",
+
 ]
 
 outro_phrases = [

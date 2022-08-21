@@ -1,6 +1,6 @@
 import os
 from io import BytesIO
-from typing import Tuple
+from typing import Tuple, List, Union
 
 import cv2
 import numpy as np
@@ -492,7 +492,7 @@ class Swatch(models.Model):
 
         self.complement_hex = self.get_complement(self.hex_color)
 
-    def _get_closest_color_swatch(self, library: QuerySet, color_to_match: LabColor):
+    def _get_closest_color_swatch(self, library: Union[QuerySet, List], color_to_match: LabColor):
         distance_dict = dict()
 
         for item in library:

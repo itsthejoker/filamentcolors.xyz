@@ -7,6 +7,51 @@
         <h1>{{ header }}</h1>
         <h4>{{ subheader }}</h4>
 
+        {% if "add/swatch" in request.path %}
+            <div id="similar-swatch-alert" style="display: none">
+                <div class="alert alert-danger" role="alert">
+                    Found similar swatches...
+                    <div id="similar-swatch-content"></div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#id_color_name').change(function () {
+                        const mfr_obj = $("#id_manufacturer option:selected");
+                        const alert_obj = $("#similar-swatch-alert")
+                        if (mfr_obj.text() === "---------") {
+                            alert_obj.css("display", "none")
+                            return
+                        }
+                        let mfr_id = mfr_obj.val();
+                        console.log(mfr_id);
+                        const URL = `/api/swatch/?color_name__icontains=${$('#id_color_name').val()}&manufacturer__id=${mfr_id}`;
+                        console.log(URL);
+                        $.getJSON(URL, function (data) {
+                            var items = [];
+                            console.log(data.results);
+                            if (data.results.length === 0) {
+                                alert_obj.css("display", "none")
+                                return
+                            }
+                            $.each(data.results, function (key, value) {
+                                console.log(key, value);
+                                items.push(`<li>${value.manufacturer.name} - ${value.color_name} ${value.filament_type.name}</li>`);
+                            });
+
+                            const alert_content = $("#similar-swatch-content");
+                            const new_list = $("<ul/>", {
+                                "class": "similar-swatch-content mb-0",
+                                html: items.join("")
+                            });
+                            alert_content.replaceWith(new_list);
+                            alert_obj.css("display", "block")
+                        });
+                    });
+                })
+            </script>
+        {% endif %}
+
         {% if header_js_buttons or header_link_buttons %}
             <div class="row">
                 {% for item in header_js_buttons %}

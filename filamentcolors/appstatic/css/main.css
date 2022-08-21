@@ -199,20 +199,6 @@ a:hover {
     }
 }
 
-.border-between > [class*='col-']:before {
-    background: #c6c6c6;
-    bottom: 0;
-    content: " ";
-    left: 0;
-    position: absolute;
-    width: 1px;
-    top: 0;
-}
-
-.border-between > [class*='col-']:first-child:before {
-    display: none;
-}
-
 .kofi-button {
     margin-top: -3px;
 }

@@ -26,8 +26,8 @@
             </div>
         {% endif %}
         {% if not error %}
-            <div class="row border-between">
-                <div class="col-md-6">
+            <div class="row">
+                <div class="col-lg-6">
                     <section class="gallery-block grid-gallery">
                         <div class="item">
                             <a class="lightbox" href="{{ swatch.image_front.url }}" title="Swatch Front">
@@ -67,7 +67,7 @@
                         {% endif %}
                     </section>
                 </div>
-                <div class="col-md-6 ">
+                <div class="col-lg-6 ">
                     <div class="text-center">
                         <h2>{{ swatch.manufacturer.name }}
                             - {{ swatch.color_name }} {{ swatch.filament_type.name }}</h2>
@@ -118,11 +118,6 @@
                                    rel="noopener"
                                 >Buy from {{ swatch.manufacturer.name }}</a>
                             {% endif %}
-                            <small>
-                                Any printing defects visible on this swatch are solely on me and should not be
-                                interpreted as the material being difficult. All swatch gcodes are pre-generated
-                                per filament type and are not tuned to specific filaments.
-                            </small>
                             <p></p>
                         </div>
                         <div class="col-md-1"></div>
@@ -137,16 +132,16 @@
                         <h5>Related colors</h5>
                         <hr>
                     </div>
-                    <div class="row border-between">
-                        <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-6 text-center">
                             Pure complement:
-                            <div class="container text-center">
+                            <div class="container">
                                 <div class="big-color-cube"
                                      style="background-color:#{{ swatch.complement_hex }};"></div>
                                 <div>#{{ swatch.complement_hex }}</div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 text-center">
                             {% if swatch.complement %}
                                 Closest match:
                                 {% include "partials/complement_color_box.partial" with s=swatch.complement %}
@@ -183,6 +178,17 @@
                         </div>
                     {% endif %}
                 </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-0 col-md-2 col-xl-3"></div>
+                <div class="col-12 col-md-8 col-xl-6 text-center">
+                    <small>
+                        Any printing defects visible on this swatch are solely on me and should not be
+                        interpreted as the material being difficult. All swatch gcodes are pre-generated
+                        per filament type and are not tuned to specific filaments.
+                    </small>
+                </div>
+                <div class="col-0 col-md-2 col-xl-3"></div>
             </div>
         {% endif %}
 

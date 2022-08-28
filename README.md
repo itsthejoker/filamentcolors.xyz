@@ -11,8 +11,8 @@ https://filamentcolors.xyz/api/
 API notes:
 ---
 
-- Color family is marked by a 3 letter code for data savings; the map can be found here: https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/models.py#L76-L103
-- /api/swatch/ has several sort methods available to it: `type`, `manufacturer`, and `color`. See https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/api/views.py#L18 for the source.
+- Color family is marked by a 3 letter code for data savings; the map can be found here: https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/models.py#L130-L156
+- /api/swatch/ has several sort methods available to it: `type`, `manufacturer`, and `color`. See https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/api/views.py#L34 for the source.
 - Example urls:
   - https://filamentcolors.xyz/api/swatch/?m=color
   - https://filamentcolors.xyz/api/swatch/?m=type

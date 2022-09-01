@@ -9,6 +9,7 @@
             <div class="col-sm-4 col-md-4 col-lg-2 text-center bump-down">
                 <a href="{% url 'about' %}">
                     <img title="About this site!"
+                         loading="lazy"
                          alt="about this site"
                          src="https://img.icons8.com/material/32/000000/help--v1.png">
                 </a>
@@ -16,12 +17,14 @@
             <div class="col-sm-4 col-md-4 col-lg-2 text-center bump-down">
                 <a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank" rel="noopener">
                     <img title="Source code (github!)"
+                         loading="lazy"
                          src="{% static "GitHub-Mark-32px.png" %}"
                          alt="source code (github)"></a>
             </div>
             <div class="col-sm-4 col-md-4 col-lg-2 text-center bump-down">
                 <a href="https://twitter.com/filamentcolors" target="_blank" rel="noopener">
                     <img title="Follow me on Twitter!"
+                         loading="lazy"
                          width="32" height="32" src="{% static "Twitter_Social_Icon_Circle_Color.png" %}"
                          alt="@filamentcolors on Twitter">
                 </a>
@@ -43,6 +46,7 @@
             <div class="col-md-6 col-lg-3 text-center mt-1 mb-2">
                 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
                     <img alt="Creative Commons License"
+                         loading="lazy"
                          style="border-width:0"
                          src="https://i.creativecommons.org/l/by/4.0/88x31.png"/>
                 </a>

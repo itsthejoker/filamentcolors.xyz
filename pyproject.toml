@@ -15,7 +15,7 @@ psycopg2-binary = "^2.9.3"
 python-dotenv = "^0.20.0"
 python-twitter = "^3.5"
 colorcorrect = "^0.9.1"
-colormath = "^3.0.0"
+colormath = { git = "https://github.com/itsthejoker/python-colormath.git", branch = "master" }
 django-taggit = "^3.0.0"
 colorthief = "^0.2.1"
 djangorestframework = "^3.13.1"

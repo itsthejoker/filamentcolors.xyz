@@ -1,4 +1,4 @@
-from django.conf.urls import include, url
+from django.urls import path, include, re_path
 from rest_framework import routers
 
 from filamentcolors.api.views import (
@@ -15,6 +15,6 @@ router.register(r"swatch", SwatchViewSet, basename="swatch")
 router.register(r"manufacturer", ManufacturerViewSet, basename="manufacturer")
 
 urlpatterns = [
-    url(r"^api/", include(router.urls)),
-    url("api/version/", db_version, name="db_version"),
+    re_path(r"^api/", include(router.urls)),
+    path("api/version/", db_version, name="db_version"),
 ]

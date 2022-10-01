@@ -31,6 +31,7 @@ wheel = "^0.37.1"
 scipy = "1.9.1"
 django-filter = "^22.1"
 poetryup = "^0.10.0"
+setuptools = "^65.4.1"
 
 [tool.poetry.dev-dependencies]
 better-exceptions = "^0.3.3"

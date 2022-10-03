@@ -39,7 +39,7 @@
                 <a class="nav-link" href="/about">About</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'postlist' %}">Posts</a>
+                <a class="nav-link" href="http://blog.joekaufeld.com/" target="_blank">Posts</a>
             </li>
             <li class="nav-item active">
                 <div class="nav-link clickable" onclick="showWelcome()" data-toggle="collapse"

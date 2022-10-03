@@ -16,6 +16,10 @@
     {% include 'partials/welcome_modal.partial' %}
 {% endif %}
 
+<noscript>
+    {% include 'partials/no-js-alert.partial' %}
+</noscript>
+
 {% if show_color_warning %}
     {% include 'partials/color-warning.partial' %}
 {% endif %}
@@ -24,8 +28,10 @@
     {% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
 {% endif %}
 
-{% block content %}
-{% endblock content %}
+<main id="main">
+    {% block content %}
+    {% endblock content %}
+</main>
 
 {% if is_library_view %}
     {# This has to be below the content #}
@@ -33,3 +39,4 @@
 {% endif %}
 
 {% include 'partials/footer.partial' %}
+

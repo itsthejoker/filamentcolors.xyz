@@ -43,7 +43,6 @@ intro_phrases = [
     "Something you might be interested in!",
     "Success!",
     "Hey, check this out!",
-
 ]
 
 outro_phrases = [

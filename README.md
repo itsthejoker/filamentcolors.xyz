@@ -22,3 +22,19 @@ Please don't hammer the API if you're just checking for a specific piece of info
 Send a GET request to https://filamentcolors.xyz/api/version/; you'll get the following response: `{"db_version": 1, "db_last_modified": 1586021667}`. The `db_version` will be incremented if the _schema_ changes (which for right now, assume that it is stable), and the `db_last_modified` key is an ISO timestamp of the last time there was a swatch uploaded.
 
 If you have any questions, please feel free to reach out to me on Twitter at [@filamentcolors](https://twitter.com/filamentcolors)!
+
+
+ Obsolete major version 10                                                                                         │
+ │                                                                                                                   │
+ │ The PostgreSQL version 10 is obsolete, but the server or client packages are still installed. Please install the  │
+ │ latest packages (postgresql-12 and postgresql-client-12) and upgrade the existing  clusters with                  │
+ │ pg_upgradecluster (see manpage).                                                                                  │
+ │                                                                                                                   │
+ │ Please be aware that the installation of postgresql-12 will automatically create a default cluster 12/main. If    │
+ │ you want to upgrade the 10/main cluster, you need to remove the already existing 12 cluster (pg_dropcluster       │
+ │ --stop 12 main, see manpage for details).                                                                         │
+ │                                                                                                                   │
+ │ The old server and client packages are no longer supported. After the existing clusters are upgraded, the         │
+ │ postgresql-10 and postgresql-client-10 packages should be removed.                                                │
+ │                                                                                                                   │
+ │ Please see /usr/share/doc/postgresql-common/README.Debian.gz for details.

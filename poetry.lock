@@ -301,6 +301,20 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "imagecodecs"
+version = "2022.9.26"
+description = "Image transformation, compression, and decompression codecs"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+numpy = ">=1.19.2"
+
+[package.extras]
+all = ["matplotlib (>=3.3)", "numcodecs", "tifffile (>=2021.11.2)"]
+
+[[package]]
 name = "imageio"
 version = "2.22.0"
 description = "Library for reading and writing a wide range of image, video, scientific, and volumetric data formats."
@@ -452,7 +466,7 @@ python-versions = "*"
 
 [[package]]
 name = "networkx"
-version = "2.8.6"
+version = "2.8.7"
 description = "Python package for creating and manipulating graphs and networks"
 category = "main"
 optional = false
@@ -460,7 +474,7 @@ python-versions = ">=3.8"
 
 [package.extras]
 default = ["matplotlib (>=3.4)", "numpy (>=1.19)", "pandas (>=1.3)", "scipy (>=1.8)"]
-developer = ["mypy (>=0.961)", "pre-commit (>=2.20)"]
+developer = ["mypy (>=0.981)", "pre-commit (>=2.20)"]
 doc = ["nb2plots (>=0.6)", "numpydoc (>=1.4)", "pillow (>=9.1)", "pydata-sphinx-theme (>=0.9)", "sphinx (>=5)", "sphinx-gallery (>=0.10)", "texext (>=0.6.6)"]
 extra = ["lxml (>=4.6)", "pydot (>=1.4.2)", "pygraphviz (>=1.9)", "sympy (>=1.10)"]
 test = ["codecov (>=2.1)", "pytest (>=7.1)", "pytest-cov (>=3.0)"]
@@ -675,7 +689,7 @@ requests-oauthlib = "*"
 
 [[package]]
 name = "pytz"
-version = "2022.2.1"
+version = "2022.4"
 description = "World timezone definitions, modern and historical"
 category = "main"
 optional = false
@@ -949,7 +963,7 @@ test = ["pytest (>=3.0.0)", "pytest-cov"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10,<3.11"
-content-hash = "3b04d58d19969678b4212fdad8cc55de9125ea63970ea7fe15c6add1cd0c9888"
+content-hash = "d2d6f754dd5f255f2aef537c43579fecf5eadf566aae385b96f53910dc1750f6"
 
 [metadata.files]
 appnope = [
@@ -1073,6 +1087,27 @@ idna = [
     {file = "idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},
     {file = "idna-3.4.tar.gz", hash = "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"},
 ]
+imagecodecs = [
+    {file = "imagecodecs-2022.9.26-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:c8dd5ffb3b37486fd621ebd1c27ce2f0f5936711d736e8b00cb3d8b3a6f484ae"},
+    {file = "imagecodecs-2022.9.26-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1d0f397e86fe731f845a7845769d91e49062562b88f09c9cf982e4534c4237c3"},
+    {file = "imagecodecs-2022.9.26-cp310-cp310-win32.whl", hash = "sha256:b3222cb01e9764fcccf90e21920ee76ccf36a4dd1e69d7a7824f9956d2173324"},
+    {file = "imagecodecs-2022.9.26-cp310-cp310-win_amd64.whl", hash = "sha256:f9f02ae0addba6c5305c928d8ef91462cb682c038e6b93021144f53825fb9031"},
+    {file = "imagecodecs-2022.9.26-cp311-cp311-win32.whl", hash = "sha256:7069e0a79dcfab894ebb36dca894bf31db9125d2ded311db76aff69d1bb0440c"},
+    {file = "imagecodecs-2022.9.26-cp311-cp311-win_amd64.whl", hash = "sha256:871ac92eae3387e3dbfefeaff54c4e70b8110c928423673127d0ee268eb061e2"},
+    {file = "imagecodecs-2022.9.26-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:dac006c5bf94a50623061110c1c43fbc2dda8fa631cae41601ebaf354e066440"},
+    {file = "imagecodecs-2022.9.26-cp38-cp38-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:dcc0b47f1e9664fbbf7eca7e83f3472540bb28a89cfa43178712d2c581d2dd48"},
+    {file = "imagecodecs-2022.9.26-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:376461b2255511a3cb5cb68160fda0e44aa77802cb4f44ef980e849121fcd34c"},
+    {file = "imagecodecs-2022.9.26-cp38-cp38-win32.whl", hash = "sha256:49860ac98e6721eb43e799da9682fb5835d183f62d9fc22aff52731f1a3031c4"},
+    {file = "imagecodecs-2022.9.26-cp38-cp38-win_amd64.whl", hash = "sha256:d0b2944ccea7d552b7158bc160fd7a48756e4e72d00a8ee9229a6b993f822fa3"},
+    {file = "imagecodecs-2022.9.26-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:858f78f707f36f34118b3a6a2fba27b718c9c52ea6bda2c68da3a8239a3ed7dc"},
+    {file = "imagecodecs-2022.9.26-cp39-cp39-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:ea3c19a75d1d7d129bbe6590eacbd04a1a97888d5064fe96befd04e42368b748"},
+    {file = "imagecodecs-2022.9.26-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:80c1e36aad2b105b69e63cd93bf25dbd391e939fe9e4a1f5701aa4bdc0f45330"},
+    {file = "imagecodecs-2022.9.26-cp39-cp39-win32.whl", hash = "sha256:f9ee64055fc5a0ce2cff11aeb0a4f229dca5cd03197a872d8fae1c443f0ff9ae"},
+    {file = "imagecodecs-2022.9.26-cp39-cp39-win_amd64.whl", hash = "sha256:9c521bbd689c3cf4da43e0ea4559e38d58d8a7bcdf8c10b2f0bb7950128abf44"},
+    {file = "imagecodecs-2022.9.26-pp38-pypy38_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8b5329ab1618403ba745c8f697dad9ab96459f91f322e855b71103e7d136d765"},
+    {file = "imagecodecs-2022.9.26-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:9c75c38203a0fbf19fb43d619e423f7200cac819066fe6579f7fc57f8c878805"},
+    {file = "imagecodecs-2022.9.26.tar.gz", hash = "sha256:04d5757d8fd7819844b0f8d9eed05025dca4962f280d0010b42c7c9c993fe371"},
+]
 imageio = [
     {file = "imageio-2.22.0-py3-none-any.whl", hash = "sha256:aff0e9b5faf4936728f982a1ab63797b1339847a4533c3e4c8343635149dfbfc"},
     {file = "imageio-2.22.0.tar.gz", hash = "sha256:a332d127ec387b2d3dca967fd065a90f1c1a4ba2343570b03fe2cebb6ed064ea"},
@@ -1108,8 +1143,8 @@ mypy-extensions = [
     {file = "mypy_extensions-0.4.3.tar.gz", hash = "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"},
 ]
 networkx = [
-    {file = "networkx-2.8.6-py3-none-any.whl", hash = "sha256:2a30822761f34d56b9a370d96a4bf4827a535f5591a4078a453425caeba0c5bb"},
-    {file = "networkx-2.8.6.tar.gz", hash = "sha256:bd2b7730300860cbd2dafe8e5af89ff5c9a65c3975b352799d87a6238b4301a6"},
+    {file = "networkx-2.8.7-py3-none-any.whl", hash = "sha256:15cdf7f7c157637107ea690cabbc488018f8256fa28242aed0fb24c93c03a06d"},
+    {file = "networkx-2.8.7.tar.gz", hash = "sha256:815383fd52ece0a7024b5fd8408cc13a389ea350cd912178b82eed8b96f82cd3"},
 ]
 numpy = [
     {file = "numpy-1.23.3-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:c9f707b5bb73bf277d812ded9896f9512a43edff72712f31667d0a8c2f8e71ee"},
@@ -1332,8 +1367,8 @@ python-twitter = [
     {file = "python_twitter-3.5-py2.py3-none-any.whl", hash = "sha256:4a420a6cb6ee9d0c8da457c8a8573f709c2ff2e1a7542e2d38807ebbfe8ebd1d"},
 ]
 pytz = [
-    {file = "pytz-2022.2.1-py2.py3-none-any.whl", hash = "sha256:220f481bdafa09c3955dfbdddb7b57780e9a94f5127e35456a48589b9e0c0197"},
-    {file = "pytz-2022.2.1.tar.gz", hash = "sha256:cea221417204f2d1a2aa03ddae3e867921971d0d76f14d87abb4414415bbdcf5"},
+    {file = "pytz-2022.4-py2.py3-none-any.whl", hash = "sha256:2c0784747071402c6e99f0bafdb7da0fa22645f06554c7ae06bf6358897e9c91"},
+    {file = "pytz-2022.4.tar.gz", hash = "sha256:48ce799d83b6f8aab2020e369b627446696619e79645419610b9facd909b3174"},
 ]
 PyWavelets = [
     {file = "PyWavelets-1.4.1-cp310-cp310-macosx_10_13_x86_64.whl", hash = "sha256:d854411eb5ee9cb4bc5d0e66e3634aeb8f594210f6a1bed96dbed57ec70f181c"},

@@ -24,6 +24,7 @@ from skimage import io
 from martor.models import MartorField
 
 from filamentcolors.colors import Color
+from filamentcolors.pantone import get_closest_pantone_color
 from filamentcolors.twitter_helpers import send_tweet
 
 
@@ -116,6 +117,46 @@ class Post(models.Model):
         else:
             pub = "published" if self.published else "unpublished"
         return f"{self.id} | {self.title} | {pub} | {self.get_absolute_url()}"
+
+
+class Pantone(models.Model):
+    COLOR_MATCH_STEP = 50
+    CATEGORIES = [
+        "Fashion and Interior Designers",
+        "Industrial Designers",
+        "Graphic Designers"
+    ]
+
+    code = models.CharField(max_length=48)
+    name = models.CharField(max_length=250, null=True, blank=True)
+    rgb_r = models.IntegerField()
+    rgb_g = models.IntegerField()
+    rgb_b = models.IntegerField()
+    hex_color = models.CharField(max_length=6, null=True, blank=True)
+    category = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.code
+
+
+class RAL(models.Model):
+    COLOR_MATCH_STEP = 100
+    CATEGORIES = [
+        "RAL Classic",
+        "RAL Effect",
+        "RAL Design System+"
+    ]
+
+    code = models.CharField(max_length=48)
+    name = models.CharField(max_length=250, null=True, blank=True)
+    rgb_r = models.IntegerField()
+    rgb_g = models.IntegerField()
+    rgb_b = models.IntegerField()
+    hex_color = models.CharField(max_length=6, null=True, blank=True)
+    category = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.code
 
 
 class Swatch(models.Model):
@@ -329,6 +370,54 @@ class Swatch(models.Model):
     complement_hex = models.CharField(
         max_length=6, blank=True, verbose_name="DO NOT ADD! Computed Complement Hex"
     )
+    closest_pantone_1 = models.ForeignKey(
+        Pantone,
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="pantone_1",
+        verbose_name="Computed Pantone 'Fashion and Interior Designers' color"
+    )
+    closest_pantone_2 = models.ForeignKey(
+        Pantone,
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="pantone_2",
+        verbose_name="Computed Pantone 'Industrial Designers' color"
+    )
+    closest_pantone_3 = models.ForeignKey(
+        Pantone,
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="pantone_3",
+        verbose_name="Computed Pantone 'Graphic Designers' color"
+    )
+    closest_ral_1 = models.ForeignKey(
+        RAL,
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="ral_1",
+        verbose_name="Computed RAL Classic color"
+    )
+    closest_ral_2 = models.ForeignKey(
+        RAL,
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="ral_2",
+        verbose_name="Computed RAL Effect color"
+    )
+    closest_ral_3 = models.ForeignKey(
+        RAL,
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING,
+        related_name="ral_3",
+        verbose_name="Computed RAL Design System+ color"
+    )
 
     # !!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -515,6 +604,44 @@ class Swatch(models.Model):
         except IndexError:
             return None
 
+    def get_closest_third_party_color(self, model, category):
+        """Takes in either Pantone or RAL, then returns the matching element."""
+        distance_dict = {}
+        rgb = self.get_rgb(self.hex_color)
+        target_color = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
+        options = model.objects.filter(
+            category=category,
+            rgb_r__gt=max(rgb[0] - model.COLOR_MATCH_STEP, 0),
+            rgb_r__lt=min(rgb[0] + model.COLOR_MATCH_STEP, 255),
+            rgb_g__gt=max(rgb[1] - model.COLOR_MATCH_STEP, 0),
+            rgb_g__lt=min(rgb[1] + model.COLOR_MATCH_STEP, 255),
+            rgb_b__gt=max(rgb[2] - model.COLOR_MATCH_STEP, 0),
+            rgb_b__lt=min(rgb[2] + model.COLOR_MATCH_STEP, 255),
+        )
+        for option in options:
+            possible_color = convert_color(sRGBColor.new_from_rgb_hex(option.hex_color), LabColor)
+            distance = delta_e_cmc(target_color, possible_color)
+            distance_dict.update({option: distance})
+
+        distance_dict = {
+            i: distance_dict[i] for i in distance_dict if distance_dict[i] is not None
+        }
+        sorted_distance_list = sorted(distance_dict.items(), key=lambda kv: kv[1])
+        try:
+            return sorted_distance_list[0][0]
+        except IndexError:
+            return None
+
+    def get_closest_pantone(self):
+        fields = ["closest_pantone_1", "closest_pantone_2", "closest_pantone_3"]
+        for index, category in enumerate(Pantone.CATEGORIES):
+            setattr(self, fields[index], self.get_closest_third_party_color(Pantone, category))
+
+    def get_closest_ral(self):
+        fields = ["closest_ral_1", "closest_ral_2", "closest_ral_3"]
+        for index, category in enumerate(RAL.CATEGORIES):
+            setattr(self, fields[index], self.get_closest_third_party_color(RAL, category))
+
     def update_complement_swatch(self, l):
         complement = Color(self.hex_color).complementary()[1]
         complement = convert_color(
@@ -653,6 +780,8 @@ class Swatch(models.Model):
         else:
             self.crop_and_save_images()
             self.generate_hex_info()
+            self.get_closest_ral()
+            self.get_closest_pantone()
 
             super(Swatch, self).save(*args, **kwargs)
 

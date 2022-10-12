@@ -119,3 +119,5 @@ filamentcolors/appstatic/rest_framework
 filamentcolors/frontend
 node_modules
 package-lock.json
+dump.json
+*.gz

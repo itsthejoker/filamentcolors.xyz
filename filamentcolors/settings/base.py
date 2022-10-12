@@ -101,14 +101,20 @@ WSGI_APPLICATION = "filamentcolors.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": "filamentcolors",
+#         "USER": "colors",
+#         "PASSWORD": os.getenv("DJANGO_DB_PASSWORD"),
+#         "HOST": "localhost",
+#         "PORT": "",
+#     }
+# }
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "filamentcolors",
-        "USER": "colors",
-        "PASSWORD": os.getenv("DJANGO_DB_PASSWORD"),
-        "HOST": "localhost",
-        "PORT": "",
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 

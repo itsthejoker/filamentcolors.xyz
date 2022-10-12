@@ -31,6 +31,13 @@ def prep_request(
     if first_time_visitor(r):
         data.update({"launch_welcome_modal": True})
 
+    if r.htmx:
+        base_template = "partial_base.html"
+    else:
+        base_template = "base.html"
+
+    data.update({"base_template": base_template})
+
     response = render(r, html, context=data, *args, **kwargs)
     response = set_tasty_cookies(response)
 
@@ -130,10 +137,11 @@ def get_settings_cookies(r: request) -> Dict:
             type_settings.pop()
 
         types = [
-            GenericFilamentType.objects.get(id=x.split("-")[0])
+            x.split("-")[0]
             for x in type_settings
             if x.split("-")[1] == "true"
         ]
+        types = GenericFilamentType.objects.filter(id__in=types)
     else:
         types = GenericFilamentType.objects.all()
 

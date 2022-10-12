@@ -204,6 +204,14 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-cleanup"
+version = "6.0.0"
+description = "Deletes old files."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "django-cors-headers"
 version = "3.13.0"
 description = "django-cors-headers is a Django application for handling the server headers required for Cross-Origin Resource Sharing (CORS)."
@@ -226,6 +234,17 @@ python-versions = ">=3.7"
 Django = ">=3.2"
 
 [[package]]
+name = "django-htmx"
+version = "1.12.2"
+description = "Extensions for using Django with htmx."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Django = ">=3.2"
+
+[[package]]
 name = "django-taggit"
 version = "3.0.0"
 description = "django-taggit is a reusable Django application for simple tagging."
@@ -235,6 +254,21 @@ python-versions = ">=3.6"
 
 [package.dependencies]
 Django = ">=3.2"
+
+[[package]]
+name = "django-unused-media"
+version = "0.2.2"
+description = "Delete unused media files from Django project"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+django = ">=1.8"
+six = "*"
+
+[package.extras]
+tests = ["coverage", "coveralls", "django-nose", "flake8", "isort", "mock", "nose", "preggy", "pypandoc", "tox (<2.0)", "twine", "yanc"]
 
 [[package]]
 name = "django-widget-tweaks"
@@ -963,7 +997,7 @@ test = ["pytest (>=3.0.0)", "pytest-cov"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10,<3.11"
-content-hash = "d2d6f754dd5f255f2aef537c43579fecf5eadf566aae385b96f53910dc1750f6"
+content-hash = "1ded393fda518be944f7bb612e599c0b40e5ea1380276bc9aadab45d85d94af9"
 
 [metadata.files]
 appnope = [
@@ -1052,6 +1086,10 @@ Django = [
     {file = "Django-4.1.1-py3-none-any.whl", hash = "sha256:acb21fac9275f9972d81c7caf5761a89ec3ea25fe74545dd26b8a48cb3a0203e"},
     {file = "Django-4.1.1.tar.gz", hash = "sha256:a153ffd5143bf26a877bfae2f4ec736ebd8924a46600ca089ad96b54a1d4e28e"},
 ]
+django-cleanup = [
+    {file = "django-cleanup-6.0.0.tar.gz", hash = "sha256:922e06ef8839c92bd3ab37a84db6058b8764f3fe44dbb4487bbca941d288280a"},
+    {file = "django_cleanup-6.0.0-py2.py3-none-any.whl", hash = "sha256:997feab3b1f7a2e84f71c29e83b1d664459ec0d4b1924977b1fa25b5babb8703"},
+]
 django-cors-headers = [
     {file = "django-cors-headers-3.13.0.tar.gz", hash = "sha256:f9dc6b4e3f611c3199700b3e5f3398c28757dcd559c2f82932687f3d0443cfdf"},
     {file = "django_cors_headers-3.13.0-py3-none-any.whl", hash = "sha256:37e42883b5f1f2295df6b4bba96eb2417a14a03270cb24b2a07f021cd4487cf4"},
@@ -1060,9 +1098,17 @@ django-filter = [
     {file = "django-filter-22.1.tar.gz", hash = "sha256:ed473b76e84f7e83b2511bb2050c3efb36d135207d0128dfe3ae4b36e3594ba5"},
     {file = "django_filter-22.1-py3-none-any.whl", hash = "sha256:ed429e34760127e3520a67f415bec4c905d4649fbe45d0d6da37e6ff5e0287eb"},
 ]
+django-htmx = [
+    {file = "django-htmx-1.12.2.tar.gz", hash = "sha256:93a356ec0a983a33cc11d927bfe4ab3eca847dc89786d6293e80bc12dc9da03c"},
+    {file = "django_htmx-1.12.2-py3-none-any.whl", hash = "sha256:fe2d31eb8eeae1f531248c0b7cc441dc68b77158892514ed2fcf5f6119b89bd5"},
+]
 django-taggit = [
     {file = "django-taggit-3.0.0.tar.gz", hash = "sha256:e645b8e3dd4f85989d5ef5c5a3d5ebbe5badf5d1e51b53e42d0af726240b00b9"},
     {file = "django_taggit-3.0.0-py3-none-any.whl", hash = "sha256:ca2df20399a11321db75988404afb640a08eff61e52bde35f6c16f307004ec9e"},
+]
+django-unused-media = [
+    {file = "django-unused-media-0.2.2.tar.gz", hash = "sha256:8f46b5a7d3e10f09e31126aefb2efe24e3dedb6a89daf786f7e055c5298668ee"},
+    {file = "django_unused_media-0.2.2-py3-none-any.whl", hash = "sha256:390d0cfa4ac9e4d0c4de0878b42bda41ed188fa62b0032fdf0a266e7136ce013"},
 ]
 django-widget-tweaks = [
     {file = "django-widget-tweaks-1.4.12.tar.gz", hash = "sha256:9bfc5c705684754a83cc81da328b39ad1b80f32bd0f4340e2a810cbab4b0c00e"},

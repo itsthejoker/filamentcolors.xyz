@@ -61,6 +61,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "martor",
     "django_filters",
+    "django_htmx",
+    "django_cleanup",  # This must be at the bottom!
 ]
 
 MIDDLEWARE = [
@@ -69,6 +71,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -98,14 +101,20 @@ WSGI_APPLICATION = "filamentcolors.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": "filamentcolors",
+#         "USER": "colors",
+#         "PASSWORD": os.getenv("DJANGO_DB_PASSWORD"),
+#         "HOST": "localhost",
+#         "PORT": "",
+#     }
+# }
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "filamentcolors",
-        "USER": "colors",
-        "PASSWORD": os.getenv("DJANGO_DB_PASSWORD"),
-        "HOST": "localhost",
-        "PORT": "",
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 

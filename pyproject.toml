@@ -32,6 +32,9 @@ scipy = "1.9.1"
 django-filter = "^22.1"
 poetryup = "^0.10.0"
 setuptools = "^65.4.1"
+django-htmx = "^1.12.2"
+django-unused-media = "^0.2.2"
+django-cleanup = "^6.0.0"
 imagecodecs = "^2022.9.26"
 
 [tool.poetry.dev-dependencies]

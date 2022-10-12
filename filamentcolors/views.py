@@ -3,7 +3,8 @@ from typing import Any
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import Http404, HttpResponse
-from django.shortcuts import HttpResponseRedirect, reverse, get_object_or_404
+from django.shortcuts import HttpResponseRedirect, reverse
+from django.urls import resolve, Resolver404
 
 from filamentcolors.helpers import (
     build_data_dict,
@@ -14,7 +15,7 @@ from filamentcolors.helpers import (
     get_swatches,
     prep_request,
 )
-from filamentcolors.models import GenericFilamentType, Swatch, Post
+from filamentcolors.models import GenericFilamentType, Swatch
 
 
 def homepage(request: WSGIRequest) -> HttpResponseRedirect:
@@ -174,43 +175,24 @@ def inventory_page(request: WSGIRequest) -> HttpResponse:
     return prep_request(request, "inventory.html", data)
 
 
-def post_list(request: WSGIRequest) -> HttpResponse:
-    data = build_data_dict(request)
-    data.update(
-        {"posts": Post.objects.filter(published=True).order_by("-date_added"),}
-    )
-    return prep_request(request, "post_list.html", data)
-
-
-def post_detail(request: WSGIRequest, slug: str) -> HttpResponse:
-    post = get_object_or_404(Post, slug=slug)
-    if not post.published:
+def loader_redirect(request: WSGIRequest) -> HttpResponse:
+    """
+    Take the name of a view and return an HTML spinner that then calls the target view.
+    """
+    internal_path = request.GET.get('next', None)
+    if not internal_path:
+        raise Http404
+    try:
+        # resolve only looks at the internal urls, so this _shouldn't_ be a bad idea
+        resolve(internal_path)
+    except Resolver404:
         raise Http404
 
     data = build_data_dict(request)
-
-    next_post = (
-        Post.objects.filter(date_added__gt=post.date_added)
-        .order_by("date_added")
-        .first()
-    )
-    prev_post = (
-        Post.objects.filter(date_added__lt=post.date_added)
-        .order_by("-date_added")
-        .first()
-    )
-
-    data.update({"post": post, "next_post": next_post, "prev_post": prev_post})
-    return prep_request(request, "post_detail.html", data)
-
-
-def post_preview(request: WSGIRequest, slug: str) -> HttpResponse:
-    post = get_object_or_404(Post, slug=slug)
-    if not post.enable_preview:
-        raise Http404
-    data = build_data_dict(request)
-    data.update({"post": post})
-    return prep_request(request, "post_detail.html", data)
+    # if we have a resolver match, then we know that the url is good and valid. Pass
+    # it back to the template so we can get that spinner going.
+    data |= {"next_url": internal_path}
+    return prep_request(request, "_loader.html", data)
 
 
 def about_page(request: WSGIRequest) -> HttpResponse:

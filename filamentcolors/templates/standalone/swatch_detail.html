@@ -103,21 +103,23 @@
                                 </tr>
                                 </tbody>
                             </table>
-                            {% if swatch.amazon_purchase_link %}
-                                <a class="btn btn-block btn-info my-3" href="{{ swatch.amazon_purchase_link }}"
-                                   target="_blank"
-                                   role="button"
-                                   rel="noopener"
-                                >Buy on
-                                    Amazon<br><span style="font-size: smaller">(affiliate link)</span></a>
-                            {% endif %}
-                            {% if swatch.mfr_purchase_link %}
-                                <a class="btn btn-block btn-success my-3" href="{{ swatch.mfr_purchase_link }}"
-                                   target="_blank"
-                                   role="button"
-                                   rel="noopener"
-                                >Buy from {{ swatch.manufacturer.name }}</a>
-                            {% endif %}
+                            <div class="d-grid gap-2">
+                                {% if swatch.amazon_purchase_link %}
+                                    <a class="btn btn-primary" href="{{ swatch.amazon_purchase_link }}"
+                                       target="_blank"
+                                       role="button"
+                                       rel="noopener"
+                                    >Buy on
+                                        Amazon<br><span style="font-size: smaller">(affiliate link)</span></a>
+                                {% endif %}
+                                {% if swatch.mfr_purchase_link %}
+                                    <a class="btn btn-success" href="{{ swatch.mfr_purchase_link }}"
+                                       target="_blank"
+                                       role="button"
+                                       rel="noopener"
+                                    >Buy from {{ swatch.manufacturer.name }}</a>
+                                {% endif %}
+                            </div>
                             <p></p>
                         </div>
                         <div class="col-md-1"></div>
@@ -164,15 +166,18 @@
                         <div class="row bump-down">
                             <div class="col-1"></div>
                             <div class="col-10 bump-down">
-                                <button type="button" class="btn btn-outline-dark btn-block bump-down"
-                                        data-toggle="modal"
-                                        data-target=".bd-example-modal-lg">Click here for more color combinations!
-                                </button>
-                                <button type="button" class="btn btn-outline-dark btn-block bump-down"
-                                        data-toggle="modal"
-                                        data-target=".similarColorsModal-lg">Not quite what you're looking for? Try
-                                    these!
-                                </button>
+                                <div class="d-grid gap-2">
+                                    <button type="button" class="btn btn-outline-dark"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#theGrandColorSchemeList">Click here for more color
+                                        combinations!
+                                    </button>
+                                    <button type="button" class="btn btn-outline-dark"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#similarColorsModal">Not quite what you're looking for? Try
+                                        these!
+                                    </button>
+                                </div>
                             </div>
                             <div class="col-1"></div>
                         </div>
@@ -196,7 +201,7 @@
             baguetteBox.run('.grid-gallery', {animation: 'slideIn'});
         </script>
 
-        {% include 'partials/color_scheme_modal.partial' %}
-        {% include 'partials/similar_colors_modal.partial' %}
+        {% include 'modals/color_scheme_modal.partial' %}
+        {% include 'modals/similar_colors_modal.partial' %}
     </div>
 {% endblock content %}

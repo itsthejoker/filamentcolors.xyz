@@ -1,4 +1,4 @@
-{% include 'partials/patreon_modal.partial' %}
+{% include 'modals/patreon_modal.partial' %}
 {% load static %}
 
 <footer class="page-footer pt-4">

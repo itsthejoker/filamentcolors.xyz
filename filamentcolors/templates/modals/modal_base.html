@@ -1,0 +1,34 @@
+{% load sameas %}
+
+{% comment %}
+Total block list:
+ * id
+ * extra_classes
+ * title
+ * content
+ * footer
+{% endcomment %}
+<div class="modal fade" id="{% block id %}{% endblock %}" tabindex="-1" aria-labelledby="{% sameas id %}Label"
+     aria-hidden="true">
+    <div class="modal-dialog {% block extra_classes %}{% endblock %}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="{% sameas id %}Label">{% block title %}{% endblock %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% block content %}{% endblock %}
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex">
+                    <div>
+                        {% block footer_msg %}{% endblock %}
+                    </div>
+                    <div class="ps-3">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

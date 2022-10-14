@@ -115,7 +115,7 @@ def typesort(request: WSGIRequest, id: int) -> HttpResponse:
 
 
 def swatch_detail(request: WSGIRequest, id: int) -> HttpResponse:
-    html = "swatch_detail.html"
+    html = "standalone/swatch_detail.html"
     swatch = Swatch.objects.filter(id=id).first()
     data = build_data_dict(request)
 

@@ -19,8 +19,9 @@
 
 <script src="{% static 'vendored/js/jquery-3.4.1.min.js' %}"></script>
 <script src="{% static 'vendored/js/baguetteBox.min.js' %}"></script>
-<script src="{% static 'vendored/js/popper.min.js' %}"></script>
-<script src="{% static 'vendored/js/bootstrap.min.js' %}"></script>
+{#<script src="{% static 'vendored/js/popper.min.js' %}"></script>#}
+<script src="{% static 'vendored/js/bootstrap.bundle.min.js' %}"></script>
+
 <script src="{% static 'vendored/js/contract.js' %}"></script>
 <script src="{% static 'vendored/js/dispatcher.js' %}"></script>
 <script type="text/javascript" src="{% static 'vendored/js/toastify.js' %}" async defer></script>

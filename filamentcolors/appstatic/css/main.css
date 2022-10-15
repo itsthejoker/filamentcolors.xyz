@@ -15,6 +15,10 @@ a:hover {
     text-decoration: underline;
 }
 
+hr {
+    border-top: 1px solid;
+}
+
 .cardBox a:hover, .cardBox a:visited, .cardBox a:link, .cardBox a:active {
     text-decoration: None;
 }
@@ -25,6 +29,12 @@ a:hover {
 
 .complement-box, .complement-box:hover {
     text-decoration: None;
+    color: black;
+}
+
+.complement-box:hover {
+    box-shadow: 0 0 5px black;
+    transition-duration: 100ms;
 }
 
 .btn {
@@ -198,6 +208,14 @@ a:hover {
         box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.15) !important;
     }
 }
+
+@media (max-width: 991.98px) {
+    /* For the About section of the navbar on mobile, don't default to 250px */
+    .dropdown-100.show {
+        height: 100% !important
+    }
+}
+
 
 .kofi-button {
     margin-top: -3px;

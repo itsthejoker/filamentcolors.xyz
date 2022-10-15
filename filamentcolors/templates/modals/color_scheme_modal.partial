@@ -22,16 +22,16 @@
         </a>
     </p>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-lg-6">
             {% include "partials/complement_color_box.partial" with s=swatch %}
         </div>
-        <div class="col-sm-6">
+        <div class="col-lg-6">
             {% include "partials/complement_color_box.partial" with s=swatch.complement %}
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-3">
         <div class="col text-center bump-down">
-            <a class="btn btn-primary bump-down"
+            <a class="btn btn-info bump-down"
                href="/library/collection/{{ swatch.id }},{{ swatch.complement.id }}" target="_blank"
                role="button"
                rel="noopener"
@@ -64,9 +64,9 @@
             {% include "partials/complement_color_box.partial" with s=swatch.analogous_2 %}
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-3">
         <div class="col text-center bump-down">
-            <a class="btn btn-primary bump-down"
+            <a class="btn btn-info bump-down"
                href="/library/collection/{{ swatch.id }},{{ swatch.analogous_1.id }},{{ swatch.analogous_2.id }}"
                target="_blank"
                role="button"
@@ -100,9 +100,9 @@
             {% include "partials/complement_color_box.partial" with s=swatch.triadic_2 %}
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-3">
         <div class="col text-center bump-down">
-            <a class="btn btn-primary bump-down"
+            <a class="btn btn-info bump-down"
                href="/library/collection/{{ swatch.id }},{{ swatch.triadic_1.id }},{{ swatch.triadic_2.id }}"
                target="_blank"
                role="button"
@@ -132,9 +132,9 @@
             {% include "partials/complement_color_box.partial" with s=swatch.split_complement_2 %}
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-3">
         <div class="col text-center bump-down">
-            <a class="btn btn-primary bump-down"
+            <a class="btn btn-info bump-down"
                href="/library/collection/{{ swatch.id }},{{ swatch.split_complement_1.id }},{{ swatch.split_complement_2.id }}"
                target="_blank"
                role="button"
@@ -165,18 +165,18 @@
         </a>
     </p>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-lg-6">
             {% include "partials/complement_color_box.partial" with s=swatch %}
             {% include "partials/complement_color_box.partial" with s=swatch.tetradic_1 %}
         </div>
-        <div class="col-md-6">
+        <div class="col-lg-6">
             {% include "partials/complement_color_box.partial" with s=swatch.tetradic_2 %}
             {% include "partials/complement_color_box.partial" with s=swatch.tetradic_3 %}
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-3">
         <div class="col text-center bump-down">
-            <a class="btn btn-primary bump-down"
+            <a class="btn btn-info bump-down"
                href="/library/collection/{{ swatch.id }},{{ swatch.tetradic_1.id }},{{ swatch.tetradic_2.id }},{{ swatch.tetradic_3.id }}"
                target="_blank"
                role="button"
@@ -199,18 +199,18 @@
         </a>
     </p>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-lg-6">
             {% include "partials/complement_color_box.partial" with s=swatch %}
             {% include "partials/complement_color_box.partial" with s=swatch.square_1 %}
         </div>
-        <div class="col-md-6">
+        <div class="col-lg-6">
             {% include "partials/complement_color_box.partial" with s=swatch.square_2 %}
             {% include "partials/complement_color_box.partial" with s=swatch.square_3 %}
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-3">
         <div class="col text-center bump-down">
-            <a class="btn btn-primary bump-down"
+            <a class="btn btn-info bump-down"
                href="/library/collection/{{ swatch.id }},{{ swatch.square_1.id }},{{ swatch.square_2.id }},{{ swatch.square_3.id }}"
                target="_blank"
                role="button"

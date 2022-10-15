@@ -21,10 +21,11 @@
  * SOFTWARE.
  */
 
-const anchorElements = Array.from(document.querySelectorAll('a'));
-const modalElements = {};
+document.addEventListener("DOMContentLoaded", function (event) {
+    const anchorElements = Array.from(document.querySelectorAll('a'));
+    const modalElements = {};
 
-anchorElements.forEach(el => {
+    anchorElements.forEach(el => {
         // don't run on a tags that aren't mail links
         if (el.href.includes("mailto") === false) return;
 
@@ -35,54 +36,49 @@ anchorElements.forEach(el => {
         const newModal = getModalContent({id, ...parseMailto(el.href)});
         document.body.insertAdjacentHTML("beforeend", newModal);
 
-        // todo: swap out for vanilla js with bootstrap 5
-        // jquery is already here because this is for bootstrap and
-        // bootstrap 4 requires it.
-        modalElements[id] = $(`#emailmagic-${id}`);
+        // bootstrap 5 only
+        modalElements[id] = new bootstrap.Modal(document.getElementById(`emailmagic-${id}`));
 
-        el.addEventListener(
-            'click', e => {
-                e.preventDefault();
-                modalElements[id].modal();
-            }
-        );
-
-    }
-);
+        el.addEventListener('click', e => {
+            e.preventDefault();
+            modalElements[id].show();
+        });
+    });
+});
 
 function getModalContent({id, emailAddress, subject, cc, bcc, body}) {
     return `
-        <div class="modal fade" id="emailmagic-${id}" tabindex="-1" role="dialog" aria-labelledby="Select your preferred email provider!" aria-hidden="true">
+        <div class="modal fade" id="emailmagic-${id}" tabindex="-1" role="dialog" aria-label="Select your preferred email provider!" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Open email in...</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times" style="color:black"></i></button>
               </div>
               <div class="modal-body">
-                <a 
-                  href="https://mail.google.com/mail/?view=cm&fs=1&to=${emailAddress}&su=${subject}&cc=${cc}&bcc=${bcc}&body=${body}"
-                  class="btn btn-block btn-outline-danger"
-                  target="_blank"
-                >Gmail</a>
-                <a 
-                  href="https://outlook.office.com/owa/?path=/mail/action/compose&to=${emailAddress}&subject=${subject}&body=${body}"
-                  class="btn btn-block btn-outline-primary"
-                  target="_blank"
-                >Outlook</a>
-                <a
-                  href="https://compose.mail.yahoo.com/?to=${emailAddress}&subject=${subject}&cc=${cc}&bcc=${bcc}&body=${body}"
-                  class="btn btn-block btn-outline-success"
-                  target="_blank"
-                >Yahoo! Mail</a>
-                <a href="mailto:${emailAddress}" class="btn btn-block btn-outline-info" target="_blank">Default</a>
-                <hr/>
-                <button class="btn btn-block btn-outline-dark" onclick="copyToClipboard('${emailAddress}')">Copy to Clipboard</button>
+                <div class="d-grid gap-2">
+                    <a
+                      href="https://mail.google.com/mail/?view=cm&fs=1&to=${emailAddress}&su=${subject}&cc=${cc}&bcc=${bcc}&body=${body}"
+                      class="btn bg-gradient-warning"
+                      target="_blank"
+                    >Gmail</a>
+                    <a
+                      href="https://outlook.office.com/owa/?path=/mail/action/compose&to=${emailAddress}&subject=${subject}&body=${body}"
+                      class="btn bg-gradient-info"
+                      target="_blank"
+                    >Outlook</a>
+                    <a
+                      href="https://compose.mail.yahoo.com/?to=${emailAddress}&subject=${subject}&cc=${cc}&bcc=${bcc}&body=${body}"
+                      class="btn bg-gradient-secondary"
+                      target="_blank"
+                    >Yahoo! Mail</a>
+                    <a href="mailto:${emailAddress}" class="btn bg-gradient-success" target="_blank">Default</a>
+                    <hr/>
+                    <button class="btn bg-gradient-dark" onclick="copyToClipboard('${emailAddress}')">Copy to Clipboard</button>
+                </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
@@ -90,7 +86,7 @@ function getModalContent({id, emailAddress, subject, cc, bcc, body}) {
     `
 }
 
-function copyToClipboard(val){
+function copyToClipboard(val) {
     navigator.clipboard.writeText(val);
 }
 

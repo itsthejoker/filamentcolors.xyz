@@ -66,6 +66,7 @@ urlpatterns = [
         views.manufacturersort,
         name="manufacturersort",
     ),
+    path("library/manufacturer/", views.manufacturer_list, name="mfr_list"),
     path("library/filament_type/<int:id>/", views.typesort, name="typesort"),
     path(
         "library/color_family/<str:family_id>/",

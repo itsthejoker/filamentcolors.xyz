@@ -195,6 +195,12 @@ def loader_redirect(request: WSGIRequest) -> HttpResponse:
     return prep_request(request, "_loader.html", data)
 
 
+def manufacturer_list(request: WSGIRequest) -> HttpResponse:
+    return prep_request(
+        request, "standalone/manufacturer_list.html", build_data_dict(request)
+    )
+
+
 def about_page(request: WSGIRequest) -> HttpResponse:
     return prep_request(request, "about.html", build_data_dict(request))
 

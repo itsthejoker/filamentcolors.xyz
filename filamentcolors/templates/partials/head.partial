@@ -10,24 +10,32 @@
 <link rel="stylesheet" href="{% static 'vendored/css/bootstrap.min.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/css/baguetteBox.min.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/css/material_icons.css' %}">
-<link rel="stylesheet" href="{% static 'css/main.css' %}?v=4">
 <link rel="stylesheet" href="{% static 'vendored/css/toastify.css' %}">
+<link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/nucleo-icons.css' %}">
+<link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/nucleo-svg.css' %}">
+<link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/material-kit-pro.min.css' %}">
+<link rel="stylesheet" href="{% static 'vendored/fontawesome/css/all.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/main.css' %}?v=5">
 
 {% if not request.user.is_authenticated %}
     <script async defer data-domain="filamentcolors.xyz" src="https://informatics.filamentcolors.xyz/js/index.js"></script>
 {% endif %}
 
+<script src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/js/material-kit-pro.min.js' %}"></script>
 <script src="{% static 'vendored/js/jquery-3.4.1.min.js' %}"></script>
 <script src="{% static 'vendored/js/baguetteBox.min.js' %}"></script>
-{#<script src="{% static 'vendored/js/popper.min.js' %}"></script>#}
 <script src="{% static 'vendored/js/bootstrap.bundle.min.js' %}"></script>
+<!-- todo: 600kb of JS???-->
+<script src="{% static 'vendored/fontawesome/js/solid.min.js' %}" defer></script>
+<script src="{% static 'vendored/fontawesome/js/fontawesome.min.js' %}" defer></script>
 
 <script src="{% static 'vendored/js/contract.js' %}"></script>
 <script src="{% static 'vendored/js/dispatcher.js' %}"></script>
 <script type="text/javascript" src="{% static 'vendored/js/toastify.js' %}" async defer></script>
 <script src="{% static 'js/cookies/cookie.js' %}"></script>
 
-<script type="text/javascript" src="{% static "js/emailmagic.js" %}" async defer></script>
+<script type="text/javascript" src="{% static "js/emailmagic.js" %}?v=2" async defer></script>
+<script src="{% static 'js/multistepmodal.js' %}"></script>
 
 <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicons/apple-touch-icon.png' %}?v=QEJXGyWNR2">
 <link rel="icon" type="image/png" sizes="32x32" href="/static/favicons/favicon-32x32.png?v=QEJXGyWNR2">

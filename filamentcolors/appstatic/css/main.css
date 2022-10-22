@@ -62,84 +62,6 @@ hr {
     width: calc(100% - 70px)
 }
 
-.item-info {
-    display: inline-block;
-    height: 3em;
-    left: 25px
-}
-
-.item-info > span {
-    position: relative;
-    left: 3em;
-    display: inline-block;
-    width: 100%;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden
-}
-
-.item-info > a {
-    position: absolute;
-    left: 25px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: bold;
-    color: #333
-}
-
-.app-card {
-    display: inline-block;
-    vertical-align: top;
-    height: 280px;
-    background: #fff;
-    margin: 0 auto 30px;
-    text-align: left
-}
-
-.app-card .cover {
-    display: block;
-    width: 100%;
-    height: 225px;
-    overflow: hidden;
-    position: relative
-}
-
-.app-card .cover > img {
-    width: 100%
-}
-
-.app-card .cover::after {
-    content: '';
-    display: inline-block;
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25));
-    width: 100%;
-    height: 40px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: 9
-}
-
-.app-card .item-info {
-    height: 55px;
-    padding: 5px 10px 0
-}
-
-.app-card .item-info .avatar-wrapper {
-    vertical-align: middle;
-    border: none
-}
-
-.app-card .item-name {
-    display: inline-block;
-    font-size: 12px;
-    color: #333;
-    margin: 0 0 0 12px;
-    line-height: 1.25em;
-    width: calc(100% - 58px);
-    vertical-align: middle
-}
-
 .color-cube {
     float: left;
     width: 20px;
@@ -459,12 +381,13 @@ hr {
     cursor: pointer;
 }
 
-.btn-outline-secondary:not(.active):hover:active {
+.btn-settings:not(.active):hover:active {
     background-color: white !important;
     color: #6c757d;
+!important;
 }
 
-.btn-outline-secondary:not(.active):hover {
+.btn-settings:not(.active):hover {
     background-color: white !important;
     color: #6c757d;
 }
@@ -478,4 +401,48 @@ hr {
     object-fit: cover;
     object-position: 100% 0;
     width: 400px;
+}
+
+.btn-invisible {
+    background: transparent;
+    border: none !important;
+    font-size: 0;
+}
+
+/* https://www.w3schools.com/howto/howto_js_fullscreen_overlay.asp */
+
+/* The Overlay (background) */
+.overlay {
+    /* Height & width depends on how you want to reveal the overlay (see JS below) */
+    height: 100%;
+    width: 100%;
+    position: fixed; /* Stay in place */
+    z-index: 100; /* Sit on top */
+    left: 0;
+    top: 0;
+    background-color: rgb(0, 0, 0); /* Black fallback color */
+    background-color: rgba(0, 0, 0, 0.05); /* Black w/opacity */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+}
+
+/* Position the content inside the overlay */
+.overlay-content {
+    position: relative;
+    top: 25%; /* 25% from the top */
+    width: 100%; /* 100% width */
+    text-align: center; /* Centered text/links */
+    margin-top: 30px; /* 30px top margin to avoid conflict with the close button on smaller screens */
+}
+
+.htmx-indicator {
+    display: none;
+}
+
+.htmx-request .overlay {
+    display: block;
+}
+
+.htmx-request.overlay {
+    display: block;
 }

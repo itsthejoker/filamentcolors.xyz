@@ -4,7 +4,6 @@ from typing import Any
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import Http404, HttpResponse
 from django.shortcuts import HttpResponseRedirect, reverse
-from django.urls import resolve, Resolver404
 
 from filamentcolors.helpers import (
     build_data_dict,
@@ -38,7 +37,7 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
     :param method: the string which determines how to sort the results.
     :return:
     """
-    html = "library.html"
+    html = "standalone/library.html"
 
     data = build_data_dict(request, library=True)
     items = get_swatches(data)
@@ -60,13 +59,13 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
     else:
         items = items.order_by("-date_added")
 
-    data.update({"swatches": items})
+    data.update({"swatches": items, "show_filter_bar": True})
 
     return prep_request(request, html, data)
 
 
 def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
-    html = "library.html"
+    html = "standalone/library.html"
 
     data = build_data_dict(request, library=True)
     s = get_swatches(data)
@@ -79,7 +78,7 @@ def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
 
 
 def manufacturersort(request: WSGIRequest, id: int) -> HttpResponse:
-    html = "library.html"
+    html = "standalone/library.html"
 
     data = build_data_dict(request, library=True)
     s = get_swatches(data)
@@ -97,7 +96,7 @@ def manufacturersort(request: WSGIRequest, id: int) -> HttpResponse:
 
 
 def typesort(request: WSGIRequest, id: int) -> HttpResponse:
-    html = "library.html"
+    html = "standalone/library.html"
     data = build_data_dict(request, library=True)
 
     f_type = GenericFilamentType.objects.filter(id=id).first()
@@ -161,7 +160,9 @@ def edit_swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
 
     data.update({"preselect_collection": cleaned_ids})
     data.update(
-        {"swatches": get_swatches(data).order_by("-date_added"),}
+        {
+            "swatches": get_swatches(data).order_by("-date_added"),
+        }
     )
 
     return prep_request(request, html, data)
@@ -170,29 +171,11 @@ def edit_swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
 def inventory_page(request: WSGIRequest) -> HttpResponse:
     data = build_data_dict(request)
     data.update(
-        {"swatches": Swatch.objects.all(),}
+        {
+            "swatches": Swatch.objects.all(),
+        }
     )
     return prep_request(request, "inventory.html", data)
-
-
-def loader_redirect(request: WSGIRequest) -> HttpResponse:
-    """
-    Take the name of a view and return an HTML spinner that then calls the target view.
-    """
-    internal_path = request.GET.get('next', None)
-    if not internal_path:
-        raise Http404
-    try:
-        # resolve only looks at the internal urls, so this _shouldn't_ be a bad idea
-        resolve(internal_path)
-    except Resolver404:
-        raise Http404
-
-    data = build_data_dict(request)
-    # if we have a resolver match, then we know that the url is good and valid. Pass
-    # it back to the template so we can get that spinner going.
-    data |= {"next_url": internal_path}
-    return prep_request(request, "_loader.html", data)
 
 
 def manufacturer_list(request: WSGIRequest) -> HttpResponse:
@@ -202,11 +185,11 @@ def manufacturer_list(request: WSGIRequest) -> HttpResponse:
 
 
 def about_page(request: WSGIRequest) -> HttpResponse:
-    return prep_request(request, "about.html", build_data_dict(request))
+    return prep_request(request, "standalone/about.html", build_data_dict(request))
 
 
 def donation_page(request: WSGIRequest) -> HttpResponse:
-    return prep_request(request, "donations.html", build_data_dict(request))
+    return prep_request(request, "standalone/donations.html", build_data_dict(request))
 
 
 def error_404(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:

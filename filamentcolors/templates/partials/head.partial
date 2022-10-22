@@ -11,23 +11,23 @@
 <link rel="stylesheet" href="{% static 'vendored/css/baguetteBox.min.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/css/material_icons.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/css/toastify.css' %}">
+<link rel="stylesheet" href="{% static 'vendored/icomoon/style.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/nucleo-icons.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/nucleo-svg.css' %}">
+<link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/material-kit-pro.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/material-kit-pro.min.css' %}">
-<link rel="stylesheet" href="{% static 'vendored/fontawesome/css/all.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/main.css' %}?v=5">
 
 {% if not request.user.is_authenticated %}
-    <script async defer data-domain="filamentcolors.xyz" src="https://informatics.filamentcolors.xyz/js/index.js"></script>
+    <script async defer data-domain="filamentcolors.xyz"
+            src="https://informatics.filamentcolors.xyz/js/index.js"></script>
 {% endif %}
 
 <script src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/js/material-kit-pro.min.js' %}"></script>
 <script src="{% static 'vendored/js/jquery-3.4.1.min.js' %}"></script>
 <script src="{% static 'vendored/js/baguetteBox.min.js' %}"></script>
 <script src="{% static 'vendored/js/bootstrap.bundle.min.js' %}"></script>
-<!-- todo: 600kb of JS???-->
-<script src="{% static 'vendored/fontawesome/js/solid.min.js' %}" defer></script>
-<script src="{% static 'vendored/fontawesome/js/fontawesome.min.js' %}" defer></script>
+<script src="{% static 'vendored/js/masonry.min.js' %}"></script>
 
 <script src="{% static 'vendored/js/contract.js' %}"></script>
 <script src="{% static 'vendored/js/dispatcher.js' %}"></script>
@@ -46,3 +46,29 @@
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="msapplication-config" content="/static/favicons/browserconfig.xml?v=QEJXGyWNR3">
 <meta name="theme-color" content="#ffffff">
+
+<script>
+    htmx.onLoad(function (t) {
+        tooltips();
+
+        if (performance.getEntriesByType("navigation")[0].type !== "back_forward") {
+            // When navigating to a new page using htmx, scroll to the top.
+            // If you use the back button, don't scroll.
+            window.scrollTo(0, 0);
+        }
+        let deck = $('#deck-of-many-things');
+        if (deck.length) {
+            // reinit masonry if we need to
+            deck.masonry({"percentPosition": true})
+        }
+    })
+
+    function tooltips() {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    }
+
+    htmx.config.historyCacheSize = 1;
+    htmx.config.refreshOnHistoryMiss = true
+    htmx.config.useTemplateFragments = true
+</script>

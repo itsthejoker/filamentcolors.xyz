@@ -11,7 +11,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name="swatch", options={"verbose_name_plural": "swatches"},
+            name="swatch",
+            options={"verbose_name_plural": "swatches"},
         ),
         migrations.AlterField(
             model_name="swatch",

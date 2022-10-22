@@ -76,7 +76,6 @@ urlpatterns = [
     path("donating/", views.donation_page, name="donations"),
     path("inventory/", views.inventory_page, name="inventory"),
     path("about/", views.about_page, name="about"),
-    path("redirect/", views.loader_redirect, name="redirect"),
     # Admin urls
     path("admin/", admin.site.urls),
     path("logout/", staff_views.logout_view, name="logout"),
@@ -101,11 +100,17 @@ urlpatterns = [
         name="force_hex_color",
     ),
     path(
+        "set_colors/",
+        staff_views.set_colors_for_unpublished_swatches,
+        name="set_colors",
+    ),
+    path(
         "sitemap.xml",
         sitemap,
         {"sitemaps": sitemaps},
         name="django.contrib.sitemaps.views.sitemap",
     ),
+    path("__debug__/", include("debug_toolbar.urls")),
     # Event / Special URLs
     # ...
     # Old links that need to exist for a while and just redirect.

@@ -10,5 +10,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="swatch", name="tags",),
+        migrations.RemoveField(
+            model_name="swatch",
+            name="tags",
+        ),
     ]

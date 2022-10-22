@@ -1,34 +1,59 @@
-<div id="s{{ obj.id }}" class="col-md-6 col-lg-4 cardBox anim" align="center">
-    <a href="/swatch/{{ obj.id }}" class="card mb-4 shadow" style="width: 18rem;">
-        <div class="multiselector" role="checkbox" aria-checked="false" tabindex="0"
-             jsaction="mousedown:card.select; click:card.select"
-             aria-label="{{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}">
+<div id="s{{ obj.id }}" class="cardBox anim" align="center">
+    <button
+            tabindex="0"
+            hx-target="#main"
+            hx-swap="outerHTML"
+            hx-trigger="click"
+            hx-get="/swatch/{{ obj.id }}"
+            hx-push-url="true"
+            hx-indicator="#loading"
+            class="card mb-4 shadow"
+            style="width: 18rem;"
+    >
+        {% if 'swatch' not in request.path %}
+            <div class="multiselector" role="checkbox" aria-checked="false" tabindex="0"
+                 jsaction="mousedown:card.select; click:card.select"
+                 aria-label="{{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}">
                 <span class="material-icons">
-        radio_button_unchecked
-        </span>
-        </div>
+                radio_button_unchecked
+                </span>
+            </div>
+        {% endif %}
         <div class="card-img-container">
-            <img class="card-img-top img-fluid layer" loading="lazy" src="{{ obj.card_img.url }}" alt="Card image cap">
-            <div class="card-img-overlay card-img-overlay-two multi-check layer"></div>
+            <img class="card-img-top img-fluid layer"
+                 loading="lazy"
+                 src="{{ obj.card_img.url }}"
+                 style="height:89px"
+                 alt="Card image for {{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}">
+            {% if 'swatch' not in request.path %}
+                <div class="card-img-overlay card-img-overlay-two multi-check layer"
+                     style="border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem"></div>
+            {% endif %}
         </div>
 
         <div class="card-body" align="left">
             <div class="color-cube" style="background-color:#{{ obj.hex_color }};"></div>
-            <h5 class="card-title">
-                #{{ obj.hex_color }}
+            <div>
+                <h5 class="card-title position-relative">
+                    #{{ obj.hex_color }}
+                </h5>
                 {% if not obj.is_available %}
-                    <span
-                            class="badge badge-secondary"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title="This swatch is not available for purchase from the manufacturer or Amazon."
-                    >Unavailable</span>
+                    <div class="row">
+                        <div class="col text-center mb-3 mt-2 d-grid">
+                            <div
+                                    class="badge bg-gradient-secondary"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    data-container="body"
+                                    data-animation="true"
+                                    title="This swatch is not available for purchase from the manufacturer or Amazon.">
+                                Unavailable
+                            </div>
+                        </div>
+                    </div>
                 {% endif %}
-            </h5>
+            </div>
             <p class="card-text">{{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}</p>
         </div>
-        <div class="card-footer">
-            <small class="text-muted">Uploaded {{ obj.human_readable_date }}</small>
-        </div>
-    </a>
+    </button>
 </div>

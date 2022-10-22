@@ -125,7 +125,7 @@ class AdmonitionPattern(markdown.inlinepatterns.Pattern):
 
 
 class AdmonitionExtension(markdown.Extension):
-    """ Urlize Extension for Python-Markdown. """
+    """Urlize Extension for Python-Markdown."""
 
     def extendMarkdown(self, md, md_globals):
         md.inlinePatterns["admonition"] = AdmonitionPattern(ADMONITION_RE, md)

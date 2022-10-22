@@ -1,213 +1,222 @@
-<div class="modal fade" tabindex="-1" role="dialog" id="settingsModal" aria-labelledby="Settings Menu">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Settings</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>
-                    Whatever you change here will be saved locally; remember that whenever your browser
-                    cookies are cleared, these will have to be set again.
-                </p>
-                <hr>
-                <div class="container">
-                    <h5>Types of filament to display:</h5>
-                    <div class="btn-group-toggle container" data-toggle="button" id="filamentTypeSettings">
-                        {% for t in settings_buttons %}
-                            <label class="btn btn-outline-secondary active btn-block" id="{{ t.id }}">
-                                <input type="checkbox" checked autocomplete="off">{{ t.name }}
-                            </label>
-                        {% endfor %}
+{% extends 'modals/modal_base.html' %}
+
+{% block id %}settingsModal{% endblock %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+
+    <p>
+        Whatever you change here will be saved locally; remember that whenever your browser
+        cookies are cleared, these will have to be set again.
+    </p>
+    <hr>
+    <div class="container">
+        <h5>Types of filament to display:</h5>
+        <div class="container">
+            <div class="ms-3 mt-3" id="filamentTypeSettings">
+                {% for t in settings_buttons %}
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" style="margin-top: 9px" type="checkbox" id="{{ t.id }}"
+                               checked="" autocomplete="off">
+                        <label class="form-check-label fs-5" for="{{ t.id }}"
+                        >{{ t.name }}</label>
                     </div>
-                </div>
-                <hr>
-                <div class="container">
-                    <h5>Show unavailable filaments?</h5>
-                    <div class="btn-group btn-group-toggle container d-flex"
-                         role="group"
-                         data-toggle="buttons"
-                         id="showUnavailableSetting"
-                    >
-                        <label class="btn btn-outline-secondary active w-100" id="showDC">
-                            <input type="radio" name="options" autocomplete="off" checked>Show
-                        </label>
-                        <label class="btn btn-outline-secondary w-100" id="hideDC">
-                            <input type="radio" name="options" autocomplete="off">Hide
-                        </label>
-                    </div>
-                </div>
-                <div id="advancedSettingsContainer">
-                    <hr>
-                    <div class="container">
-                        <h5>Toggle Specific Manufacturers</h5>
-                        <div class="container">
-                            <button type="button"
-                                    id="showHideMfrsButton"
-                                    class="btn btn-block btn-secondary showall"
-                                    onclick="toggleShowHideMfrs()"
-                            >Unselect All
-                            </button>
-                        </div>
-                        <div class="row container fix-margin">
-                            {% for m in manufacturers %}
-                                <div class="btn-group-toggle col-sm-6 text-xs-center bump-down mfrSettings"
-                                     data-toggle="buttons">
-                                    <label class="btn btn-outline-secondary active btn-block" id="{{ m.id }}">
-                                        <input type="checkbox" checked="" autocomplete="off">{{ m.name }}</label>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button"
-                        class="btn btn-outline-secondary mr-auto"
-                        id="advancedSettingsButton"
-                        onclick="showHideAdvanced()">
-                    Advanced
-                </button>
-                <button type="button"
-                        class="btn btn-primary"
-                        onclick="saveSettings()">
-                    Save changes
-                </button>
+                {% endfor %}
             </div>
         </div>
     </div>
-</div>
+    <hr>
+    <div class="container">
+        <h5>General</h5>
+        <div class="container">
+            <div class="ms-3 mt-3" id="filamentTypeSettings">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" style="margin-top: 9px" type="checkbox" id="unavailableCheckbox"
+                           checked="" autocomplete="off">
+                    <label class="form-check-label fs-5" for="unavailableCheckbox">Show unavailable
+                        filaments</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="advancedSettingsContainer">
+        <hr>
+        <div class="container">
+            <h5>Toggle Specific Manufacturers</h5>
+            <div class="container d-grid">
+                <button type="button"
+                        id="showHideMfrsButton"
+                        class="btn bg-gradient-secondary showall"
+                        onclick="toggleShowHideMfrs()"
+                >Unselect All
+                </button>
+            </div>
+            <div class="container">
+                <div class="ms-3 mt-3" id="mfrSettings">
+                    {% for m in manufacturers %}
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" style="margin-top: 9px" type="checkbox" id="m{{ m.id }}"
+                                   checked="" autocomplete="off">
+                            <label class="form-check-label fs-5" for="m{{ m.id }}"
+                            >{{ m.name }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
-<script>
-    function toggleShowHideMfrs() {
-        mfr = $($(".mfrSettings").get().reverse());
-        // for bootstrap 5 ditching jquery:
-        // mfr = Array.from(document.getElementsByClassName("mfrSettings")).reverse()
+{% block footer %}
+    <button type="button"
+            class="btn bg-gradient-default mb-0"
+            id="advancedSettingsButton"
+            onclick="showHideAdvanced()">
+        Show Advanced
+    </button>
+    <button type="button"
+            class="btn bg-gradient-secondary mb-0"
+            onclick="saveSettings()">
+        Save changes
+    </button>
+{% endblock %}
 
-        btn = $("#showHideMfrsButton");
+{% block extra %}
+    <script>
+        function toggleShowHideMfrs() {
+            mfr = $("#mfrSettings")
+            // for bootstrap 5 ditching jquery:
+            // mfr = Array.from(document.getElementsByClassName("mfrSettings")).reverse()
 
-        var showAllBool = btn.hasClass('showall');
+            btn = $("#showHideMfrsButton");
+            btn.removeClass("focus");
 
-        btn[0].innerText = (showAllBool ? "Select All" : "Deselect All");
+            var showAllBool = btn.hasClass('showall');
 
-        mfr.children().each(
-            function (_, a) {
-                a = $(a);
-                if (a.hasClass('active') === showAllBool) {
-                    a.button('toggle')
+            btn[0].innerText = (showAllBool ? "Select All" : "Deselect All");
+
+            mfr.children().each(
+                function (_, a) {
+                    a = $(a).children().first();
+                    if (a.is(':checked') === showAllBool) {
+                        a.prop("checked", !a.prop("checked"))
+                    }
+                    if (a.hasClass('focus')) {
+                        a.removeClass('focus')
+                    }
                 }
-                if (a.hasClass('focus')) {
-                    a.removeClass('focus')
-                }
+            );
+            btn.toggleClass('showall');
+        }
+
+        function showHideAdvanced() {
+            el = $("#advancedSettingsContainer");
+            el.toggle();
+            btn = $("#advancedSettingsButton");
+            btn.text(btn.text().includes("Show") ? "Hide Advanced" : "Show Advanced")
+        }
+
+        function saveSettings() {
+            el = $("#filamentTypeSettings");
+            let fs = "";
+
+            mfr = $("#mfrSettings");
+            let mfr_list = "";
+
+            $.each(
+                el.children(), function (count, value) {
+                    value = $(value).children().first()
+                    fs = fs + value.attr("id") + "-" + value.is(':checked') + "_";
+                });
+            console.log(fs);
+
+            $.each(
+                mfr.children(), function (count, value) {
+                    value = $(value).children().first()
+                    if (!(value.is(':checked'))) {
+                        mfr_list = mfr_list + value.attr("id").slice(1,) + "-"
+                    }
+                });
+
+            if (fs.includes('true') === false) {
+                Toastify({
+                    text: 'It looks like all filament types have been disabled.' +
+                        ' Please enable at least one type.',
+                    duration: 3000,
+                    backgroundColor: "#d9534f"
+                }).showToast();
+                return
             }
-        );
-        btn.toggleClass('showall');
-    }
 
-    function showHideAdvanced() {
-        el = $("#advancedSettingsContainer");
-        el.toggle();
-        btn = $("#advancedSettingsButton");
-        btn.toggleClass("active")
-    }
-
-    function saveSettings() {
-        el = $("#filamentTypeSettings");
-        let fs = "";
-
-        mfr = $(".mfrSettings");
-        let mfr_list = "";
-
-        $.each(
-            el.children(), function (count, value) {
-                fs = fs + value.id + "-" + value.classList.contains("active") + "_";
-            });
-
-        $.each(
-            mfr.children(), function (count, value) {
-                if (!(value.classList.contains("active"))) {
-                    mfr_list = mfr_list + value.id + "-"
-                }
-            });
-
-        if (fs.includes('true') === false) {
-            Toastify({
-                text: 'It looks like all filament types have been disabled.' +
-                    ' Please enable at least one type.',
-                duration: 3000,
-                backgroundColor: "#d9534f"
-            }).showToast();
-            return
-        }
-
-        if (mfr_list.split("-").slice(0, -1).length === mfr.children().length) {
-            Toastify({
-                text: 'It looks like all manufacturers have been disabled.' +
-                    ' Please enable at least one.',
-                duration: 3000,
-                backgroundColor: "#d9534f"
-            }).showToast();
-            return
-        }
-        createCookie('show-types', fs, 365);
-
-        // the radio selector
-        createCookie('show-un',
-            document.getElementById("showUnavailableSetting").children[0].classList.contains("active"),
-            365
-        );
-
-        createCookie('mfr-blacklist', mfr_list, 365);
-
-        // settings have been saved, time to actually load them
-        window.location.reload();
-    }
-
-    function loadSettings() {
-        fsettings = readCookie('show-types');
-        dsetting = readCookie('show-un');
-        msettings = readCookie('mfr-blacklist');
-
-        {# Using a single equals for all of these kills me here, but it #}
-        {# CANNOT be a !== because javascript sucks and it breaks. #}
-        if (fsettings != null) {
-            $.each(fsettings.split("_").slice(0, -1), function (count, value) {
-                var [id, bool] = value.split('-');
-                if (bool === "false") {
-                    $("#filamentTypeSettings #" + id).button('toggle')
-                }
-            })
-        }
-
-        // default to not showing unavailable filament and toggle appropriate buttons
-        if (dsetting != null) {
-            if (dsetting === "false") {
-                a = $("#showDC");
-                a.toggleClass('active');
-                a.siblings().toggleClass('active');
+            if (mfr_list.split("-").slice(0, -1).length === mfr.children().length) {
+                Toastify({
+                    text: 'It looks like all manufacturers have been disabled.' +
+                        ' Please enable at least one.',
+                    duration: 3000,
+                    backgroundColor: "#d9534f"
+                }).showToast();
+                return
             }
-        } else {
-            a = $("#hideDC");
-            a.toggleClass('active');
-            a.siblings().toggleClass('active');
+            createCookie('show-types', fs, 365);
+
+            // the radio selector
+            createCookie('show-un',
+                $("#unavailableCheckbox").is(':checked'),
+                365
+            );
+
+            createCookie('mfr-blacklist', mfr_list, 365);
+
+            // settings have been saved, time to actually load them
+            window.location.reload();
         }
 
-        if (msettings != null) {
-            {# a hyphen separated list of ids #}
-            ids = msettings.split("-").slice(0, -1);
-            $.each($(".mfrSettings").children(), function (count, value) {
-                if (ids.includes(value.id.toString())) {
-                    $(".mfrSettings").find('#' + value.id).button('toggle')
+        function loadSettings() {
+            fsettings = readCookie('show-types');
+            dsetting = readCookie('show-un');
+            msettings = readCookie('mfr-blacklist');
+
+            {# Using a single equals for all of these kills me here, but it #}
+            {# CANNOT be a !== because javascript sucks and it breaks. #}
+            if (fsettings != null) {
+                $.each(fsettings.split("_").slice(0, -1), function (count, value) {
+                    var [id, bool] = value.split('-');
+                    if (bool === "false") {
+                        let obj = $("#filamentTypeSettings #" + id);
+                        obj.prop("checked", !obj.prop("checked"))
+                    }
+                })
+            }
+
+            // default to showing unavailable filament
+            let unavailablecb = $("#unavailableCheckbox");
+            if (dsetting != null) {
+                if (dsetting === "false") {
+                    unavailablecb.prop("checked", false)
                 }
-            })
-        }
-    }
+            } else {
+                unavailablecb.prop("checked", true)
+            }
 
-    $(document).ready(function () {
-        loadSettings();
-        // hide the advanced settings
-        $("#advancedSettingsContainer").toggle()
-    });
-</script>
+            if (msettings != null) {
+                {# a hyphen separated list of ids #}
+                const mfrSettings = $("#mfrSettings")
+                ids = msettings.split("-").slice(0, -1);
+                $.each(mfrSettings.children(), function (count, value) {
+                    value = $(value).children().first();
+                    if (ids.includes(value.attr("id").slice(1,))) {
+                        let obj = mfrSettings.find('#' + value.attr("id"))
+                        obj.prop("checked", !obj.prop("checked"))
+                    }
+                })
+            }
+        }
+
+        $(document).ready(function () {
+            loadSettings();
+            // hide the advanced settings
+            $("#advancedSettingsContainer").toggle()
+        });
+    </script>
+{% endblock %}

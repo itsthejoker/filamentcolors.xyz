@@ -24,13 +24,13 @@
 
 from __future__ import unicode_literals
 from django import template
-from django.template.loader_tags import (BlockNode, do_block)
+from django.template.loader_tags import BlockNode, do_block
 
 
 register = template.Library()
 
 
-_block_key = lambda b: '__sameas_{}__'.format(b)
+_block_key = lambda b: "__sameas_{}__".format(b)
 
 
 class SameNode(template.Node):
@@ -41,18 +41,16 @@ class SameNode(template.Node):
         return context[_block_key(self.block_name)].render(context)
 
 
-@register.tag('sameas')
+@register.tag("sameas")
 def do_sameas(parser, token):
     try:
         tag, block = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError(
-            "{} tag requires a single argument" .format(
-                token.split_contents()[0]
-            )
+            "{} tag requires a single argument".format(token.split_contents()[0])
         )
     else:
-        return(SameNode(block))
+        return SameNode(block)
 
 
 # ydm: I have to override the default `block` tag handler since
@@ -69,7 +67,7 @@ class BlockNodeProxy(BlockNode):
         return result
 
 
-@register.tag('block')
+@register.tag("block")
 def modified_do_block(parser, token):
     node = do_block(parser, token)
     return BlockNodeProxy(node.name, node.nodelist)

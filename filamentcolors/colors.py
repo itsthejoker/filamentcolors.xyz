@@ -611,13 +611,13 @@ class Color:
 
     def square(self):
         """
-            O
-           x x
-          x   x
-         O     O
-          x   x
-           x x
-            O
+           O
+          x x
+         x   x
+        O     O
+         x   x
+          x x
+           O
         """
         # RGB -> HSL
         h, s, l = rgb_to_hsl(self.col)
@@ -645,13 +645,13 @@ class Color:
 
     def tetradic(self):
         """
-            O
-           x x
-          x   O
-         x     x
-          O   x
-           x x
-            O
+           O
+          x x
+         x   O
+        x     x
+         O   x
+          x x
+           O
         """
         # RGB -> HSL
         h, s, l = rgb_to_hsl(self.col)

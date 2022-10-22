@@ -1,5 +1,6 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
+from django.http import HttpResponse
 from django.shortcuts import (
     HttpResponseRedirect,
     redirect,
@@ -7,6 +8,7 @@ from django.shortcuts import (
     reverse,
     get_object_or_404,
 )
+from django.views.decorators.csrf import csrf_exempt
 
 from filamentcolors.forms import (
     FilamentTypeForm,
@@ -16,7 +18,7 @@ from filamentcolors.forms import (
     SwatchForm,
     ManualHexValueForm,
 )
-from filamentcolors.helpers import build_data_dict
+from filamentcolors.helpers import build_data_dict, prep_request
 from filamentcolors.models import Swatch
 
 
@@ -26,6 +28,30 @@ def get_path_redirect(request, viewname: str, *args, **kwargs):
         return redirect(path)
     else:
         return redirect(reverse(viewname, args=args, kwargs=kwargs))
+
+
+@csrf_exempt
+@staff_member_required
+def set_colors_for_unpublished_swatches(request):
+    if request.htmx:
+        swatch = Swatch.objects.get(id=request.POST["swatch_id"])
+        swatch.hex_color = request.POST["hex"]
+        if swatch.hex_color.startswith("#"):
+            swatch.hex_color = swatch.hex_color[1:]
+        swatch.regenerate_all()
+        swatch.save()
+        return prep_request(
+            request, "partials/success_alert.partial", {"swatch": swatch}
+        )
+
+    swatches = (
+        Swatch.objects.select_related("manufacturer")
+        .prefetch_related("filament_type")
+        .filter(closest_pantone_1__isnull=True)
+    )
+    data = build_data_dict(request)
+    data.update({"swatches": swatches})
+    return prep_request(request, "standalone/update_swatch_colors.html", data)
 
 
 @staff_member_required
@@ -78,7 +104,7 @@ def add_swatch(request, swatch_id: int = None):
                 ],
             }
         )
-    return render(request, "generic_form.html", data)
+    return prep_request(request, "generic_form.html", data)
 
 
 @staff_member_required()
@@ -109,7 +135,7 @@ def add_swatch_landing(request):
                 ],
             }
         )
-        return render(request, "generic_form.html", data)
+        return prep_request(request, "generic_form.html", data)
 
 
 @staff_member_required
@@ -137,7 +163,7 @@ def add_inventory_swatch(request):
                 ],
             }
         )
-        return render(request, "generic_form.html", data)
+        return prep_request(request, "generic_form.html", data)
 
 
 @staff_member_required
@@ -156,7 +182,7 @@ def add_manufacturer(request):
                 "form": form,
             }
         )
-        return render(request, "generic_form.html", data)
+        return prep_request(request, "generic_form.html", data)
 
 
 @staff_member_required
@@ -175,7 +201,7 @@ def add_filament_type(request):
                 "form": form,
             }
         )
-        return render(request, "generic_form.html", data)
+        return prep_request(request, "generic_form.html", data)
 
 
 @staff_member_required
@@ -204,7 +230,7 @@ def force_hex_color(request, swatch_id: int):
                 reverse("swatchdetail", kwargs={"id": swatch.id})
             )
     form = ManualHexValueForm()
-    return render(request, "generic_form.html", {"form": form, "swatch": swatch})
+    return prep_request(request, "generic_form.html", {"form": form, "swatch": swatch})
 
 
 @staff_member_required

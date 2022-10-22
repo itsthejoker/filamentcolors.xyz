@@ -28,7 +28,7 @@ class SwatchViewSet(ReadOnlyModelViewSet):
         "manufacturer__name": ["exact", "icontains"],
         "manufacturer__id": ["exact"],
         "color_name": ["exact", "icontains"],
-        "published": ["exact"]
+        "published": ["exact"],
     }
 
     def get_queryset(self):

@@ -10,7 +10,12 @@
         <div class="step-1">
             <div class="modal-header">
                 <h5 class="modal-title" id="how-does-this-work">How does this work?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times" style="color:black"></i></button>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-info">
@@ -50,7 +55,12 @@
         <div class="step-2">
             <div class="modal-header">
                 <h5 class="modal-title">Step 1: Pick a Type</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times" style="color:black"></i></button>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
             </div>
             <div class="modal-body">
                 Of course you don't have to pick a filament type, but most folks prefer
@@ -88,7 +98,12 @@
         <div class="step-3">
             <div class="modal-header">
                 <h5 class="modal-title step-2" data-step="2">Step 2: Pick a Color</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times" style="color:black"></i></button>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
             </div>
             <div class="modal-body">
                 See something you like? Something you already have? Something that might
@@ -140,7 +155,12 @@
         <div class="step-4">
             <div class="modal-header">
                 <h5 class="modal-title">Step 3: Color Matching</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times" style="color:black"></i></button>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
             </div>
             <div class="modal-body">
                 Most projects only need two colors, so we spin the
@@ -180,7 +200,12 @@
         <div class="step-5">
             <div class="modal-header">
                 <h5 class="modal-title">Step 4: Collections</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times" style="color:black"></i></button>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
             </div>
             <div class="modal-body">
                 What happens when you find colors that you like? We believe that old
@@ -219,7 +244,12 @@
         <div class="step-6">
             <div class="modal-header">
                 <h5 class="modal-title">Step 5: Colors, Computers, and Beyond</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times" style="color:black"></i></button>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
             </div>
             <div class="modal-body">
                 Computers don't understand color the same way humans do. Color is a
@@ -240,7 +270,7 @@
                 you see any bugs or other issues please let me know! DM me on Twitter or just ping
                 <a href="https://twitter.com/filamentcolors" target="_blank" rel="noopener">@filamentcolors</a>
                 or send me an email at <a
-                    href="mailto:filamentcolorsxyz@joekaufeld.com">filamentcolorsxyz@joekaufeld.com</a>.
+                    href="mailto:filamentcolors@joekaufeld.com">filamentcolors@joekaufeld.com</a>.
                 <p></p>
                 I hope you find this resource useful; if you make a project using it, please
                 let me know! I'm always happy to showcase projects that were created with

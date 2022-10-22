@@ -69,7 +69,7 @@ function getModalContent({id, emailAddress, subject, cc, bcc, body}) {
                     >Outlook</a>
                     <a
                       href="https://compose.mail.yahoo.com/?to=${emailAddress}&subject=${subject}&cc=${cc}&bcc=${bcc}&body=${body}"
-                      class="btn bg-gradient-secondary"
+                      class="btn bg-gradient-primary"
                       target="_blank"
                     >Yahoo! Mail</a>
                     <a href="mailto:${emailAddress}" class="btn bg-gradient-success" target="_blank">Default</a>
@@ -78,7 +78,7 @@ function getModalContent({id, emailAddress, subject, cc, bcc, body}) {
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
           </div>

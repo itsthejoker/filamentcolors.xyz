@@ -10,6 +10,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="swatch", name="maker",),
-        migrations.RemoveField(model_name="swatch", name="printed_on",),
+        migrations.RemoveField(
+            model_name="swatch",
+            name="maker",
+        ),
+        migrations.RemoveField(
+            model_name="swatch",
+            name="printed_on",
+        ),
     ]

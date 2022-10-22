@@ -1,0 +1,17 @@
+<div id="s{{ obj.id }}" class="cardBox anim" align="center">
+    <div class="card mb-4 shadow" style="width: 18rem;">
+        <div class="card-img-container">
+            <div
+                    class="card-img-top img-fluid layer"
+                    style="width: 100%; height: 89px; background-color: #{{ obj.hex_color }}"
+            ></div>
+        </div>
+
+        <div class="card-body" align="left">
+            <h5 class="card-title">
+                #{{ obj.hex_color }}
+            </h5>
+            <p class="card-text">{{ obj.category }} {{ obj.code }} {{ obj.filament_type.name }}</p>
+        </div>
+    </div>
+</div>

@@ -31,7 +31,7 @@ def prep_request(
     if first_time_visitor(r):
         data.update({"launch_welcome_modal": True})
 
-    if r.htmx:
+    if r.htmx and not r.htmx.history_restore_request:
         base_template = "partial_base.html"
     else:
         base_template = "base.html"
@@ -80,7 +80,6 @@ def build_data_dict(request, library: bool = False) -> Dict:
     :param library: bool
     :return: dict
     """
-
     return {
         "search_prefill": request.GET.get("q", ""),
         "manufacturers": (
@@ -99,10 +98,15 @@ def build_data_dict(request, library: bool = False) -> Dict:
         ),
         "filament_types": GenericFilamentType.objects.order_by(Lower("name")),
         "color_family": Swatch.BASE_COLOR_OPTIONS,
-        "welcome_experience_images": [
-            GenericFile.objects.filter(file__startswith=X).first()
-            for X in ["step1", "step2", "step3", "step4"]
-        ],
+        "welcome_experience_images": GenericFile.objects.filter(
+            Q(
+                *[
+                    ("file__startswith", name)
+                    for name in ["step1", "step2", "step3", "step4"]
+                ],
+                _connector=Q.OR
+            )
+        ),
         "settings_buttons": GenericFilamentType.objects.all(),
         "user_settings": get_settings_cookies(request),
         "is_library_view": library,
@@ -136,11 +140,7 @@ def get_settings_cookies(r: request) -> Dict:
         if type_settings[-1] == "":
             type_settings.pop()
 
-        types = [
-            x.split("-")[0]
-            for x in type_settings
-            if x.split("-")[1] == "true"
-        ]
+        types = [x.split("-")[0] for x in type_settings if x.split("-")[1] == "true"]
         types = GenericFilamentType.objects.filter(id__in=types)
     else:
         types = GenericFilamentType.objects.all()
@@ -182,8 +182,10 @@ def generate_custom_library(data: Dict):
 
 
 def get_custom_library(data: Dict) -> QuerySet:
-    s = Swatch.objects.filter(
-        filament_type__parent_type__in=data["user_settings"]["types"]
+    s = (
+        Swatch.objects.select_related("manufacturer")
+        .prefetch_related("filament_type")
+        .filter(filament_type__parent_type__in=data["user_settings"]["types"])
     )
     if data["user_settings"]["show_unavailable"] is False:
         s = s.exclude(amazon_purchase_link__isnull=True, mfr_purchase_link__isnull=True)
@@ -197,5 +199,10 @@ def get_swatches(data: Dict) -> QuerySet:
     if generate_custom_library(data):
         queryset = get_custom_library(data)
     else:
-        queryset = Swatch.objects.filter(published=True)
+        # queryset = Swatch.objects.filter(published=True)
+        queryset = (
+            Swatch.objects.select_related("manufacturer")
+            .prefetch_related("filament_type")
+            .filter(published=True)
+        )
     return queryset

@@ -24,7 +24,7 @@ from skimage import io
 from martor.models import MartorField
 
 from filamentcolors.colors import Color
-from filamentcolors.twitter_helpers import send_tweet
+from filamentcolors.twitter_helpers import send_to_social_media
 
 
 def update_google():
@@ -84,10 +84,11 @@ class GenericFile(models.Model):
     experience images.
     """
 
+    name = models.CharField(max_length=30, null=True, blank=True)
     file = models.FileField()
 
     def __str__(self):
-        return self.file.name
+        return f"{self.name} - {self.file.name}" if self.name else self.file.name
 
 
 class Post(models.Model):
@@ -172,7 +173,7 @@ class Swatch(models.Model):
     PINK = "PNK"
     ORANGE = "RNG"
     GREY = "GRY"
-    TRANSPARENT = "TRN"
+    TRANSLUCENT = "TRN"
 
     BASE_COLOR_OPTIONS = [
         (WHITE, "White"),
@@ -186,8 +187,10 @@ class Swatch(models.Model):
         (PINK, "Pink"),
         (ORANGE, "Orange"),
         (GREY, "Grey"),
-        (TRANSPARENT, "Transparent"),
+        (TRANSLUCENT, "Translucent"),
     ]
+
+    STEP_OPTIONS = [16, 32, 48, 64, 80, 96, 112, 128]
 
     manufacturer = models.ForeignKey(
         Manufacturer, on_delete=models.CASCADE, null=True, blank=True
@@ -579,61 +582,41 @@ class Swatch(models.Model):
 
     def get_closest_color_swatch(self, library: Union[QuerySet, List], rgb: tuple):
         """Get a swatch that fits with progressively less-strict clamps."""
-        for step_option in [16, 32, 48, 64, 80, 96]:
-            if result := self._get_closest_color_swatch(library, rgb, step=step_option):
+        for step_option in self.STEP_OPTIONS:
+            if result := self._get_closest_color(library, rgb=rgb, step=step_option):
                 return result
-
-    def _get_closest_color_swatch(
-        self, library: Union[QuerySet, List], rgb: tuple, step: int = None
-    ):
-        distance_dict = dict()
-
-        color_to_match = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
-
-        library = library.filter(
-            rgb_r__gt=max(rgb[0] - step, 0),
-            rgb_r__lt=min(rgb[0] + step, 255),
-            rgb_g__gt=max(rgb[1] - step, 0),
-            rgb_g__lt=min(rgb[1] + step, 255),
-            rgb_b__gt=max(rgb[2] - step, 0),
-            rgb_b__lt=min(rgb[2] + step, 255),
-        )
-
-        for item in library:
-            possible_color = convert_color(
-                sRGBColor.new_from_rgb_hex(item.hex_color), LabColor
-            )
-
-            distance = delta_e_cmc(color_to_match, possible_color)
-
-            distance_dict.update({item: distance})
-
-        distance_dict = {
-            i: distance_dict[i] for i in distance_dict if distance_dict[i] is not None
-        }
-
-        sorted_distance_list = sorted(distance_dict.items(), key=lambda kv: kv[1])
-
-        try:
-            return sorted_distance_list[0][0]
-        except IndexError:
-            return None
 
     def get_closest_third_party_color(self, model, category):
         """Get a swatch that fits with progressively less-strict clamps."""
-        for step_option in [16, 32, 48, 64, 80, 96, 112, 128]:
-            if result := self._get_closest_third_party_color(
-                model, category, step=step_option
+        self_color = self.get_rgb(self.hex_color)
+        queryset = model.objects.all()
+
+        for step_option in self.STEP_OPTIONS:
+            if result := self._get_closest_color(
+                queryset,
+                rgb=self_color,
+                step=step_option,
+                extra_args={"category": category},
             ):
                 return result
 
-    def _get_closest_third_party_color(self, model, category, step):
+    def _get_closest_color(
+        self, queryset, step: int, rgb: tuple = None, extra_args: dict = None
+    ):
         """Takes in either Pantone or RAL, then returns the matching element."""
         distance_dict = {}
-        rgb = self.get_rgb(self.hex_color)
+
+        if not extra_args:
+            extra_args = {}
+
+        if not rgb:
+            rgb = self.get_rgb(self.hex_color)
+        else:
+            target_color = rgb
         target_color = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
-        options = model.objects.filter(
-            category=category,
+
+        options = queryset.filter(
+            **extra_args,
             rgb_r__gt=max(rgb[0] - step, 0),
             rgb_r__lt=min(rgb[0] + step, 255),
             rgb_g__gt=max(rgb[1] - step, 0),

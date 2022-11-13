@@ -761,7 +761,7 @@ class Color:
         # what is the difference of 100% lightness and the current value
         diff = 1.0 - lightness
 
-        # devide the difference on a step size
+        # divide the difference on a step size
         step = diff / float(number)
 
         # use that step size to generate the 10 increasing lightness values

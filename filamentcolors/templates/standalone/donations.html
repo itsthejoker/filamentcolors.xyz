@@ -21,6 +21,24 @@
                 is a receipt from your shipping provider of choice.
             </div>
         </div>
+        <p>
+            There are a lot of plastics that I have on hand but might not be on the site
+            yet -- take a look at the inventory to make sure what you have is new to the
+            library! If you have any questions, give me a shout!
+        </p>
+        <div class="row mt-4 mb-3">
+            <div
+                    class="col-sm-12 col-md-4 mx-auto d-grid"
+                    hx-target="#main"
+                    hx-swap="outerHTML"
+                    hx-trigger="click"
+                    hx-get="{% url 'inventory' %}"
+                    hx-push-url="true"
+                    hx-indicator="#loading"
+            >
+                <div class="btn btn-lg bg-gradient-primary">Inventory</div>
+            </div>
+        </div>
         <h2>Supplies Needed</h2>
         <ul>
             <li>
@@ -106,11 +124,13 @@
         </div>
         <p class="mt-2">
             At the moment, I can only accept <b>1.75mm</b> filament. If you have 3mm filament
-            and a 3mm printer, please <a href="https://twitter.com/messages/compose?recipient_id=1101685845055148032&text=3mm%20Donation%20Question"
-                  target="_blank">through Twitter</a> or <a href="mailto:filamentcolors@joekaufeld.com">through email</a>.
+            and a 3mm printer, please <a
+                href="https://twitter.com/messages/compose?recipient_id=1101685845055148032&text=3mm%20Donation%20Question"
+                target="_blank">through Twitter</a> or <a href="mailto:filamentcolors@joekaufeld.com">through email</a>.
             If whatever types / sizes you have aren't among those listed, please
             <a href="https://twitter.com/messages/compose?recipient_id=1101685845055148032&text=Filament%20Question"
-                  target="_blank">ping me on Twitter</a> or <a href="mailto:filamentcolors@joekaufeld.com">send me an email</a>
+               target="_blank">ping me on Twitter</a> or <a href="mailto:filamentcolors@joekaufeld.com">send me an
+            email</a>
             to make sure that I can print it.
         </p>
         <h4>Prepare to ship</h4>
@@ -121,8 +141,7 @@
             address it as follows:
         </p>
         <div class="row">
-            <div class="col-sm-0 col-md-4"></div>
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-4 mx-auto">
                 <div class="alert alert-info text-center text-white">
                     Joe Kaufeld<br>
                     FilamentColors.xyz<br>
@@ -130,15 +149,14 @@
                     Indianapolis, IN 46217
                 </div>
             </div>
-            <div class="col-sm-0 col-md-4"></div>
         </div>
         <div class="container">
             <div class="alert alert-primary text-white" role="alert">
                 If it would be cheaper for you to ship to Europe, FilamentColors.xyz has
                 partnered with
-                <a class="alert-link" href="https://www.3dgeeks.app">3D Geeks App</a>
+                <a class="alert-link text-white" href="https://www.3dgeeks.app">3D Geeks App</a>
                 in the Netherlands to serve as an alternate shipping destination. Hop in
-                the <a class="alert-link" href="https://www.3dgeeks.app/u/discord-server">
+                the <a class="alert-link text-white" href="https://www.3dgeeks.app/u/discord-server">
                 3D Geeks Discord</a> and ask for <b>@Toby</b> for additional information!
             </div>
         </div>
@@ -146,8 +164,9 @@
             If you can, please let me know that you're planning to send things my way. It
             helps in both the planning department (watching out for packages) and also allows
             me to confirm that whatever samples you have aren't already in the pipeline so
-            that we don't accidentally get duplicates. <a href="https://twitter.com/messages/compose?recipient_id=1101685845055148032&text=Filament%20Donation"
-                  target="_blank">Send me a message on Twitter</a> or
+            that we don't accidentally get duplicates. <a
+                href="https://twitter.com/messages/compose?recipient_id=1101685845055148032&text=Filament%20Donation"
+                target="_blank">Send me a message on Twitter</a> or
             <a href="mailto:filamentcolors@joekaufeld.com">shoot me an email</a> so we can
             collaborate!
         </p>

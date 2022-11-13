@@ -126,8 +126,10 @@
                                 {% endif %}
                             {% else %}
                                 {% if field.field.widget.input_type == 'file' %}
-                                    <label for="{{ field.auto_id }}" class="form-label">{{ field.label }}</label>
-                                    {% render_field field class="form-control" type="file" %}
+                                    <div class="my-auto pe-3 text-muted">{{ field.label }}:</div>
+                                    {{ field|add_class:"form-control"|attr:"type=file" }}
+                                    {#                                    <label for="{{ field.auto_id }}" class="form-label">{{ field.label }}</label>#}
+                                    {#                                    {% render_field field class="form-control" type="file" %}#}
                                 {% elif field.field.widget.input_type == 'select' %}
                                     <div class="form-floating">
                                         <label for="{{ field.auto_id }}"
@@ -220,17 +222,7 @@
             $("form").each(createAllErrors);
         })
     </script>
-    <!-- init dropdowns if present -->
-    <script src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/js/plugins/choices.min.js' %}"></script>
 
-    <script>
-        // init select dropdowns
-        $(document).ready(function () {
-            $('select').each(function (el) {
-                new Choices($(this)[0])
-            })
-        });
-    </script>
     {# Put application-specific imports down here. #}
     {% include "partials/swatch_add_js.partial" %}
 

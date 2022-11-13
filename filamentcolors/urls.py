@@ -76,6 +76,12 @@ urlpatterns = [
     path("donating/", views.donation_page, name="donations"),
     path("inventory/", views.inventory_page, name="inventory"),
     path("about/", views.about_page, name="about"),
+    path("colormatch/", views.colormatch, name="colormatch"),
+    path(
+        "single_swatch_card/<int:swatch_id>/",
+        views.single_swatch_card,
+        name="single_swatch_card",
+    ),
     # Admin urls
     path("admin/", admin.site.urls),
     path("logout/", staff_views.logout_view, name="logout"),

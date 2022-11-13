@@ -2,6 +2,7 @@ import os
 import random
 import string
 
+import httpx
 from dotenv import load_dotenv
 from twitter import Api
 
@@ -64,7 +65,7 @@ outro_phrases = [
 ]
 
 
-def generate_swatch_upload_tweet(swatch) -> str:
+def generate_swatch_upload_message(swatch) -> str:
     plural = "'" if swatch.manufacturer.name.endswith("s") else "'s"
     return (
         f"{random.choice(intro_phrases)} {swatch.manufacturer.name}{plural}"
@@ -74,10 +75,18 @@ def generate_swatch_upload_tweet(swatch) -> str:
     )
 
 
-def send_tweet(message: str = None, swatch=None) -> None:
+def send_to_social_media(message: str = None, swatch=None) -> None:
     if not message:
-        message = generate_swatch_upload_tweet(swatch)
+        message = generate_swatch_upload_message(swatch)
+    # Post to Twitter
     api.PostUpdate(message)
+
+    # Post to Mastodon
+    httpx.post(
+        "https://3dp.chat/api/v1/statuses",
+        data={"status": message},
+        headers={"Authorization": f'Bearer {os.environ.get("MASTODON_ACCESS_TOKEN")}'},
+    )
 
 
 daily_tweet_intro = [
@@ -99,7 +108,6 @@ daily_tweet_intro = [
     "Is it just me or is the interrobang criminally underrated‽ But anyway, back to swatches.",
     "Today's fashion-forward color is brought to you by Python! Python: not just a snake!",
     '"Swatches?! Why does it always have to be swatches???"',
-    "Fun fact: this system is incompatible with Pantone!",
     "🎶 Do you hear the swatches print? Swatches are printing all the time... 🎵",
     "Looking for some new colors? The librarian has some recommendations!",
     "I asked the Magic 8-Ball for your favorite color and it gave me something!",

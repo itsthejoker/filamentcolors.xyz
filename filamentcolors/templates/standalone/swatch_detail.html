@@ -30,7 +30,7 @@
                 <div class="col-lg-6">
                     <section class="gallery-block grid-gallery">
                         <div class="item">
-                            <a class="lightbox" href="{{ swatch.image_front.url }}" title="Swatch Front">
+                            <a class="lightbox" href="{{ swatch.image_front.url }}" title="Representative picture of the swatch front">
                                 <img class="img-fluid image scale-on-hover" src="{{ swatch.image_front.url }}"
                                      alt="An image of the front of the color swatch.">
                             </a>
@@ -39,7 +39,7 @@
                             <div class="row">
                                 <div class="col-sm-3"></div>
                                 <div class="col-sm-3 item">
-                                    <a class="lightbox" href="{{ swatch.image_back.url }}" title="Swatch Back">
+                                    <a class="lightbox" href="{{ swatch.image_back.url }}" title="Representative picture of the swatch back">
                                         <img class="img-fluid image scale-on-hover" src="{{ swatch.image_back.url }}"
                                              alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
                                     </a>
@@ -57,7 +57,7 @@
                             <div class="row">
                                 <div class="col-sm-4"></div>
                                 <div class="col-sm-4">
-                                    <a class="lightbox" href="{{ swatch.image_back.url }}" title="Swatch Back">
+                                    <a class="lightbox" href="{{ swatch.image_back.url }}" title="Representative picture of the swatch back">
                                         <img class="img-fluid image scale-on-hover" src="{{ swatch.image_back.url }}"
                                              alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
                                     </a>
@@ -72,7 +72,7 @@
                         <h2 class="mt-lg-5 mt-md-0">{{ swatch.manufacturer.name }}
                             - {{ swatch.color_name }} {{ swatch.filament_type.name }}</h2>
                         <div class="big-color-cube" style="background-color:#{{ swatch.hex_color }};"></div>
-                        <p>#{{ swatch.hex_color }}</p>
+                        <p>#{{ swatch.hex_color|upper }}</p>
                     </div>
                     <div class="row mt-lg-5 mt-md-0">
                         <div class="col-md-1"></div>
@@ -229,7 +229,7 @@
                            href="/library/collection/{{ swatch.id }},{{ swatch.complement.id }}" target="_blank"
                            role="button"
                            rel="noopener"
-                        >Open Collection</a>
+                        >Create Collection</a>
                     </div>
                 </div>
 
@@ -267,7 +267,7 @@
                            target="_blank"
                            role="button"
                            rel="noopener"
-                        >Open Collection</a>
+                        >Create Collection</a>
                     </div>
                 </div>
                 <div class="container">
@@ -305,7 +305,7 @@
                            target="_blank"
                            role="button"
                            rel="noopener"
-                        >Open Collection</a>
+                        >Create Collection</a>
                     </div>
                 </div>
                 <div class="container">
@@ -339,7 +339,7 @@
                            target="_blank"
                            role="button"
                            rel="noopener"
-                        >Open Collection</a>
+                        >Create Collection</a>
                     </div>
                 </div>
                 <div class="container">
@@ -387,7 +387,7 @@
                            target="_blank"
                            role="button"
                            rel="noopener"
-                        >Open Collection</a>
+                        >Create Collection</a>
                     </div>
                 </div>
                 <div class="container">
@@ -427,7 +427,7 @@
                            target="_blank"
                            role="button"
                            rel="noopener"
-                        >Open Collection</a>
+                        >Create Collection</a>
                     </div>
                 </div>
             {% endif %}

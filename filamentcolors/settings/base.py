@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "ssssh I'm hunting wabbits")
 DEBUG = os.environ.get("DEBUG_MODE", False)
 
 ALLOWED_HOSTS = [".filamentcolors.xyz", "134.209.72.203"]
-INTERNAL_IPS = ["127.0.0.1", "localhost"]
+# INTERNAL_IPS = ["127.0.0.1", "localhost"]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

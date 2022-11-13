@@ -2,9 +2,12 @@ import random
 from typing import Any
 
 from django.core.handlers.wsgi import WSGIRequest
+from django.db.models.functions import Lower
 from django.http import Http404, HttpResponse
 from django.shortcuts import HttpResponseRedirect, reverse
+from django.views.decorators.csrf import csrf_exempt
 
+from filamentcolors.colors import hex_to_rgb
 from filamentcolors.helpers import (
     build_data_dict,
     clean_collection_ids,
@@ -85,11 +88,6 @@ def manufacturersort(request: WSGIRequest, id: int) -> HttpResponse:
 
     s = s.filter(manufacturer_id=id)
 
-    if len(s) == 0:
-        # No filaments found, and we shouldn't have a manufacturer
-        # with no filaments.
-        raise Http404
-
     data.update({"swatches": s})
 
     return prep_request(request, html, data)
@@ -150,11 +148,11 @@ def swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
         }
     )
 
-    return prep_request(request, "library.html", data)
+    return prep_request(request, "standalone/library.html", data)
 
 
 def edit_swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
-    html = "library.html"
+    html = "standalone/library.html"
     data = build_data_dict(request, library=True)
     cleaned_ids = clean_collection_ids(ids)
 
@@ -172,10 +170,51 @@ def inventory_page(request: WSGIRequest) -> HttpResponse:
     data = build_data_dict(request)
     data.update(
         {
-            "swatches": Swatch.objects.all(),
+            "swatches": Swatch.objects.select_related("manufacturer")
+            .prefetch_related("filament_type")
+            .order_by(Lower("manufacturer__name"), Lower("color_name")),
         }
     )
-    return prep_request(request, "inventory.html", data)
+    return prep_request(request, "standalone/inventory.html", data)
+
+
+@csrf_exempt
+def colormatch(request: WSGIRequest) -> HttpResponse:
+    data = build_data_dict(request)
+
+    if request.method == "POST":
+        incoming_color = request.POST.get("hex_color")
+        if not incoming_color:
+            # validation is always a good thing
+            return HttpResponse(status=400)
+
+        library = get_swatches(data)
+        matches = []
+
+        for _ in range(3):
+            matching_swatch = Swatch().get_closest_color_swatch(
+                library, hex_to_rgb(incoming_color)
+            )
+            matches.append(matching_swatch)
+            library = library.exclude(id=matching_swatch.id)
+
+        data["colormatch_swatches"] = matches
+        return prep_request(request, "partials/colormatch_results.partial", data)
+
+    return prep_request(request, "standalone/colormatch.html", data)
+
+
+def single_swatch_card(request: WSGIRequest, swatch_id: int) -> HttpResponse:
+    """For the color match page, this is used to populate the 'saved' functionality."""
+    data = build_data_dict(request)
+    data.update(
+        {
+            "swatch": Swatch.objects.select_related("manufacturer")
+            .prefetch_related("filament_type")
+            .get(id=swatch_id),
+        }
+    )
+    return prep_request(request, "partials/single_swatch_column.partial", data)
 
 
 def manufacturer_list(request: WSGIRequest) -> HttpResponse:

@@ -24,10 +24,6 @@
 {% include 'partials/loading_screen.partial' %}
 
 <main id="main">
-    {% if show_color_warning %}
-        {% include 'partials/color-warning.partial' %}
-    {% endif %}
-
     {% block content %}
     {% endblock content %}
 

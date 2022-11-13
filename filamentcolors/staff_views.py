@@ -1,10 +1,8 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
-from django.http import HttpResponse
 from django.shortcuts import (
     HttpResponseRedirect,
     redirect,
-    render,
     reverse,
     get_object_or_404,
 )
@@ -33,7 +31,7 @@ def get_path_redirect(request, viewname: str, *args, **kwargs):
 @csrf_exempt
 @staff_member_required
 def set_colors_for_unpublished_swatches(request):
-    if request.htmx:
+    if request.htmx and request.method == "POST":
         swatch = Swatch.objects.get(id=request.POST["swatch_id"])
         swatch.hex_color = request.POST["hex"]
         if swatch.hex_color.startswith("#"):

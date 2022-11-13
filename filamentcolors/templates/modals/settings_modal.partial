@@ -5,10 +5,9 @@
 {% block title %}Settings{% endblock %}
 
 {% block content %}
-
     <p>
-        Whatever you change here will be saved locally; remember that whenever your browser
-        cookies are cleared, these will have to be set again.
+        <strong>Note!</strong> These filters will apply <strong>everywhere</strong> until you change them again or clear
+        your cookies.
     </p>
     <hr>
     <div class="container">

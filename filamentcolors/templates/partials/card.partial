@@ -1,41 +1,32 @@
-<div id="s{{ obj.id }}" class="cardBox anim" align="center">
-    <button
-            tabindex="0"
-            hx-target="#main"
-            hx-swap="outerHTML"
-            hx-trigger="click"
-            hx-get="/swatch/{{ obj.id }}"
-            hx-push-url="true"
-            hx-indicator="#loading"
-            class="card mb-4 shadow"
-            style="width: 18rem;"
-    >
-        {% if 'swatch' not in request.path %}
-            <div class="multiselector" role="checkbox" aria-checked="false" tabindex="0"
-                 jsaction="mousedown:card.select; click:card.select"
-                 aria-label="{{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}">
-                <span class="material-icons">
-                radio_button_unchecked
-                </span>
-            </div>
-        {% endif %}
+{% load static %}
+
+<button
+        id="s{{ obj.id }}"
+        class="card mb-4 shadow swatchcard cardBox anim mx-auto"
+        style="width: 18rem;"
+        data-swatch-id="{{ obj.id }}"
+>
+    <div class="card-img-overlay p-0"></div>
+    <div hx-target="#main"
+         hx-swap="outerHTML"
+         hx-trigger="click"
+         hx-get="/swatch/{{ obj.id }}"
+         hx-push-url="true"
+         hx-indicator="#loading">
+
         <div class="card-img-container">
-            <img class="card-img-top img-fluid layer"
-                 loading="lazy"
-                 src="{{ obj.card_img.url }}"
+            <img class="card-img-top img-fluid layer lazy-load-image"
+                 src="{% static 'swatch-card-test.svg' %}"
+                 data-src="{{ obj.card_img.url }}"
                  style="height:89px"
                  alt="Card image for {{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}">
-            {% if 'swatch' not in request.path %}
-                <div class="card-img-overlay card-img-overlay-two multi-check layer"
-                     style="border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem"></div>
-            {% endif %}
         </div>
 
-        <div class="card-body" align="left">
+        <div class="card-body text-start">
             <div class="color-cube" style="background-color:#{{ obj.hex_color }};"></div>
             <div>
                 <h5 class="card-title position-relative">
-                    #{{ obj.hex_color }}
+                    #{{ obj.hex_color|upper }}
                 </h5>
                 {% if not obj.is_available %}
                     <div class="row">
@@ -55,5 +46,5 @@
             </div>
             <p class="card-text">{{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}</p>
         </div>
-    </button>
-</div>
+    </div>
+</button>

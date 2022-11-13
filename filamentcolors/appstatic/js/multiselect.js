@@ -1,95 +1,131 @@
-function getID(flow) {
-    h = flow.s.parentElement.href;
-    return h.slice(h.lastIndexOf('/') + 1);
+$(document).ready(function () {
+
+    window.multiselectArray = [];
+    // this is a global variable that is set by the template
+    if (preselected !== "") {
+        preselect_items(preselected)
+    }
+
+    let cards = $(".swatchcard");
+    cards.each(function () {
+        $(this).on("long-press", function (e) {
+            e.preventDefault();
+
+            let card = $(e.target).closest(".swatchcard");
+            if (is_selected(card)) {
+                return
+            }
+            select_item(card);
+            enableCollectionMode();
+        })
+    })
+})
+
+
+function showCollectionCounter() {
+    updateCounter();
+    const el = $("#collection-buttons");
+    el.removeClass("way-off-screen");
+    el.removeClass("slide-out-left");
+    el.addClass("slide-in-left");
 }
+
+
+function hideCollectionCounter() {
+    const el = $("#collection-buttons");
+    el.removeClass("slide-in-left");
+    el.addClass("slide-out-left");
+}
+
+
+function enableCollectionMode() {
+    enable_overlays();
+    showCollectionCounter();
+    swatches = $(".swatchcard")
+    swatches.each(function () {
+        $(this).closest(".card-img-overlay").css("display", "block")
+    })
+}
+
+
+function getID(obj) {
+    // expects a jquery obj
+    return obj.data()['swatchId']
+}
+
 
 function updateCounter() {
     document.getElementById("multiselect-badge").innerText = window.multiselectArray.length;
 }
 
-function preselect_items(ids) {
-    ids.forEach(
-        item => {
-            element = $(`#s${item} .multiselector`)
-            console.log(element)
-            element[0].click()
-        }
-    );
+function getCounter() {
+    return window.multiselectArray.length
 }
 
-const eventContract = new jsaction.EventContract();
 
-// Events will be handled for all elements under this container.
-eventContract.addContainer(document.getElementById('deck-of-many-things'));
+function is_selected(obj) {
+    return obj.hasClass("selected-card")
+}
 
-// Register the event types we care about.
-eventContract.addEvent('click');
-//eventContract.addEvent('mousedown');
 
-// Create the dispatcher and connect it to the event contract. The event contract queues events
-// while the dispatcher takes events and dispatches them to the correct handler.
-const dispatcher = new jsaction.Dispatcher();
-eventContract.dispatchTo(dispatcher.dispatch.bind(dispatcher));
+function select_item(obj) {
+    // this expects a jquery obj of a single swatch
+    window.multiselectArray.push(getID(obj));
 
-const handleSelection = function (flow) {
-    flow.C.preventDefault();
-    if (
-        flow.s.getAttribute('aria-checked') === "false"
-    ) {
-        window.multiselectArray.push(getID(flow));
-        flow.s.setAttribute('aria-checked', 'true');
-        el = flow.s.nextElementSibling.getElementsByClassName('card-img-overlay')[0];
-        el.style.backgroundImage = "url('https://img.icons8.com/dusk/30/000000/checked.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
-        el.style.color = "#007bff";
-        flow.s.parentElement.style.transform = "translateZ(0px) scale3d(0.95, 0.95, 1)";
-        flow.s.parentElement.className = "card mb-4 anim big-shadow";
-        updateCounter();
-    } else {
+    obj.addClass("selected-card")
+    obj.removeClass("shadow");
+    obj.css("transform", "translateZ(0px) scale3d(0.925, 0.925, 1)");
+    obj.addClass('big-shadow');
+}
 
-        flow.s.setAttribute('aria-checked', 'false');
-        el = flow.s.nextElementSibling.getElementsByClassName('card-img-overlay')[0];
-        el.style.backgroundImage = "url('https://img.icons8.com/cotton/30/000000/plus.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
-        el.style.color = "";
-        flow.s.parentElement.className = "card mb-4 anim shadow";
-        flow.s.parentElement.style.transform = '';
-        id = getID(flow);
-        result = window.multiselectArray.filter(item => item !== id);
-        window.multiselectArray = result;
-        updateCounter();
-    }
-    b = document.getElementById("collection-buttons");
-    fs = document.getElementsByClassName("card-img-overlay");
-    if (
-        window.multiselectArray.length > 0
-    ) {
-        if (!(b.getAttribute('class').includes('slide-in-left'))) {
-            b.setAttribute('class', 'collection-buttons slide-in-left');
-            for (i = 0; i < fs.length; i++) {
-                fs[i].style.display = 'block';
-                fs[i].parentElement.previousElementSibling.style.width = "300px";
-                fs[i].parentElement.previousElementSibling.style.height = "105%";
-                fs[i].parentElement.previousElementSibling.style.top = "-5px";
-                fs[i].parentElement.previousElementSibling.style.left = "-7px";
-            }
-        }
-    } else {
-        b.setAttribute('class', 'collection-buttons slide-out-left');
-        for (i = 0; i < fs.length; i++) {
-            fs[i].style.display = '';
-            fs[i].parentElement.previousElementSibling.style.width = "36px";
-            fs[i].parentElement.previousElementSibling.style.height = "36px";
-            fs[i].parentElement.previousElementSibling.style.top = "0px";
-            fs[i].parentElement.previousElementSibling.style.left = "0px";
-        }
-    }
-};
 
-dispatcher.registerHandlers(
-    'card',                          // the namespace
-    null,                            // handler object
-    {                                // action map
-        'select': handleSelection,
+function deselect_item(obj) {
+    // this expects a jquery obj of a single swatch
+    let id = getID(obj)
+    window.multiselectArray = window.multiselectArray.filter(item => item !== id)
+
+    obj.removeClass("selected-card")
+    obj.addClass("shadow");
+    obj.css("transform", "");
+    obj.removeClass('big-shadow');
+}
+
+
+function enable_overlays() {
+    $(".card-img-overlay").each(function () {
+        $(this).css("display", "block").css("height", "100%").css("width", "100%")
+    })
+}
+
+
+function disableOverlays() {
+    $(".card-img-overlay").each(function () {
+        $(this).css("display", "")
+    })
+}
+
+
+function preselect_items(ids) {
+    ids.forEach(item => {
+        obj = $(`#s${item}`);
+        select_item(obj)
     });
+    updateCounter();
+    showCollectionCounter();
+    enable_overlays();
+}
+
+$(".card-img-overlay").each(function () {
+    $(this).on("click", function (evt) {
+        let card = $(this).closest(".swatchcard");
+        is_selected(card) ? deselect_item(card) : select_item(card)
+        updateCounter();
+        if (getCounter() === 0) {
+            disableOverlays();
+            hideCollectionCounter();
+        }
+    })
+})
 
 $('#go-button').on('click', function (evt) {
     url = window.location.origin + "/library/collection/" + window.multiselectArray.join();
@@ -97,28 +133,8 @@ $('#go-button').on('click', function (evt) {
 });
 
 $('#clear-button').on('click', function (evt) {
-    fs = document.getElementsByClassName("card-img-overlay");
-    for (i = 0; i < fs.length; i++) {
-        fs[i].style.display = '';
-        fs[i].parentElement.previousElementSibling.style.width = 30;
-        fs[i].parentElement.previousElementSibling.style.height = 30;
-        fs[i].parentElement.previousElementSibling.style.top = 0;
-        fs[i].parentElement.previousElementSibling.style.left = 0;
-        fs[i].parentElement.previousElementSibling.setAttribute('aria-checked', 'false');
-        fs[i].style.backgroundImage = "url('https://img.icons8.com/cotton/30/000000/plus.png'), linear-gradient(to bottom,rgba(0, 0, 0, 0.26),transparent 30px,transparent)";
-        fs[i].style.color = "";
-        fs[i].parentElement.parentElement.className = "card mb-4 anim shadow";
-        fs[i].parentElement.parentElement.style.transform = '';
-    }
-    window.multiselectArray = [];
-    d = document.getElementById("collection-buttons");
-    d.setAttribute('class', 'collection-buttons slide-out-left');
-});
-
-$(document).ready(function () {
-    window.multiselectArray = [];
-    // this is a global variable that is set by the template
-    if (preselected !== "") {
-        preselect_items(preselected)
-    }
+    window.multiselectArray.forEach(id => deselect_item($(`#s${id}`)));
+    updateCounter();
+    disableOverlays();
+    hideCollectionCounter();
 });

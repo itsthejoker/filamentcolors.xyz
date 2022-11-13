@@ -31,6 +31,8 @@
             'radio-button3': '&#xea56;',
             'search': '&#xe986;',
             'magnifier': '&#xe986;',
+            'equalizer2': '&#xe993;',
+            'sliders2': '&#xe993;',
           '0': 0
         };
         delete icons['0'];

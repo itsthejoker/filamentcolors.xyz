@@ -1,0 +1,23 @@
+{% extends base_template %}
+
+{% block content %}
+    <h4 class="mt-4">Results</h4>
+    <div class="row container mt-3">
+        {% for option in colormatch_swatches %}
+            <div class="col-md-{% if forloop.last %}12{% else %}6{% endif %} col-xl-4">
+                {% include 'partials/card.partial' with obj=option %}
+                <div class="text-center">
+                    <a
+                            class="btn bg-gradient-info"
+                            hx-target="#saved_swatches_collection"
+                            hx-swap="beforeend"
+                            hx-trigger="click"
+                            hx-get="/single_swatch_card/{{ option.id }}"
+                            hx-indicator="#loading"
+                    >Grab Swatch</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div id="noScrollToTop"></div>
+{% endblock %}

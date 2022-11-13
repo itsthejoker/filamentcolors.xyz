@@ -217,7 +217,7 @@
                 <div class="row">
                     <div class="col-xs-1 col-lg-2"></div>
                     <div class="col-xs-10 col-lg-8">
-                        <a href="/library/collection/327,383,117,378/" target="_blank">
+                        <a href="/library/collection/327,328,1050,811/" target="_blank">
                             <img src="{{ welcome_experience_images.3.file.url }}"
                                  loading="lazy"
                                  alt="An image showing the complement color section."
@@ -229,8 +229,8 @@
                 </div>
                 <p></p>
                 You can get to the above collection through this link:
-                <a href="/library/collection/327,383,117,378/" target="_blank">
-                    filamentcolors.xyz/library/collection/327,383,117,378/
+                <a href="/library/collection/327,328,1050,811/" target="_blank">
+                    filamentcolors.xyz/library/collection/327,328,1050,811/
                 </a>
                 <p></p>
                 Share collections you like anywhere; the same link will work for everyone!
@@ -243,7 +243,48 @@
         </div>
         <div class="step-6">
             <div class="modal-header">
-                <h5 class="modal-title">Step 5: Colors, Computers, and Beyond</h5>
+                <h5 class="modal-title">Step 5: Creating Your Own Collections</h5>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    You can create your own collections, too! Just click / tap and hold on
+                    a swatch for half a second, watch it shrink, and you'll be in collections
+                    mode! You can click on any swatch you want to; it will add or remove it
+                    from the collection you're actively building (and you can see the number
+                    of swatches you have selected on the left). Check out the video below for
+                    a quick demonstration of how it works!
+                </p>
+                <video class="w-100" controls autoplay loop muted>
+                    <source src="{{ welcome_experience_movies.0.file.url }}" type="video/mp4" />
+                    <source src="{{ welcome_experience_movies.1.file.url }}" type="video/webm" />
+                    Your browser cannot play this video.
+                </video>
+                <p>
+                    You will also automatically enter this view if you are in a collection
+                    and click "Modify this collection".
+                </p>
+                <p>
+                    Save your collections by bookmarking the page! Once created, your
+                    collections will never expire and will be accessible by the same link.
+                    Send it to someone else; they'll be able to see the wonderful colors
+                    you've picked out!
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn bg-gradient-primary" onclick="goToStep(5)">Previous</button>
+                <button class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn bg-gradient-primary" onclick="goToStep(7)">Continue</button>
+            </div>
+        </div>
+        <div class="step-7">
+            <div class="modal-header">
+                <h5 class="modal-title">Step 6: Colors, Computers, and Beyond</h5>
                 <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
                         aria-label="Close">
                     <span class="position-absolute top-0 start-0">
@@ -267,10 +308,12 @@
                 about different color sorting methods and the various issues they have.
                 <p></p>
                 There's a lot of math and educated guesswork that goes into this, so if
-                you see any bugs or other issues please let me know! DM me on Twitter or just ping
-                <a href="https://twitter.com/filamentcolors" target="_blank" rel="noopener">@filamentcolors</a>
-                or send me an email at <a
-                    href="mailto:filamentcolors@joekaufeld.com">filamentcolors@joekaufeld.com</a>.
+                you see any bugs or other issues please let me know! The best way to reach me is
+                through email at <a
+                    href="mailto:filamentcolors@joekaufeld.com">filamentcolors@joekaufeld.com</a>,
+                but you can also find me on <a
+                    target="_blank" rel="me noopener" href="https://3dp.chat/@filamentcolors">Mastodon</a>
+                or <a target="_blank" rel="noopener" href="https://twitter.com/filamentcolors">Twitter</a>.
                 <p></p>
                 I hope you find this resource useful; if you make a project using it, please
                 let me know! I'm always happy to showcase projects that were created with
@@ -279,7 +322,7 @@
                 Cheers!
             </div>
             <div class="modal-footer">
-                <button class="btn bg-gradient-primary" onclick="goToStep(5)">Previous</button>
+                <button class="btn bg-gradient-primary" onclick="goToStep(6)">Previous</button>
                 <button class="btn bg-gradient-secondary"
                         onclick="finishbutton()">Finish
                 </button>

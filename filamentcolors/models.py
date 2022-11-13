@@ -70,7 +70,7 @@ class FilamentType(models.Model):
     hot_end_temp = models.IntegerField(default=205)
     bed_temp = models.IntegerField(default=60)
     parent_type = models.ForeignKey(
-        GenericFilamentType, blank=True, null=True, on_delete=models.DO_NOTHING
+        GenericFilamentType, blank=True, null=True, on_delete=models.SET_NULL
     )
 
     def __str__(self):
@@ -241,7 +241,7 @@ class Swatch(models.Model):
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="complement_swatch",
     )
 
@@ -249,14 +249,14 @@ class Swatch(models.Model):
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="analogous_one_swatch",
     )
     analogous_2 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="analogous_two_swatch",
     )
 
@@ -264,14 +264,14 @@ class Swatch(models.Model):
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="triadic_one_swatch",
     )
     triadic_2 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="triadic_two_swatch",
     )
 
@@ -279,14 +279,14 @@ class Swatch(models.Model):
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="split_complement_one_swatch",
     )
     split_complement_2 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="split_complement_two_swatch",
     )
 
@@ -294,21 +294,21 @@ class Swatch(models.Model):
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="tetradic_one_swatch",
     )
     tetradic_2 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="tetradic_two_swatch",
     )
     tetradic_3 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="tetradic_three_swatch",
     )
 
@@ -316,35 +316,35 @@ class Swatch(models.Model):
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="square_one_swatch",
     )
     square_2 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="square_two_swatch",
     )
     square_3 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="square_three_swatch",
     )
     closest_1 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="closest_one_swatch",
     )
     closest_2 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="closest_two_swatch",
     )
 
@@ -373,7 +373,7 @@ class Swatch(models.Model):
         Pantone,
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="pantone_1",
         verbose_name="Computed Pantone 'Fashion and Interior Designers' color",
     )
@@ -381,7 +381,7 @@ class Swatch(models.Model):
         Pantone,
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="pantone_2",
         verbose_name="Computed Pantone 'Industrial Designers' color",
     )
@@ -389,7 +389,7 @@ class Swatch(models.Model):
         Pantone,
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="pantone_3",
         verbose_name="Computed Pantone 'Graphic Designers' color",
     )
@@ -397,7 +397,7 @@ class Swatch(models.Model):
         RAL,
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="ral_1",
         verbose_name="Computed RAL Classic color",
     )
@@ -405,7 +405,7 @@ class Swatch(models.Model):
         RAL,
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="ral_2",
         verbose_name="Computed RAL Effect color",
     )
@@ -413,7 +413,7 @@ class Swatch(models.Model):
         RAL,
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="ral_3",
         verbose_name="Computed RAL Design System+ color",
     )

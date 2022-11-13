@@ -1,0 +1,90 @@
+{% extends base_template %}
+
+{% block content %}
+    <div class="mt-4 container">
+        <h1>Manufacturers</h1>
+        <div class="row justify-space-between py-2">
+            <div class="col-lg-4 mx-auto">
+                <div class="input-group input-group-dynamic mb-4">
+                    <span class="input-group-text"><span class="icon-search"></span></span>
+                    <input
+                            class="form-control"
+                            id="filterInput"
+                            oninput="filterStuff()"
+                            placeholder="Filter Manufacturers..."
+                            type="text"
+                            aria-label="Search"
+                            value="{{ search_prefill }}"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-10 col-lg-8 col-xxl-6 mx-auto">
+                {% for m in manufacturers %}
+                    {% with m.name.0|upper as first_letter %}
+                        {% ifchanged %}
+                            <div class="mfr-header">
+                                <h3 id="{{ first_letter }}">{{ first_letter }}</h3>
+                                <hr>
+                            </div>
+
+                        {% endifchanged %}
+                    {% endwith %}
+                    <a
+                            type="button"
+                            class="btn btn-default mfr-btn"
+                            hx-target="#main"
+                            hx-swap="outerHTML"
+                            hx-trigger="click"
+                            hx-get="{% url 'manufacturersort' m.id %}"
+                            hx-push-url="true"
+                            hx-indicator="#loading"
+                    >
+                        <span>{{ m }}</span>
+                        <span class="badge badge-primary">{{ m.swatch_count }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function filterStuff() {
+            var input, filter, elements, i, txtValue, filterArray;
+            input = document.getElementById("filterInput");
+            filter = input.value.toUpperCase();
+            filterArray = filter.split(" ");
+            elements = $(".mfr-btn");
+
+            for (i = 0; i < elements.length; i++) {
+                txtValue = elements[i].innerText || elements[i].textContent;
+                txtValue = txtValue.toUpperCase();
+                if (filterArray.every(function (element) {
+                    return txtValue.indexOf(element) > -1
+                })) {
+                    elements[i].style.display = "";
+                } else {
+                    elements[i].style.display = "none";
+                }
+            }
+
+            headers = $(".mfr-header");
+            headers.each(function () {
+                let el = $(this);
+                let links = el.nextUntil(".mfr-header").filter(":visible");
+                if (links.length === 0) {
+                    el.css("display", "none")
+                } else {
+                    el.css("display", "")
+                }
+            })
+        }
+
+        $(document).ready(function () {
+            filterStuff();
+        });
+    </script>
+
+{% endblock %}

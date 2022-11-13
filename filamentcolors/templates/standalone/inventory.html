@@ -1,0 +1,141 @@
+{% extends base_template %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Inventory / Backlog</h1>
+        <p>
+            If you're looking at donating, use this page as a reference for what is
+            both currently added and what's in the pipeline to be added. If you have
+            a filament that isn't represented on this page, then it <i>probably</i>
+            is one that I don't already have; I'm still adding filaments from my backlog
+            so it will be a little while before this page is fully up to date.
+        </p>
+        <h4>Instructions</h4>
+        <p>
+            Use the filter bar below to search for the filament you want to donate.
+            If it appears in the list, I currently have it in hand. (If it's listed
+            as "Published", that means it's available in the catalog.) If the filament
+            that you're searching for is <strong>not in the list</strong>, then I don't
+            have it and would love to get it!
+        </p>
+        <h4>Legend</h4>
+        <div class="row">
+            <div class="col-lg-6">
+            <span
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-container="body"
+                    class="badge badge-success"
+                    title="This swatch is available in the library!"
+            >Published</span>
+                This swatch can be viewed in the library.
+            </div>
+            <div class="col-lg-6">
+            <span
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-container="body"
+                    class="badge badge-danger mt-2 mt-lg-0"
+                    title="This swatch is not yet available in the library."
+            >Not Published</span>
+                We have this filament in the queue, but it has not yet been indexed and published.
+            </div>
+        </div>
+
+        <h3 class="mt-4">Inventory</h3>
+
+        <div class="container mt-4">
+            <div class="row justify-space-between py-2">
+                <div class="col-lg-4 mx-auto">
+                    <div class="input-group input-group-dynamic mb-4">
+                        <span class="input-group-text"><span class="icon-search"></span></span>
+                        <input
+                                class="form-control"
+                                id="filterInput"
+                                oninput="filterStuff()"
+                                placeholder="Filter Inventory..."
+                                type="text"
+                                aria-label="Search"
+                                value="{{ search_prefill }}"
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function filterStuff() {
+                var filter, elements, text, filterArray;
+                filter = $("#filterInput").val().toUpperCase();
+                filterArray = filter.split(" ");
+                elements = $(".inventory-row");
+
+                elements.each(function () {
+                    el = $(this);
+                    text = el.text().toUpperCase();
+                    if (filterArray.every(function (element) {
+                        return text.indexOf(element) > -1
+                    })) {
+                        el.css("display", "")
+                    } else {
+                        el.css("display", "none")
+                    }
+                })
+                let message = $("#foundOneMessage");
+                $(".inventory-row:visible").length === 0 ? message.css("display", "") : message.css("display", "none")
+            }
+
+            $(document).ready(function () {
+                filterStuff();
+            });
+        </script>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-xl-10 col-xxl-8 mx-auto">
+                    <div class="d-none d-lg-block">
+                        <div class="row">
+                            <div class="col-8"><h5>Name</h5></div>
+                            <div class="col-4 text-center"><h5>Published?</h5></div>
+                        </div>
+                    </div>
+                    {% for item in swatches %}
+                        <div class="row mt-lg-2 mt-md-3 inventory-row">
+                            <div class="col-12 col-lg-8 text-center text-lg-start">
+                                {{ item.manufacturer }} {{ item.color_name }} {{ item.filament_type.name }}
+                            </div>
+                            <div class="col-12 col-lg-4 text-center">
+                            <span
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    data-container="body"
+                                    {% if item.published %}
+                                    class="badge badge-success"
+                                    title="This swatch is available in the library!"
+                                    {% else %}
+                                    class="badge badge-danger"
+                                    title="This swatch is not yet available in the library."
+                                    {% endif %}
+                            >
+                            {% if item.published %}
+                                Published
+                            {% else %}
+                                Not Published
+                            {% endif %}
+                            </span>
+                            </div>
+                            {% if not forloop.last %}
+                                <div class="d-lg-none">
+                                    <hr>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                <div class="text-center" id="foundOneMessage">
+                    <h4>You found something I don't have!</h4>
+                    <p>Set that one aside, because I'd love to get a bit of it for the library!</p>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

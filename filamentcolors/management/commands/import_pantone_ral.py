@@ -10,11 +10,11 @@ class Command(BaseCommand):
     help = "Import information from pantone.db"
 
     def handle(self, *args, **options):
-        if not os.path.exists(os.path.join(settings.BASE_DIR, 'pantone.db')):
+        if not os.path.exists(os.path.join(settings.BASE_DIR, "pantone.db")):
             self.stdout.write(self.style.ERROR("Cannot find pantone.db."))
             return
 
-        con = sqlite3.connect(os.path.join(settings.BASE_DIR, 'pantone.db'))
+        con = sqlite3.connect(os.path.join(settings.BASE_DIR, "pantone.db"))
         cur = con.cursor()
 
         if Pantone.objects.count() == 0:
@@ -28,13 +28,17 @@ class Command(BaseCommand):
                         rgb_b=obj[3],
                         hex_color=obj[4][1:],
                         name=obj[5],
-                        category=obj[6]
+                        category=obj[6],
                     )
                 )
             Pantone.objects.bulk_create(to_write)
-            self.stdout.write(self.style.SUCCESS(f"Created {Pantone.objects.count()} objects!"))
+            self.stdout.write(
+                self.style.SUCCESS(f"Created {Pantone.objects.count()} objects!")
+            )
         else:
-            self.stdout.write(self.style.ERROR("There are already Pantone objects present. Skipping."))
+            self.stdout.write(
+                self.style.ERROR("There are already Pantone objects present. Skipping.")
+            )
 
         if RAL.objects.count() == 0:
             to_write = []
@@ -47,14 +51,17 @@ class Command(BaseCommand):
                         rgb_b=obj[3],
                         hex_color=obj[4][1:],
                         name=obj[5],
-                        category=obj[6]
+                        category=obj[6],
                     )
                 )
             RAL.objects.bulk_create(to_write)
-            self.stdout.write(self.style.SUCCESS(f"Created {RAL.objects.count()} objects!"))
+            self.stdout.write(
+                self.style.SUCCESS(f"Created {RAL.objects.count()} objects!")
+            )
         else:
-            self.stdout.write(self.style.ERROR("There are already RAL objects present. Skipping."))
-
+            self.stdout.write(
+                self.style.ERROR("There are already RAL objects present. Skipping.")
+            )
 
         #
         # self.stdout.write(self.style.SUCCESS("Loading data..."))

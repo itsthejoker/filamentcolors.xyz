@@ -1,0 +1,332 @@
+{% extends 'modals/modal_base.html' %}
+{% load static %}
+
+{% block id %}welcomeExperience{% endblock %}
+
+{% block extra_classes %}modal-lg{% endblock %}
+
+{% block modal_content %}
+    <div id="welcomeExperienceContent">
+        <div class="step-1">
+            <div class="modal-header">
+                <h5 class="modal-title" id="how-does-this-work">How does this work?</h5>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                <span class="text-white">The goal of this site is to allow you to quickly find colors that work well
+                together. The Process:</span>
+                    <p></p>
+                    <ul class="mb-0 text-white">
+                        <li>Distill filaments into their "dominant" color</li>
+                        <li>Use the dominant color to find color groups</li>
+                        <li>
+                            Reverse the above to find filaments that come as close as
+                            possible to the dominant colors
+                        </li>
+                    </ul>
+                </div>
+                <hr>
+                Getting started is easy; there are two primary ways to use the site.
+                <p></p>
+                <ul>
+                    <li>
+                        <b>Search!</b> Use the search bar at the top of the library
+                        to find filaments that you already have and want to match or just
+                        look for filaments that sound interesting!
+                    </li>
+                    <li>
+                        <b>Browse!</b> Scroll through the library and see if there's
+                        a filament that looks interesting; maybe there's a color that grabs
+                        your attention or a name that seems familiar. Start there!
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn bg-gradient-primary" onclick="goToStep(2)">Continue</button>
+            </div>
+        </div>
+        <div class="step-2">
+            <div class="modal-header">
+                <h5 class="modal-title">Step 1: Pick a Type</h5>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Of course you don't have to pick a filament type, but most folks prefer
+                to handle one type of material over another. Most of the library is in
+                PLA, but there are lots of different filament types represented!
+                <p></p>
+                <div class="row">
+                    <div class="col-xs-1 col-lg-3"></div>
+                    <div class="col-xs-10 col-lg-6">
+                        <img src="{{ welcome_experience_images.0.file.url }}"
+                             loading="lazy"
+                             alt="An image showing the navigation on the navbar."
+                             class="welcome-experience-photo"
+                        />
+                    </div>
+                    <div class="col-xs-1 col-lg-3"></div>
+                </div>
+                <p></p>
+                Sometimes a manufacturer may have a certain color filament in multiple
+                formats, like ABS, PETG, and / or PLA. In that case, all of the versions
+                that I have are added. There is very rarely any color variance between
+                the different plastics, but that's for you to decide.
+                <p></p>
+                Each filament type includes all of its most common sub-types; for
+                example, the PLA category includes PLA+, Pro PLA, HTPLA, and more! If you
+                want to search just a specific subtype, use the filter bar at the top of
+                the screen.
+            </div>
+            <div class="modal-footer">
+                <button class="btn bg-gradient-primary" onclick="goToStep(1)">Previous</button>
+                <button class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn bg-gradient-primary" onclick="goToStep(3)">Continue</button>
+            </div>
+        </div>
+        <div class="step-3">
+            <div class="modal-header">
+                <h5 class="modal-title step-2" data-step="2">Step 2: Pick a Color</h5>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                See something you like? Something you already have? Something that might
+                work for a project? Just click on the swatch card to take a look at the
+                filament detail page.
+                <p></p>
+                <div class="row">
+                    <div class="col-xs-1 col-lg-2"></div>
+                    <div class="col-xs-10 col-lg-8">
+                        <a href="/swatch/327" class="welcome-experience-photo">
+                            <img src="{{ welcome_experience_images.1.file.url }}"
+                                 loading="lazy"
+                                 alt="An image showing Snolabs' Transparent Blue filament."
+                                 class="welcome-experience-photo"
+                            />
+                        </a>
+                    </div>
+                    <div class="col-xs-1 col-lg-2"></div>
+                </div>
+                <p></p>
+                Each filament detail page has four major things on it:
+                <p></p>
+                <ul>
+                    <li>Example print settings (what works for me may not work for you,
+                        but it's probably a reasonable starting point)
+                    </li>
+                    <li>High-resolution images of the front and back of the printed
+                        swatch
+                    </li>
+                    <li>Purchase links from wherever a filament is available, either from
+                        Amazon.com or direct from the manufacturer
+                        <ul>
+                            <li>In order to keep this site ad-free, all Amazon.com links
+                                are affiliate links. Doesn't cost you anything and I
+                                receive a tiny percentage of the total purchase price to
+                                help keep the site running.
+                            </li>
+                        </ul>
+                    </li>
+                    <li>Click <b>Continue</b> to see the fourth big thing!</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn bg-gradient-primary" onclick="goToStep(2)">Previous</button>
+                <button class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn bg-gradient-primary" onclick="goToStep(4)">Continue</button>
+            </div>
+        </div>
+        <div class="step-4">
+            <div class="modal-header">
+                <h5 class="modal-title">Step 3: Color Matching</h5>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Most projects only need two colors, so we spin the
+                <a href="https://en.wikipedia.org/wiki/Color_wheel" target="_blank" rel="noopener">color wheel</a>
+                180 degrees and find you the closest color in the library automatically!
+                <p></p>
+                Example:
+                <p></p>
+                <div class="row">
+                    <div class="col-xs-1 col-lg-2"></div>
+                    <div class="col-xs-10 col-lg-8">
+                        <img src="{{ welcome_experience_images.2.file.url }}"
+                             loading="lazy"
+                             alt="An image showing the complement color section."
+                             class="welcome-experience-photo"
+                        />
+                    </div>
+                    <div class="col-xs-1 col-lg-2"></div>
+                </div>
+                <p></p>
+                Due to how computers see color and the limitations of the color wheel,
+                this will work better with bright colors. As you get closer to white
+                and black, the results will be more murky.
+                <p></p>
+                As more colors are added to the library, this will become more accurate.
+                If you're interested in some of the math behind how this works, there are
+                links on the About page. When you see the button above, click on it to see
+                different color configurations using your chosen base color! (Not here;
+                the above screenshot is just an example.)
+            </div>
+            <div class="modal-footer">
+                <button class="btn bg-gradient-primary" onclick="goToStep(3)">Previous</button>
+                <button class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn bg-gradient-primary" onclick="goToStep(5)">Continue</button>
+            </div>
+        </div>
+        <div class="step-5">
+            <div class="modal-header">
+                <h5 class="modal-title">Step 4: Collections</h5>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                What happens when you find colors that you like? We believe that old
+                school is the best school here; rather than dealing with cookies or
+                user accounts, the URL that is generated in the address bar can be
+                bookmarked or otherwise saved. Whenever you navigate to it, the library
+                items that are in it will always be there as long as we're still online!
+                <p></p>
+                <div class="row">
+                    <div class="col-xs-1 col-lg-2"></div>
+                    <div class="col-xs-10 col-lg-8">
+                        <a href="/library/collection/327,328,1050,811/" target="_blank">
+                            <img src="{{ welcome_experience_images.3.file.url }}"
+                                 loading="lazy"
+                                 alt="An image showing the complement color section."
+                                 class="welcome-experience-photo"
+                            />
+                        </a>
+                    </div>
+                    <div class="col-xs-1 col-lg-2"></div>
+                </div>
+                <p></p>
+                You can get to the above collection through this link:
+                <a href="/library/collection/327,328,1050,811/" target="_blank">
+                    filamentcolors.xyz/library/collection/327,328,1050,811/
+                </a>
+                <p></p>
+                Share collections you like anywhere; the same link will work for everyone!
+            </div>
+            <div class="modal-footer">
+                <button class="btn bg-gradient-primary" onclick="goToStep(4)">Previous</button>
+                <button class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn bg-gradient-primary" onclick="goToStep(6)">Continue</button>
+            </div>
+        </div>
+        <div class="step-6">
+            <div class="modal-header">
+                <h5 class="modal-title">Step 5: Creating Your Own Collections</h5>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    You can create your own collections, too! Just click / tap and hold on
+                    a swatch for half a second, watch it shrink, and you'll be in collections
+                    mode! You can click on any swatch you want to; it will add or remove it
+                    from the collection you're actively building (and you can see the number
+                    of swatches you have selected on the left). Check out the video below for
+                    a quick demonstration of how it works!
+                </p>
+                <video class="w-100" controls autoplay loop muted>
+                    <source src="{{ welcome_experience_movies.0.file.url }}" type="video/mp4" />
+                    <source src="{{ welcome_experience_movies.1.file.url }}" type="video/webm" />
+                    Your browser cannot play this video.
+                </video>
+                <p>
+                    You will also automatically enter this view if you are in a collection
+                    and click "Modify this collection".
+                </p>
+                <p>
+                    Save your collections by bookmarking the page! Once created, your
+                    collections will never expire and will be accessible by the same link.
+                    Send it to someone else; they'll be able to see the wonderful colors
+                    you've picked out!
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn bg-gradient-primary" onclick="goToStep(5)">Previous</button>
+                <button class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn bg-gradient-primary" onclick="goToStep(7)">Continue</button>
+            </div>
+        </div>
+        <div class="step-7">
+            <div class="modal-header">
+                <h5 class="modal-title">Step 6: Colors, Computers, and Beyond</h5>
+                <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span class="position-absolute top-0 start-0">
+                        <span class="icon-times" style="color:black; font-size:16px"></span>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Computers don't understand color the same way humans do. Color is a
+                distinctly visual phenomenon, and one we still struggle to communicate
+                to machines. The grand majority of this site is automatically generated,
+                and the site will make mistakes; there's a bunch of great resources
+                <a href="/about#why-is-color-hard" target="_blank" rel="noopener">HERE</a>.
+                <p></p>
+                The absolute best resource I've seen about working with colors through math
+                alone is by
+                <a href="https://twitter.com/AlanZucconi" target="_blank" rel="noopener">Alan Zucconi</a>,
+                who wrote <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/"
+                             target="_blank"
+                             rel="noopener">this fantastic post</a>
+                about different color sorting methods and the various issues they have.
+                <p></p>
+                There's a lot of math and educated guesswork that goes into this, so if
+                you see any bugs or other issues please let me know! The best way to reach me is
+                through email at <a
+                    href="mailto:filamentcolors@joekaufeld.com">filamentcolors@joekaufeld.com</a>,
+                but you can also find me on <a
+                    target="_blank" rel="me noopener" href="https://3dp.chat/@filamentcolors">Mastodon</a>
+                or <a target="_blank" rel="noopener" href="https://twitter.com/filamentcolors">Twitter</a>.
+                <p></p>
+                I hope you find this resource useful; if you make a project using it, please
+                let me know! I'm always happy to showcase projects that were created with
+                the help of my app!
+                <p></p>
+                Cheers!
+            </div>
+            <div class="modal-footer">
+                <button class="btn bg-gradient-primary" onclick="goToStep(6)">Previous</button>
+                <button class="btn bg-gradient-secondary"
+                        onclick="finishbutton()">Finish
+                </button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

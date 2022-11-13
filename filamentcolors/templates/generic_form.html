@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends base_template %}
 {% load static %}
 {% load widget_tweaks %}
 
@@ -7,140 +7,153 @@
         <h1>{{ header }}</h1>
         <h4>{{ subheader }}</h4>
 
-        {% if "/add/" in request.path %}
-            <div id="similar-swatch-alert" style="display: none">
-                <div class="alert alert-danger" role="alert">
-                    Found similar swatches...
-                    <div id="similar-swatch-content"></div>
-                </div>
-            </div>
-            <script type="text/javascript">
-                function resetAlertContent() {
-                    $("#similar-swatch-content").empty()
-                }
-
-                function checkForDuplicates() {
-                    const name_obj = $('#id_color_name');
-                    const mfr_obj = $("#id_manufacturer option:selected");
-                    const alert_obj = $("#similar-swatch-alert")
-
-                    // Check to see if we have the data we need to check. If we don't,
-                    // just hide the element. Doesn't matter if it has data in it or not
-                    // because we'll wipe it before we write to it or display it again.
-                    if (mfr_obj.text() === "---------" || name_obj.val() === "") {
-                        alert_obj.css("display", "none");
-                        return
-                    }
-                    let mfr_id = mfr_obj.val();
-                    const URL = `/api/swatch/?color_name__icontains=${name_obj.val()}&manufacturer__id=${mfr_id}`;
-                    $.getJSON(URL, function (data) {
-                        var items = [];
-                        if (data.results.length === 0) {
-                            alert_obj.css("display", "none");
-                            resetAlertContent();
-                            return
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-md-8 col-lg-8 col-xl-8">
+                {% if "/add/" in request.path %}
+                    <div id="similar-swatch-alert" style="display: none">
+                        <div class="alert alert-danger text-white" role="alert">
+                            Found similar swatches...
+                            <div id="similar-swatch-content"></div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        function resetAlertContent() {
+                            $("#similar-swatch-content").empty()
                         }
-                        $.each(data.results, function (key, value) {
-                            items.push(`<li>${value.manufacturer.name} - ${value.color_name} ${value.filament_type.name}</li>`);
-                        });
-                        resetAlertContent();
-                        const alert_content = $("#similar-swatch-content");
-                        const new_list = $("<ul/>", {
-                            "class": "mb-0",
-                            html: items.join("")
-                        });
-                        alert_content.append(new_list);
-                        alert_obj.css("display", "block")
-                    });
-                }
 
-                $(document).ready(function () {
-                    $('#id_color_name').change(checkForDuplicates);
-                    $('#id_manufacturer').change(checkForDuplicates);
-                })
-            </script>
-        {% endif %}
+                        function checkForDuplicates() {
+                            const name_obj = $('#id_color_name');
+                            const mfr_obj = $("#id_manufacturer option:selected");
+                            const alert_obj = $("#similar-swatch-alert")
 
-        {% if header_js_buttons or header_link_buttons %}
-            <div class="row">
-                {% for item in header_js_buttons %}
-                    <div class="col mt-2">
-                        <button class="btn btn-info btn-block"
-                                onclick="{{ item.onclick }}">{{ item.text }}</button>
-                    </div>
-                {% endfor %}
-                {% for item in header_link_buttons %}
-                    <div class="col mt-2">
-                        <a href="{% url item.reverse_url %}"
-                           class="btn btn-info btn-block">{{ item.text }}</a>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+                            // Check to see if we have the data we need to check. If we don't,
+                            // just hide the element. Doesn't matter if it has data in it or not
+                            // because we'll wipe it before we write to it or display it again.
+                            if (mfr_obj.text() === "---------" || name_obj.val() === "") {
+                                alert_obj.css("display", "none");
+                                return
+                            }
+                            let mfr_id = mfr_obj.val();
+                            const URL = `/api/swatch/?color_name__icontains=${name_obj.val()}&manufacturer__id=${mfr_id}`;
+                            $.getJSON(URL, function (data) {
+                                var items = [];
+                                if (data.results.length === 0) {
+                                    alert_obj.css("display", "none");
+                                    resetAlertContent();
+                                    return
+                                }
+                                $.each(data.results, function (key, value) {
+                                    items.push(`<li>${value.manufacturer.name} - ${value.color_name} ${value.filament_type.name}</li>`);
+                                });
+                                resetAlertContent();
+                                const alert_content = $("#similar-swatch-content");
+                                const new_list = $("<ul/>", {
+                                    "class": "mb-0",
+                                    html: items.join("")
+                                });
+                                alert_content.append(new_list);
+                                alert_obj.css("display", "block")
+                            });
+                        }
 
-        <div class="container mt-3">
-            {% if swatch %}
-                <div class="text-center">
-                    <img style="width: 600px" src="{{ swatch.image_front.url }}"
-                         alt="The front of the swatch in question.">
-                </div>
-                {% include 'partials/eyedropper.partial' %}
-            {% endif %}
-            {# Lifted from https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html#}
-            {% if form.is_multipart %}
-                {# properly handle the file uploads #}
-                <form novalidate enctype="multipart/form-data" method="post" action="">
-            {% else %}
-                <form novalidate method="post" action="">
-            {% endif %}
-            <div class="errorMessages"></div>
-            {% csrf_token %}
-            {% for hidden_field in form.hidden_fields %}
-                {{ hidden_field }}
-            {% endfor %}
+                        $(document).ready(function () {
+                            $('#id_color_name').change(checkForDuplicates);
+                            $('#id_manufacturer').change(checkForDuplicates);
+                        })
+                    </script>
+                {% endif %}
 
-            {% if form.non_field_errors %}
-                <div class="alert alert-danger" role="alert">
-                    {% for error in form.non_field_errors %}
-                        {{ error }}
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            {% for field in form.visible_fields %}
-                <div class="form-group">
-                    {{ field.label_tag }}
-
-                    {% if form.is_bound %}
-                        {% if field.errors %}
-                            {% render_field field class="form-control is-invalid" %}
-                            {% for error in field.errors %}
-                                <div class="invalid-feedback">
-                                    {{ error }}
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            {% render_field field class="form-control is-valid" %}
-                        {% endif %}
-                    {% else %}
-                        {% if field.field.widget.input_type == 'file' %}
-                            <div class="btn-group-toggle">
-                                <label for="{{ field.auto_id }}"
-                                       class="form-control-file btn btn-secondary">browse</label>
-                                {% render_field field class="inputfile" style="visibility:hidden;margin-top:-30px" %}
+                {% if header_js_buttons or header_link_buttons %}
+                    <div class="row">
+                        {% for item in header_js_buttons %}
+                            <div class="col-md-6 col-xl mt-2 d-grid">
+                                <button class="btn bg-gradient-info"
+                                        onclick="{{ item.onclick }}">{{ item.text }}</button>
                             </div>
-                        {% else %}
-                            {% render_field field class="form-control" %}
-                        {% endif %}
-                    {% endif %}
+                        {% endfor %}
+                        {% for item in header_link_buttons %}
+                            <div class="col-md-6 col-xl mt-2 d-grid">
+                                <a href="{% url item.reverse_url %}"
+                                   class="btn bg-gradient-info">{{ item.text }}</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
-                    {% if field.help_text %}
-                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                <div class="container mt-3">
+                    {% if swatch %}
+                        <div class="text-center">
+                            <img style="width: 600px" src="{{ swatch.image_front.url }}"
+                                 alt="The front of the swatch in question.">
+                        </div>
+                        {% include 'partials/eyedropper.partial' %}
                     {% endif %}
+                    {# Lifted from https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html#}
+                    {% if form.is_multipart %}
+                        {# properly handle the file uploads #}
+                        <form novalidate enctype="multipart/form-data" method="post" action="">
+                    {% else %}
+                        <form novalidate method="post" action="">
+                    {% endif %}
+                    <div class="errorMessages"></div>
+                    {% csrf_token %}
+                    {% for hidden_field in form.hidden_fields %}
+                        {{ hidden_field }}
+                    {% endfor %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger text-white" role="alert">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% for field in form.visible_fields %}
+                        <div class="form-group input-group input-group-dynamic mt-4{% if field.value != "" %} is-filled{% endif %}">
+                            {% if form.is_bound %}
+                                {% if field.errors %}
+                                    {{ field|add_label_class:"form-label" }}
+                                    {{ field|add_class:"form-control is-invalid" }}
+                                    {% for error in field.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    {{ field|add_label_class:"form-label" }}
+                                    {{ field|add_class:"form-control is-valid" }}
+                                {% endif %}
+                            {% else %}
+                                {% if field.field.widget.input_type == 'file' %}
+                                    <div class="my-auto pe-3 text-muted">{{ field.label }}:</div>
+                                    {{ field|add_class:"form-control"|attr:"type=file" }}
+                                    {#                                    <label for="{{ field.auto_id }}" class="form-label">{{ field.label }}</label>#}
+                                    {#                                    {% render_field field class="form-control" type="file" %}#}
+                                {% elif field.field.widget.input_type == 'select' %}
+                                    <div class="form-floating">
+                                        <label for="{{ field.auto_id }}"
+                                               style="top: -3em;left: -0.4em;font-size: 0.6875rem">
+                                            {{ field.label }}
+                                        </label>
+                                        {{ field|add_class:"form-control" }}
+                                    </div>
+                                {% else %}
+                                    {{ field|add_label_class:"form-label" }}
+                                    {{ field|add_class:"form-control" }}
+                                {% endif %}
+                            {% endif %}
+
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn bg-gradient-primary mt-4">Submit</button>
+                    </form>
                 </div>
-            {% endfor %}
-            <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+            </div>
+            <div class="col"></div>
         </div>
     </div>
 
@@ -181,7 +194,7 @@
                         // addClass run for each loop.
                         errorList.addClass("mt-3");
                         errorList.append(
-                            '<div class="alert alert-danger" role="alert">\n' + label.html() + " " + message + '\n</div>'
+                            '<div class="alert alert-danger text-white" role="alert">\n' + label.html() + " " + message + '\n</div>'
                         )
                     });
                 };

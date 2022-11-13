@@ -1,101 +1,656 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'library' %}">FilamentColors.xyz</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+{% load static %}
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    Browse by
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item dropdown-toggle" href="#">Manufacturer</a>
-                    <ul class="dropdown-menu">
-                        {% for m in manufacturers %}
-                            <li><a class="dropdown-item" href="/library/manufacturer/{{ m.id }}">{{ m.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                    <a class="dropdown-item dropdown-toggle" href="#">Filament Type</a>
-                    <ul class="dropdown-menu">
-                        {% for t in filament_types %}
-                            <li><a class="dropdown-item" href="/library/filament_type/{{ t.id }}">{{ t.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                    <a class="dropdown-item dropdown-toggle" href="#">Color Family</a>
-                    <ul class="dropdown-menu">
-                        {% for c in color_family %}
-                            <li><a class="dropdown-item" href="/library/color_family/{{ c.0 }}">{{ c.1 }}</a></li>
-                        {% endfor %}
-                    </ul>
-                    <a class="dropdown-item" href="/library/sort/random">Random</a>
-                    <a class="dropdown-item" href="/library/sort/color">Color</a>
-                </div>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="/about">About</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="http://blog.joekaufeld.com/" target="_blank">Posts</a>
-            </li>
-            <li class="nav-item active">
-                <div class="nav-link clickable" onclick="showWelcome()" data-toggle="collapse"
-                     data-target="#navbarSupportedContent">How does this
-                    work?
-                </div>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="{% url 'donations' %}">Filament Donations</a>
-            </li>
-            {% if request.user.is_authenticated %}
-                <li class="nav-item active dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        Admin
+<nav
+        class="navbar navbar-expand-lg navbar-light bg-white z-index-3 py-3">
+    <div class="container">
+        <a class="navbar-brand d-md-block d-lg-none"
+           hx-get="{% url 'library' %}"
+           rel="tooltip"
+           title="Colors for everybody!"
+           data-bs-placement="bottom"
+           tabindex="0"
+           hx-indicator="#loading"
+           hx-target="#main"
+           hx-swap="outerHTML"
+           hx-trigger="click"
+           hx-push-url="true"
+        >
+            FilamentColors.xyz
+        </a>
+        <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false"
+                aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon mt-2">
+        <span class="navbar-toggler-bar bar1"></span>
+        <span class="navbar-toggler-bar bar2"></span>
+        <span class="navbar-toggler-bar bar3"></span>
+      </span>
+        </button>
+        <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0" id="navigation">
+            <ul class="navbar-nav d-md-none d-lg-block">
+                <li>
+                    <a class="navbar-brand clickable"
+                       hx-get="{% url 'library' %}"
+                       hx-indicator="#loading"
+                       tabindex="0"
+                       hx-target="#main"
+                       hx-swap="outerHTML"
+                       hx-trigger="click"
+                       hx-push-url="true"
+                    >
+                        FilamentColors.xyz
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {% if 'swatch' in request.path and 'add' not in request.path %}
-                            <a class="dropdown-item"
-                               href="/admin/filamentcolors/swatch/{{ swatch.id }}/change/">Edit Swatch</a>
-                            <a class="dropdown-item"
-                               href="{% url 'recalculate_color' swatch.id %}">Recalculate Color</a>
-                            <a class="dropdown-item"
-                               href="{% url 'force_hex_color' swatch.id %}">Force Specific Color</a>
-                            <div class="dropdown-divider"></div>
-                        {% endif %}
-                        <a class="dropdown-item"
-                           href="{% url 'add_swatch_landing' %}">Upload New</a>
-                        <a class="dropdown-item"
-                           href="{% url 'add_mfr' %}">Add Manufacturer</a>
-                        <a class="dropdown-item"
-                           href="{% url 'add_filament_type' %}">Add Filament Type</a>
-                        <a class="dropdown-item"
-                           href="{% url 'admin:index' %}">Django Admin</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav navbar-nav-hover mx-auto">
+                <li class="nav-item dropdown dropdown-hover mx-2 ps-0">
+                    <a class="nav-link d-flex cursor-pointer align-items-center" id="dropdownMenuBlocks"
+                       data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                        Browse by
+                        <img src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/img/down-arrow-dark.svg' %}"
+                             alt="down-arrow" class="arrow ms-auto ms-md-2">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive p-3 border-radius-lg mt-0 mt-lg-3"
+                         aria-labelledby="dropdownMenuBlocks">
+                        {% comment %}
+                        DESKTOP MODE
+                        {% endcomment %}
+                        <div class="d-none d-lg-block">
+                            <ul class="list-group">
+                                <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
+                                    <button
+                                            class="dropdown-item py-2 ps-3 border-radius-md"
+                                            tabindex="0"
+                                            hx-target="#main"
+                                            hx-swap="outerHTML"
+                                            hx-trigger="click"
+                                            hx-get="{% url 'mfr_list' %}"
+                                            hx-indicator="#loading"
+                                            hx-push-url="true"
+                                    >
+                                        <div class="d-flex">
+                                            <div class="w-100 d-flex align-items-center justify-content-between">
+                                                <div>
+                                                    <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">
+                                                        Manufacturer</h6>
+                                                    <span class="text-sm">Click for all {{ manufacturers|length }}!</span>
+                                                </div>
+                                                <img src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/img/down-arrow.svg' %}"
+                                                     alt="down-arrow"
+                                                     class="arrow">
+                                            </div>
+                                        </div>
+                                    </button>
+                                    <div class="dropdown-menu mt-0 py-3 px-2 mt-3">
+                                        {% for m in manufacturers|slice:"9" %}
+                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
+                                               tabindex="0"
+                                               hx-target="#main"
+                                               hx-swap="outerHTML"
+                                               hx-trigger="click"
+                                               hx-get="/library/manufacturer/{{ m.id }}"
+                                               hx-indicator="#loading"
+                                               hx-push-url="true"
+                                            >{{ m.name }}</a>
+                                        {% endfor %}
+                                        <a class="dropdown-item ps-3 border-radius-md mb-1"
+                                           tabindex="0"
+                                           hx-target="#main"
+                                           hx-swap="outerHTML"
+                                           hx-trigger="click"
+                                           hx-get="{% url 'mfr_list' %}"
+                                           hx-indicator="#loading"
+                                           hx-push-url="true"
+                                        ><strong>→ view all</strong></a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
+                                    <div class="dropdown-item py-2 ps-3 border-radius-md">
+                                        <div class="d-flex">
+                                            <div class="w-100 d-flex align-items-center justify-content-between">
+                                                <div>
+                                                    <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">
+                                                        Filament Type</h6>
+                                                </div>
+                                                <img src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/img/down-arrow.svg' %}"
+                                                     alt="down-arrow"
+                                                     class="arrow">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-menu mt-0 py-3 px-2 mt-3">
+                                        {% for t in filament_types %}
+                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
+                                               tabindex="0"
+                                               hx-target="#main"
+                                               hx-swap="outerHTML"
+                                               hx-trigger="click"
+                                               hx-push-url="true"
+                                               hx-get="/library/filament_type/{{ t.id }}"
+                                               hx-indicator="#loading"
+                                            >{{ t.name }}</a>
+                                        {% endfor %}
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
+                                    <div class="dropdown-item py-2 ps-3 border-radius-md">
+                                        <div class="d-flex">
+                                            <div class="w-100 d-flex align-items-center justify-content-between">
+                                                <div>
+                                                    <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">
+                                                        Color Family</h6>
+                                                </div>
+                                                <img src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/img/down-arrow.svg' %}"
+                                                     alt="down-arrow"
+                                                     class="arrow">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-menu mt-0 py-3 px-2 mt-3">
+                                        {% for c in color_family %}
+                                            <a class="dropdown-item ps-3 border-radius-md mb-1"
+                                               tabindex="0"
+                                               hx-target="#main"
+                                               hx-swap="outerHTML"
+                                               hx-trigger="click"
+                                               hx-push-url="true"
+                                               hx-indicator="#loading"
+                                               hx-get="/library/color_family/{{ c.0 }}">{{ c.1 }}</a>
+                                        {% endfor %}
+                                    </div>
+                                </li>
+                                <li class="nav-item list-group-item border-0 p-0">
+                                    <a hx-get="/library/sort/random"
+                                       tabindex="0"
+                                       hx-target="#main"
+                                       hx-swap="outerHTML"
+                                       hx-indicator="#loading"
+                                       hx-trigger="click"
+                                       hx-push-url="true"
+                                       class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                        <b>Random</b>
+                                    </a>
+                                </li>
+                                <li class="nav-item list-group-item border-0 p-0">
+                                    <a hx-get="/library/sort/color"
+                                       tabindex="0"
+                                       hx-indicator="#loading"
+                                       hx-target="#main"
+                                       hx-swap="outerHTML"
+                                       hx-trigger="click"
+                                       hx-push-url="true"
+                                       class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                        <b>Color</b>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        {% comment %}
+                        MOBILE MODE
+                        {% endcomment %}
+                        <div class="row d-lg-none">
+                            <div class="col-md-12">
+                                <div class="d-flex mb-2">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">
+                                                Manufacturer</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% for m in manufacturers|slice:"9" %}
+                                    <a class="dropdown-item ps-3 border-radius-md mb-1"
+                                       href="/library/manufacturer/{{ m.id }}">{{ m.name }}</a>
+                                {% endfor %}
+                                <a class="dropdown-item ps-3 border-radius-md mb-1"
+                                   href="{% url 'mfr_list' %}"><strong>→ view all</strong></a>
+                                <div class="d-flex mb-2 mt-3">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">
+                                                Filament Types</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% for t in filament_types %}
+                                    <a class="dropdown-item ps-3 border-radius-md mb-1"
+                                       href="/library/filament_type/{{ t.id }}">{{ t.name }}</a>
+                                {% endfor %}
+                                <div class="d-flex mb-2 mt-3">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">
+                                                Color Family</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% for c in color_family %}
+                                    <a class="dropdown-item ps-3 border-radius-md mb-1"
+                                       href="/library/color_family/{{ c.0 }}">{{ c.1 }}</a>
+                                {% endfor %}
+                                <div class="d-flex mb-2 mt-3">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <a href="/library/sort/random">
+                                            <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">
+                                                Random</h6>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="d-flex mb-2 mt-3">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <a href="/library/sort/color">
+                                            <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">
+                                                Color</h6>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </li>
-            {% endif %}
-        </ul>
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <div class="nav-link clickable" onclick="showSettings()" data-toggle="collapse"
-                     data-target="#navbarSupportedContent">Settings
-                </div>
-            </li>
-        </ul>
+                <li class="nav-item dropdown dropdown-hover mx-2 ps-0">
+                    <a class="nav-link d-flex cursor-pointer align-items-center"
+                       data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                        About
+                        <img src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/img/down-arrow-dark.svg' %}"
+                             alt="down-arrow" class="arrow ms-auto ms-md-2">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive dropdown-100 p-3 border-radius-lg mt-0 mt-lg-3"
+                         aria-labelledby="dropdownMenuBlocks"
+                         id="aboutDropDown"
+                    >
+                        {% comment %}
+                        DESKTOP MODE
+                        {% endcomment %}
+                        <div class="d-none d-lg-block">
+                            <ul class="list-group">
+                                <li class="nav-item list-group-item border-0 p-0">
+                                    <a hx-get="{% url 'about' %}"
+                                       tabindex="0"
+                                       hx-indicator="#loading"
+                                       hx-target="#main"
+                                       hx-swap="outerHTML"
+                                       hx-trigger="click"
+                                       hx-push-url="true"
+                                       class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                        <b>The project</b>
+                                    </a>
+                                </li>
+                                <li class="nav-item list-group-item border-0 p-0">
+                                    <div onclick="showWelcome()"
+                                         class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                        <b>How does this site work?</b>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        {% comment %}
+                        MOBILE MODE
+                        {% endcomment %}
+                        <div class="row d-lg-none dropdown-100">
+                            <div class="col-md-12">
+                                <div class="d-flex mb-2">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <a href="{% url 'about' %}"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>The project</b>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <div class="d-lg-none">
+                                            <div onclick="showWelcome()"
+                                                 data-bs-toggle="collapse"
+                                                 data-bs-target="#navigation"
+                                                 class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                <b>How does this site work?</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="mx-2">
+                    <a class="nav-link d-flex justify-content-between cursor-pointer align-items-center"
+                       role="button" href="http://blog.joekaufeld.com/" target="_blank">
+                        Posts
+                    </a>
+                </li>
+                <li class="nav-item dropdown dropdown-hover mx-2 ps-0">
+                    <a class="nav-link d-flex cursor-pointer align-items-center"
+                       data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                        Contact
+                        <img src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/img/down-arrow-dark.svg' %}"
+                             alt="down-arrow" class="arrow ms-auto ms-md-2">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive dropdown-100 p-3 border-radius-lg mt-0 mt-lg-3"
+                         aria-labelledby="dropdownMenuBlocks"
+                         id="contactDropDown"
+                    >
+                        {% comment %}
+                        DESKTOP MODE
+                        {% endcomment %}
+                        <div class="d-none d-lg-block">
+                            <ul class="list-group">
+                                <li class="nav-item list-group-item border-0 p-0">
+                                    <a hx-get="{% url 'donations' %}"
+                                       tabindex="0"
+                                       hx-target="#main"
+                                       hx-indicator="#loading"
+                                       hx-swap="outerHTML"
+                                       hx-trigger="click"
+                                       hx-push-url="true"
+                                       class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                        <b>Filament donations</b>
+                                    </a>
+                                </li>
+                                <li class="nav-item list-group-item border-0 p-0">
+                                    <a href="https://3dp.chat/@filamentcolors"
+                                       rel="me"
+                                       target="_blank"
+                                       class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                        <b>Mastodon</b>
+                                    </a>
+                                </li>
+                                <li class="nav-item list-group-item border-0 p-0">
+                                    <a href="https://twitter.com/filamentcolors"
+                                       target="_blank"
+                                       class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                        <b>Twitter</b>
+                                    </a>
+                                </li>
+                                <li class="nav-item list-group-item border-0 p-0">
+                                    <a href="mailto:filamentcolors@joekaufeld.com"
+                                       class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                        <b>Email</b>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        {% comment %}
+                        MOBILE MODE
+                        {% endcomment %}
+                        <div class="row d-lg-none dropdown-100">
+                            <div class="col-md-12">
+                                <div class="d-flex mb-2">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <a href="{% url 'donations' %}"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Filament donations</b>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <a href="https://3dp.chat/@filamentcolors"
+                                           rel="me"
+                                           target="_blank"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Mastodon</b>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <a href="https://twitter.com/filamentcolors"
+                                           target="_blank"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Twitter</b>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <a href="mailto:filamentcolors@joekaufeld.com"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Email</b>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="mx-2">
+                    <a class="nav-link d-flex justify-content-between cursor-pointer align-items-center"
+                       role="button"
+                       hx-get="{% url 'colormatch' %}"
+                       tabindex="0"
+                       hx-target="#main"
+                       hx-indicator="#loading"
+                       hx-swap="outerHTML"
+                       hx-trigger="click"
+                       hx-push-url="true"
+                    >
+                        Color Match
+                    </a>
+                </li>
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item dropdown dropdown-hover mx-2 ps-0">
+                        <a class="nav-link d-flex cursor-pointer align-items-center"
+                           data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                            Admin
+                            <img src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/img/down-arrow-dark.svg' %}"
+                                 alt="down-arrow" class="arrow ms-auto ms-md-2">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive dropdown-100 p-3 border-radius-lg mt-0 mt-lg-3"
+                             aria-labelledby="dropdownMenuBlocks"
+                             id="contactDropDown"
+                        >
+                            {% comment %}
+                            DESKTOP MODE
+                            {% endcomment %}
+                            <div class="d-none d-lg-block">
+                                <ul class="list-group">
+                                    {% if 'swatch' in request.path and 'add' not in request.path %}
+                                        <li class="nav-item list-group-item border-0 p-0">
+                                            <a href="/admin/filamentcolors/swatch/{{ swatch.id }}/change/"
+                                               tabindex="0"
+                                               class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                <b>Edit Swatch</b>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item list-group-item border-0 p-0">
+                                            <a hx-get="{% url 'recalculate_color' swatch.id %}"
+                                               tabindex="0"
+                                               hx-target="#main"
+                                               hx-indicator="#loading"
+                                               hx-swap="outerHTML"
+                                               hx-trigger="click"
+                                               hx-push-url="true"
+                                               class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                <b>Recalculate Color</b>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item list-group-item border-0 p-0">
+                                            <a hx-get="{% url 'force_hex_color' swatch.id %}"
+                                               tabindex="0"
+                                               hx-indicator="#loading"
+                                               hx-target="#main"
+                                               hx-swap="outerHTML"
+                                               hx-trigger="click"
+                                               hx-push-url="true"
+                                               class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                <b>Force Specific Color</b>
+                                            </a>
+                                        </li>
+                                        <div class="dropdown-divider"></div>
+                                    {% endif %}
+                                    <li class="nav-item list-group-item border-0 p-0">
+                                        <a hx-get="{% url 'add_swatch_landing' %}"
+                                           tabindex="0"
+                                           hx-indicator="#loading"
+                                           hx-target="#main"
+                                           hx-swap="outerHTML"
+                                           hx-trigger="click"
+                                           hx-push-url="true"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Upload New</b>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item list-group-item border-0 p-0">
+                                        <a hx-get="{% url 'add_mfr' %}"
+                                           tabindex="0"
+                                           hx-indicator="#loading"
+                                           hx-target="#main"
+                                           hx-swap="outerHTML"
+                                           hx-trigger="click"
+                                           hx-push-url="true"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Add Manufacturer</b>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item list-group-item border-0 p-0">
+                                        <a hx-get="{% url 'add_filament_type' %}"
+                                           tabindex="0"
+                                           hx-indicator="#loading"
+                                           hx-target="#main"
+                                           hx-swap="outerHTML"
+                                           hx-trigger="click"
+                                           hx-push-url="true"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Add Filament Type</b>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item list-group-item border-0 p-0">
+                                        <a hx-get="{% url 'set_colors' %}"
+                                           tabindex="0"
+                                           hx-indicator="#loading"
+                                           hx-target="#main"
+                                           hx-swap="outerHTML"
+                                           hx-trigger="click"
+                                           hx-push-url="true"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Set Hex Colors</b>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item list-group-item border-0 p-0">
+                                        <a href="{% url 'admin:index' %}"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Django Admin</b>
+                                        </a>
+                                    </li>
+                                    <div class="dropdown-divider"></div>
+                                    <li class="nav-item list-group-item border-0 p-0">
+                                        <a href="{% url 'logout' %}"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Logout</b>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            {% comment %}
+                            MOBILE MODE
+                            {% endcomment %}
+                            <div class="row d-lg-none dropdown-100">
+                                <div class="col-md-12">
+                                    {% if 'swatch' in request.path and 'add' not in request.path %}
+                                        <div class="d-flex mb-2">
+                                            <div class="w-100 d-flex align-items-center justify-content-between">
+                                                <a href="/admin/filamentcolors/swatch/{{ swatch.id }}/change/"
+                                                   class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                    <b>Edit Swatch</b>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex mb-2">
+                                            <div class="w-100 d-flex align-items-center justify-content-between">
+                                                <a href="{% url 'recalculate_color' swatch.id %}"
+                                                   class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                    <b>Recalculate Color</b>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex mb-2">
+                                            <div class="w-100 d-flex align-items-center justify-content-between">
+                                                <a href="{% url 'force_hex_color' swatch.id %}"
+                                                   class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                    <b>Force Specific Color</b>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown-divider"></div>
+                                    {% endif %}
+                                    <div class="d-flex mb-2">
+                                        <div class="w-100 d-flex align-items-center justify-content-between">
+                                            <a href="{% url 'add_swatch_landing' %}"
+                                               class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                <b>Upload New</b>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-2">
+                                        <div class="w-100 d-flex align-items-center justify-content-between">
+                                            <a href="{% url 'add_mfr' %}"
+                                               class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                <b>Add Manufacturer</b>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-2">
+                                        <div class="w-100 d-flex align-items-center justify-content-between">
+                                            <a href="{% url 'add_filament_type' %}"
+                                               class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                <b>Add Filament Type</b>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-2">
+                                        <div class="w-100 d-flex align-items-center justify-content-between">
+                                            <a href="{% url 'set_colors' %}"
+                                               class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                <b>Set Hex Color</b>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-2">
+                                        <div class="w-100 d-flex align-items-center justify-content-between">
+                                            <a href="{% url 'admin:index' %}"
+                                               class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                <b>Django Admin</b>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+
+                                    <div class="d-flex mb-2">
+                                        <div class="w-100 d-flex align-items-center justify-content-between">
+                                            <a href="{% url 'logout' %}"
+                                               class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                <b>Logout</b>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav">
+                <li class="d-md-block d-lg-none ps-2">
+                    <div class="nav-link clickable" onclick="showSettings()" data-bs-toggle="collapse"
+                         data-bs-target="#navigation"><span class="icon-equalizer2"></span> Settings
+                    </div>
+                </li>
+                <li class="d-none d-lg-block ps-2">
+                    <div class="nav-link clickable ps-7" onclick="showSettings()">
+                        <span class="icon-equalizer2" style="font-size:28px"></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
 
-{% include 'partials/welcome_experience_modal.partial' %}
-{% include 'partials/settings_modal.partial' %}
-
+{% include 'modals/welcome_experience_modal.partial' %}
+{% include 'modals/settings_modal.partial' %}
+{##}
 {# JS for handling submenu dropdown #}
-
+{##}
 <script>
     function showWelcome() {
         $("#welcomeExperience").modal("show")
@@ -116,5 +671,7 @@
                 $(".dropdown-menu .show").removeClass("show"), s.removeClass("active-dropdown")
             }), n.parent().hasClass("navbar-nav") || s.next().css({top: s[0].offsetTop, left: n.outerWidth() - 4}), !1
         })
-    });
+    })
+    ;
+
 </script>

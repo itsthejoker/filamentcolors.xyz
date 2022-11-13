@@ -5,7 +5,10 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from filamentcolors.models import Swatch
-from filamentcolors.twitter_helpers import generate_daily_swatch_tweet, send_tweet
+from filamentcolors.twitter_helpers import (
+    generate_daily_swatch_tweet,
+    send_to_social_media,
+)
 
 
 def get_random_swatch() -> Swatch:
@@ -39,4 +42,4 @@ class Command(BaseCommand):
         self.stdout.write(f"Sleeping for {sleep_count}")
         sleep(sleep_count)
 
-        send_tweet(get_tweet_content(get_random_swatch()))
+        send_to_social_media(get_tweet_content(get_random_swatch()))

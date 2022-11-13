@@ -2,10 +2,12 @@ import random
 from typing import Any
 
 from django.core.handlers.wsgi import WSGIRequest
+from django.db.models.functions import Lower
 from django.http import Http404, HttpResponse
 from django.shortcuts import HttpResponseRedirect, reverse
-from django.urls import resolve, Resolver404
+from django.views.decorators.csrf import csrf_exempt
 
+from filamentcolors.colors import hex_to_rgb
 from filamentcolors.helpers import (
     build_data_dict,
     clean_collection_ids,
@@ -38,7 +40,7 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
     :param method: the string which determines how to sort the results.
     :return:
     """
-    html = "library.html"
+    html = "standalone/library.html"
 
     data = build_data_dict(request, library=True)
     items = get_swatches(data)
@@ -60,13 +62,13 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
     else:
         items = items.order_by("-date_added")
 
-    data.update({"swatches": items})
+    data.update({"swatches": items, "show_filter_bar": True})
 
     return prep_request(request, html, data)
 
 
 def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
-    html = "library.html"
+    html = "standalone/library.html"
 
     data = build_data_dict(request, library=True)
     s = get_swatches(data)
@@ -79,17 +81,12 @@ def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
 
 
 def manufacturersort(request: WSGIRequest, id: int) -> HttpResponse:
-    html = "library.html"
+    html = "standalone/library.html"
 
     data = build_data_dict(request, library=True)
     s = get_swatches(data)
 
     s = s.filter(manufacturer_id=id)
-
-    if len(s) == 0:
-        # No filaments found, and we shouldn't have a manufacturer
-        # with no filaments.
-        raise Http404
 
     data.update({"swatches": s})
 
@@ -97,7 +94,7 @@ def manufacturersort(request: WSGIRequest, id: int) -> HttpResponse:
 
 
 def typesort(request: WSGIRequest, id: int) -> HttpResponse:
-    html = "library.html"
+    html = "standalone/library.html"
     data = build_data_dict(request, library=True)
 
     f_type = GenericFilamentType.objects.filter(id=id).first()
@@ -115,7 +112,7 @@ def typesort(request: WSGIRequest, id: int) -> HttpResponse:
 
 
 def swatch_detail(request: WSGIRequest, id: int) -> HttpResponse:
-    html = "swatch_detail.html"
+    html = "standalone/swatch_detail.html"
     swatch = Swatch.objects.filter(id=id).first()
     data = build_data_dict(request)
 
@@ -151,17 +148,19 @@ def swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
         }
     )
 
-    return prep_request(request, "library.html", data)
+    return prep_request(request, "standalone/library.html", data)
 
 
 def edit_swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
-    html = "library.html"
+    html = "standalone/library.html"
     data = build_data_dict(request, library=True)
     cleaned_ids = clean_collection_ids(ids)
 
     data.update({"preselect_collection": cleaned_ids})
     data.update(
-        {"swatches": get_swatches(data).order_by("-date_added"),}
+        {
+            "swatches": get_swatches(data).order_by("-date_added"),
+        }
     )
 
     return prep_request(request, html, data)
@@ -170,37 +169,66 @@ def edit_swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
 def inventory_page(request: WSGIRequest) -> HttpResponse:
     data = build_data_dict(request)
     data.update(
-        {"swatches": Swatch.objects.all(),}
+        {
+            "swatches": Swatch.objects.select_related("manufacturer")
+            .prefetch_related("filament_type")
+            .order_by(Lower("manufacturer__name"), Lower("color_name")),
+        }
     )
-    return prep_request(request, "inventory.html", data)
+    return prep_request(request, "standalone/inventory.html", data)
 
 
-def loader_redirect(request: WSGIRequest) -> HttpResponse:
-    """
-    Take the name of a view and return an HTML spinner that then calls the target view.
-    """
-    internal_path = request.GET.get('next', None)
-    if not internal_path:
-        raise Http404
-    try:
-        # resolve only looks at the internal urls, so this _shouldn't_ be a bad idea
-        resolve(internal_path)
-    except Resolver404:
-        raise Http404
-
+@csrf_exempt
+def colormatch(request: WSGIRequest) -> HttpResponse:
     data = build_data_dict(request)
-    # if we have a resolver match, then we know that the url is good and valid. Pass
-    # it back to the template so we can get that spinner going.
-    data |= {"next_url": internal_path}
-    return prep_request(request, "_loader.html", data)
+
+    if request.method == "POST":
+        incoming_color = request.POST.get("hex_color")
+        if not incoming_color:
+            # validation is always a good thing
+            return HttpResponse(status=400)
+
+        library = get_swatches(data)
+        matches = []
+
+        for _ in range(3):
+            matching_swatch = Swatch().get_closest_color_swatch(
+                library, hex_to_rgb(incoming_color)
+            )
+            matches.append(matching_swatch)
+            library = library.exclude(id=matching_swatch.id)
+
+        data["colormatch_swatches"] = matches
+        return prep_request(request, "partials/colormatch_results.partial", data)
+
+    return prep_request(request, "standalone/colormatch.html", data)
+
+
+def single_swatch_card(request: WSGIRequest, swatch_id: int) -> HttpResponse:
+    """For the color match page, this is used to populate the 'saved' functionality."""
+    data = build_data_dict(request)
+    data.update(
+        {
+            "swatch": Swatch.objects.select_related("manufacturer")
+            .prefetch_related("filament_type")
+            .get(id=swatch_id),
+        }
+    )
+    return prep_request(request, "partials/single_swatch_column.partial", data)
+
+
+def manufacturer_list(request: WSGIRequest) -> HttpResponse:
+    return prep_request(
+        request, "standalone/manufacturer_list.html", build_data_dict(request)
+    )
 
 
 def about_page(request: WSGIRequest) -> HttpResponse:
-    return prep_request(request, "about.html", build_data_dict(request))
+    return prep_request(request, "standalone/about.html", build_data_dict(request))
 
 
 def donation_page(request: WSGIRequest) -> HttpResponse:
-    return prep_request(request, "donations.html", build_data_dict(request))
+    return prep_request(request, "standalone/donations.html", build_data_dict(request))
 
 
 def error_404(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:

@@ -55,6 +55,7 @@ coverage.xml
 *.log
 local_settings.py
 db.sqlite3
+db_backup.sqlite3
 
 # Flask stuff:
 instance/
@@ -103,7 +104,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-db.sqlite3
 .idea/
 static/
 images/
@@ -121,3 +121,7 @@ node_modules
 package-lock.json
 dump.json
 *.gz
+material-kit-pro-html-v3.0.3
+fontawesome/
+fontawesome-5/
+

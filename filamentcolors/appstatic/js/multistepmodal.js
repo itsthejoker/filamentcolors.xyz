@@ -1,6 +1,6 @@
-let el = $('#welcomeExperienceContent');
-let steps = el.children();
-const parent = $('#welcomeExperience');
+let welcomeExperience = $();
+let steps = [];
+let parent = $();
 
 function goToStep(num) {
     $.each(steps, function (index, item) {
@@ -41,10 +41,13 @@ function finishbutton() {
 // this fires on page load to hide all the other steps; otherwise it would
 // just render as one gigantic modal with everything in one.
 $(document).ready(function () {
+    welcomeExperience = $('#welcomeExperienceContent');
+    steps = welcomeExperience.children();
+    const parent = $('#welcomeExperience');
     resetSteps();
 
     // I can't believe this actually works
-    $('#welcomeExperience')[0].addEventListener('keydown', (e) => {
+    parent[0].addEventListener('keydown', (e) => {
         if (!e.repeat) {
             if (e.key === "ArrowLeft") {
                 cs = getCurrentStep();

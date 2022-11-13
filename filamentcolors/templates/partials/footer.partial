@@ -1,27 +1,43 @@
-{% include 'partials/patreon_modal.partial' %}
+{% include 'modals/patreon_modal.partial' %}
 {% load static %}
 
 <footer class="page-footer pt-4">
     <div class="container my-3">
         <hr>
         <div class="row">
-            <div class="col-sm-0 col-lg-3"></div>
-            <div class="col-sm-4 col-md-4 col-lg-2 text-center bump-down">
-                <a href="{% url 'about' %}">
+            <div class="col-sm-3 col-md-3 col-lg-2 text-center bump-down mx-auto">
+                <button tabindex="0"
+                        hx-target="#main"
+                        hx-swap="outerHTML"
+                        hx-trigger="click"
+                        hx-get="{% url 'about' %}"
+                        hx-indicator="#loading"
+                        hx-push-url="true"
+                        class="btn-invisible"
+                >
                     <img title="About this site!"
+                         class="clickable"
                          loading="lazy"
                          alt="about this site"
-                         src="https://img.icons8.com/material/32/000000/help--v1.png">
-                </a>
+                         src="{% static 'help_icon.png' %}">
+                </button>
             </div>
-            <div class="col-sm-4 col-md-4 col-lg-2 text-center bump-down">
+            <div class="col-sm-3 col-md-3 col-lg-2 text-center bump-down mx-auto">
                 <a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank" rel="noopener">
-                    <img title="Source code (github!)"
+                    <img title="Source code (GitHub!)"
                          loading="lazy"
                          src="{% static "GitHub-Mark-32px.png" %}"
                          alt="source code (github)"></a>
             </div>
-            <div class="col-sm-4 col-md-4 col-lg-2 text-center bump-down">
+            <div class="col-sm-3 col-md-3 col-lg-2 text-center bump-down mx-auto">
+                <a href="https://3dp.chat/@filamentcolors" target="_blank" rel="me">
+                    <img title="Follow me on Mastodon!"
+                         loading="lazy"
+                         width="32" height="32" src="{% static "mastodon-32.png" %}"
+                         alt="@filamentcolors on Mastodon">
+                </a>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-2 text-center bump-down mx-auto">
                 <a href="https://twitter.com/filamentcolors" target="_blank" rel="noopener">
                     <img title="Follow me on Twitter!"
                          loading="lazy"
@@ -29,12 +45,12 @@
                          alt="@filamentcolors on Twitter">
                 </a>
             </div>
-            <div class="col-sm-0 col-lg-3"></div>
         </div>
         <div class="row mt-3">
             <div class="col-md-6 col-lg-3 text-center mb-2">
-                <button type="button" class="btn btn-secondary" data-toggle="modal"
-                        style="background: #f96854; border-color: #f96854; color: #ffffff" data-target="#patreonModal">
+                <button type="button" class="btn bg-gradient-secondary" data-bs-toggle="modal"
+                        style="background: #f96854; border-color: #f96854; color: #ffffff"
+                        data-bs-target="#patreonModal">
                     I'm on Patreon!
                 </button>
             </div>

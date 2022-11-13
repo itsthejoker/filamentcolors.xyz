@@ -28,15 +28,54 @@ def prep_request(
     and returning the welcome modal if necessary without having to remember
     to write it into every view.
     """
+    if not data:
+        data = {}
+
     if first_time_visitor(r):
-        data.update({"launch_welcome_modal": True})
+        data |= {"launch_welcome_modal": True}
 
-    if r.htmx:
-        base_template = "partial_base.html"
+    if r.htmx and not r.htmx.history_restore_request:
+        data |= {"base_template": "partial_base.html"}
     else:
-        base_template = "base.html"
-
-    data.update({"base_template": base_template})
+        # This request requires rendering the base template, so perform all
+        # the queries needed to populate it.
+        # Here's what these keys are used for:
+        #
+        #   manufacturers               |   used to populate dropdown from navbar
+        #   filament_types              |   ...
+        #   color_family                |   ...
+        #   welcome_experience_images   |   the urls for the example images shown in
+        #                               |       "how to use the site" modals.
+        #   settings_buttons            |   model objects that power the settings page
+        data |= {
+            "manufacturers": (
+                Manufacturer.objects.exclude(
+                    id__in=(
+                        Manufacturer.objects.annotate(
+                            total_count=Count("swatch", distinct=True)
+                        )
+                        .filter(swatch__published=False)
+                        .annotate(unpublished=Count("swatch", distinct=True))
+                        .filter(Q(unpublished=F("total_count")))
+                    )
+                )
+                .exclude(id__in=Manufacturer.objects.filter(swatch__isnull=True))
+                .order_by(Lower("name"))
+                .annotate(
+                    swatch_count=Count("swatch", filter=Q(swatch__published=True))
+                )
+            ),
+            "filament_types": GenericFilamentType.objects.order_by(Lower("name")),
+            "color_family": Swatch.BASE_COLOR_OPTIONS,
+            "welcome_experience_images": GenericFile.objects.filter(
+                name__in=["step1", "step2", "step3", "step4"]
+            ),
+            "welcome_experience_movies": GenericFile.objects.filter(
+                name__in=["collections_example", "collections_example_webm"]
+            ),
+            "settings_buttons": GenericFilamentType.objects.all(),
+            "base_template": "base.html",
+        }
 
     response = render(r, html, context=data, *args, **kwargs)
     response = set_tasty_cookies(response)
@@ -64,46 +103,15 @@ def set_tasty_cookies(response) -> HttpResponse:
 
 def build_data_dict(request, library: bool = False) -> Dict:
     """
-    Here's what these keys are used for:
-
-    search_prefill              |   prepopulate the filter bar at top of page
-    manufacturers               |   used to populate dropdown from navbar
-    filament_types              |   ...
-    color_family                |   ...
-    welcome_experience_images   |   the urls for the example images shown in
-                                |       "how to use the site" modals.
-    settings_buttons            |   model objects that power the settings page
-    user_settings               |   a dict pulled from the user's browser
-    is_library_view             |   a boolean; only show search bar on the library.
-
+      search_prefill              |   prepopulate the filter bar at top of page
+      user_settings               |   a dict pulled from the user's browser
+      is_library_view             |   a boolean; only show search bar on the library.
     :param request: Request
     :param library: bool
     :return: dict
     """
-
     return {
         "search_prefill": request.GET.get("q", ""),
-        "manufacturers": (
-            Manufacturer.objects.exclude(
-                id__in=(
-                    Manufacturer.objects.annotate(
-                        total_count=Count("swatch", distinct=True)
-                    )
-                    .filter(swatch__published=False)
-                    .annotate(unpublished=Count("swatch", distinct=True))
-                    .filter(Q(unpublished=F("total_count")))
-                )
-            )
-            .exclude(id__in=Manufacturer.objects.filter(swatch__isnull=True))
-            .order_by(Lower("name"))
-        ),
-        "filament_types": GenericFilamentType.objects.order_by(Lower("name")),
-        "color_family": Swatch.BASE_COLOR_OPTIONS,
-        "welcome_experience_images": [
-            GenericFile.objects.filter(file__startswith=X).first()
-            for X in ["step1", "step2", "step3", "step4"]
-        ],
-        "settings_buttons": GenericFilamentType.objects.all(),
         "user_settings": get_settings_cookies(request),
         "is_library_view": library,
     }
@@ -136,11 +144,7 @@ def get_settings_cookies(r: request) -> Dict:
         if type_settings[-1] == "":
             type_settings.pop()
 
-        types = [
-            x.split("-")[0]
-            for x in type_settings
-            if x.split("-")[1] == "true"
-        ]
+        types = [x.split("-")[0] for x in type_settings if x.split("-")[1] == "true"]
         types = GenericFilamentType.objects.filter(id__in=types)
     else:
         types = GenericFilamentType.objects.all()
@@ -161,7 +165,7 @@ def get_settings_cookies(r: request) -> Dict:
     }
 
 
-def generate_custom_library(data: Dict):
+def generate_custom_library(data: Dict) -> bool:
     """
     Return a boolean based on whether or not we actually need to generate
     our own queryset to do matching from. The data here is from the user's
@@ -182,8 +186,10 @@ def generate_custom_library(data: Dict):
 
 
 def get_custom_library(data: Dict) -> QuerySet:
-    s = Swatch.objects.filter(
-        filament_type__parent_type__in=data["user_settings"]["types"]
+    s = (
+        Swatch.objects.select_related("manufacturer")
+        .prefetch_related("filament_type")
+        .filter(filament_type__parent_type__in=data["user_settings"]["types"])
     )
     if data["user_settings"]["show_unavailable"] is False:
         s = s.exclude(amazon_purchase_link__isnull=True, mfr_purchase_link__isnull=True)
@@ -197,5 +203,9 @@ def get_swatches(data: Dict) -> QuerySet:
     if generate_custom_library(data):
         queryset = get_custom_library(data)
     else:
-        queryset = Swatch.objects.filter(published=True)
+        queryset = (
+            Swatch.objects.select_related("manufacturer")
+            .prefetch_related("filament_type")
+            .filter(published=True)
+        )
     return queryset

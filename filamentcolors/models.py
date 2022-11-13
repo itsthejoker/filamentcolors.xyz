@@ -24,7 +24,7 @@ from skimage import io
 from martor.models import MartorField
 
 from filamentcolors.colors import Color
-from filamentcolors.twitter_helpers import send_tweet
+from filamentcolors.twitter_helpers import send_to_social_media
 
 
 def update_google():
@@ -70,7 +70,7 @@ class FilamentType(models.Model):
     hot_end_temp = models.IntegerField(default=205)
     bed_temp = models.IntegerField(default=60)
     parent_type = models.ForeignKey(
-        GenericFilamentType, blank=True, null=True, on_delete=models.DO_NOTHING
+        GenericFilamentType, blank=True, null=True, on_delete=models.SET_NULL
     )
 
     def __str__(self):
@@ -84,10 +84,11 @@ class GenericFile(models.Model):
     experience images.
     """
 
+    name = models.CharField(max_length=30, null=True, blank=True)
     file = models.FileField()
 
     def __str__(self):
-        return self.file.name
+        return f"{self.name} - {self.file.name}" if self.name else self.file.name
 
 
 class Post(models.Model):
@@ -119,11 +120,10 @@ class Post(models.Model):
 
 
 class Pantone(models.Model):
-    COLOR_MATCH_STEP = 50
     CATEGORIES = [
         "Fashion and Interior Designers",
         "Industrial Designers",
-        "Graphic Designers"
+        "Graphic Designers",
     ]
 
     code = models.CharField(max_length=48)
@@ -139,12 +139,7 @@ class Pantone(models.Model):
 
 
 class RAL(models.Model):
-    COLOR_MATCH_STEP = 100
-    CATEGORIES = [
-        "RAL Classic",
-        "RAL Effect",
-        "RAL Design System+"
-    ]
+    CATEGORIES = ["RAL Classic", "RAL Effect", "RAL Design System+"]
 
     code = models.CharField(max_length=48)
     name = models.CharField(max_length=250, null=True, blank=True)
@@ -178,7 +173,7 @@ class Swatch(models.Model):
     PINK = "PNK"
     ORANGE = "RNG"
     GREY = "GRY"
-    TRANSPARENT = "TRN"
+    TRANSLUCENT = "TRN"
 
     BASE_COLOR_OPTIONS = [
         (WHITE, "White"),
@@ -192,8 +187,10 @@ class Swatch(models.Model):
         (PINK, "Pink"),
         (ORANGE, "Orange"),
         (GREY, "Grey"),
-        (TRANSPARENT, "Transparent"),
+        (TRANSLUCENT, "Translucent"),
     ]
+
+    STEP_OPTIONS = [16, 32, 48, 64, 80, 96, 112, 128]
 
     manufacturer = models.ForeignKey(
         Manufacturer, on_delete=models.CASCADE, null=True, blank=True
@@ -244,7 +241,7 @@ class Swatch(models.Model):
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="complement_swatch",
     )
 
@@ -252,14 +249,14 @@ class Swatch(models.Model):
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="analogous_one_swatch",
     )
     analogous_2 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="analogous_two_swatch",
     )
 
@@ -267,14 +264,14 @@ class Swatch(models.Model):
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="triadic_one_swatch",
     )
     triadic_2 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="triadic_two_swatch",
     )
 
@@ -282,14 +279,14 @@ class Swatch(models.Model):
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="split_complement_one_swatch",
     )
     split_complement_2 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="split_complement_two_swatch",
     )
 
@@ -297,21 +294,21 @@ class Swatch(models.Model):
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="tetradic_one_swatch",
     )
     tetradic_2 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="tetradic_two_swatch",
     )
     tetradic_3 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="tetradic_three_swatch",
     )
 
@@ -319,35 +316,35 @@ class Swatch(models.Model):
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="square_one_swatch",
     )
     square_2 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="square_two_swatch",
     )
     square_3 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="square_three_swatch",
     )
     closest_1 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="closest_one_swatch",
     )
     closest_2 = models.ForeignKey(
         "self",
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="closest_two_swatch",
     )
 
@@ -376,49 +373,49 @@ class Swatch(models.Model):
         Pantone,
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="pantone_1",
-        verbose_name="Computed Pantone 'Fashion and Interior Designers' color"
+        verbose_name="Computed Pantone 'Fashion and Interior Designers' color",
     )
     closest_pantone_2 = models.ForeignKey(
         Pantone,
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="pantone_2",
-        verbose_name="Computed Pantone 'Industrial Designers' color"
+        verbose_name="Computed Pantone 'Industrial Designers' color",
     )
     closest_pantone_3 = models.ForeignKey(
         Pantone,
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="pantone_3",
-        verbose_name="Computed Pantone 'Graphic Designers' color"
+        verbose_name="Computed Pantone 'Graphic Designers' color",
     )
     closest_ral_1 = models.ForeignKey(
         RAL,
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="ral_1",
-        verbose_name="Computed RAL Classic color"
+        verbose_name="Computed RAL Classic color",
     )
     closest_ral_2 = models.ForeignKey(
         RAL,
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="ral_2",
-        verbose_name="Computed RAL Effect color"
+        verbose_name="Computed RAL Effect color",
     )
     closest_ral_3 = models.ForeignKey(
         RAL,
         null=True,
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="ral_3",
-        verbose_name="Computed RAL Design System+ color"
+        verbose_name="Computed RAL Design System+ color",
     )
 
     # !!!!!!!!!!!!!!!!!!!!!!!!
@@ -585,16 +582,41 @@ class Swatch(models.Model):
 
     def get_closest_color_swatch(self, library: Union[QuerySet, List], rgb: tuple):
         """Get a swatch that fits with progressively less-strict clamps."""
-        for step_option in [16, 32, 48, 64, 80, 96]:
-            if result := self._get_closest_color_swatch(library, rgb, step=step_option):
+        for step_option in self.STEP_OPTIONS:
+            if result := self._get_closest_color(library, rgb=rgb, step=step_option):
                 return result
 
-    def _get_closest_color_swatch(self, library: Union[QuerySet, List], rgb: tuple, step: int = None):
-        distance_dict = dict()
+    def get_closest_third_party_color(self, model, category):
+        """Get a swatch that fits with progressively less-strict clamps."""
+        self_color = self.get_rgb(self.hex_color)
+        queryset = model.objects.all()
 
-        color_to_match = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
+        for step_option in self.STEP_OPTIONS:
+            if result := self._get_closest_color(
+                queryset,
+                rgb=self_color,
+                step=step_option,
+                extra_args={"category": category},
+            ):
+                return result
 
-        library = library.filter(
+    def _get_closest_color(
+        self, queryset, step: int, rgb: tuple = None, extra_args: dict = None
+    ):
+        """Takes in either Pantone or RAL, then returns the matching element."""
+        distance_dict = {}
+
+        if not extra_args:
+            extra_args = {}
+
+        if not rgb:
+            rgb = self.get_rgb(self.hex_color)
+        else:
+            target_color = rgb
+        target_color = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
+
+        options = queryset.filter(
+            **extra_args,
             rgb_r__gt=max(rgb[0] - step, 0),
             rgb_r__lt=min(rgb[0] + step, 255),
             rgb_g__gt=max(rgb[1] - step, 0),
@@ -602,43 +624,10 @@ class Swatch(models.Model):
             rgb_b__gt=max(rgb[2] - step, 0),
             rgb_b__lt=min(rgb[2] + step, 255),
         )
-
-        for item in library:
-            possible_color = convert_color(
-                sRGBColor.new_from_rgb_hex(item.hex_color), LabColor
-            )
-
-            distance = delta_e_cmc(color_to_match, possible_color)
-
-            distance_dict.update({item: distance})
-
-        distance_dict = {
-            i: distance_dict[i] for i in distance_dict if distance_dict[i] is not None
-        }
-
-        sorted_distance_list = sorted(distance_dict.items(), key=lambda kv: kv[1])
-
-        try:
-            return sorted_distance_list[0][0]
-        except IndexError:
-            return None
-
-    def get_closest_third_party_color(self, model, category):
-        """Takes in either Pantone or RAL, then returns the matching element."""
-        distance_dict = {}
-        rgb = self.get_rgb(self.hex_color)
-        target_color = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
-        options = model.objects.filter(
-            category=category,
-            rgb_r__gt=max(rgb[0] - model.COLOR_MATCH_STEP, 0),
-            rgb_r__lt=min(rgb[0] + model.COLOR_MATCH_STEP, 255),
-            rgb_g__gt=max(rgb[1] - model.COLOR_MATCH_STEP, 0),
-            rgb_g__lt=min(rgb[1] + model.COLOR_MATCH_STEP, 255),
-            rgb_b__gt=max(rgb[2] - model.COLOR_MATCH_STEP, 0),
-            rgb_b__lt=min(rgb[2] + model.COLOR_MATCH_STEP, 255),
-        )
         for option in options:
-            possible_color = convert_color(sRGBColor.new_from_rgb_hex(option.hex_color), LabColor)
+            possible_color = convert_color(
+                sRGBColor.new_from_rgb_hex(option.hex_color), LabColor
+            )
             distance = delta_e_cmc(target_color, possible_color)
             distance_dict.update({option: distance})
 
@@ -654,12 +643,18 @@ class Swatch(models.Model):
     def generate_closest_pantone(self):
         fields = ["closest_pantone_1", "closest_pantone_2", "closest_pantone_3"]
         for index, category in enumerate(Pantone.CATEGORIES):
-            setattr(self, fields[index], self.get_closest_third_party_color(Pantone, category))
+            setattr(
+                self,
+                fields[index],
+                self.get_closest_third_party_color(Pantone, category),
+            )
 
     def generate_closest_ral(self):
         fields = ["closest_ral_1", "closest_ral_2", "closest_ral_3"]
         for index, category in enumerate(RAL.CATEGORIES):
-            setattr(self, fields[index], self.get_closest_third_party_color(RAL, category))
+            setattr(
+                self, fields[index], self.get_closest_third_party_color(RAL, category)
+            )
 
     def generate_rgb(self):
         rgb = self.get_rgb(self.hex_color)
@@ -671,31 +666,45 @@ class Swatch(models.Model):
         complement = Color(self.hex_color).complementary()[1]
         complement = sRGBColor.new_from_rgb_hex(str(complement))
 
-        self.complement = self.get_closest_color_swatch(l, complement.get_upscaled_value_tuple())
+        self.complement = self.get_closest_color_swatch(
+            l, complement.get_upscaled_value_tuple()
+        )
 
     def update_analogous_swatches(self, l):
         analogous = Color(self.hex_color).analagous()
         a_1 = sRGBColor.new_from_rgb_hex(str(analogous[1]))
         a_2 = sRGBColor.new_from_rgb_hex(str(analogous[2]))
 
-        self.analogous_1 = self.get_closest_color_swatch(l, a_1.get_upscaled_value_tuple())
-        self.analogous_2 = self.get_closest_color_swatch(l, a_2.get_upscaled_value_tuple())
+        self.analogous_1 = self.get_closest_color_swatch(
+            l, a_1.get_upscaled_value_tuple()
+        )
+        self.analogous_2 = self.get_closest_color_swatch(
+            l, a_2.get_upscaled_value_tuple()
+        )
 
     def update_triadic_swatches(self, l):
         triadic = Color(self.hex_color).triadic()
         t_1 = sRGBColor.new_from_rgb_hex(str(triadic[1]))
         t_2 = sRGBColor.new_from_rgb_hex(str(triadic[2]))
 
-        self.triadic_1 = self.get_closest_color_swatch(l, t_1.get_upscaled_value_tuple())
-        self.triadic_2 = self.get_closest_color_swatch(l, t_2.get_upscaled_value_tuple())
+        self.triadic_1 = self.get_closest_color_swatch(
+            l, t_1.get_upscaled_value_tuple()
+        )
+        self.triadic_2 = self.get_closest_color_swatch(
+            l, t_2.get_upscaled_value_tuple()
+        )
 
     def update_split_complement_swatches(self, l):
         split_c = Color(self.hex_color).split_complementary()
         s_1 = sRGBColor.new_from_rgb_hex(str(split_c[1]))
         s_2 = sRGBColor.new_from_rgb_hex(str(split_c[2]))
 
-        self.split_complement_1 = self.get_closest_color_swatch(l, s_1.get_upscaled_value_tuple())
-        self.split_complement_2 = self.get_closest_color_swatch(l, s_2.get_upscaled_value_tuple())
+        self.split_complement_1 = self.get_closest_color_swatch(
+            l, s_1.get_upscaled_value_tuple()
+        )
+        self.split_complement_2 = self.get_closest_color_swatch(
+            l, s_2.get_upscaled_value_tuple()
+        )
 
     def update_tetradic_swatches(self, l):
         tetradic = Color(self.hex_color).tetradic()
@@ -703,9 +712,15 @@ class Swatch(models.Model):
         t_2 = sRGBColor.new_from_rgb_hex(str(tetradic[2]))
         t_3 = sRGBColor.new_from_rgb_hex(str(tetradic[3]))
 
-        self.tetradic_1 = self.get_closest_color_swatch(l, t_1.get_upscaled_value_tuple())
-        self.tetradic_2 = self.get_closest_color_swatch(l, t_2.get_upscaled_value_tuple())
-        self.tetradic_3 = self.get_closest_color_swatch(l, t_3.get_upscaled_value_tuple())
+        self.tetradic_1 = self.get_closest_color_swatch(
+            l, t_1.get_upscaled_value_tuple()
+        )
+        self.tetradic_2 = self.get_closest_color_swatch(
+            l, t_2.get_upscaled_value_tuple()
+        )
+        self.tetradic_3 = self.get_closest_color_swatch(
+            l, t_3.get_upscaled_value_tuple()
+        )
 
     def update_square_swatches(self, l):
         square = Color(self.hex_color).square()
@@ -718,7 +733,9 @@ class Swatch(models.Model):
         self.square_3 = self.get_closest_color_swatch(l, s_3.get_upscaled_value_tuple())
 
     def update_closest_swatches(self, l):
-        own_color = sRGBColor.new_from_rgb_hex(self.hex_color).get_upscaled_value_tuple()
+        own_color = sRGBColor.new_from_rgb_hex(
+            self.hex_color
+        ).get_upscaled_value_tuple()
         l = l.exclude(pk=self.pk)
 
         self.closest_1 = self.get_closest_color_swatch(l, own_color)
@@ -773,7 +790,7 @@ class Swatch(models.Model):
         return self._get_closest_color_swatch(l, color_to_match)
 
     def regenerate_all(self, long_way=False):
-        self.generate_hex_info(long_way)
+        # self.generate_hex_info(long_way)
         self.generate_closest_ral()
         self.generate_closest_pantone()
         self.generate_rgb()

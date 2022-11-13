@@ -1,0 +1,461 @@
+{% extends base_template %}
+
+{% block content %}
+    {# twitter #}
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@filamentcolors">
+    <meta name="twitter:site" content="@filamentcolors">
+    <meta name="twitter:title"
+          content="{{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}">
+    <meta name="twitter:description" content="{{ swatch.notes }}">
+    <meta name="twitter:image:src" content="https://filamentcolors.xyz{{ swatch.card_img.url }}">
+    <meta name="twitter:image:width" content="280">
+    <meta name="twitter:image:height" content="150">
+
+    {# facebook #}
+    <meta property="og:title"
+          content="{{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}">
+    <meta property="og:image" content="https://filamentcolors.xyz{{ swatch.card_img.url }}">
+    <meta name="og:image:width" content="280">
+    <meta name="og:image:height" content="150">
+
+    <div class="container mt-3">
+        {% if error %}
+            <div class="text-center">
+                <h4>{{ error }}</h4>
+            </div>
+        {% endif %}
+        {% if not error %}
+            <div class="row">
+                <div class="col-lg-6">
+                    <section class="gallery-block grid-gallery">
+                        <div class="item">
+                            <a class="lightbox" href="{{ swatch.image_front.url }}" title="Representative picture of the swatch front">
+                                <img class="img-fluid image scale-on-hover" src="{{ swatch.image_front.url }}"
+                                     alt="An image of the front of the color swatch.">
+                            </a>
+                        </div>
+                        {% if swatch.image_other %}
+                            <div class="row">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-3 item">
+                                    <a class="lightbox" href="{{ swatch.image_back.url }}" title="Representative picture of the swatch back">
+                                        <img class="img-fluid image scale-on-hover" src="{{ swatch.image_back.url }}"
+                                             alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
+                                    </a>
+                                </div>
+                                <div class="col-sm-3 item">
+                                    <a class="lightbox" href="{{ swatch.image_other.url }}">
+                                        <img class="img-fluid image scale-on-hover" src="{{ swatch.image_other.url }}"
+                                             alt="An image of a small object printed with the filament.">
+                                    </a>
+                                </div>
+                                <div class="col-sm-3"></div>
+                            </div>
+                        {% endif %}
+                        {% if not swatch.image_other %}
+                            <div class="row">
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-4">
+                                    <a class="lightbox" href="{{ swatch.image_back.url }}" title="Representative picture of the swatch back">
+                                        <img class="img-fluid image scale-on-hover" src="{{ swatch.image_back.url }}"
+                                             alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
+                                    </a>
+                                </div>
+                                <div class="col-sm-4"></div>
+                            </div>
+                        {% endif %}
+                    </section>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <h2 class="mt-lg-5 mt-md-0">{{ swatch.manufacturer.name }}
+                            - {{ swatch.color_name }} {{ swatch.filament_type.name }}</h2>
+                        <div class="big-color-cube" style="background-color:#{{ swatch.hex_color }};"></div>
+                        <p>#{{ swatch.hex_color|upper }}</p>
+                    </div>
+                    <div class="row mt-lg-5 mt-md-0">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10 gray-background">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col" colspan="2">General Info</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="ps-4">Hot end temp</td>
+                                    <td>{{ swatch.filament_type.hot_end_temp }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4">Bed temp</td>
+                                    <td>{{ swatch.filament_type.bed_temp }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4">Filament type</td>
+                                    <td>{{ swatch.filament_type.name }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4">Date added</td>
+                                    <td>{{ swatch.human_readable_date }}</td>
+                                </tr>
+                                {% if swatch.donated_by %}
+                                    <tr>
+                                        <td class="ps-4">Donated by</td>
+                                        <td>{{ swatch.donated_by }}</td>
+                                    </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                            <div class="d-grid gap-2">
+                                {% if swatch.amazon_purchase_link %}
+                                    <a class="btn btn-info" href="{{ swatch.amazon_purchase_link }}"
+                                       target="_blank"
+                                       role="button"
+                                       rel="noopener"
+                                    >Buy on
+                                        Amazon<br><span style="font-size: smaller">(affiliate link)</span></a>
+                                {% endif %}
+                                {% if swatch.mfr_purchase_link %}
+                                    <a class="btn btn-success" href="{{ swatch.mfr_purchase_link }}"
+                                       target="_blank"
+                                       role="button"
+                                       rel="noopener"
+                                    >Buy from {{ swatch.manufacturer.name }}</a>
+                                {% endif %}
+                            </div>
+                            <p></p>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="text-center mt-lg-5 mt-md-3">
+                        <small class="" style="font-size: 12px">
+                            Any printing defects visible on this swatch are solely on me and should not be
+                            interpreted as the material being difficult. All swatch gcodes are pre-generated
+                            per filament type and are not tuned to specific filaments. Picture is
+                            representative and may not match the hex value shown. The hex value shown is the
+                            measured color of the swatch.
+                        </small>
+                    </div>
+                    <div class="mt-3">
+                        {{ swatch.notes }}
+                    </div>
+                </div>
+            </div>
+
+            {% if swatch.closest_pantone_1 or swatch.closest_ral_1 %}
+                <h3>Matching Colors</h3>
+                <h4>Pantone</h4>
+                <p>
+                    The Pantone Matching System is a standardized proprietary color
+                    system that is used to identify specific colors for industry use,
+                    like paint, printing, or dyes. DISCLAIMER: Suggested colors are
+                    our closest approximation. Please use your best judgement.
+                    <a href="https://en.wikipedia.org/wiki/Pantone" target="_blank" rel="noopener">
+                        Wikipedia
+                    </a>
+                </p>
+                <div class="row container">
+                    <div class="col-md-6 col-xl-4">
+                        {% include 'partials/third_party_swatch.partial' with obj=swatch.closest_pantone_1 %}
+                    </div>
+                    <div class="col-md-6 col-xl-4">
+                        {% include 'partials/third_party_swatch.partial' with obj=swatch.closest_pantone_2 %}
+                    </div>
+                    <div class="col-md-12 col-xl-4">
+                        {% include 'partials/third_party_swatch.partial' with obj=swatch.closest_pantone_3 %}
+                    </div>
+                </div>
+                <div class="container">
+                    <hr>
+                </div>
+                <h4>RAL</h4>
+                <p>
+                    RAL is a standardized proprietary color system used to identify
+                    specific colors for industry use, usually for varnish or powder
+                    coating metal. Many of the colors are based on reflectivity or
+                    translucency, so the options displayed will not have all the
+                    attributes they would have with a RAL color set. DISCLAIMER:
+                    Suggested colors are our closest approximation. Please use your
+                    best judgement.
+                    <a href="https://en.wikipedia.org/wiki/RAL_colour_standard" target="_blank" rel="noopener">
+                        Wikipedia
+                    </a>
+                </p>
+                <div class="row container">
+                    <div class="col-md-6 col-xl-4">
+                        {% include 'partials/third_party_swatch.partial' with obj=swatch.closest_ral_1 %}
+                    </div>
+                    <div class="col-md-6 col-xl-4">
+                        {% include 'partials/third_party_swatch.partial' with obj=swatch.closest_ral_2 %}
+                    </div>
+                    <div class="col-md-12 col-xl-4">
+                        {% include 'partials/third_party_swatch.partial' with obj=swatch.closest_ral_3 %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if swatch.complement %}
+                {# This is just to make sure that if someone modifies their library to 0 #}
+                {# swatches then the "show more colors" section won't explode. #}
+                <h3 class="mt-4">Related Colors</h3>
+                <h4>
+                    Complementary Color
+                </h4>
+                <p>
+                    Complementary colors are pairs of colors which, when combined
+                    or mixed, cancel each other out (lose hue) by producing a
+                    grayscale color like white or black. When placed next to
+                    each other, they create the strongest contrast for those two
+                    colors. Complementary colors may also be called "opposite
+                    colors."
+                    <a href="https://en.wikipedia.org/wiki/Complementary_colors" target="_blank" rel="noopener">
+                        Wikipedia
+                    </a>
+                </p>
+                <div class="row container">
+                    <div class="col-md-6">
+                        {% include 'partials/card.partial' with obj=swatch %}
+                    </div>
+                    <div class="col-md-6">
+                        {% include 'partials/card.partial' with obj=swatch.complement %}
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col text-center bump-down">
+                        <a class="btn btn-outline-info bump-down"
+                           href="/library/collection/{{ swatch.id }},{{ swatch.complement.id }}" target="_blank"
+                           role="button"
+                           rel="noopener"
+                        >Create Collection</a>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <hr>
+                </div>
+
+                <h4>
+                    Analogous Color
+                </h4>
+                <p>
+                    Analogous colors are groups of three colors that are next to
+                    each other on the color wheel, sharing a common color, with
+                    one being the dominant color, which tends to be a primary or
+                    secondary color, and a tertiary.
+                    <a href="https://en.wikipedia.org/wiki/Analogous_colors" target="_blank" rel="noopener">
+                        Wikipedia
+                    </a>
+                </p>
+                <div class="row container">
+                    <div class="col-md-6 col-xl-4">
+                        {% include 'partials/card.partial' with obj=swatch %}
+                    </div>
+                    <div class="col-md-6 col-xl-4">
+                        {% include 'partials/card.partial' with obj=swatch.analogous_1 %}
+                    </div>
+                    <div class="col-md-12 col-xl-4">
+                        {% include 'partials/card.partial' with obj=swatch.analogous_2 %}
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col text-center bump-down">
+                        <a class="btn btn-outline-info bump-down"
+                           href="/library/collection/{{ swatch.id }},{{ swatch.analogous_1.id }},{{ swatch.analogous_2.id }}"
+                           target="_blank"
+                           role="button"
+                           rel="noopener"
+                        >Create Collection</a>
+                    </div>
+                </div>
+                <div class="container">
+                    <hr>
+                </div>
+
+                <h4>
+                    Triadic Color
+                </h4>
+                <p>
+                    The triadic color scheme uses three colors equally spaced
+                    around the color wheel. Triadic color schemes tend to be
+                    quite vibrant, even when using pale or unsaturated versions
+                    of hues, offers a higher degree of contrast while at the
+                    same time retains the color harmony.
+                    <a href="https://en.wikipedia.org/wiki/Color_scheme#Triadic" target="_blank" rel="noopener">
+                        Wikipedia
+                    </a>
+                </p>
+                <div class="row container">
+                    <div class="col-md-6 col-xl-4">
+                        {% include 'partials/card.partial' with obj=swatch %}
+                    </div>
+                    <div class="col-md-6 col-xl-4">
+                        {% include 'partials/card.partial' with obj=swatch.triadic_1 %}
+                    </div>
+                    <div class="col-md-12 col-xl-4">
+                        {% include 'partials/card.partial' with obj=swatch.triadic_2 %}
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col text-center bump-down">
+                        <a class="btn btn-outline-info bump-down"
+                           href="/library/collection/{{ swatch.id }},{{ swatch.triadic_1.id }},{{ swatch.triadic_2.id }}"
+                           target="_blank"
+                           role="button"
+                           rel="noopener"
+                        >Create Collection</a>
+                    </div>
+                </div>
+                <div class="container">
+                    <hr>
+                </div>
+
+                <h4>
+                    Split-Complementary Color
+                </h4>
+                <p>
+                    Split Complementary color is a mix between Complementary
+                    color and Analagous color. It forms a modified triangle
+                    where one color is dominant and the other two make great
+                    accents.
+                </p>
+                <div class="row container">
+                    <div class="col-md-6 col-xl-4">
+                        {% include 'partials/card.partial' with obj=swatch %}
+                    </div>
+                    <div class="col-md-6 col-xl-4">
+                        {% include 'partials/card.partial' with obj=swatch.split_complement_1 %}
+                    </div>
+                    <div class="col-md-12 col-xl-4">
+                        {% include 'partials/card.partial' with obj=swatch.split_complement_2 %}
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col text-center bump-down">
+                        <a class="btn btn-outline-info bump-down"
+                           href="/library/collection/{{ swatch.id }},{{ swatch.split_complement_1.id }},{{ swatch.split_complement_2.id }}"
+                           target="_blank"
+                           role="button"
+                           rel="noopener"
+                        >Create Collection</a>
+                    </div>
+                </div>
+                <div class="container">
+                    <hr>
+                </div>
+
+                <h4>
+                    Tetradic (Rectangular) Color
+                </h4>
+                <p>
+                    The tetradic (double complementary) colors scheme is the
+                    richest of all the schemes because it uses four colors
+                    arranged into two complementary color pairs. This scheme
+                    is hard to harmonize and requires a color to be dominant
+                    or subdue the colors; if all four colors are used in equal
+                    amounts, the scheme may look unbalanced.
+                </p>
+                <p>
+                    The rectangle color scheme uses four colors arranged into
+                    two complementary pairs and offers plenty of possibilities
+                    for variation. Rectangle color schemes work best when one
+                    color is dominant.
+                    <a href="https://en.wikipedia.org/wiki/Color_scheme#Rectangle" target="_blank" rel="noopener">
+                        Wikipedia
+                    </a>
+                </p>
+                <div class="row container">
+                    <div class="col-md-6 col-lg-6 col-xxl-3">
+                        {% include 'partials/card.partial' with obj=swatch %}
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xxl-3">
+                        {% include 'partials/card.partial' with obj=swatch.tetradic_1 %}
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xxl-3">
+                        {% include 'partials/card.partial' with obj=swatch.tetradic_2 %}
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xxl-3">
+                        {% include 'partials/card.partial' with obj=swatch.tetradic_3 %}
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col text-center bump-down">
+                        <a class="btn btn-outline-info bump-down"
+                           href="/library/collection/{{ swatch.id }},{{ swatch.tetradic_1.id }},{{ swatch.tetradic_2.id }},{{ swatch.tetradic_3.id }}"
+                           target="_blank"
+                           role="button"
+                           rel="noopener"
+                        >Create Collection</a>
+                    </div>
+                </div>
+                <div class="container">
+                    <hr>
+                </div>
+
+                <h4>
+                    Tetradic (Square) Color
+                </h4>
+                <p>
+                    The square color scheme is similar to the rectangle, but
+                    with all four colors spaced evenly around the color circle.
+                    Square color schemes work best when all colors are evenly
+                    balanced.
+                    <a href="https://en.wikipedia.org/wiki/Color_scheme#Square" target="_blank" rel="noopener">
+                        Wikipedia
+                    </a>
+                </p>
+                <div class="row container">
+                    <div class="col-md-6 col-lg-6 col-xxl-3">
+                        {% include 'partials/card.partial' with obj=swatch %}
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xxl-3">
+                        {% include 'partials/card.partial' with obj=swatch.square_1 %}
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xxl-3">
+                        {% include 'partials/card.partial' with obj=swatch.square_2 %}
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xxl-3">
+                        {% include 'partials/card.partial' with obj=swatch.square_3 %}
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col text-center bump-down">
+                        <a class="btn btn-outline-info bump-down"
+                           href="/library/collection/{{ swatch.id }},{{ swatch.square_1.id }},{{ swatch.square_2.id }},{{ swatch.square_3.id }}"
+                           target="_blank"
+                           role="button"
+                           rel="noopener"
+                        >Create Collection</a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <h3 class="mt-4">Similar Colors</h3>
+        <p>
+            Sometimes the specific color or filament that the site suggests
+            just isn't available... or maybe you'd just like to try something
+            similar! Here's
+            <b>{{ swatch.manufacturer.name }}{{ swatch.manufacturer.get_possessive_apostrophe }}
+                {{ swatch.color_name }}</b> and the <b>two closest swatches</b> in the library!
+        </p>
+        <div class="row">
+            <div class="col-md-12 col-lg-4">
+                {% include 'partials/card.partial' with obj=swatch %}
+            </div>
+            <div class="col-md-12 col-lg-4">
+                {% include 'partials/card.partial' with obj=swatch.closest_1 %}
+            </div>
+            <div class="col-md-12 col-lg-4">
+                {% include 'partials/card.partial' with obj=swatch.closest_2 %}
+            </div>
+        </div>
+
+        <script>
+            baguetteBox.run('.grid-gallery', {animation: 'slideIn'});
+        </script>
+
+    </div>
+{% endblock content %}

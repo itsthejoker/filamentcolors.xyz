@@ -611,13 +611,13 @@ class Color:
 
     def square(self):
         """
-            O
-           x x
-          x   x
-         O     O
-          x   x
-           x x
-            O
+           O
+          x x
+         x   x
+        O     O
+         x   x
+          x x
+           O
         """
         # RGB -> HSL
         h, s, l = rgb_to_hsl(self.col)
@@ -645,13 +645,13 @@ class Color:
 
     def tetradic(self):
         """
-            O
-           x x
-          x   O
-         x     x
-          O   x
-           x x
-            O
+           O
+          x x
+         x   O
+        x     x
+         O   x
+          x x
+           O
         """
         # RGB -> HSL
         h, s, l = rgb_to_hsl(self.col)
@@ -761,7 +761,7 @@ class Color:
         # what is the difference of 100% lightness and the current value
         diff = 1.0 - lightness
 
-        # devide the difference on a step size
+        # divide the difference on a step size
         step = diff / float(number)
 
         # use that step size to generate the 10 increasing lightness values

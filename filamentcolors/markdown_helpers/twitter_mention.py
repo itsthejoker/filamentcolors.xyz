@@ -37,7 +37,7 @@ class TwitterMentionPattern(markdown.inlinepatterns.Pattern):
 
 class MentionExtension(markdown.Extension):
     def extendMarkdown(self, md, md_globals):
-        """ Setup `mention_link` with MentionPattern """
+        """Setup `mention_link` with MentionPattern"""
         md.inlinePatterns["mention_link"] = TwitterMentionPattern(MENTION_RE, md)
 
 

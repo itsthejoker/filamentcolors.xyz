@@ -15,6 +15,10 @@ a:hover {
     text-decoration: underline;
 }
 
+hr {
+    border-top: 1px solid;
+}
+
 .cardBox a:hover, .cardBox a:visited, .cardBox a:link, .cardBox a:active {
     text-decoration: None;
 }
@@ -25,6 +29,12 @@ a:hover {
 
 .complement-box, .complement-box:hover {
     text-decoration: None;
+    color: black;
+}
+
+.complement-box:hover {
+    box-shadow: 0 0 5px black;
+    transition-duration: 100ms;
 }
 
 .btn {
@@ -50,84 +60,6 @@ a:hover {
     display: inline-block;
     color: #666;
     width: calc(100% - 70px)
-}
-
-.item-info {
-    display: inline-block;
-    height: 3em;
-    left: 25px
-}
-
-.item-info > span {
-    position: relative;
-    left: 3em;
-    display: inline-block;
-    width: 100%;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden
-}
-
-.item-info > a {
-    position: absolute;
-    left: 25px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: bold;
-    color: #333
-}
-
-.app-card {
-    display: inline-block;
-    vertical-align: top;
-    height: 280px;
-    background: #fff;
-    margin: 0 auto 30px;
-    text-align: left
-}
-
-.app-card .cover {
-    display: block;
-    width: 100%;
-    height: 225px;
-    overflow: hidden;
-    position: relative
-}
-
-.app-card .cover > img {
-    width: 100%
-}
-
-.app-card .cover::after {
-    content: '';
-    display: inline-block;
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25));
-    width: 100%;
-    height: 40px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: 9
-}
-
-.app-card .item-info {
-    height: 55px;
-    padding: 5px 10px 0
-}
-
-.app-card .item-info .avatar-wrapper {
-    vertical-align: middle;
-    border: none
-}
-
-.app-card .item-name {
-    display: inline-block;
-    font-size: 12px;
-    color: #333;
-    margin: 0 0 0 12px;
-    line-height: 1.25em;
-    width: calc(100% - 58px);
-    vertical-align: middle
 }
 
 .color-cube {
@@ -198,6 +130,14 @@ a:hover {
         box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.15) !important;
     }
 }
+
+@media (max-width: 991.98px) {
+    /* For the About section of the navbar on mobile, don't default to 250px */
+    .dropdown-100.show {
+        height: 100% !important
+    }
+}
+
 
 .kofi-button {
     margin-top: -3px;
@@ -282,27 +222,12 @@ a:hover {
 }
 
 .card-img-overlay {
-    z-index: 1;
-    pointer-events: none;
+    position: absolute;
+    z-index: 99;
+    top: 0;
+    left: 0;
     display: none;
-    transition: opacity 0.1s linear;
-    background-image: url("https://img.icons8.com/cotton/30/000000/plus.png"),
-    linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.26),
-            transparent 30px,
-            transparent);
-    background-repeat: no-repeat, repeat;
-    background-position: 6px 6px, 0 0;
-    border-radius: .14em;
-}
-
-.card-img-top:hover ~ .card-img-overlay {
-    display: block;
-}
-
-.multiselector:hover ~ .card-img-container .card-img-overlay {
-    display: block
+    border-radius: .75em;
 }
 
 /* ----------------------------------------------
@@ -392,7 +317,6 @@ a:hover {
 
 #multiselect-badge {
     width: 100%;
-    height: 38px;
 }
 
 #clear-button {
@@ -409,9 +333,9 @@ a:hover {
 }
 
 .big-shadow {
-    -webkit-box-shadow: 0 0 74px -7px rgba(0, 0, 0, 1);
-    -moz-box-shadow: 0 0 74px -7px rgba(0, 0, 0, 1);
-    box-shadow: 0 0 74px -7px rgba(0, 0, 0, 1);
+    -webkit-box-shadow: 0 0 40px 0 rgba(0, 0, 0, 1);
+    -moz-box-shadow: 0 0 40px 0 rgba(0, 0, 0, 1);
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, 1);
 }
 
 .anim {
@@ -441,12 +365,13 @@ a:hover {
     cursor: pointer;
 }
 
-.btn-outline-secondary:not(.active):hover:active {
+.btn-settings:not(.active):hover:active {
     background-color: white !important;
     color: #6c757d;
+!important;
 }
 
-.btn-outline-secondary:not(.active):hover {
+.btn-settings:not(.active):hover {
     background-color: white !important;
     color: #6c757d;
 }
@@ -460,4 +385,50 @@ a:hover {
     object-fit: cover;
     object-position: 100% 0;
     width: 400px;
+}
+
+.btn-invisible {
+    background: transparent;
+    border: none !important;
+    font-size: 0;
+}
+
+/* https://www.w3schools.com/howto/howto_js_fullscreen_overlay.asp */
+
+/* The Overlay (background) */
+.overlay {
+    height: 100%;
+    width: 100%;
+    position: fixed; /* Stay in place */
+    z-index: 100; /* Sit on top */
+    left: 0;
+    top: 0;
+    background-color: rgb(0, 0, 0); /* Black fallback color */
+    background-color: rgba(0, 0, 0, 0.05); /* Black w/opacity */
+    overflow-x: hidden; /* Disable horizontal scroll */
+}
+
+/* Position the content inside the overlay */
+.overlay-content {
+    position: relative;
+    top: 25%; /* 25% from the top */
+    width: 100%; /* 100% width */
+    text-align: center; /* Centered text/links */
+    margin-top: 30px; /* 30px top margin to avoid conflict with the close button on smaller screens */
+}
+
+.htmx-indicator {
+    display: none;
+}
+
+.htmx-request .overlay {
+    display: block;
+}
+
+.htmx-request.overlay {
+    display: block;
+}
+
+.inventory-row:hover {
+    background-color: rgba(0, 0, 0, 0.1)
 }

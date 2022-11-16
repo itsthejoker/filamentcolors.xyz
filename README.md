@@ -11,10 +11,10 @@ https://filamentcolors.xyz/api/
 API notes:
 ---
 
-- Color family is marked by a 3 letter code for data savings; the map can be found here: https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/models.py#L130-L156
-- /api/swatch/ has several sort methods available to it: `type`, `manufacturer`, and `color`. See https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/api/views.py#L34 for the source.
+- Color family is marked by a 3 letter code for data savings; the map can be found here: https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/models.py#L165-L176
+- /api/swatch/ has some sort methods available to it: `type` and `manufacturer`. See https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/api/views.py#L36 for the source.
 - Example urls:
-  - https://filamentcolors.xyz/api/swatch/?m=color
+  - https://filamentcolors.xyz/api/swatch/?m=manufacturer
   - https://filamentcolors.xyz/api/swatch/?m=type
 
 Please don't hammer the API if you're just checking for a specific piece of information like color values; instead, please keep a cache of the information that's important to you. There's a quick endpoint that you can use to validate that the information you have cached and the server information are the same.

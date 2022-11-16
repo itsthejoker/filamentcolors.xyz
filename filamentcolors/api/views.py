@@ -1,6 +1,8 @@
+import colorsys
+
 from colormath.color_conversions import convert_color
 from colormath.color_objects import LabColor, sRGBColor
-from django.db.models import Q
+from django.db.models import F, Q
 from django.db.models.functions import Lower
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
@@ -40,9 +42,6 @@ class SwatchViewSet(ReadOnlyModelViewSet):
 
         elif method == "manufacturer":
             queryset = queryset.order_by("manufacturer")
-
-        elif method == "color":
-            queryset = sorted(queryset, key=get_hsv)
 
         else:
             queryset = queryset.order_by("-date_added")

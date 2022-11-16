@@ -1,0 +1,2 @@
+# exclude all files under /vendored from Github's language statistics
+filamentcolors/appstatic/vendored/** linguist-vendored

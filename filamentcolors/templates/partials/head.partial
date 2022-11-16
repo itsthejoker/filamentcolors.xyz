@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<script src="{% static 'vendored/js/htmx.min.js' %}"></script>
+<script src="{% static 'vendored/js/htmx.js' %}"></script>
 {% django_htmx_script %}
 <link rel="stylesheet" href="{% static 'vendored/css/bootstrap.min.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/css/baguetteBox.min.css' %}">
@@ -14,8 +14,7 @@
 <link rel="stylesheet" href="{% static 'vendored/icomoon/style.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/nucleo-icons.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/nucleo-svg.css' %}">
-<link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/material-kit-pro.css' %}">
-{#<link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/material-kit-pro.min.css?asdf' %}">#}
+<link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/material-kit-pro.css' %}?v=2">
 <link rel="stylesheet" href="{% static 'css/main.css' %}?v=5">
 
 {% if not request.user.is_authenticated %}

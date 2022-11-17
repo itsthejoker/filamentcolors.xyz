@@ -57,9 +57,7 @@
                 </button>
             </div>
             <div class="col-md-6 col-lg-3 text-center kofi-button mb-2 mt-1">
-                <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script>
-                <script type='text/javascript'>kofiwidget2.init('Buy Me a Coffee', '#007bff', 'C0C2QOVZ');
-                kofiwidget2.draw();</script>
+                <a href="https://ko-fi.com/joekaufeld" class="btn bg-gradient-info">Buy me a coffee!</a>
             </div>
             <div class="col-md-6 col-lg-3 text-center mt-1 mb-2">
                 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">

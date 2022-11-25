@@ -1,5 +1,6 @@
 from django import forms
 from django.db.models.functions import Lower
+from django.forms import ClearableFileInput
 
 from filamentcolors.models import FilamentType, Manufacturer, Swatch
 
@@ -34,11 +35,11 @@ class SwatchForm(forms.ModelForm):
         ]
 
 
+class CustomClearableFileInputField(ClearableFileInput):
+    template_name = "widgets/clearable_file_input.html"
+
+
 class SwatchUpdateImagesForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["image_front"].required = True
-        self.fields["image_back"].required = True
 
     class Meta:
         model = Swatch
@@ -47,6 +48,11 @@ class SwatchUpdateImagesForm(forms.ModelForm):
             "image_back",
             "image_other",
         ]
+        widgets = {
+            'image_front': CustomClearableFileInputField,
+            'image_back': CustomClearableFileInputField,
+            'image_other': CustomClearableFileInputField
+        }
 
 
 class ListSwatchInventoryForm(forms.Form):

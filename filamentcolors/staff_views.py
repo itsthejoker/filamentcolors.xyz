@@ -138,17 +138,31 @@ def add_swatch_landing(request):
 
 @staff_member_required
 def update_swatch_images(request, swatch_id: int):
+    target_swatch = Swatch.objects.get(id=swatch_id)
     if request.method == "POST":
         form = SwatchUpdateImagesForm(
-            request.POST, request.FILES, instance=Swatch.objects.get(id=swatch_id)
+            request.POST, request.FILES, instance=target_swatch
         )
         updated_swatch = form.save(commit=False)
-        updated_swatch.card_image = None
-        updated_swatch.regenerate_info = True
+        updated_swatch.crop_and_save_images()
         updated_swatch.save()
+        return HttpResponseRedirect(
+            reverse("swatchdetail", kwargs={"id": target_swatch.id})
+        )
     else:
-        # todo: serve the empty form
-        ...
+        data = build_data_dict(request)
+        form = SwatchUpdateImagesForm(instance=target_swatch)
+        data.update(
+            {
+                "header": "Update Swatch Images",
+                "subheader": (
+                    f"Updating images for {target_swatch.manufacturer.name}"
+                    f" {target_swatch.color_name} {target_swatch.filament_type.name}!"
+                ),
+                "form": form,
+            }
+        )
+        return prep_request(request, "generic_form.html", data)
 
 
 @staff_member_required

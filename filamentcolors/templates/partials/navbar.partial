@@ -445,40 +445,6 @@
                             {% endcomment %}
                             <div class="d-none d-lg-block">
                                 <ul class="list-group">
-                                    {% if 'swatch' in request.path and 'add' not in request.path %}
-                                        <li class="nav-item list-group-item border-0 p-0">
-                                            <a href="/admin/filamentcolors/swatch/{{ swatch.id }}/change/"
-                                               tabindex="0"
-                                               class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                                                <b>Edit Swatch</b>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item list-group-item border-0 p-0">
-                                            <a hx-get="{% url 'recalculate_color' swatch.id %}"
-                                               tabindex="0"
-                                               hx-target="#main"
-                                               hx-indicator="#loading"
-                                               hx-swap="outerHTML"
-                                               hx-trigger="click"
-                                               hx-push-url="true"
-                                               class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                                                <b>Recalculate Color</b>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item list-group-item border-0 p-0">
-                                            <a hx-get="{% url 'force_hex_color' swatch.id %}"
-                                               tabindex="0"
-                                               hx-indicator="#loading"
-                                               hx-target="#main"
-                                               hx-swap="outerHTML"
-                                               hx-trigger="click"
-                                               hx-push-url="true"
-                                               class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                                                <b>Force Specific Color</b>
-                                            </a>
-                                        </li>
-                                        <div class="dropdown-divider"></div>
-                                    {% endif %}
                                     <li class="nav-item list-group-item border-0 p-0">
                                         <a hx-get="{% url 'add_swatch_landing' %}"
                                            tabindex="0"
@@ -547,33 +513,6 @@
                             {% endcomment %}
                             <div class="row d-lg-none dropdown-100">
                                 <div class="col-md-12">
-                                    {% if 'swatch' in request.path and 'add' not in request.path %}
-                                        <div class="d-flex mb-2">
-                                            <div class="w-100 d-flex align-items-center justify-content-between">
-                                                <a href="/admin/filamentcolors/swatch/{{ swatch.id }}/change/"
-                                                   class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                                                    <b>Edit Swatch</b>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex mb-2">
-                                            <div class="w-100 d-flex align-items-center justify-content-between">
-                                                <a href="{% url 'recalculate_color' swatch.id %}"
-                                                   class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                                                    <b>Recalculate Color</b>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex mb-2">
-                                            <div class="w-100 d-flex align-items-center justify-content-between">
-                                                <a href="{% url 'force_hex_color' swatch.id %}"
-                                                   class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                                                    <b>Force Specific Color</b>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="dropdown-divider"></div>
-                                    {% endif %}
                                     <div class="d-flex mb-2">
                                         <div class="w-100 d-flex align-items-center justify-content-between">
                                             <a href="{% url 'add_swatch_landing' %}"

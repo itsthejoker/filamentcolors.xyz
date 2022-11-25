@@ -30,7 +30,8 @@
                 <div class="col-lg-6">
                     <section class="gallery-block grid-gallery">
                         <div class="item">
-                            <a class="lightbox" href="{{ swatch.image_front.url }}" title="Representative picture of the swatch front">
+                            <a class="lightbox" href="{{ swatch.image_front.url }}"
+                               title="Representative picture of the swatch front">
                                 <img class="img-fluid image scale-on-hover" src="{{ swatch.image_front.url }}"
                                      alt="An image of the front of the color swatch.">
                             </a>
@@ -39,7 +40,8 @@
                             <div class="row">
                                 <div class="col-sm-3"></div>
                                 <div class="col-sm-3 item">
-                                    <a class="lightbox" href="{{ swatch.image_back.url }}" title="Representative picture of the swatch back">
+                                    <a class="lightbox" href="{{ swatch.image_back.url }}"
+                                       title="Representative picture of the swatch back">
                                         <img class="img-fluid image scale-on-hover" src="{{ swatch.image_back.url }}"
                                              alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
                                     </a>
@@ -57,7 +59,8 @@
                             <div class="row">
                                 <div class="col-sm-4"></div>
                                 <div class="col-sm-4">
-                                    <a class="lightbox" href="{{ swatch.image_back.url }}" title="Representative picture of the swatch back">
+                                    <a class="lightbox" href="{{ swatch.image_back.url }}"
+                                       title="Representative picture of the swatch back">
                                         <img class="img-fluid image scale-on-hover" src="{{ swatch.image_back.url }}"
                                              alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
                                     </a>
@@ -124,6 +127,47 @@
                                        role="button"
                                        rel="noopener"
                                     >Buy from {{ swatch.manufacturer.name }}</a>
+                                {% endif %}
+                                {% if request.user.is_authenticated %}
+                                    <div class="dropdown d-grid">
+                                        <a href="#"
+                                           class="btn bg-gradient-primary dropdown-toggle-white dropdown-toggle"
+                                           data-bs-toggle="dropdown" id="AdminSwatchControlPanel">
+                                            Admin
+                                        </a>
+                                        <ul class="dropdown-menu w-100 text-center" aria-labelledby="AdminSwatchControlPanel">
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   href="/admin/filamentcolors/swatch/{{ swatch.id }}/change/">
+                                                    Edit Swatch
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   tabindex="0"
+                                                   hx-target="#main"
+                                                   hx-indicator="#loading"
+                                                   hx-swap="outerHTML"
+                                                   hx-trigger="click"
+                                                   hx-push-url="true"
+                                                   hx-get="{% url 'update_images' swatch.id %}">
+                                                    Replace Images
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   tabindex="0"
+                                                   hx-target="#main"
+                                                   hx-indicator="#loading"
+                                                   hx-swap="outerHTML"
+                                                   hx-trigger="click"
+                                                   hx-push-url="true"
+                                                   hx-get="{% url 'force_hex_color' swatch.id %}">
+                                                    Force Specific Color
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 {% endif %}
                             </div>
                             <p></p>

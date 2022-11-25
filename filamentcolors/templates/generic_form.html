@@ -127,9 +127,7 @@
                             {% else %}
                                 {% if field.field.widget.input_type == 'file' %}
                                     <div class="my-auto pe-3 text-muted">{{ field.label }}:</div>
-                                    {{ field|add_class:"form-control"|attr:"type=file" }}
-                                    {#                                    <label for="{{ field.auto_id }}" class="form-label">{{ field.label }}</label>#}
-                                    {#                                    {% render_field field class="form-control" type="file" %}#}
+                                    {{ field|add_class:"form-control"|attr:"type=file"|add_class:"file-input" }}
                                 {% elif field.field.widget.input_type == 'select' %}
                                     <div class="form-floating">
                                         <label for="{{ field.auto_id }}"
@@ -159,6 +157,7 @@
 
     <script>
         $(document).ready(function () {
+            // set up new inputs
             var inputs = document.querySelectorAll('.inputfile');
             Array.prototype.forEach.call(inputs, function (input) {
                 var label = input.previousElementSibling
@@ -174,6 +173,7 @@
                         label.innerText = "browse";
                 });
             });
+
             // from https://www.tjvantoll.com/2012/08/05/html5-form-validation-showing-all-error-messages/
             var createAllErrors = function () {
                 var form = $(this)

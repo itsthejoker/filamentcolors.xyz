@@ -34,6 +34,21 @@ class SwatchForm(forms.ModelForm):
         ]
 
 
+class SwatchUpdateImagesForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["image_front"].required = True
+        self.fields["image_back"].required = True
+
+    class Meta:
+        model = Swatch
+        fields = [
+            "image_front",
+            "image_back",
+            "image_other",
+        ]
+
+
 class ListSwatchInventoryForm(forms.Form):
     unpublished_swatches = forms.ModelChoiceField(
         Swatch.objects.select_related("manufacturer")

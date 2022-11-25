@@ -14,7 +14,7 @@ from filamentcolors.forms import (
     ListSwatchInventoryForm,
     ManufacturerForm,
     SwatchForm,
-    ManualHexValueForm,
+    ManualHexValueForm, SwatchUpdateImagesForm,
 )
 from filamentcolors.helpers import build_data_dict, prep_request
 from filamentcolors.models import Swatch
@@ -134,6 +134,21 @@ def add_swatch_landing(request):
             }
         )
         return prep_request(request, "generic_form.html", data)
+
+
+@staff_member_required
+def update_swatch_images(request, swatch_id: int):
+    if request.method == "POST":
+        form = SwatchUpdateImagesForm(
+            request.POST, request.FILES, instance=Swatch.objects.get(id=swatch_id)
+        )
+        updated_swatch = form.save(commit=False)
+        updated_swatch.card_image = None
+        updated_swatch.regenerate_info = True
+        updated_swatch.save()
+    else:
+        # todo: serve the empty form
+        ...
 
 
 @staff_member_required

@@ -27,11 +27,6 @@
 <main id="main">
     {% block content %}
     {% endblock content %}
-
-    {% if is_library_view %}
-        {# This has to be below the content #}
-        {% include 'partials/multiselect_js.partial' %}
-    {% endif %}
 </main>
 
 {% include 'partials/footer.partial' %}

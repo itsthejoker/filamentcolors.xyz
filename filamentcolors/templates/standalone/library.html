@@ -6,7 +6,7 @@
             {% include 'partials/color-warning.partial' %}
         {% endif %}
 
-        {% if is_library_view and swatches %}
+        {% if show_search_bar and swatches %}
             {% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
         {% endif %}
         {% if show_collection_edit_button %}
@@ -36,4 +36,6 @@
             </div>
         {% endif %}
     </div>
+
+    {% include 'partials/multiselect_js.partial' %}
 {% endblock content %}

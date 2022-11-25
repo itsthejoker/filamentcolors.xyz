@@ -1,6 +1,9 @@
-$(document).ready(function () {
-
+function multiselect_main() {
     window.multiselectArray = [];
+    // reset cards from an htmx load if necessary
+    $(".swatchcard.selected-card").each(function () {
+        $(this).removeClass("selected-card")
+    })
     // this is a global variable that is set by the template
     if (preselected !== "") {
         preselect_items(preselected)
@@ -19,6 +22,16 @@ $(document).ready(function () {
             enableCollectionMode();
         })
     })
+}
+
+
+htmx.onLoad(function (t) {
+    multiselect_main()
+})
+
+
+$(document).ready(function () {
+    multiselect_main()
 })
 
 

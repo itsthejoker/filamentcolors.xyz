@@ -79,7 +79,7 @@ def build_data_dict(request, library: bool = False) -> Dict:
       settings_buttons            |   model objects that power the settings page
       search_prefill              |   prepopulate the filter bar at top of page
       user_settings               |   a dict pulled from the user's browser
-      is_library_view             |   a boolean; only show search bar on the library.
+      show_search_bar             |   a boolean; only show search bar on the library.
     :param request: Request
     :param library: bool
     :return: dict
@@ -113,7 +113,7 @@ def build_data_dict(request, library: bool = False) -> Dict:
         "settings_buttons": GenericFilamentType.objects.all(),
         "search_prefill": request.GET.get("q", ""),
         "user_settings": get_settings_cookies(request),
-        "is_library_view": library,
+        "show_search_bar": library,
     }
 
 

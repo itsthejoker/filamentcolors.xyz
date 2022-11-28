@@ -361,7 +361,7 @@ class Swatch(models.Model):
         blank=True, verbose_name="DO NOT ADD! Computed Card Image"
     )
     hex_color = models.CharField(
-        max_length=6, blank=True, verbose_name="DO NOT ADD! Computed Hex Color"
+        max_length=6, blank=True, verbose_name="Measured hex value"
     )
     complement_hex = models.CharField(
         max_length=6, blank=True, verbose_name="DO NOT ADD! Computed Complement Hex"

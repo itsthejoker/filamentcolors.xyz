@@ -8,6 +8,7 @@ from filamentcolors.models import FilamentType, Manufacturer, Swatch
 class SwatchForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["hex_color"].required = True
         self.fields["image_front"].required = True
         self.fields["image_back"].required = True
 
@@ -23,6 +24,7 @@ class SwatchForm(forms.ModelForm):
         fields = [
             "manufacturer",
             "color_name",
+            "hex_color",
             "filament_type",
             "color_parent",
             "amazon_purchase_link",

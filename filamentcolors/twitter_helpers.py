@@ -15,6 +15,8 @@ api = Api(
     access_token_secret=os.environ.get("TWITTER_ACCESS_TOKEN_SECRET"),
 )
 
+REF_KEY = "[[ref]]"
+
 intro_phrases = [
     "Swatcheriffic!",
     "Just added a new swatch!",
@@ -34,7 +36,7 @@ intro_phrases = [
     "A new color!",
     "Gadzooks!",
     "Holy moly!",
-    "SWATCHTALITY!",
+    "SWATCH-TALITY!",
     "I found this under the bed!",
     "Just pushed an update!",
     "What do you think of this one?",
@@ -44,6 +46,8 @@ intro_phrases = [
     "Something you might be interested in!",
     "Success!",
     "Hey, check this out!",
+    "SWATCHES!",
+    "More colors!",
 ]
 
 outro_phrases = [
@@ -62,6 +66,9 @@ outro_phrases = [
     "appears here:",
     "is listed here:",
     "",
+    "is available!",
+    "has arrived!",
+    "is here!",
 ]
 
 
@@ -71,7 +78,7 @@ def generate_swatch_upload_message(swatch) -> str:
         f"{random.choice(intro_phrases)} {swatch.manufacturer.name}{plural}"
         f" {swatch.color_name} {swatch.filament_type.name}"
         f" {random.choice(outro_phrases)}"
-        f" https://filamentcolors.xyz/swatch/{swatch.id}?ref=newswatchtweet"
+        f" https://filamentcolors.xyz/swatch/{swatch.id}?ref={REF_KEY}"
     )
 
 
@@ -79,12 +86,12 @@ def send_to_social_media(message: str = None, swatch=None) -> None:
     if not message:
         message = generate_swatch_upload_message(swatch)
     # Post to Twitter
-    api.PostUpdate(message)
+    api.PostUpdate(message.replace(REF_KEY, "newswatchtweet"))
 
     # Post to Mastodon
     httpx.post(
         "https://3dp.chat/api/v1/statuses",
-        data={"status": message},
+        data={"status": message.replace(REF_KEY, "newswatchtoot")},
         headers={"Authorization": f'Bearer {os.environ.get("MASTODON_ACCESS_TOKEN")}'},
     )
 
@@ -94,7 +101,7 @@ daily_tweet_intro = [
     "Let's take a stroll through the archives!",
     "Spin the wheel of random selection to see what we get!",
     "It's always fun to find colors we may not have seen before.",
-    "`return random.choice(Swatch.objects.all())`",
+    "`return random.choice(Swatch.objects.all(published=True))`",
     "A quick scroll through the archives unearthed this!",
     "[insert clickbait intro here]",
     "Remember, filaments in the mirror may be closer than they appear.",
@@ -113,19 +120,31 @@ daily_tweet_intro = [
     "I asked the Magic 8-Ball for your favorite color and it gave me something!",
     "I've always wondered why my copy of Gray's Anatomy is tan... hmm...",
     "🎶 Voulez-vous coloriez avec moi, ce soir? 🎵",
-    "If a print fails and no one is around to hear it, does it still spaghetti? Anyway..."
+    "If a print fails and no one is around to hear it, does it still spaghetti? Anyway...",
     "Did you see that clip of {famous_person} doing {totally_normal_thing}??? Anyway...",
-    f"This tweet is brought to you by the number {random.choice(string.digits)}!",
+    "This post is brought to you by the number {number}!",
     "Heeeere's Swatchy!",
     "Fun fact: my bookshelves are (mostly!) organized by color. Ask me about it sometime!",
     "One of these days I'll add a bunch of Sims loading messages. Reticulating splines...",
     "Is it possible to have too many samples? Yes, but actually no.",
+    "So I was thinking... how much filament is too much filament? Hrm.",
+    "This post is brought to you by the letter {letter}!",
+    "Has it been long enough? Can we make fetch happen now?",
+    "Roses are red, violets are blue, and we've got swatches of all of them too!",
+    "Fun fact: this site is powered by hamsters! Okay, it's actually DigitalOcean, but still.",
+    "Fun fact: there are {swatchcount} swatches currently available for your perusal!",
+    "Got an idea for one of these messages? Hit me up!",
 ]
 
 
 def generate_daily_swatch_tweet(swatch):
+    from filamentcolors.models import Swatch  # hooray for no circular imports
+
     plural = swatch.manufacturer.get_possessive_apostrophe
-    intro = random.choice(daily_tweet_intro)
+    intro:str = random.choice(daily_tweet_intro)
+    intro = intro.replace("{number}", random.choice(string.digits))
+    intro = intro.replace("{letter}", random.choice(string.ascii_uppercase))
+    intro = intro.replace("{swatchcount}", str(Swatch.objects.filter(published=True).count()))
 
     full_update = (
         f"{intro}\n\nHave you seen this one yet? {swatch.manufacturer.name}{plural}"

@@ -832,7 +832,11 @@ class Swatch(models.Model):
             # have to save the model before we can send the tweet, otherwise
             # we won't have a swatch ID.
             if not settings.DEBUG:
-                send_to_social_media(swatch=self)
+                try:
+                    send_to_social_media(swatch=self)
+                except Exception as e:
+                    print(e)
+
                 update_google()
 
     def __str__(self):

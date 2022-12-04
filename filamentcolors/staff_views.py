@@ -251,6 +251,7 @@ def force_hex_color(request, swatch_id: int):
             if value.startswith("#"):
                 value = value[1:]
             swatch.hex_color = value
+            swatch.regenerate_all()
             swatch.update_all_color_matches(Swatch.objects.filter(published=True))
             swatch.save()
             return HttpResponseRedirect(

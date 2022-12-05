@@ -37,6 +37,7 @@
                          width="32" height="32" src="{% static "mastodon-32.png" %}"
                          alt="@filamentcolors on Mastodon">
                 </a>
+                <a rel="me" href="https://fosstodon.org/@itsthejoker"></a>
             </div>
             <div class="col-1 col-sm-2 text-center bump-down mx-auto">
                 <a href="https://twitter.com/filamentcolors" target="_blank" rel="noopener">

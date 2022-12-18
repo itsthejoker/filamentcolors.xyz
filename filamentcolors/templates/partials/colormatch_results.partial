@@ -11,9 +11,7 @@
                             class="btn bg-gradient-info"
                             hx-target="#saved_swatches_collection"
                             hx-swap="beforeend"
-                            hx-trigger="click"
-                            hx-get="/single_swatch_card/{{ option.id }}"
-                            hx-indicator="#loading"
+                            href="/single_swatch_card/{{ option.id }}"
                     >Grab Swatch</a>
                 </div>
             </div>

@@ -34,12 +34,7 @@
                     <a
                             type="button"
                             class="btn btn-default mfr-btn"
-                            hx-target="#main"
-                            hx-swap="outerHTML"
-                            hx-trigger="click"
-                            hx-get="{% url 'manufacturersort' m.id %}"
-                            hx-push-url="true"
-                            hx-indicator="#loading"
+                            href="{% url 'manufacturersort' m.id %}"
                     >
                         <span>{{ m }}</span>
                         <span class="badge badge-primary">{{ m.swatch_count }}</span>

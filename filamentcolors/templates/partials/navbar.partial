@@ -4,16 +4,11 @@
         class="navbar navbar-expand-lg navbar-light bg-white z-index-3 py-3">
     <div class="container">
         <a class="navbar-brand d-md-block d-lg-none"
-           hx-get="{% url 'library' %}"
+           href="{% url 'library' %}"
            rel="tooltip"
            title="Colors for everybody!"
            data-bs-placement="bottom"
            tabindex="0"
-           hx-indicator="#loading"
-           hx-target="#main"
-           hx-swap="outerHTML"
-           hx-trigger="click"
-           hx-push-url="true"
         >
             FilamentColors.xyz
         </a>
@@ -30,13 +25,8 @@
             <ul class="navbar-nav d-md-none d-lg-block">
                 <li>
                     <a class="navbar-brand clickable"
-                       hx-get="{% url 'library' %}"
-                       hx-indicator="#loading"
+                       href="{% url 'library' %}"
                        tabindex="0"
-                       hx-target="#main"
-                       hx-swap="outerHTML"
-                       hx-trigger="click"
-                       hx-push-url="true"
                     >
                         FilamentColors.xyz
                     </a>
@@ -58,15 +48,10 @@
                         <div class="d-none d-lg-block">
                             <ul class="list-group">
                                 <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
-                                    <button
+                                    <a
                                             class="dropdown-item py-2 ps-3 border-radius-md"
                                             tabindex="0"
-                                            hx-target="#main"
-                                            hx-swap="outerHTML"
-                                            hx-trigger="click"
-                                            hx-get="{% url 'mfr_list' %}"
-                                            hx-indicator="#loading"
-                                            hx-push-url="true"
+                                            href="{% url 'mfr_list' %}"
                                     >
                                         <div class="d-flex">
                                             <div class="w-100 d-flex align-items-center justify-content-between">
@@ -80,27 +65,17 @@
                                                      class="arrow">
                                             </div>
                                         </div>
-                                    </button>
+                                    </a>
                                     <div class="dropdown-menu mt-0 py-3 px-2 mt-3">
                                         {% for m in manufacturers|slice:"9" %}
                                             <a class="dropdown-item ps-3 border-radius-md mb-1"
                                                tabindex="0"
-                                               hx-target="#main"
-                                               hx-swap="outerHTML"
-                                               hx-trigger="click"
-                                               hx-get="/library/manufacturer/{{ m.id }}"
-                                               hx-indicator="#loading"
-                                               hx-push-url="true"
+                                               href="/library/manufacturer/{{ m.id }}"
                                             >{{ m.name }}</a>
                                         {% endfor %}
                                         <a class="dropdown-item ps-3 border-radius-md mb-1"
                                            tabindex="0"
-                                           hx-target="#main"
-                                           hx-swap="outerHTML"
-                                           hx-trigger="click"
-                                           hx-get="{% url 'mfr_list' %}"
-                                           hx-indicator="#loading"
-                                           hx-push-url="true"
+                                           href="{% url 'mfr_list' %}"
                                         ><strong>→ view all</strong></a>
                                     </div>
                                 </li>
@@ -122,12 +97,7 @@
                                         {% for t in filament_types %}
                                             <a class="dropdown-item ps-3 border-radius-md mb-1"
                                                tabindex="0"
-                                               hx-target="#main"
-                                               hx-swap="outerHTML"
-                                               hx-trigger="click"
-                                               hx-push-url="true"
-                                               hx-get="/library/filament_type/{{ t.id }}"
-                                               hx-indicator="#loading"
+                                               href="/library/filament_type/{{ t.id }}"
                                             >{{ t.name }}</a>
                                         {% endfor %}
                                     </div>
@@ -150,35 +120,20 @@
                                         {% for c in color_family %}
                                             <a class="dropdown-item ps-3 border-radius-md mb-1"
                                                tabindex="0"
-                                               hx-target="#main"
-                                               hx-swap="outerHTML"
-                                               hx-trigger="click"
-                                               hx-push-url="true"
-                                               hx-indicator="#loading"
-                                               hx-get="/library/color_family/{{ c.0 }}">{{ c.1 }}</a>
+                                               href="/library/color_family/{{ c.0 }}">{{ c.1 }}</a>
                                         {% endfor %}
                                     </div>
                                 </li>
                                 <li class="nav-item list-group-item border-0 p-0">
-                                    <a hx-get="/library/sort/random"
+                                    <a href="/library/sort/random"
                                        tabindex="0"
-                                       hx-target="#main"
-                                       hx-swap="outerHTML"
-                                       hx-indicator="#loading"
-                                       hx-trigger="click"
-                                       hx-push-url="true"
                                        class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                         <b>Random</b>
                                     </a>
                                 </li>
                                 <li class="nav-item list-group-item border-0 p-0">
-                                    <a hx-get="/library/sort/color"
+                                    <a href="/library/sort/color"
                                        tabindex="0"
-                                       hx-indicator="#loading"
-                                       hx-target="#main"
-                                       hx-swap="outerHTML"
-                                       hx-trigger="click"
-                                       hx-push-url="true"
                                        class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                         <b>Color</b>
                                     </a>
@@ -265,13 +220,8 @@
                         <div class="d-none d-lg-block">
                             <ul class="list-group">
                                 <li class="nav-item list-group-item border-0 p-0">
-                                    <a hx-get="{% url 'about' %}"
+                                    <a href="{% url 'about' %}"
                                        tabindex="0"
-                                       hx-indicator="#loading"
-                                       hx-target="#main"
-                                       hx-swap="outerHTML"
-                                       hx-trigger="click"
-                                       hx-push-url="true"
                                        class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                         <b>The project</b>
                                     </a>
@@ -336,13 +286,8 @@
                         <div class="d-none d-lg-block">
                             <ul class="list-group">
                                 <li class="nav-item list-group-item border-0 p-0">
-                                    <a hx-get="{% url 'donations' %}"
+                                    <a href="{% url 'donations' %}"
                                        tabindex="0"
-                                       hx-target="#main"
-                                       hx-indicator="#loading"
-                                       hx-swap="outerHTML"
-                                       hx-trigger="click"
-                                       hx-push-url="true"
                                        class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                         <b>Filament donations</b>
                                     </a>
@@ -417,13 +362,8 @@
                 <li class="mx-2">
                     <a class="nav-link d-flex justify-content-between cursor-pointer align-items-center"
                        role="button"
-                       hx-get="{% url 'colormatch' %}"
+                       href="{% url 'colormatch' %}"
                        tabindex="0"
-                       hx-target="#main"
-                       hx-indicator="#loading"
-                       hx-swap="outerHTML"
-                       hx-trigger="click"
-                       hx-push-url="true"
                     >
                         Color Match
                     </a>
@@ -446,49 +386,29 @@
                             <div class="d-none d-lg-block">
                                 <ul class="list-group">
                                     <li class="nav-item list-group-item border-0 p-0">
-                                        <a hx-get="{% url 'add_swatch_landing' %}"
+                                        <a href="{% url 'add_swatch_landing' %}"
                                            tabindex="0"
-                                           hx-indicator="#loading"
-                                           hx-target="#main"
-                                           hx-swap="outerHTML"
-                                           hx-trigger="click"
-                                           hx-push-url="true"
                                            class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                             <b>Upload New</b>
                                         </a>
                                     </li>
                                     <li class="nav-item list-group-item border-0 p-0">
-                                        <a hx-get="{% url 'add_mfr' %}"
+                                        <a href="{% url 'add_mfr' %}"
                                            tabindex="0"
-                                           hx-indicator="#loading"
-                                           hx-target="#main"
-                                           hx-swap="outerHTML"
-                                           hx-trigger="click"
-                                           hx-push-url="true"
                                            class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                             <b>Add Manufacturer</b>
                                         </a>
                                     </li>
                                     <li class="nav-item list-group-item border-0 p-0">
-                                        <a hx-get="{% url 'add_filament_type' %}"
+                                        <a href="{% url 'add_filament_type' %}"
                                            tabindex="0"
-                                           hx-indicator="#loading"
-                                           hx-target="#main"
-                                           hx-swap="outerHTML"
-                                           hx-trigger="click"
-                                           hx-push-url="true"
                                            class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                             <b>Add Filament Type</b>
                                         </a>
                                     </li>
                                     <li class="nav-item list-group-item border-0 p-0">
-                                        <a hx-get="{% url 'set_colors' %}"
+                                        <a href="{% url 'set_colors' %}"
                                            tabindex="0"
-                                           hx-indicator="#loading"
-                                           hx-target="#main"
-                                           hx-swap="outerHTML"
-                                           hx-trigger="click"
-                                           hx-push-url="true"
                                            class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                             <b>Set Hex Colors</b>
                                         </a>

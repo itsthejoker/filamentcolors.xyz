@@ -1,19 +1,13 @@
 {% load static %}
 
-<button
+<div
         id="s{{ obj.id }}"
         class="card mb-4 shadow swatchcard cardBox anim mx-auto"
         style="width: 18rem;"
         data-swatch-id="{{ obj.id }}"
 >
     <div class="card-img-overlay p-0"></div>
-    <div hx-target="#main"
-         hx-swap="outerHTML"
-         hx-trigger="click"
-         hx-get="/swatch/{{ obj.id }}"
-         hx-push-url="true"
-         hx-indicator="#loading">
-
+    <a href="/swatch/{{ obj.id }}">
         <div class="card-img-container">
             <img class="card-img-top img-fluid layer lazy-load-image"
                  src="{% static 'swatch-card-test.svg' %}"
@@ -46,5 +40,5 @@
             </div>
             <p class="card-text">{{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}</p>
         </div>
-    </div>
-</button>
+    </a>
+</div>

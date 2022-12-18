@@ -42,14 +42,13 @@
                                     <input type="text" style="display: none" value="{{ s.id }}" name="swatch_id">
                                 </div>
                                 <div class="col-lg-6 d-grid">
-                                    <button
+                                    <a
                                             class="btn bg-gradient-secondary"
                                             hx-post="{% url 'set_colors' %}"
-                                            hx-trigger="click"
                                             hx-target="#row-{{ s.id }}"
                                             hx-swap="innerHTML"
                                     >Submit
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </form>

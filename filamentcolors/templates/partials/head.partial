@@ -51,11 +51,6 @@
 
 <script>
     htmx.onLoad(function (t) {
-        // scroll to the top of a page loaded via htmx, but don't scroll on any other type of load
-        if (!(document.getElementById("noScrollToTop"))) {
-            window.scrollTo(0, 0);
-        }
-
         tooltips();
         lazyloadimages();
 
@@ -99,7 +94,7 @@
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     }
 
-    htmx.config.historyCacheSize = 1;
+    htmx.config.historyCacheSize = 10;
     htmx.config.refreshOnHistoryMiss = true
     htmx.config.useTemplateFragments = true
 

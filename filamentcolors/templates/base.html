@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     {% include 'partials/head.partial' %}
     {% if swatch %}
@@ -11,7 +11,13 @@
     {% endif %}
 </head>
 
-<body>
+<body
+        hx-target="#main"
+        hx-boost="true"  {# Make all <a> tags htmx-compatible. #}
+        hx-swap="outerHTML"  {# Always swap the full element and the target. #}
+        hx-push-url="true" {# Update the URL that displays in the browser. #}
+        hx-indicator="#loading" {# The location of the loading spinner. #}
+>
 {% include 'partials/navbar.partial' %}
 
 {% if launch_welcome_modal %}

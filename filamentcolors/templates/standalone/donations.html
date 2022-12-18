@@ -27,16 +27,8 @@
             library! If you have any questions, give me a shout!
         </p>
         <div class="row mt-4 mb-3">
-            <div
-                    class="col-sm-12 col-md-4 mx-auto d-grid"
-                    hx-target="#main"
-                    hx-swap="outerHTML"
-                    hx-trigger="click"
-                    hx-get="{% url 'inventory' %}"
-                    hx-push-url="true"
-                    hx-indicator="#loading"
-            >
-                <div class="btn btn-lg bg-gradient-primary">Inventory</div>
+            <div class="col-sm-12 col-md-4 mx-auto d-grid">
+                <a class="btn btn-lg bg-gradient-primary" href="{% url 'inventory' %}">Inventory</a>
             </div>
         </div>
         <h2>Supplies Needed</h2>
@@ -154,9 +146,9 @@
             <div class="alert alert-primary text-white" role="alert">
                 If it would be cheaper for you to ship to Europe, FilamentColors.xyz has
                 partnered with
-                <a class="alert-link text-white" href="https://www.3dgeeks.app">3D Geeks App</a>
+                <a class="alert-link text-white" href="https://www.3dgeeks.app" target="_blank">3D Geeks App</a>
                 in the Netherlands to serve as an alternate shipping destination. Hop in
-                the <a class="alert-link text-white" href="https://www.3dgeeks.app/u/discord-server">
+                the <a class="alert-link text-white" href="https://www.3dgeeks.app/u/discord-server" target="_blank">
                 3D Geeks Discord</a> and ask for <b>@Toby</b> for additional information!
             </div>
         </div>

@@ -28,7 +28,7 @@
         {% if not error %}
             <div class="row">
                 <div class="col-lg-6">
-                    <section class="gallery-block grid-gallery">
+                    <section class="gallery-block grid-gallery" hx-boost="false">
                         <div class="item">
                             <a class="lightbox" href="{{ swatch.image_front.url }}"
                                title="Representative picture of the swatch front">
@@ -145,24 +145,14 @@
                                             <li>
                                                 <a class="dropdown-item"
                                                    tabindex="0"
-                                                   hx-target="#main"
-                                                   hx-indicator="#loading"
-                                                   hx-swap="outerHTML"
-                                                   hx-trigger="click"
-                                                   hx-push-url="true"
-                                                   hx-get="{% url 'update_images' swatch.id %}">
+                                                   href="{% url 'update_images' swatch.id %}">
                                                     Replace Images
                                                 </a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item"
                                                    tabindex="0"
-                                                   hx-target="#main"
-                                                   hx-indicator="#loading"
-                                                   hx-swap="outerHTML"
-                                                   hx-trigger="click"
-                                                   hx-push-url="true"
-                                                   hx-get="{% url 'force_hex_color' swatch.id %}">
+                                                   href="{% url 'force_hex_color' swatch.id %}">
                                                     Force Specific Color
                                                 </a>
                                             </li>

@@ -7,13 +7,10 @@
         <div class="row">
             <div class="col-sm-2"></div>
             <div class="col-1 col-sm-2 text-center bump-down mx-auto">
-                <button tabindex="0"
+                <a tabindex="0"
                         hx-target="#main"
-                        hx-swap="outerHTML"
                         hx-trigger="click"
-                        hx-get="{% url 'about' %}"
-                        hx-indicator="#loading"
-                        hx-push-url="true"
+                        href="{% url 'about' %}"
                         class="btn-invisible"
                 >
                     <img title="About this site!"
@@ -21,7 +18,7 @@
                          loading="lazy"
                          alt="about this site"
                          src="{% static 'help_icon.png' %}">
-                </button>
+                </a>
             </div>
             <div class="col-1 col-sm-2 text-center bump-down mx-auto">
                 <a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank" rel="noopener">

@@ -6,7 +6,6 @@
                 <input
                         class="form-control"
                         id="filterInput"
-                        oninput="filterStuff()"
                         placeholder="Filter Library..."
                         type="text"
                         aria-label="Search"
@@ -29,7 +28,9 @@
             if (text) {
                 txtValue = text.textContent || text.innerText;
                 txtValue = txtValue.toUpperCase();
-                if (filterArray.every(function (element) {return txtValue.indexOf(element) > -1})) {
+                if (filterArray.every(function (element) {
+                    return txtValue.indexOf(element) > -1
+                })) {
                     elements[i].style.display = "";
                 } else {
                     elements[i].style.display = "none";
@@ -41,6 +42,19 @@
     }
 
     $(document).ready(function () {
+        function delay(fn, ms) {
+            // https://stackoverflow.com/a/1909508
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+
+        $('#filterInput').keyup(delay(function (e) {
+            filterStuff();
+        }, 200));
+
         filterStuff();
     });
 </script>

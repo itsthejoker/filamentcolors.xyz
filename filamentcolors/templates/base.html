@@ -14,7 +14,7 @@
 <body
         hx-target="#main"
         hx-boost="true"  {# Make all <a> tags htmx-compatible. #}
-        hx-swap="outerHTML"  {# Always swap the full element and the target. #}
+        hx-swap="outerHTML show:window:top"  {# Always swap the full element and the target & show the navbar. #}
         hx-push-url="true" {# Update the URL that displays in the browser. #}
         hx-indicator="#loading" {# The location of the loading spinner. #}
 >

@@ -34,6 +34,7 @@ class SwatchSerializer(HyperlinkedModelSerializer):
             "image_back",
             "image_other",
             "date_added",
+            "date_published",
             "notes",
             "amazon_purchase_link",
             "mfr_purchase_link",

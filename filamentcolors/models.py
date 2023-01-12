@@ -228,6 +228,7 @@ class Swatch(models.Model):
     donated_by = models.CharField(max_length=240, null=True, blank=True)
 
     date_added = models.DateTimeField(default=timezone.now)
+    date_published = models.DateTimeField(null=True, blank=True)
     last_cache_update = models.DateTimeField(
         default=pytz.timezone("UTC").localize(
             timezone.datetime(year=1969, month=1, day=1)
@@ -422,7 +423,11 @@ class Swatch(models.Model):
 
     @property
     def human_readable_date(self) -> str:
-        return self.date_added.strftime("%b %d, %Y")
+        format = "%b %d, %Y"
+        if self.date_published:
+            return self.date_published.strftime(format)
+        else:
+            return self.date_added.strftime(format)
 
     def get_rgb(self, hex: str) -> Tuple[int, ...]:
         return tuple(int(hex[i : i + 2], 16) for i in (0, 2, 4))
@@ -759,9 +764,9 @@ class Swatch(models.Model):
         These will only be used if the user has the default settings on the
         front end.
         """
-        latest_swatch = Swatch.objects.exclude(published=False).latest("date_added")
-        if latest_swatch.date_added > self.last_cache_update:
-            library = Swatch.objects.exclude(published=False)
+        latest_swatch = Swatch.objects.filter(published=True).latest("date_published")
+        if latest_swatch.date_published > self.last_cache_update:
+            library = Swatch.objects.filter(published=True)
             self.update_all_color_matches(library)
             self.last_cache_update = timezone.now()
             self.save()

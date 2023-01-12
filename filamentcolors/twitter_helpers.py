@@ -141,10 +141,12 @@ def generate_daily_swatch_tweet(swatch):
     from filamentcolors.models import Swatch  # hooray for no circular imports
 
     plural = swatch.manufacturer.get_possessive_apostrophe
-    intro:str = random.choice(daily_tweet_intro)
+    intro: str = random.choice(daily_tweet_intro)
     intro = intro.replace("{number}", random.choice(string.digits))
     intro = intro.replace("{letter}", random.choice(string.ascii_uppercase))
-    intro = intro.replace("{swatchcount}", str(Swatch.objects.filter(published=True).count()))
+    intro = intro.replace(
+        "{swatchcount}", str(Swatch.objects.filter(published=True).count())
+    )
 
     full_update = (
         f"{intro}\n\nHave you seen this one yet? {swatch.manufacturer.name}{plural}"

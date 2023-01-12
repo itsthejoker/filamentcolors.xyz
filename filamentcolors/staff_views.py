@@ -6,6 +6,7 @@ from django.shortcuts import (
     reverse,
     get_object_or_404,
 )
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from filamentcolors.forms import (
@@ -14,7 +15,8 @@ from filamentcolors.forms import (
     ListSwatchInventoryForm,
     ManufacturerForm,
     SwatchForm,
-    ManualHexValueForm, SwatchUpdateImagesForm,
+    ManualHexValueForm,
+    SwatchUpdateImagesForm,
 )
 from filamentcolors.helpers import build_data_dict, prep_request
 from filamentcolors.models import Swatch
@@ -73,6 +75,7 @@ def add_swatch(request, swatch_id: int = None):
             form = SwatchForm(request.POST, request.FILES)
         new_swatch = form.save(commit=False)
         new_swatch.published = True
+        new_swatch.date_published = timezone.now()
         new_swatch.save()
         return HttpResponseRedirect(
             reverse("swatchdetail", kwargs={"id": new_swatch.id})

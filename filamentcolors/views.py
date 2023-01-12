@@ -60,7 +60,7 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
         data.update({"show_color_warning": True})
 
     else:
-        items = items.order_by("-date_added")
+        items = items.order_by("-date_published")
 
     data.update({"swatches": items, "show_filter_bar": True})
 
@@ -159,7 +159,7 @@ def edit_swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
     data.update({"preselect_collection": cleaned_ids})
     data.update(
         {
-            "swatches": get_swatches(data).order_by("-date_added"),
+            "swatches": get_swatches(data).order_by("-date_published"),
         }
     )
 

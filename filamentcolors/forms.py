@@ -42,7 +42,6 @@ class CustomClearableFileInputField(ClearableFileInput):
 
 
 class SwatchUpdateImagesForm(forms.ModelForm):
-
     class Meta:
         model = Swatch
         fields = [
@@ -51,9 +50,9 @@ class SwatchUpdateImagesForm(forms.ModelForm):
             "image_other",
         ]
         widgets = {
-            'image_front': CustomClearableFileInputField,
-            'image_back': CustomClearableFileInputField,
-            'image_other': CustomClearableFileInputField
+            "image_front": CustomClearableFileInputField,
+            "image_back": CustomClearableFileInputField,
+            "image_other": CustomClearableFileInputField,
         }
 
 

@@ -19,7 +19,7 @@ def first_time_visitor(r: request) -> bool:
 
 
 def prep_request(
-        r: request, html: str, data: Dict = None, *args: Any, **kwargs: Any
+    r: request, html: str, data: Dict = None, *args: Any, **kwargs: Any
 ) -> HttpResponse:
     """
     Prepare the actual request for serving.
@@ -50,7 +50,7 @@ def prep_request(
 def get_hsv(item):
     # This seems to work but I don't know why or how
     hexrgb = item.hex_color
-    r, g, b = (int(hexrgb[i: i + 2], 16) / 255.0 for i in range(0, 5, 2))
+    r, g, b = (int(hexrgb[i : i + 2], 16) / 255.0 for i in range(0, 5, 2))
     return colorsys.rgb_to_hsv(r, g, b)
 
 
@@ -98,9 +98,7 @@ def build_data_dict(request, library: bool = False) -> Dict:
             )
             .exclude(id__in=Manufacturer.objects.filter(swatch__isnull=True))
             .order_by(Lower("name"))
-            .annotate(
-                swatch_count=Count("swatch", filter=Q(swatch__published=True))
-            )
+            .annotate(swatch_count=Count("swatch", filter=Q(swatch__published=True)))
         ),
         "filament_types": GenericFilamentType.objects.order_by(Lower("name")),
         "color_family": Swatch.BASE_COLOR_OPTIONS,
@@ -179,9 +177,9 @@ def generate_custom_library(data: Dict) -> bool:
     :return:
     """
     return not (
-            len(data["user_settings"]["types"]) == GenericFilamentType.objects.count()
-            and data["user_settings"]["show_unavailable"]
-            and len(data["user_settings"]["mfr_whitelist"]) == Manufacturer.objects.count()
+        len(data["user_settings"]["types"]) == GenericFilamentType.objects.count()
+        and data["user_settings"]["show_unavailable"]
+        and len(data["user_settings"]["mfr_whitelist"]) == Manufacturer.objects.count()
     )
 
 

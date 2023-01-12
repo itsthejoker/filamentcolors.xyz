@@ -34,7 +34,7 @@ sitemaps = {
     "swatches": GenericSitemap(
         {
             "queryset": Swatch.objects.filter(published=True).order_by("id"),
-            "date_field": "date_added",
+            "date_field": "date_published",
         }
     ),
     "posts": GenericSitemap(

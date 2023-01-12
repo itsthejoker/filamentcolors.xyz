@@ -44,7 +44,7 @@ class SwatchViewSet(ReadOnlyModelViewSet):
             queryset = queryset.order_by("manufacturer")
 
         else:
-            queryset = queryset.order_by("-date_added")
+            queryset = queryset.order_by("-date_published")
 
         return queryset
 

@@ -129,6 +129,7 @@ class InventoryForm(forms.ModelForm):
             "filament_type",
             "color_name",
             "color_parent",
+            "alt_color_parent",
             "manufacturer",
             "donated_by",
         ]

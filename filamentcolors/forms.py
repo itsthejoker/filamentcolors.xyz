@@ -5,6 +5,10 @@ from django.forms import ClearableFileInput
 from filamentcolors.models import FilamentType, Manufacturer, Swatch
 
 
+class CustomClearableFileInputField(ClearableFileInput):
+    template_name = "widgets/clearable_file_input.html"
+
+
 class SwatchForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -27,6 +31,7 @@ class SwatchForm(forms.ModelForm):
             "hex_color",
             "filament_type",
             "color_parent",
+            "alt_color_parent",
             "amazon_purchase_link",
             "mfr_purchase_link",
             "image_front",
@@ -35,10 +40,43 @@ class SwatchForm(forms.ModelForm):
             "notes",
             "donated_by",
         ]
+        widgets = {
+            "image_front": CustomClearableFileInputField,
+            "image_back": CustomClearableFileInputField,
+            "image_other": CustomClearableFileInputField,
+        }
 
 
-class CustomClearableFileInputField(ClearableFileInput):
-    template_name = "widgets/clearable_file_input.html"
+class SwatchFormNoImages(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["hex_color"].required = True
+        self.fields["color_name"].required = True
+        self.fields["manufacturer"].required = True
+        self.fields["filament_type"].required = True
+        self.fields["color_parent"].required = True
+
+    manufacturer = forms.ModelChoiceField(
+        queryset=Manufacturer.objects.all().order_by(Lower("name"))
+    )
+    filament_type = forms.ModelChoiceField(
+        queryset=FilamentType.objects.all().order_by(Lower("name"))
+    )
+
+    class Meta:
+        model = Swatch
+        fields = [
+            "manufacturer",
+            "color_name",
+            "hex_color",
+            "filament_type",
+            "color_parent",
+            "alt_color_parent",
+            "amazon_purchase_link",
+            "mfr_purchase_link",
+            "notes",
+            "donated_by",
+        ]
 
 
 class SwatchUpdateImagesForm(forms.ModelForm):

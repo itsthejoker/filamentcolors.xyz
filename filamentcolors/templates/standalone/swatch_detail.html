@@ -135,10 +135,11 @@
                                            data-bs-toggle="dropdown" id="AdminSwatchControlPanel">
                                             Admin
                                         </a>
-                                        <ul class="dropdown-menu w-100 text-center" aria-labelledby="AdminSwatchControlPanel">
+                                        <ul class="dropdown-menu w-100 text-center"
+                                            aria-labelledby="AdminSwatchControlPanel">
                                             <li>
                                                 <a class="dropdown-item" hx-boost="false"
-                                                   href="/admin/filamentcolors/swatch/{{ swatch.id }}/change/">
+                                                   href="{% url 'edit_swatch' swatch.id %}">
                                                     Edit Swatch
                                                 </a>
                                             </li>
@@ -154,6 +155,12 @@
                                                    tabindex="0"
                                                    href="{% url 'force_hex_color' swatch.id %}">
                                                     Force Specific Color
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" hx-boost="false"
+                                                   href="/admin/filamentcolors/swatch/{{ swatch.id }}/change/">
+                                                    Admin Panel
                                                 </a>
                                             </li>
                                         </ul>

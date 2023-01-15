@@ -2,6 +2,7 @@ import random
 from typing import Any
 
 from django.core.handlers.wsgi import WSGIRequest
+from django.db.models import Q
 from django.db.models.functions import Lower
 from django.http import Http404, HttpResponse
 from django.shortcuts import HttpResponseRedirect, reverse
@@ -73,7 +74,7 @@ def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
     data = build_data_dict(request, library=True)
     s = get_swatches(data)
 
-    s = s.filter(color_parent=family_id)
+    s = s.filter(Q(color_parent=family_id) | Q(alt_color_parent=family_id))
 
     data.update({"swatches": s})
 

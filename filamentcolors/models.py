@@ -203,7 +203,18 @@ class Swatch(models.Model):
     )
 
     color_parent = models.CharField(
-        max_length=3, choices=BASE_COLOR_OPTIONS, null=True, blank=True, default=WHITE
+        max_length=3,
+        choices=BASE_COLOR_OPTIONS,
+        null=True,
+        blank=True,
+        default=WHITE,
+    )
+
+    alt_color_parent = models.CharField(
+        max_length=3,
+        choices=BASE_COLOR_OPTIONS,
+        null=True,
+        blank=True,
     )
 
     # full size images

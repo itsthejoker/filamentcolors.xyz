@@ -116,6 +116,11 @@ urlpatterns = [
         name="update_images",
     ),
     path(
+        "edit/<int:swatch_id>/",
+        staff_views.swatch_edit,
+        name="edit_swatch",
+    ),
+    path(
         "sitemap.xml",
         sitemap,
         {"sitemaps": sitemaps},

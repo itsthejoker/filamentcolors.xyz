@@ -16,7 +16,7 @@ from filamentcolors.forms import (
     ManufacturerForm,
     SwatchForm,
     ManualHexValueForm,
-    SwatchUpdateImagesForm,
+    SwatchUpdateImagesForm, SwatchFormNoImages,
 )
 from filamentcolors.helpers import build_data_dict, prep_request
 from filamentcolors.models import Swatch
@@ -160,6 +160,37 @@ def update_swatch_images(request, swatch_id: int):
                 "header": "Update Swatch Images",
                 "subheader": (
                     f"Updating images for {target_swatch.manufacturer.name}"
+                    f" {target_swatch.color_name} {target_swatch.filament_type.name}!"
+                ),
+                "form": form,
+            }
+        )
+        return prep_request(request, "generic_form.html", data)
+
+
+@staff_member_required
+def swatch_edit(request, swatch_id: int):
+    target_swatch = Swatch.objects.get(id=swatch_id)
+    if request.method == "POST":
+        form = SwatchFormNoImages(
+            request.POST, instance=target_swatch
+        )
+        updated_swatch = form.save(commit=False)
+        updated_swatch.regenerate_info = True
+        updated_swatch.save()
+
+        return HttpResponseRedirect(
+            reverse("swatchdetail", kwargs={"id": target_swatch.id})
+        )
+    else:
+        data = build_data_dict(request)
+        form = SwatchFormNoImages(instance=target_swatch)
+        data.update(
+            {
+                "header": "Edit Swatch",
+                "subheader": (
+                    f"Edit {target_swatch.manufacturer.name}"
+                    f"{target_swatch.manufacturer.get_possessive_apostrophe}"
                     f" {target_swatch.color_name} {target_swatch.filament_type.name}!"
                 ),
                 "form": form,

@@ -16,7 +16,8 @@ from filamentcolors.forms import (
     ManufacturerForm,
     SwatchForm,
     ManualHexValueForm,
-    SwatchUpdateImagesForm, SwatchFormNoImages,
+    SwatchUpdateImagesForm,
+    SwatchFormNoImages,
 )
 from filamentcolors.helpers import build_data_dict, prep_request
 from filamentcolors.models import Swatch
@@ -172,9 +173,7 @@ def update_swatch_images(request, swatch_id: int):
 def swatch_edit(request, swatch_id: int):
     target_swatch = Swatch.objects.get(id=swatch_id)
     if request.method == "POST":
-        form = SwatchFormNoImages(
-            request.POST, instance=target_swatch
-        )
+        form = SwatchFormNoImages(request.POST, instance=target_swatch)
         updated_swatch = form.save(commit=False)
         updated_swatch.regenerate_info = True
         updated_swatch.save()

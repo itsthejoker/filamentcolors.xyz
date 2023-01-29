@@ -1,7 +1,9 @@
+from typing import Optional
+
 from rest_framework import serializers
 from rest_framework.serializers import HyperlinkedModelSerializer
 
-from filamentcolors.models import FilamentType, Manufacturer, Swatch
+from filamentcolors.models import FilamentType, Manufacturer, Swatch, Pantone, RAL
 
 
 class FilamentTypeSerializer(HyperlinkedModelSerializer):
@@ -16,10 +18,44 @@ class ManufacturerSerializer(HyperlinkedModelSerializer):
         fields = ("id", "name", "website")
 
 
+class ColorSerializerHelpers:
+    def get_name(self, obj) -> Optional[str]:
+        if obj.name:
+            return obj.name
+        return None
+
+    def get_hex_color(self, obj) -> str:
+        return f"#{obj.hex_color}"
+
+
+class PantoneColorSerializer(HyperlinkedModelSerializer, ColorSerializerHelpers):
+    name = serializers.SerializerMethodField()
+    hex_color = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Pantone
+        fields = ("code", "name", "hex_color", "category")
+
+
+class RALColorSerializer(HyperlinkedModelSerializer, ColorSerializerHelpers):
+    name = serializers.SerializerMethodField()
+    hex_color = serializers.SerializerMethodField()
+
+    class Meta:
+        model = RAL
+        fields = ("code", "name", "hex_color", "category")
+
+
 class SwatchSerializer(HyperlinkedModelSerializer):
     manufacturer = ManufacturerSerializer(read_only=True)
     filament_type = FilamentTypeSerializer(read_only=True)
-    # remove after 10/23/22
+    closest_pantone_1 = PantoneColorSerializer(read_only=True)
+    closest_pantone_2 = PantoneColorSerializer(read_only=True)
+    closest_pantone_3 = PantoneColorSerializer(read_only=True)
+    closest_ral_3 = RALColorSerializer(read_only=True)
+    closest_ral_2 = RALColorSerializer(read_only=True)
+    closest_ral_1 = RALColorSerializer(read_only=True)
+
     tags = serializers.ListField(default=[])
 
     class Meta:
@@ -38,6 +74,12 @@ class SwatchSerializer(HyperlinkedModelSerializer):
             "notes",
             "amazon_purchase_link",
             "mfr_purchase_link",
+            "closest_pantone_1",
+            "closest_pantone_2",
+            "closest_pantone_3",
+            "closest_ral_1",
+            "closest_ral_2",
+            "closest_ral_3",
             "complement",
             "analogous_1",
             "analogous_2",

@@ -16,9 +16,11 @@ from filamentcolors.api.serializers import (
     FilamentTypeSerializer,
     ManufacturerSerializer,
     SwatchSerializer,
+    PantoneColorSerializer,
+    RALColorSerializer,
 )
 from filamentcolors.helpers import get_hsv
-from filamentcolors.models import FilamentType, Manufacturer, Swatch
+from filamentcolors.models import FilamentType, Manufacturer, Swatch, Pantone, RAL
 
 
 class SwatchViewSet(ReadOnlyModelViewSet):
@@ -88,6 +90,18 @@ class FilamentTypeViewSet(ReadOnlyModelViewSet):
     serializer_class = FilamentTypeSerializer
     basename = "filament_type"
     queryset = FilamentType.objects.all().order_by(Lower("name"))
+
+
+class PantoneColorViewSet(ReadOnlyModelViewSet):
+    serializer_class = PantoneColorSerializer
+    basename = "pantone"
+    queryset = Pantone.objects.all().order_by(Lower("name"))
+
+
+class RALColorViewSet(ReadOnlyModelViewSet):
+    serializer_class = RALColorSerializer
+    basename = "ral"
+    queryset = RAL.objects.all().order_by(Lower("name"))
 
 
 def db_version(request):

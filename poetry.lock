@@ -1272,6 +1272,27 @@ requests = "*"
 requests-oauthlib = "*"
 
 [[package]]
+name = "pytumblr"
+version = "0.1.2"
+description = "A Python Tumblr API v2 Client"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+files = [
+    {file = "PyTumblr-0.1.2-py2.py3-none-any.whl", hash = "sha256:4435bf4ddbd3543a980a2920788914e8e41a9b91b255eabfd22dd7a2f4eedfec"},
+    {file = "PyTumblr-0.1.2.tar.gz", hash = "sha256:eef2653110f84df74a9d8628a4edf30131004de07e93484bc8cc95e44072036e"},
+]
+
+[package.dependencies]
+future = "*"
+requests-oauthlib = "*"
+
+[package.extras]
+mock = ["mock"]
+nose = ["nose"]
+nosecov = ["nose-cov"]
+
+[[package]]
 name = "pytz"
 version = "2022.7"
 description = "World timezone definitions, modern and historical"
@@ -1828,4 +1849,4 @@ test = ["pytest (>=3.0.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.11"
-content-hash = "7886c7cecebcd7126dac258799e692bf81dd47c203bdadbc83b2ca91830d50ab"
+content-hash = "aa911f32d0147c8671e9edf03b38bc2c9968b60fc4ff43e902fdef4211254d05"

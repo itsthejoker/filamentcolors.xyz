@@ -42,4 +42,8 @@ class Command(BaseCommand):
         self.stdout.write(f"Sleeping for {sleep_count}")
         sleep(sleep_count)
 
-        send_to_social_media(get_tweet_content(get_random_swatch()))
+        swatch_to_post = get_random_swatch()
+
+        send_to_social_media(
+            message=get_tweet_content(swatch_to_post), swatch=swatch_to_post
+        )

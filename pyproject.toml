@@ -38,6 +38,7 @@ django-cleanup = "^6.0.0"
 imagecodecs = "^2022.9.26"
 django-debug-toolbar = "^3.7.0"
 httpx = "^0.23.0"
+pytumblr = "^0.1.2"
 
 [tool.poetry.dev-dependencies]
 better-exceptions = "^0.3.3"

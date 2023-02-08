@@ -849,7 +849,7 @@ class Swatch(models.Model):
             # we won't have a swatch ID.
             if not settings.DEBUG:
                 try:
-                    send_to_social_media(swatch=self)
+                    send_to_social_media(swatch=self, new_swatch=True)
                 except Exception as e:
                     print(e)
 

@@ -3,16 +3,25 @@ import random
 import string
 
 import httpx
+import pytumblr
+from django.urls import reverse
 from dotenv import load_dotenv
 from twitter import Api
 
 load_dotenv()
 
-api = Api(
+twitter = Api(
     consumer_key=os.environ.get("TWITTER_CONSUMER_KEY"),
     consumer_secret=os.environ.get("TWITTER_CONSUMER_SECRET"),
     access_token_key=os.environ.get("TWITTER_ACCESS_TOKEN_KEY"),
     access_token_secret=os.environ.get("TWITTER_ACCESS_TOKEN_SECRET"),
+)
+
+tumblr = pytumblr.TumblrRestClient(
+    os.environ.get("TUMBLR_CONSUMER_KEY"),
+    os.environ.get("TUMBLR_SECRET"),
+    os.environ.get("TUMBLR_OAUTH_TOKEN"),
+    os.environ.get("TUMBLR_OAUTH_TOKEN_SECRET"),
 )
 
 REF_KEY = "[[ref]]"
@@ -82,22 +91,60 @@ def generate_swatch_upload_message(swatch) -> str:
     )
 
 
-def send_to_social_media(message: str = None, swatch=None) -> None:
+def send_to_social_media(message: str = None, swatch=None, new_swatch=False) -> None:
+    if not message and not swatch:
+        raise Exception("Cannot create posts without either a message or a swatch!")
     if not message:
         message = generate_swatch_upload_message(swatch)
-    try:
-        # Post to Twitter
-        api.PostUpdate(message.replace(REF_KEY, "newswatchtweet"))
-    except Exception as e:
-        print(e)
 
     try:
         # Post to Mastodon
         httpx.post(
             "https://3dp.chat/api/v1/statuses",
-            data={"status": message.replace(REF_KEY, "newswatchtoot")},
+            data={"status": message.replace(REF_KEY, "newswatchtoot" if new_swatch else 'autotoot')},
             headers={"Authorization": f'Bearer {os.environ.get("MASTODON_ACCESS_TOKEN")}'},
         )
+    except Exception as e:
+        print(e)
+
+    try:
+        # Post to Tumblr
+
+        # first fix the post message to remove the url, since it isn't clickable
+        # by default on tumblr
+        if new_swatch:
+            message = message.split(" https://")[0]
+        else:
+            split_message = message.split("here:")
+            message = split_message[0] + "at filamentcolors.xyz!"
+
+        tumblr.create_photo(
+            "filamentcolors.tumblr.com",
+            state="published",
+            tags=[
+                "3d printing",
+                "3d print",
+                "project",
+                "projects",
+                "colors",
+                "color inspo",
+                "maker",
+                "making",
+            ],
+            caption=message,
+            format="markdown",
+            link="https://filamentcolors.xyz"
+            + reverse("swatchdetail", kwargs={"id": swatch.id})
+            + f"?ref={'newswatchtumbl' if new_swatch else 'autotumbl'}",
+            data=swatch.image_front.path,
+        )
+    except Exception as e:
+        print(e)
+
+    try:
+        # Post to Twitter. At the bottom because it's the most unstable and I
+        # don't trust it lol
+        twitter.PostUpdate(message.replace(REF_KEY, "newswatchtweet" if new_swatch else 'autotweet'))
     except Exception as e:
         print(e)
 
@@ -111,7 +158,7 @@ daily_tweet_intro = [
     "A quick scroll through the archives unearthed this!",
     "[insert clickbait intro here]",
     "Remember, filaments in the mirror may be closer than they appear.",
-    "This tweet may be automated, but it's more reliable than some printers I've worked on.",
+    "This post may be automated, but it's more reliable than some printers I've worked on.",
     "Maybe you've seen this one before, maybe you haven't.",
     "Maybe this one's new to you, maybe it's not!",
     "Wanted: 3D-printing-related one-liners to put as intros to these tweets. Apply within.",
@@ -127,7 +174,6 @@ daily_tweet_intro = [
     "I've always wondered why my copy of Gray's Anatomy is tan... hmm...",
     "🎶 Voulez-vous coloriez avec moi, ce soir? 🎵",
     "If a print fails and no one is around to hear it, does it still spaghetti? Anyway...",
-    "Did you see that clip of {famous_person} doing {totally_normal_thing}??? Anyway...",
     "This post is brought to you by the number {number}!",
     "Heeeere's Swatchy!",
     "Fun fact: my bookshelves are (mostly!) organized by color. Ask me about it sometime!",
@@ -157,7 +203,7 @@ def generate_daily_swatch_tweet(swatch):
     full_update = (
         f"{intro}\n\nHave you seen this one yet? {swatch.manufacturer.name}{plural}"
         f" {swatch.color_name} {swatch.filament_type.name} can be found here:"
-        f" https://filamentcolors.xyz/swatch/{swatch.id}?ref=autotweet"
+        f" https://filamentcolors.xyz/swatch/{swatch.id}?ref={REF_KEY}"
     )
 
     return full_update

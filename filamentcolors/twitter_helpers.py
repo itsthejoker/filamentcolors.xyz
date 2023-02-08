@@ -85,15 +85,21 @@ def generate_swatch_upload_message(swatch) -> str:
 def send_to_social_media(message: str = None, swatch=None) -> None:
     if not message:
         message = generate_swatch_upload_message(swatch)
-    # Post to Twitter
-    api.PostUpdate(message.replace(REF_KEY, "newswatchtweet"))
+    try:
+        # Post to Twitter
+        api.PostUpdate(message.replace(REF_KEY, "newswatchtweet"))
+    except Exception as e:
+        print(e)
 
-    # Post to Mastodon
-    httpx.post(
-        "https://3dp.chat/api/v1/statuses",
-        data={"status": message.replace(REF_KEY, "newswatchtoot")},
-        headers={"Authorization": f'Bearer {os.environ.get("MASTODON_ACCESS_TOKEN")}'},
-    )
+    try:
+        # Post to Mastodon
+        httpx.post(
+            "https://3dp.chat/api/v1/statuses",
+            data={"status": message.replace(REF_KEY, "newswatchtoot")},
+            headers={"Authorization": f'Bearer {os.environ.get("MASTODON_ACCESS_TOKEN")}'},
+        )
+    except Exception as e:
+        print(e)
 
 
 daily_tweet_intro = [

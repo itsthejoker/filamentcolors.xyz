@@ -74,7 +74,6 @@ outro_phrases = [
     "can be found in the library!",
     "appears here:",
     "is listed here:",
-    "",
     "is available!",
     "has arrived!",
     "is here!",

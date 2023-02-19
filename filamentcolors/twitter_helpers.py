@@ -113,10 +113,10 @@ def send_to_social_media(message: str = None, swatch=None, new_swatch=False) -> 
         # first fix the post message to remove the url, since it isn't clickable
         # by default on tumblr
         if new_swatch:
-            message = message.split(" https://")[0]
+            tumblr_message = message.split(" https://")[0]
         else:
             split_message = message.split("here:")
-            message = split_message[0] + "at filamentcolors.xyz!"
+            tumblr_message = split_message[0] + "at filamentcolors.xyz!"
 
         tumblr.create_photo(
             "filamentcolors.tumblr.com",
@@ -131,7 +131,7 @@ def send_to_social_media(message: str = None, swatch=None, new_swatch=False) -> 
                 "maker",
                 "making",
             ],
-            caption=message,
+            caption=tumblr_message,
             format="markdown",
             link="https://filamentcolors.xyz"
             + reverse("swatchdetail", kwargs={"id": swatch.id})

@@ -24,7 +24,7 @@ from skimage import io
 from martor.models import MartorField
 
 from filamentcolors.colors import Color
-from filamentcolors.twitter_helpers import send_to_social_media
+from filamentcolors.social_media import send_to_social_media
 
 
 def update_google():

@@ -6,16 +6,9 @@ import httpx
 import pytumblr
 from django.urls import reverse
 from dotenv import load_dotenv
-from twitter import Api
+
 
 load_dotenv()
-
-twitter = Api(
-    consumer_key=os.environ.get("TWITTER_CONSUMER_KEY"),
-    consumer_secret=os.environ.get("TWITTER_CONSUMER_SECRET"),
-    access_token_key=os.environ.get("TWITTER_ACCESS_TOKEN_KEY"),
-    access_token_secret=os.environ.get("TWITTER_ACCESS_TOKEN_SECRET"),
-)
 
 tumblr = pytumblr.TumblrRestClient(
     os.environ.get("TUMBLR_CONSUMER_KEY"),
@@ -140,13 +133,6 @@ def send_to_social_media(message: str = None, swatch=None, new_swatch=False) -> 
     except Exception as e:
         print(e)
 
-    try:
-        # Post to Twitter. At the bottom because it's the most unstable and I
-        # don't trust it lol
-        twitter.PostUpdate(message.replace(REF_KEY, "newswatchtweet" if new_swatch else 'autotweet'))
-    except Exception as e:
-        print(e)
-
 
 daily_tweet_intro = [
     "There are colors we know and colors we have yet to know!",
@@ -188,7 +174,7 @@ daily_tweet_intro = [
 ]
 
 
-def generate_daily_swatch_tweet(swatch):
+def generate_daily_swatch_message(swatch):
     from filamentcolors.models import Swatch  # hooray for no circular imports
 
     plural = swatch.manufacturer.get_possessive_apostrophe

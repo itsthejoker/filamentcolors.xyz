@@ -5,8 +5,8 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from filamentcolors.models import Swatch
-from filamentcolors.twitter_helpers import (
-    generate_daily_swatch_tweet,
+from filamentcolors.social_media import (
+    generate_daily_swatch_message,
     send_to_social_media,
 )
 
@@ -17,33 +17,33 @@ def get_random_swatch() -> Swatch:
     )
 
 
-def get_tweet_content(swatch_of_the_day) -> str:
+def get_update_content(swatch_of_the_day) -> str:
     while True:
-        tweet_content = generate_daily_swatch_tweet(swatch_of_the_day)
-        if len(tweet_content) < 280:
+        content = generate_daily_swatch_message(swatch_of_the_day)
+        if len(content) < 280:
             # most of these come in around 180 characters, but there are
             # some swatches with long names that blow way past that
-            return tweet_content
+            return content
 
 
 class Command(BaseCommand):
-    help = "Send a tweet about a random swatch in the library."
+    help = "Send an update about a random swatch in the library."
 
     def handle(self, *args, **options):
         today = timezone.now().isoweekday()
         if today not in [2, 4, 7]:  # tuesday, thursday, sunday
             # we don't want to run every day... just enough to spice things
             # up a little.
-            self.stdout.write("Not the right day... not sending the tweet.")
+            self.stdout.write("Not the right day... not sending the update.")
             return
 
         # Don't want it to feel too robotic...
-        sleep_count = random.choice(range(7200))  # two hour window
+        sleep_count = random.choice(range(7200))  # two-hour window
         self.stdout.write(f"Sleeping for {sleep_count}")
         sleep(sleep_count)
 
         swatch_to_post = get_random_swatch()
 
         send_to_social_media(
-            message=get_tweet_content(swatch_to_post), swatch=swatch_to_post
+            message=get_update_content(swatch_to_post), swatch=swatch_to_post
         )

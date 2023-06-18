@@ -1,3 +1,8 @@
+"""
+Note: keeping this file named `tweet_swatch` so that I don't have to rename
+the cron job.
+"""
+
 import random
 from time import sleep
 

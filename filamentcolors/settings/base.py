@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "martor",
     "django_filters",
     "django_htmx",
+    "plausible_proxy",
     "django_cleanup",  # This must be at the bottom!
 ]
 
@@ -237,3 +238,5 @@ MAX_IMAGE_UPLOAD_SIZE = 5242880  # 5MB
 CORS_ALLOW_ALL_ORIGINS = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+PLAUSIBLE_DOMAIN = "filamentcolors.xyz"

@@ -394,6 +394,22 @@ files = [
 Django = ">=3.2"
 
 [[package]]
+name = "django-plausible-proxy"
+version = "0.5.0"
+description = "Django module to proxy requests to Plausible Analytics."
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+files = [
+    {file = "django_plausible_proxy-0.5.0-py3-none-any.whl", hash = "sha256:e1cb213dcfecf593b104c4197599273a5c34cdbc37c7f613912ac1dfbe6afdda"},
+    {file = "django_plausible_proxy-0.5.0.tar.gz", hash = "sha256:5a57d9afdf91fa0eec7322afbc339fcc24d20f6115d7a4af4f5c81c463b5ca92"},
+]
+
+[package.dependencies]
+Django = ">=3.2"
+requests = ">=2,<3"
+
+[[package]]
 name = "django-taggit"
 version = "3.1.0"
 description = "django-taggit is a reusable Django application for simple tagging."
@@ -1948,4 +1964,4 @@ test = ["pytest (>=3.0.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.11"
-content-hash = "a8adf110b81ea2e9fbf62c4784526599312d0156a3f9674542d311cd47a331be"
+content-hash = "82b110b03d4befaab1c53e6e31e40a9699879cbf328add098b59ba7cd0e7e4c1"

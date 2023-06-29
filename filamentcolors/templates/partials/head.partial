@@ -1,5 +1,6 @@
 {% load static %}
 {% load django_htmx %}
+{% load plausible %}
 
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,8 +19,7 @@
 <link rel="stylesheet" href="{% static 'css/main.css' %}?v=5">
 
 {% if not request.user.is_authenticated %}
-    <script async defer data-domain="filamentcolors.xyz"
-            src="https://informatics.filamentcolors.xyz/js/index.js"></script>
+    {% plausible script='script.outbound-links.js' %}
 {% endif %}
 
 <script src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/js/material-kit-pro.min.js' %}"></script>

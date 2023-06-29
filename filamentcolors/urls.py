@@ -83,6 +83,7 @@ urlpatterns = [
         name="single_swatch_card",
     ),
     path("visualizer/", views.swatch_field_visualizer, name="visualizer"),
+    path("", include("plausible_proxy.urls")),
     # Admin urls
     path("admin/", admin.site.urls),
     path("logout/", staff_views.logout_view, name="logout"),

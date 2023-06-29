@@ -39,6 +39,7 @@ django-debug-toolbar = "^3.7.0"
 httpx = "^0.23.0"
 pytumblr = "^0.1.2"
 pandas = "^2.0.2"
+plotly = "^5.15.0"
 
 [tool.poetry.dev-dependencies]
 better-exceptions = "^0.3.3"

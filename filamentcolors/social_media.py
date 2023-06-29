@@ -93,8 +93,14 @@ def send_to_social_media(message: str = None, swatch=None, new_swatch=False) -> 
         # Post to Mastodon
         httpx.post(
             "https://3dp.chat/api/v1/statuses",
-            data={"status": message.replace(REF_KEY, "newswatchtoot" if new_swatch else 'autotoot')},
-            headers={"Authorization": f'Bearer {os.environ.get("MASTODON_ACCESS_TOKEN")}'},
+            data={
+                "status": message.replace(
+                    REF_KEY, "newswatchtoot" if new_swatch else "autotoot"
+                )
+            },
+            headers={
+                "Authorization": f'Bearer {os.environ.get("MASTODON_ACCESS_TOKEN")}'
+            },
         )
     except Exception as e:
         print(e)

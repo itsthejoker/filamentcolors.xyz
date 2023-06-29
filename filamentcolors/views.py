@@ -7,8 +7,12 @@ from django.db.models.functions import Lower
 from django.http import Http404, HttpResponse
 from django.shortcuts import HttpResponseRedirect, reverse
 from django.views.decorators.csrf import csrf_exempt
+import pandas
+import numpy
+import colorsys
+from plotly import graph_objects
 
-from filamentcolors.colors import hex_to_rgb
+from filamentcolors.colors import hex_to_rgb, rgb_to_hsl
 from filamentcolors.helpers import (
     build_data_dict,
     clean_collection_ids,
@@ -216,6 +220,69 @@ def single_swatch_card(request: WSGIRequest, swatch_id: int) -> HttpResponse:
         }
     )
     return prep_request(request, "partials/single_swatch_column.partial", data)
+
+
+def swatch_field_visualizer(request: WSGIRequest) -> HttpResponse:
+    """Build the swatch visualizer plot originally written by Kevin Rotz."""
+    data = build_data_dict(request)
+    s = get_swatches(data)
+
+    def rgb2hsv(row):
+        # convert rgb data in pandas frame into hsv
+        hsv = colorsys.rgb_to_hsv(row.rgb_r / 255, row.rgb_g / 255, row.rgb_b / 255)
+        return pandas.Series(
+            [hsv[0], hsv[1], hsv[2]], index=["hsv_h", "hsv_s", "hsv_v"]
+        )
+
+    # https://stackoverflow.com/a/55055351
+    values = s.values_list(
+        "color_name", "manufacturer__name", "hex_color", "rgb_r", "rgb_g", "rgb_b"
+    )
+
+    frame = pandas.DataFrame(
+        list(values), columns=["name", "mfr", "hex", "rgb_r", "rgb_g", "rgb_b"]
+    )
+    frame = frame.join(frame.apply(rgb2hsv, axis=1))
+    colors = [
+        f"rgb({frame.rgb_r.iloc[i]}, {frame.rgb_g.iloc[i]}, {frame.rgb_b.iloc[i]})"
+        for i in range(len(frame))
+    ]
+
+    fig = graph_objects.Figure()
+    fig = fig.add_trace(
+        graph_objects.Scatter3d(
+            x=numpy.cos(2 * numpy.pi * frame.hsv_h) * frame.hsv_s,
+            y=numpy.sin(2 * numpy.pi * frame.hsv_h) * frame.hsv_s,
+            z=frame.hsv_v,
+            customdata=numpy.column_stack(
+                (
+                    frame.rgb_r,
+                    frame.rgb_g,
+                    frame.rgb_b,
+                    frame.hsv_h * 360,
+                    frame.hsv_s,
+                    frame.hsv_v,
+                    frame.hex,
+                    frame.mfr,
+                )
+            ),
+            mode="markers",
+            marker=dict(color=colors, size=20),
+            hovertemplate=(
+                "Name: %{text}<br>Brand: %{customdata[7]}"
+                "<br>Hex: %{customdata[6]}"
+                "<br>RGB: (%{customdata[0]},%{customdata[1]},%{customdata[2]})"
+                "<br>HSV: (%{customdata[3]:.2f},%{customdata[4]:.2f},%{customdata[5]:.2f})"
+                "<extra></extra>"
+            ),
+            text=frame.name,
+        )
+    )
+    data["plot"] = fig.to_html(
+        full_html=False, include_plotlyjs=False, default_height="800px"
+    )
+
+    return prep_request(request, "standalone/visualizer.html", data)
 
 
 def manufacturer_list(request: WSGIRequest) -> HttpResponse:

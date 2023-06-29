@@ -82,6 +82,7 @@ urlpatterns = [
         views.single_swatch_card,
         name="single_swatch_card",
     ),
+    path("visualizer/", views.swatch_field_visualizer, name="visualizer"),
     # Admin urls
     path("admin/", admin.site.urls),
     path("logout/", staff_views.logout_view, name="logout"),

@@ -22,7 +22,7 @@ from filamentcolors.helpers import (
     get_swatches,
     prep_request,
 )
-from filamentcolors.models import GenericFilamentType, Swatch
+from filamentcolors.models import GenericFilamentType, Swatch, Manufacturer
 
 
 def homepage(request: WSGIRequest) -> HttpResponseRedirect:
@@ -52,17 +52,21 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
 
     if method == "type":
         items = items.order_by("filament_type")
+        data["title"] = "Library, sorted by Type"
 
     elif method == "manufacturer":
         items = items.order_by("manufacturer")
+        data["title"] = "Library, sorted by Manufacturer"
 
     elif method == "random":
         items = list(items)
         random.shuffle(items)
+        data["title"] = "Library, sorted by Random"
 
     elif method == "color":
         items = sorted(items, key=get_hsv)
         data.update({"show_color_warning": True})
+        data["title"] = "Library, sorted by Color"
 
     else:
         items = items.order_by("-date_published")
@@ -74,8 +78,9 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
 
 def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
     html = "standalone/library.html"
+    family_name = [i[1] for i in Swatch.BASE_COLOR_OPTIONS if i[0] == family_id][0]
 
-    data = build_data_dict(request, library=True)
+    data = build_data_dict(request, library=True, title=f"{family_name} Swatches")
     s = get_swatches(data)
 
     s = s.filter(Q(color_parent=family_id) | Q(alt_color_parent=family_id))
@@ -87,11 +92,13 @@ def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
 
 def manufacturersort(request: WSGIRequest, id: int) -> HttpResponse:
     html = "standalone/library.html"
-
-    data = build_data_dict(request, library=True)
+    mfr = Manufacturer.objects.filter(id=id).first()
+    if not mfr:
+        raise Http404
+    data = build_data_dict(request, library=True, title=f"{mfr.name} Swatches")
     s = get_swatches(data)
 
-    s = s.filter(manufacturer_id=id)
+    s = s.filter(manufacturer=mfr)
 
     data.update({"swatches": s})
 
@@ -100,12 +107,13 @@ def manufacturersort(request: WSGIRequest, id: int) -> HttpResponse:
 
 def typesort(request: WSGIRequest, id: int) -> HttpResponse:
     html = "standalone/library.html"
-    data = build_data_dict(request, library=True)
 
     f_type = GenericFilamentType.objects.filter(id=id).first()
 
     if not f_type:
         raise Http404
+
+    data = build_data_dict(request, library=True, title=f"{f_type.name} Swatches")
 
     s = get_swatches(data)
 
@@ -128,7 +136,12 @@ def swatch_detail(request: WSGIRequest, id: int) -> HttpResponse:
         if generate_custom_library(data):
             swatch.update_all_color_matches(get_custom_library(data))
 
-        data.update({"swatch": swatch})
+        data.update(
+            {
+                "swatch": swatch,
+                "title": f"{swatch.manufacturer.name} - {swatch.color_name} {swatch.filament_type.name}",
+            }
+        )
 
         return prep_request(request, html, data)
 
@@ -150,6 +163,7 @@ def swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
             "swatches": swatch_collection,
             "collection_ids": ",".join([str(i) for i in cleaned_ids]),
             "show_collection_edit_button": True,
+            "title": "View Collection",
         }
     )
 
@@ -165,6 +179,7 @@ def edit_swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
     data.update(
         {
             "swatches": get_swatches(data).order_by("-date_published"),
+            "title": "Edit Collection",
         }
     )
 
@@ -178,6 +193,7 @@ def inventory_page(request: WSGIRequest) -> HttpResponse:
             "swatches": Swatch.objects.select_related("manufacturer")
             .prefetch_related("filament_type")
             .order_by(Lower("manufacturer__name"), Lower("color_name")),
+            "title": "Inventory",
         }
     )
     return prep_request(request, "standalone/inventory.html", data)
@@ -185,7 +201,7 @@ def inventory_page(request: WSGIRequest) -> HttpResponse:
 
 @csrf_exempt
 def colormatch(request: WSGIRequest) -> HttpResponse:
-    data = build_data_dict(request)
+    data = build_data_dict(request, title="Color Match")
 
     if request.method == "POST":
         incoming_color = request.POST.get("hex_color")
@@ -224,7 +240,7 @@ def single_swatch_card(request: WSGIRequest, swatch_id: int) -> HttpResponse:
 
 def swatch_field_visualizer(request: WSGIRequest) -> HttpResponse:
     """Build the swatch visualizer plot originally written by Kevin Rotz."""
-    data = build_data_dict(request)
+    data = build_data_dict(request, title="Swatch Field Visualizer")
     s = get_swatches(data)
 
     def rgb2hsv(row):
@@ -287,21 +303,39 @@ def swatch_field_visualizer(request: WSGIRequest) -> HttpResponse:
 
 def manufacturer_list(request: WSGIRequest) -> HttpResponse:
     return prep_request(
-        request, "standalone/manufacturer_list.html", build_data_dict(request)
+        request,
+        "standalone/manufacturer_list.html",
+        build_data_dict(request, title="Manufacturers"),
     )
 
 
 def about_page(request: WSGIRequest) -> HttpResponse:
-    return prep_request(request, "standalone/about.html", build_data_dict(request))
+    return prep_request(
+        request, "standalone/about.html", build_data_dict(request, title="About")
+    )
 
 
 def donation_page(request: WSGIRequest) -> HttpResponse:
-    return prep_request(request, "standalone/donations.html", build_data_dict(request))
+    return prep_request(
+        request,
+        "standalone/donations.html",
+        build_data_dict(request, title="Donations"),
+    )
 
 
 def error_404(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-    return prep_request(request, "404.html", build_data_dict(request), status=404)
+    return prep_request(
+        request,
+        "404.html",
+        build_data_dict(request, title="Can't find that..."),
+        status=404,
+    )
 
 
 def error_500(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-    return prep_request(request, "500.html", build_data_dict(request), status=500)
+    return prep_request(
+        request,
+        "500.html",
+        build_data_dict(request, title="Something went wrong!"),
+        status=500,
+    )

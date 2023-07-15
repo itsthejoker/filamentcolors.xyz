@@ -65,7 +65,7 @@ def set_tasty_cookies(response) -> HttpResponse:
     return response
 
 
-def build_data_dict(request, library: bool = False) -> Dict:
+def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
     """
     This request requires rendering the base template, so perform all
     the queries needed to populate it.
@@ -82,6 +82,7 @@ def build_data_dict(request, library: bool = False) -> Dict:
       show_search_bar             |   a boolean; only show search bar on the library.
     :param request: Request
     :param library: bool
+    :param title: str
     :return: dict
     """
     return {
@@ -112,6 +113,7 @@ def build_data_dict(request, library: bool = False) -> Dict:
         "search_prefill": request.GET.get("q", ""),
         "user_settings": get_settings_cookies(request),
         "show_search_bar": library,
+        "title": title or "FilamentColors",
     }
 
 

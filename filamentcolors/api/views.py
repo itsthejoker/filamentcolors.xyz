@@ -1,8 +1,5 @@
-import colorsys
-
-from colormath.color_conversions import convert_color
-from colormath.color_objects import LabColor, sRGBColor
-from django.db.models import F, Q
+from colormath.color_objects import sRGBColor
+from django.db.models import Q
 from django.db.models.functions import Lower
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
@@ -19,7 +16,6 @@ from filamentcolors.api.serializers import (
     PantoneColorSerializer,
     RALColorSerializer,
 )
-from filamentcolors.helpers import get_hsv
 from filamentcolors.models import FilamentType, Manufacturer, Swatch, Pantone, RAL
 
 
@@ -56,19 +52,30 @@ class SwatchViewSet(ReadOnlyModelViewSet):
         Take a comma separated list of hex colors and return the best guess for swatches.
         """
         hex_colors = self.request.query_params.get("colors")
+        materials = self.request.query_params.get("materials")
         if not hex_colors:
             return Response(status.HTTP_422_UNPROCESSABLE_ENTITY)
-        filters = Q(published=True)
-        if filament_type_id := self.request.query_params.get("generic_type"):
-            filters = filters & Q(filament_type__parent_type__id=int(filament_type_id))
-        library = [s for s in Swatch.objects.filter(filters) if s.is_available()]
+        filters = Q(published=True) & (
+            Q(mfr_purchase_link__isnull=True) | Q(amazon_purchase_link__isnull=True)
+        )
 
         results = {}
         hex_colors = [x.strip() for x in hex_colors.split(",")]
-        for color in hex_colors:
-            results[color] = Swatch()._get_closest_color_swatch(
+        materials = [x.strip() for x in materials.split(",")]
+        for count, color in enumerate(hex_colors):
+            if (
+                materials[count] is not None
+                and materials[count] != "any"
+                and materials[count] != ""
+            ):
+                library = Swatch.objects.filter(
+                    filters, filament_type__parent_type__name__iexact=materials[count]
+                )
+            else:
+                library = Swatch.objects.filter(filters)
+            results[color] = Swatch().get_closest_color_swatch(
                 library,
-                convert_color(sRGBColor.new_from_rgb_hex(color.strip()), LabColor),
+                sRGBColor.new_from_rgb_hex(color.strip()).get_upscaled_value_tuple(),
             )
 
         results = {

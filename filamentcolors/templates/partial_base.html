@@ -2,10 +2,11 @@
     {% block content %}
     {% endblock content %}
 
-    <script>
-        // https://stackoverflow.com/a/42749178
-        // HACK Do not change the order of these two lines!
-        history.replaceState(null, '');
-        document.title="{{ title|default:'FilamentColors' }}";
-    </script>
+    {# TODO: THIS COMPLETELY BREAKS THE BACK BUTTON WITH HTMX; FIND ANOTHER OPTION #}
+    {#    <script>#}
+    {#        // https://stackoverflow.com/a/42749178#}
+    {#        // HACK Do not change the order of these two lines!#}
+    {#        history.replaceState(null, '');#}
+    {#        document.title="{{ title|default:'FilamentColors' }}";#}
+    {#    </script>#}
 </main>

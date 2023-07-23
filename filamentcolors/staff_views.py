@@ -97,7 +97,7 @@ def add_swatch(request, swatch_id: int = None):
         data.update(
             {
                 "header_js_buttons": [
-                    {"text": "Manufacturer Site", "onclick": "loadMfrSite()"},
+                    {"text": "Manufacturer Search", "onclick": "loadMfrSearch()"},
                     {"text": "Amazon Search", "onclick": "loadAmazonSearch()"},
                 ],
                 "header_link_buttons": [

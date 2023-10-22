@@ -154,10 +154,16 @@
 
         function changeHexColorPicker() {
             let el = $("#hex-input");
+            let value = el.val();
+            console.log(value);
+
+            if (value.length === 6 && value[0] !== "#") {
+                value = `#${value}`
+            }
 
             try {
-                new Color(el.val());  // will explode if invalid
-                window.picker.fromString(`#${el.val()}`);
+                new Color(value);  // will explode if invalid
+                window.picker.fromString(`#${value}`);
                 updateButtons();
             } catch (e) {
                 invalid_color()
@@ -204,7 +210,7 @@
         }
 
         function updateButtons() {
-            let hex_base = window.picker.toHEXString()
+            let hex_base = window.picker.toHEXString();
             let rgb = new Color(hex_base);
             let hsv = rgb.to("hsv");
             let lab = rgb.to("lab");

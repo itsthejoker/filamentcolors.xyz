@@ -188,14 +188,13 @@ def edit_swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
 
 def inventory_page(request: WSGIRequest) -> HttpResponse:
     data = build_data_dict(request)
-    data.update(
-        {
-            "swatches": Swatch.objects.select_related("manufacturer")
-            .prefetch_related("filament_type")
-            .order_by(Lower("manufacturer__name"), Lower("color_name")),
-            "title": "Inventory",
-        }
-    )
+    data |= {
+        "swatches": Swatch.objects.select_related("manufacturer")
+        .prefetch_related("filament_type")
+        .order_by(Lower("manufacturer__name"), Lower("color_name")),
+        "title": "Inventory",
+    }
+    data |= {"published_count": data["swatches"].filter(published=True).count()}
     return prep_request(request, "standalone/inventory.html", data)
 
 

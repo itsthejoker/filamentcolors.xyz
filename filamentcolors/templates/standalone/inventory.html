@@ -1,4 +1,5 @@
 {% extends base_template %}
+{% load subtract %}
 
 {% block content %}
     <div class="container mt-4">
@@ -17,6 +18,14 @@
             as "Published", that means it's available in the catalog.) If the filament
             that you're searching for is <strong>not in the list</strong>, then I don't
             have it and would love to get it!
+        </p>
+        <h4>Current Inventory Status</h4>
+        <p>
+            There are currently <strong>{{ published_count }}</strong> swatches available
+            in the library with <strong>
+            {% with swatches|length as swatchcount %}
+                {{ swatchcount|subtract:published_count }}
+            {% endwith %}</strong> more in the backlog.
         </p>
         <h4>Legend</h4>
         <div class="row">

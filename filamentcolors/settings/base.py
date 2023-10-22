@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    "django.contrib.humanize",
     "corsheaders",
     "debug_toolbar",
     # We don't use taggit anymore but removing it from the migrations is a pain

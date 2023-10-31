@@ -8,6 +8,8 @@ Please give credit if you use my work for your project! Let me know if you do us
 
 https://filamentcolors.xyz/api/
 
+If you use my API for a project, I politely request that you check out my patreon to help pay for server costs: https://www.patreon.com/filamentcolors. I also have a way to do one-time donations of any amount here: https://buy.stripe.com/8wMbKg8UT4k8fBKaEE
+
 API notes:
 ---
 

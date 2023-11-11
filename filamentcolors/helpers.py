@@ -6,7 +6,7 @@ from django.db.models.functions import Lower
 from django.http import request, HttpResponse
 from django.shortcuts import render
 
-from filamentcolors.models import GenericFilamentType, GenericFile, Manufacturer, Swatch
+from filamentcolors.models import GenericFilamentType, Manufacturer, Swatch
 
 have_visited_before_cookie = "f"
 filament_type_settings_cookie = "show-types"
@@ -34,6 +34,9 @@ def prep_request(
     if first_time_visitor(r):
         data |= {"launch_welcome_modal": True}
 
+    # If we're returning a proper HTMX component, it will completely ignore
+    # this template and just return the HTML we tell it to. If we're returning
+    # a full page, we need to tell it which template to use.
     if r.htmx and not r.htmx.history_restore_request:
         data |= {"base_template": "partial_base.html"}
     else:
@@ -103,12 +106,6 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
         ),
         "filament_types": GenericFilamentType.objects.order_by(Lower("name")),
         "color_family": Swatch.BASE_COLOR_OPTIONS,
-        "welcome_experience_images": GenericFile.objects.filter(
-            name__in=["step1", "step2", "step3", "step4"]
-        ),
-        "welcome_experience_movies": GenericFile.objects.filter(
-            name__in=["collections_example", "collections_example_webm"]
-        ),
         "settings_buttons": GenericFilamentType.objects.all(),
         "search_prefill": request.GET.get("q", ""),
         "user_settings": get_settings_cookies(request),

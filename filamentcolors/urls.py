@@ -82,6 +82,16 @@ urlpatterns = [
         views.single_swatch_card,
         name="single_swatch_card",
     ),
+    path(
+        "welcome_experience_images/<int:image_id>/",
+        views.get_welcome_experience_image,
+        name="welcome_experience_image",
+    ),
+    path(
+        "welcome_experience_video",
+        views.get_welcome_experience_video,
+        name="welcome_experience_video",
+    ),
     path("visualizer/", views.swatch_field_visualizer, name="visualizer"),
     path("", include("plausible_proxy.urls")),
     # Admin urls

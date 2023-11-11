@@ -22,7 +22,7 @@ from filamentcolors.helpers import (
     get_swatches,
     prep_request,
 )
-from filamentcolors.models import GenericFilamentType, Swatch, Manufacturer
+from filamentcolors.models import GenericFilamentType, Swatch, Manufacturer, GenericFile
 
 
 def homepage(request: WSGIRequest) -> HttpResponseRedirect:
@@ -337,4 +337,41 @@ def error_500(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         "500.html",
         build_data_dict(request, title="Something went wrong!"),
         status=500,
+    )
+
+
+def get_welcome_experience_image(request: WSGIRequest, image_id: int) -> HttpResponse:
+    """This is used to serve the welcome experience images."""
+    data = build_data_dict(request)
+
+    image = GenericFile.objects.filter(name__icontains=f"step{str(image_id)}").first()
+    if not image:
+        raise Http404
+
+    data |= {"img_url": image.file.url, "img_alt": image.alt_text}
+
+    return prep_request(
+        request,
+        f"htmx_partials/welcome_experience_photo.partial",
+        data,
+    )
+
+
+def get_welcome_experience_video(request: WSGIRequest) -> HttpResponse:
+    """This is used to serve the welcome experience movies."""
+    data = build_data_dict(request)
+
+    mp4 = GenericFile.objects.get(
+        name__contains="collections_example", file__endswith="mp4"
+    )
+    webm = GenericFile.objects.get(
+        name__contains="collections_example", file__endswith="webm"
+    )
+
+    data |= {"mp4_url": mp4.file.url, "webm_url": webm.file.url}
+
+    return prep_request(
+        request,
+        f"htmx_partials/welcome_experience_video.partial",
+        data,
     )

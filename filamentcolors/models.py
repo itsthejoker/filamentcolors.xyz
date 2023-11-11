@@ -86,6 +86,7 @@ class GenericFile(models.Model):
 
     name = models.CharField(max_length=30, null=True, blank=True)
     file = models.FileField()
+    alt_text = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} - {self.file.name}" if self.name else self.file.name

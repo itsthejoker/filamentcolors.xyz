@@ -1,0 +1,4 @@
+<img src="{{ img_url }}"
+     alt="{{ img_alt }}"
+     class="welcome-experience-photo"
+/>

@@ -6,7 +6,12 @@
 {% block extra_classes %}modal-lg{% endblock %}
 
 {% block modal_content %}
-    <div id="welcomeExperienceContent">
+    <div
+            id="welcomeExperienceContent"
+            hx-disinherit="hx-indicator hx-push-url hx-target"
+            hx-swap="outerHTML"
+            hx-trigger="intersect"
+    >
         <div class="step-1">
             <div class="modal-header">
                 <h5 class="modal-title" id="how-does-this-work">How does this work?</h5>
@@ -70,11 +75,13 @@
                 <div class="row">
                     <div class="col-xs-1 col-lg-3"></div>
                     <div class="col-xs-10 col-lg-6">
-                        <img src="{{ welcome_experience_images.0.file.url }}"
-                             loading="lazy"
-                             alt="An image showing the navigation on the navbar."
-                             class="welcome-experience-photo"
-                        />
+                        <img class="text-center"
+                             src="{% static 'swatch-loading-animation.gif' %}"
+                             style="height: auto; width: 100%; max-width: 400px"
+                             alt="A spinning swatch loading animation."
+                             hx-get="{% url 'welcome_experience_image' image_id=1 %}"
+                             hx-trigger="intersect"
+                        >
                     </div>
                     <div class="col-xs-1 col-lg-3"></div>
                 </div>
@@ -113,12 +120,13 @@
                 <div class="row">
                     <div class="col-xs-1 col-lg-2"></div>
                     <div class="col-xs-10 col-lg-8">
-                        <a href="/swatch/327" class="welcome-experience-photo">
-                            <img src="{{ welcome_experience_images.1.file.url }}"
-                                 loading="lazy"
-                                 alt="An image showing Snolabs' Transparent Blue filament."
-                                 class="welcome-experience-photo"
-                            />
+                        <a href="/swatch/327" class="welcome-experience-photo text-center">
+                            <img src="{% static 'swatch-loading-animation.gif' %}"
+                                 style="height: auto; width: 100%; max-width: 400px"
+                                 alt="A spinning swatch loading animation."
+                                 hx-get="{% url 'welcome_experience_image' image_id=2 %}"
+                                 hx-trigger="intersect"
+                            >
                         </a>
                     </div>
                     <div class="col-xs-1 col-lg-2"></div>
@@ -171,12 +179,13 @@
                 <p></p>
                 <div class="row">
                     <div class="col-xs-1 col-lg-2"></div>
-                    <div class="col-xs-10 col-lg-8">
-                        <img src="{{ welcome_experience_images.2.file.url }}"
-                             loading="lazy"
-                             alt="An image showing the complement color section."
-                             class="welcome-experience-photo"
-                        />
+                    <div class="col-xs-10 col-lg-8 text-center">
+                        <img src="{% static 'swatch-loading-animation.gif' %}"
+                             style="height: auto; width: 100%; max-width: 400px"
+                             alt="A spinning swatch loading animation."
+                             hx-get="{% url 'welcome_experience_image' image_id=3 %}"
+                             hx-trigger="intersect"
+                        >
                     </div>
                     <div class="col-xs-1 col-lg-2"></div>
                 </div>
@@ -216,13 +225,14 @@
                 <p></p>
                 <div class="row">
                     <div class="col-xs-1 col-lg-2"></div>
-                    <div class="col-xs-10 col-lg-8">
+                    <div class="col-xs-10 col-lg-8 text-center">
                         <a href="/library/collection/327,328,1050,811/" target="_blank">
-                            <img src="{{ welcome_experience_images.3.file.url }}"
-                                 loading="lazy"
-                                 alt="An image showing the complement color section."
-                                 class="welcome-experience-photo"
-                            />
+                            <img src="{% static 'swatch-loading-animation.gif' %}"
+                                 style="height: auto; width: 100%; max-width: 400px"
+                                 alt="A spinning swatch loading animation."
+                                 hx-get="{% url 'welcome_experience_image' image_id=4 %}"
+                                 hx-trigger="intersect"
+                            >
                         </a>
                     </div>
                     <div class="col-xs-1 col-lg-2"></div>
@@ -260,11 +270,15 @@
                     of swatches you have selected on the left). Check out the video below for
                     a quick demonstration of how it works!
                 </p>
-                <video class="w-100" controls autoplay loop muted>
-                    <source src="{{ welcome_experience_movies.0.file.url }}" type="video/mp4" />
-                    <source src="{{ welcome_experience_movies.1.file.url }}" type="video/webm" />
-                    Your browser cannot play this video.
-                </video>
+                <div class="text-center"
+                     hx-get="{% url 'welcome_experience_video' %}"
+                     hx-trigger="intersect"
+                >
+                    <img src="{% static 'swatch-loading-animation.gif' %}"
+                         style="height: auto; width: 100%; max-width: 400px"
+                         alt="A spinning swatch loading animation."
+                    >
+                </div>
                 <p>
                     You will also automatically enter this view if you are in a collection
                     and click "Modify this collection".

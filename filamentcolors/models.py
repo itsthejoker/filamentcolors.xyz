@@ -39,6 +39,10 @@ def update_google():
 class Manufacturer(models.Model):
     name = models.CharField(max_length=160)
     website = models.URLField(null=True, blank=True, max_length=2000)
+    swap_purchase_buttons = models.BooleanField(
+        default=False,
+        help_text="List the manufacturer purchase link above the Amazon button."
+    )
 
     @property
     def get_possessive_apostrophe(self):
@@ -257,7 +261,6 @@ class Swatch(models.Model):
         on_delete=models.SET_NULL,
         related_name="complement_swatch",
     )
-
     analogous_1 = models.ForeignKey(
         "self",
         null=True,

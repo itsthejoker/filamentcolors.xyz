@@ -1,0 +1,7 @@
+{% if swatch.amazon_purchase_link %}
+    <a class="btn btn-info" href="{{ swatch.amazon_purchase_link }}"
+       target="_blank"
+       role="button"
+       rel="noopener"
+    >Buy on Amazon<br><span style="font-size: smaller">(affiliate link)</span></a>
+{% endif %}

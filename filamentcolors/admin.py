@@ -49,6 +49,7 @@ class SwatchAdmin(admin.ModelAdmin):
 
 
 class ManufacturerAdmin(admin.ModelAdmin):
+    search_fields = ("name",)
     ordering = ("name",)
 
 

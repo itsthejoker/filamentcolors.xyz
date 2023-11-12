@@ -16,6 +16,7 @@ from filamentcolors.api.serializers import (
     PantoneColorSerializer,
     RALColorSerializer,
 )
+from filamentcolors.api.throttles import SustainedRateThrottle, BurstRateThrottle
 from filamentcolors.models import FilamentType, Manufacturer, Swatch, Pantone, RAL
 
 
@@ -30,6 +31,7 @@ class SwatchViewSet(ReadOnlyModelViewSet):
         "color_name": ["exact", "icontains"],
         "published": ["exact"],
     }
+    throttle_classes = [BurstRateThrottle, SustainedRateThrottle]
 
     def get_queryset(self):
         queryset = Swatch.objects.filter(published=True)
@@ -91,24 +93,28 @@ class ManufacturerViewSet(ReadOnlyModelViewSet):
     queryset = Manufacturer.objects.all().order_by(Lower("name"))
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = {"id": ["exact"], "name": ["exact", "icontains"]}
+    throttle_classes = [BurstRateThrottle, SustainedRateThrottle]
 
 
 class FilamentTypeViewSet(ReadOnlyModelViewSet):
     serializer_class = FilamentTypeSerializer
     basename = "filament_type"
     queryset = FilamentType.objects.all().order_by(Lower("name"))
+    throttle_classes = [BurstRateThrottle, SustainedRateThrottle]
 
 
 class PantoneColorViewSet(ReadOnlyModelViewSet):
     serializer_class = PantoneColorSerializer
     basename = "pantone"
     queryset = Pantone.objects.all().order_by(Lower("name"))
+    throttle_classes = [BurstRateThrottle, SustainedRateThrottle]
 
 
 class RALColorViewSet(ReadOnlyModelViewSet):
     serializer_class = RALColorSerializer
     basename = "ral"
     queryset = RAL.objects.all().order_by(Lower("name"))
+    throttle_classes = [BurstRateThrottle, SustainedRateThrottle]
 
 
 def db_version(request):

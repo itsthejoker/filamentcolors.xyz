@@ -74,7 +74,9 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "django.middleware.cache.FetchFromCacheMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
     "filamentcolors.middleware.CacheControlMiddleware",
@@ -107,16 +109,6 @@ WSGI_APPLICATION = "filamentcolors.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql_psycopg2",
-#         "NAME": "filamentcolors",
-#         "USER": "colors",
-#         "PASSWORD": os.getenv("DJANGO_DB_PASSWORD"),
-#         "HOST": "localhost",
-#         "PORT": "",
-#     }
-# }
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -162,6 +154,16 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 )
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    }
+}
+
+CACHE_MIDDLEWARE_SECONDS = 600
+CACHE_MIDDLEWARE_KEY_PREFIX = ""
+CACHE_MIDDLEWARE_ALIAS = "default"
+
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 50,
@@ -169,6 +171,13 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticatedOrReadOnly"
     ],
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    # There are no default throttles because there are some endpoints that need to remain
+    # unthrottled and this is easier.
+    'DEFAULT_THROTTLE_RATES': {
+        # 600 requests per minute in bursts, or 1 request a second over an hour.
+        'burst': '600/min',
+        'sustained': '3600/hour'
+    }
 }
 
 # Global martor settings

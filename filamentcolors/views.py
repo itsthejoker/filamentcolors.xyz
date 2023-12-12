@@ -12,7 +12,7 @@ import numpy
 import colorsys
 from plotly import graph_objects
 
-from filamentcolors.colors import hex_to_rgb, rgb_to_hsl
+from filamentcolors.colors import hex_to_rgb
 from filamentcolors.helpers import (
     build_data_dict,
     clean_collection_ids,
@@ -46,7 +46,6 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
     :return:
     """
     html = "standalone/library.html"
-
     data = build_data_dict(request, library=True)
     items = get_swatches(data)
 

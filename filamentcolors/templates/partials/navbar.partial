@@ -8,6 +8,7 @@
            rel="tooltip"
            title="Colors for everybody!"
            data-bs-placement="bottom"
+           hx-boost="false"
            tabindex="0"
         >
             FilamentColors.xyz
@@ -26,6 +27,7 @@
                 <li>
                     <a class="navbar-brand clickable"
                        href="{% url 'library' %}"
+                       hx-boost="false"
                        tabindex="0"
                     >
                         FilamentColors.xyz

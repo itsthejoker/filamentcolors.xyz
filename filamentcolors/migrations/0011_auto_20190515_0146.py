@@ -3,7 +3,7 @@
 import datetime
 from django.db import migrations, models
 import django.db.models.deletion
-from django.utils.timezone import utc
+from datetime import timezone
 
 
 class Migration(migrations.Migration):
@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
             model_name="swatch",
             name="last_cache_update",
             field=models.DateTimeField(
-                default=datetime.datetime(1969, 1, 1, 0, 0, tzinfo=utc)
+                default=datetime.datetime(1969, 1, 1, 0, 0, tzinfo=timezone.utc)
             ),
         ),
         migrations.AddField(

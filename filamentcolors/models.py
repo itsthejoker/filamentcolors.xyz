@@ -11,7 +11,6 @@ from colormath.color_diff import delta_e_cmc
 from colormath.color_objects import LabColor, sRGBColor
 from colorthief import ColorThief
 from django.conf import settings
-from django.contrib.sitemaps import ping_google
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
 from django.core.files.storage import default_storage
@@ -25,15 +24,6 @@ from martor.models import MartorField
 
 from filamentcolors.colors import Color
 from filamentcolors.social_media import send_to_social_media
-
-
-def update_google():
-    # Let google's search panel know that I've updated something on the site.
-    try:
-        ping_google()
-    except:
-        # bare except because so much can go wrong. It's not worth retrying.
-        pass
 
 
 class Manufacturer(models.Model):
@@ -110,7 +100,6 @@ class Post(models.Model):
         if self.published:
             self.enable_preview = False
         super().save(*args, **kwargs)
-        update_google()
 
     def get_absolute_url(self):
         kwargs = {"slug": self.slug}
@@ -856,8 +845,6 @@ class Swatch(models.Model):
                     send_to_social_media(swatch=self, new_swatch=True)
                 except Exception as e:
                     print(e)
-
-                update_google()
 
     def __str__(self):
         try:

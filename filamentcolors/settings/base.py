@@ -173,11 +173,11 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     # There are no default throttles because there are some endpoints that need to remain
     # unthrottled and this is easier.
-    'DEFAULT_THROTTLE_RATES': {
+    "DEFAULT_THROTTLE_RATES": {
         # 600 requests per minute in bursts, or 1 request a second over an hour.
-        'burst': '600/min',
-        'sustained': '3600/hour'
-    }
+        "burst": "600/min",
+        "sustained": "3600/hour",
+    },
 }
 
 # Global martor settings

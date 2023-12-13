@@ -31,7 +31,7 @@ class Manufacturer(models.Model):
     website = models.URLField(null=True, blank=True, max_length=2000)
     swap_purchase_buttons = models.BooleanField(
         default=False,
-        help_text="List the manufacturer purchase link above the Amazon button."
+        help_text="List the manufacturer purchase link above the Amazon button.",
     )
 
     @property
@@ -548,7 +548,7 @@ class Swatch(models.Model):
         self.image_back.name = filename_back
 
         image = Img.open(self.card_img_jpeg)
-        image.thumbnail((200, 200), Img.ANTIALIAS)
+        image.thumbnail((200, 200), Img.Resampling.LANCZOS)
 
         filename = self._save_image(image, "thumb")
 

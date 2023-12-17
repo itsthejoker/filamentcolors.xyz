@@ -99,7 +99,7 @@ class ListSwatchInventoryForm(forms.Form):
         Swatch.objects.select_related("manufacturer")
         .prefetch_related("filament_type")
         .filter(published=False)
-        .order_by(Lower("manufacturer__name"))
+        .order_by(Lower("manufacturer__name"), Lower("color_name"))
     )
 
 

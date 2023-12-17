@@ -6,7 +6,7 @@
         <h1>Color Match</h1>
         <p>
             Looking for a particular plastic in the library close to a color you have in mind?
-            We have <strong>five different ways</strong> to enter that color -- use whatever works
+            We have a few different ways to enter that color -- use whatever works
             best for you and we'll try to match it to a plastic!
         </p>
         <div class="row mt-4 mb-3">
@@ -164,7 +164,9 @@
             try {
                 new Color(value);  // will explode if invalid
                 window.picker.fromString(`#${value}`);
-                updateButtons();
+                updateRGB();
+                updateHSV();
+                updateLAB();
             } catch (e) {
                 invalid_color()
             }
@@ -177,7 +179,9 @@
             try {
                 new Color("srgb", [r, g, b]);
                 window.picker.fromString(rgbToHex(r, g, b));
-                updateButtons();
+                updateHex();
+                updateHSV();
+                updateLAB();
             } catch (e) {
                 invalid_color()
             }
@@ -190,7 +194,9 @@
             try {
                 let rgb = new Color("hsv", [h, s, v]).to("srgb");
                 window.picker.fromString(rgbToHex(rgb.r * 255, rgb.g * 255, rgb.b * 255));
-                updateButtons();
+                updateHex();
+                updateRGB();
+                updateLAB();
             } catch (e) {
                 invalid_color()
             }
@@ -203,28 +209,51 @@
             try {
                 let rgb = new Color("lab", [l, a, b]).to("srgb");
                 window.picker.fromString(rgbToHex(rgb.r * 255, rgb.g * 255, rgb.b * 255));
-                updateButtons();
+                updateHex();
+                updateRGB();
+                updateHSV();
             } catch (e) {
                 invalid_color()
             }
         }
 
-        function updateButtons() {
+        function updateHex() {
+            window.inputs["hex"].value = window.picker.toHEXString();
+        }
+
+        function updateRGB() {
             let hex_base = window.picker.toHEXString();
             let rgb = new Color(hex_base);
-            let hsv = rgb.to("hsv");
-            let lab = rgb.to("lab");
-            window.inputs["hex"].value = hex_base;
             window.inputs["rgb_r"].value = rgb.r * 255;
             window.inputs["rgb_g"].value = rgb.g * 255;
             window.inputs["rgb_b"].value = rgb.b * 255;
+        }
+
+        function updateHSV() {
+            let hex_base = window.picker.toHEXString();
+            let rgb = new Color(hex_base);
+            let hsv = rgb.to("hsv");
             window.inputs["hsv_h"].value = hsv.h.toFixed(3);
             window.inputs["hsv_s"].value = hsv.s.toFixed(3);
             window.inputs["hsv_v"].value = hsv.v.toFixed(3);
+        }
+
+        function updateLAB() {
+            let hex_base = window.picker.toHEXString();
+            let rgb = new Color(hex_base);
+            let lab = rgb.to("lab");
             window.inputs["lab_l"].value = lab.l.toFixed(3);
             window.inputs["lab_a"].value = lab.a.toFixed(3);
             window.inputs["lab_b"].value = lab.b.toFixed(3);
         }
+
+        function updateAll() {
+            updateHex();
+            updateRGB();
+            updateHSV();
+            updateLAB()
+        }
+
         function updateGrabBag() {
             let parent = $("#saved_swatches");
             $("#saved_swatches_collection").children().length > 0 ? parent.css("display", "") : parent.css("display", "none")
@@ -246,7 +275,7 @@
                     random: true
                 }
             );
-            window.picker.onInput = updateButtons;
+            window.picker.onInput = updateAll;
             window.inputs = {}
             window.inputs["hex"] = document.getElementById("hex-input");
             window.inputs["rgb_r"] = document.getElementById("red-input");
@@ -258,7 +287,7 @@
             window.inputs["lab_l"] = document.getElementById("l-input");
             window.inputs["lab_a"] = document.getElementById("a-input");
             window.inputs["lab_b"] = document.getElementById("b-input");
-            updateButtons();
+            updateAll();
 
             htmx.onLoad(function () {
                 updateGrabBag()

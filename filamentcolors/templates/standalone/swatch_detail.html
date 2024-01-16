@@ -20,6 +20,7 @@
     <meta name="og:image:height" content="150">
 
     <div class="container mt-3">
+        {% include 'partials/messages.partial' %}
         {% if error %}
             <div class="text-center">
                 <h4>{{ error }}</h4>

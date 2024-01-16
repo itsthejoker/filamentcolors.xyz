@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class="container mt-4">
+        {% include 'partials/messages.partial' %}
         {% if show_color_warning %}
             {% include 'partials/color-warning.partial' %}
         {% endif %}

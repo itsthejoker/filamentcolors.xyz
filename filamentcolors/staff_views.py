@@ -1,5 +1,6 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
+from django.contrib import messages
 from django.shortcuts import (
     HttpResponseRedirect,
     redirect,
@@ -114,10 +115,17 @@ def add_swatch_landing(request):
     if request.method == "POST":
         form = ListSwatchInventoryForm(request.POST)
         if form.is_valid():
+            data = form.cleaned_data
+            unpublished_swatch = data["unpublished_swatches"]
+            colormatched_swatch = data["colormatched_swatches"]
+            if unpublished_swatch and colormatched_swatch:
+                messages.error(request, "You can only pick one swatch at a time!")
+                return HttpResponseRedirect(reverse("add_swatch_landing"))
+            theswatch = unpublished_swatch or colormatched_swatch
             return HttpResponseRedirect(
                 reverse(
                     "add_swatch_from_inventory",
-                    kwargs={"swatch_id": form.cleaned_data["unpublished_swatches"].id},
+                    kwargs={"swatch_id": theswatch.id},
                 )
             )
     else:

@@ -1,0 +1,14 @@
+<div class="my-3">
+{% for message in messages %}
+    <div class="alert
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        alert-danger text-white
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+        alert-warning
+    {% endif %}
+     " role="alert">
+        {{ message }}
+        <div id="similar-swatch-content"></div>
+    </div>
+{% endfor %}
+</div>

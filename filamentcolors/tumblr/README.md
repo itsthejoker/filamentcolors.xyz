@@ -1,0 +1,1 @@
+This is a copy of the code from https://github.com/tumblr/pytumblr, which does not work on python 3.12 due to bending over backwards to support python 2. I've copied the code to this directory, stripped out some of the silliness, and made it work for Python 3.12.

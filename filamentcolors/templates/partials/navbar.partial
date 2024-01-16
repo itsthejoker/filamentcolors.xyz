@@ -389,6 +389,7 @@
                                 <ul class="list-group">
                                     <li class="nav-item list-group-item border-0 p-0">
                                         <a href="{% url 'add_swatch_landing' %}"
+                                           hx-boost="false"
                                            tabindex="0"
                                            class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                             <b>Upload New</b>
@@ -440,6 +441,7 @@
                                     <div class="d-flex mb-2">
                                         <div class="w-100 d-flex align-items-center justify-content-between">
                                             <a href="{% url 'add_swatch_landing' %}"
+                                               hx-boost="false"
                                                class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                                 <b>Upload New</b>
                                             </a>

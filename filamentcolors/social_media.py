@@ -3,10 +3,10 @@ import random
 import string
 
 import httpx
-import pytumblr
 from django.urls import reverse
 from dotenv import load_dotenv
 
+from filamentcolors import tumblr as pytumblr
 
 load_dotenv()
 

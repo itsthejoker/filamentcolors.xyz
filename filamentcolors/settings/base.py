@@ -250,3 +250,4 @@ CORS_ALLOW_ALL_ORIGINS = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 PLAUSIBLE_DOMAIN = "filamentcolors.xyz"
+FORMS_URLFIELD_ASSUME_HTTPS = True

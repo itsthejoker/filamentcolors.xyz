@@ -15,7 +15,7 @@ psycopg2-binary = "^2.9.3"
 python-dotenv = "^0.20.0"
 colorcorrect = "^0.9.1"
 colormath = { git = "https://github.com/itsthejoker/python-colormath.git", branch = "master" }
-django-taggit = "^3.0.0"
+django-taggit = "^5.0.1"
 colorthief = "^0.2.1"
 djangorestframework = "^3.13.1"
 scikit-image = "0.22.0"
@@ -28,7 +28,7 @@ regex = "^2022.8.17"
 django-cors-headers = "^3.13.0"
 wheel = "^0.38.1"
 scipy = "^1.10.0"
-django-filter = "^22.1"
+django-filter = "^23.5"
 poetryup = "^0.10.0"
 setuptools = "^65.4.1"
 django-htmx = "^1.12.2"
@@ -42,6 +42,7 @@ plotly = "^5.15.0"
 django-plausible-proxy = "^0.5.0"
 requests-oauthlib = "^1.3.1"
 oauthlib = "^3.2.2"
+python-dateutil = "^2.8.2"
 
 [tool.poetry.dev-dependencies]
 better-exceptions = "^0.3.3"
@@ -50,6 +51,15 @@ beautifulsoup4 = "^4.11.1"
 isort = "^5.10.1"
 seed-isort-config = "^2.2.0"
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.4"
+pytest-django = "^4.7.0"
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "filamentcolors.settings.testing"
+# -- recommended but optional:
+python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]

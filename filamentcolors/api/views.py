@@ -12,12 +12,12 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from filamentcolors.api.serializers import (
     FilamentTypeSerializer,
     ManufacturerSerializer,
-    SwatchSerializer,
     PantoneColorSerializer,
     RALColorSerializer,
+    SwatchSerializer,
 )
-from filamentcolors.api.throttles import SustainedRateThrottle, BurstRateThrottle
-from filamentcolors.models import FilamentType, Manufacturer, Swatch, Pantone, RAL
+from filamentcolors.api.throttles import BurstRateThrottle, SustainedRateThrottle
+from filamentcolors.models import RAL, FilamentType, Manufacturer, Pantone, Swatch
 
 
 class SwatchViewSet(ReadOnlyModelViewSet):

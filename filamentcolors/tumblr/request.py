@@ -1,8 +1,8 @@
 import urllib.parse
-import requests
 
+import requests
+from requests.exceptions import HTTPError, TooManyRedirects
 from requests_oauthlib import OAuth1
-from requests.exceptions import TooManyRedirects, HTTPError
 
 
 class TumblrRequest:

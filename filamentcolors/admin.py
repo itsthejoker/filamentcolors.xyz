@@ -8,8 +8,8 @@ from filamentcolors.models import (
     GenericFilamentType,
     GenericFile,
     Manufacturer,
-    Swatch,
     Post,
+    Swatch,
 )
 
 

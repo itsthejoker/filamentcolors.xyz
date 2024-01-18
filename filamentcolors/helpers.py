@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 
 from django.db.models import Count, F, Q, QuerySet
 from django.db.models.functions import Lower
-from django.http import request, HttpResponse
+from django.http import HttpResponse, request
 from django.shortcuts import render
 
 from filamentcolors.models import GenericFilamentType, Manufacturer, Swatch

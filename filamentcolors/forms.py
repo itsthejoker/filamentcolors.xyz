@@ -101,8 +101,11 @@ class ListSwatchInventoryForm(forms.Form):
         .filter(published=False)
         .order_by(Lower("manufacturer__name"), Lower("color_name"))
     )
-    colormatched_swatches = forms.ModelChoiceField(_qs.exclude(hex_color__exact=""), required=False)
+    colormatched_swatches = forms.ModelChoiceField(
+        _qs.exclude(hex_color__exact=""), required=False
+    )
     unpublished_swatches = forms.ModelChoiceField(_qs.filter(), required=False)
+
 
 class ManufacturerForm(forms.ModelForm):
     class Meta:

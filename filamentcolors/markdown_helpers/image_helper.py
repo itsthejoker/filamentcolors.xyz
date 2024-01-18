@@ -1,6 +1,7 @@
+from xml.etree.ElementTree import Element
+
 import markdown
 from markdown.util import AtomicString
-from xml.etree.ElementTree import Element
 
 IMAGE_RE = r"!\[(.*)]\((.*)\)"
 

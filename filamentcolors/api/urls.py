@@ -1,12 +1,12 @@
-from django.urls import path, include, re_path
+from django.urls import include, path, re_path
 from rest_framework import routers
 
 from filamentcolors.api.views import (
     FilamentTypeViewSet,
     ManufacturerViewSet,
-    SwatchViewSet,
     PantoneColorViewSet,
     RALColorViewSet,
+    SwatchViewSet,
     db_version,
 )
 

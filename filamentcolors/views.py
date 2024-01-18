@@ -1,15 +1,15 @@
+import colorsys
 import random
 from typing import Any
 
+import numpy
+import pandas
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q
 from django.db.models.functions import Lower
 from django.http import Http404, HttpResponse
 from django.shortcuts import HttpResponseRedirect, reverse
 from django.views.decorators.csrf import csrf_exempt
-import pandas
-import numpy
-import colorsys
 from plotly import graph_objects
 
 from filamentcolors.colors import hex_to_rgb
@@ -22,7 +22,7 @@ from filamentcolors.helpers import (
     get_swatches,
     prep_request,
 )
-from filamentcolors.models import GenericFilamentType, Swatch, Manufacturer, GenericFile
+from filamentcolors.models import GenericFilamentType, GenericFile, Manufacturer, Swatch
 
 
 def homepage(request: WSGIRequest) -> HttpResponseRedirect:

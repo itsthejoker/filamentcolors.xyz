@@ -23,9 +23,9 @@
 # original repo: https://github.com/ydm/django-sameas
 
 from __future__ import unicode_literals
+
 from django import template
 from django.template.loader_tags import BlockNode, do_block
-
 
 register = template.Library()
 

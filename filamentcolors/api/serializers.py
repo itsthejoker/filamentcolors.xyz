@@ -3,7 +3,7 @@ from typing import Optional
 from rest_framework import serializers
 from rest_framework.serializers import HyperlinkedModelSerializer
 
-from filamentcolors.models import FilamentType, Manufacturer, Swatch, Pantone, RAL
+from filamentcolors.models import RAL, FilamentType, Manufacturer, Pantone, Swatch
 
 
 class FilamentTypeSerializer(HyperlinkedModelSerializer):

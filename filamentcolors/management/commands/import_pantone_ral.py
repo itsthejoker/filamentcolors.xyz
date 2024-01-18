@@ -1,9 +1,10 @@
 import os
 import sqlite3
 
-from django.core.management.base import BaseCommand
 from django.conf import settings
-from filamentcolors.models import Pantone, RAL
+from django.core.management.base import BaseCommand
+
+from filamentcolors.models import RAL, Pantone
 
 
 class Command(BaseCommand):

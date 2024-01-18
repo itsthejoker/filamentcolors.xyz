@@ -1,12 +1,7 @@
+from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
-from django.contrib import messages
-from django.shortcuts import (
-    HttpResponseRedirect,
-    redirect,
-    reverse,
-    get_object_or_404,
-)
+from django.shortcuts import HttpResponseRedirect, get_object_or_404, redirect, reverse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
@@ -14,11 +9,11 @@ from filamentcolors.forms import (
     FilamentTypeForm,
     InventoryForm,
     ListSwatchInventoryForm,
+    ManualHexValueForm,
     ManufacturerForm,
     SwatchForm,
-    ManualHexValueForm,
-    SwatchUpdateImagesForm,
     SwatchFormNoImages,
+    SwatchUpdateImagesForm,
 )
 from filamentcolors.helpers import build_data_dict, prep_request
 from filamentcolors.models import Swatch
@@ -68,6 +63,21 @@ def add_swatch(request, swatch_id: int = None):
             and we'll want to make sure that we save over that inventory element
             when we finish filling it out.
     """
+    data = build_data_dict(request)
+    data.update(
+        {
+            "header": "Swatch Add Form",
+            "subheader": "A new splash of color!",
+            "header_js_buttons": [
+                {"text": "Manufacturer Search", "onclick": "loadMfrSearch()"},
+                {"text": "Amazon Search", "onclick": "loadAmazonSearch()"},
+            ],
+            "header_link_buttons": [
+                {"text": "Add New Manufacturer", "reverse_url": "add_mfr"},
+                {"text": "Add Filament Type", "reverse_url": "add_filament_type"},
+            ],
+        }
+    )
     if request.method == "POST":
         if swatch_id:
             form = SwatchForm(
@@ -75,7 +85,16 @@ def add_swatch(request, swatch_id: int = None):
             )
         else:
             form = SwatchForm(request.POST, request.FILES)
-        new_swatch = form.save(commit=False)
+        try:
+            new_swatch: Swatch = form.save(commit=False)
+        except ValueError:
+            messages.error(
+                request,
+                "The form was incomplete; please provide the missing information.",
+            )
+            data.update({"form": form})
+            return prep_request(request, "generic_form.html", data)
+
         new_swatch.published = True
         new_swatch.date_published = timezone.now()
         new_swatch.save()
@@ -87,26 +106,9 @@ def add_swatch(request, swatch_id: int = None):
             form = SwatchForm(instance=Swatch.objects.get(id=swatch_id))
         else:
             form = SwatchForm()
-        data = build_data_dict(request)
-        data.update(
-            {
-                "header": "Swatch Add Form",
-                "subheader": "A new splash of color!",
-                "form": form,
-            }
-        )
-        data.update(
-            {
-                "header_js_buttons": [
-                    {"text": "Manufacturer Search", "onclick": "loadMfrSearch()"},
-                    {"text": "Amazon Search", "onclick": "loadAmazonSearch()"},
-                ],
-                "header_link_buttons": [
-                    {"text": "Add New Manufacturer", "reverse_url": "add_mfr"},
-                    {"text": "Add Filament Type", "reverse_url": "add_filament_type"},
-                ],
-            }
-        )
+
+    data.update({"form": form})
+
     return prep_request(request, "generic_form.html", data)
 
 

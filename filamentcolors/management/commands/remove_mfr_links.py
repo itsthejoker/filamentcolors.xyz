@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from filamentcolors.models import Swatch, Manufacturer
+from filamentcolors.models import Manufacturer, Swatch
 
 
 class Command(BaseCommand):

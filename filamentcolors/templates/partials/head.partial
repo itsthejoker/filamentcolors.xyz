@@ -18,6 +18,13 @@
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/material-kit-pro.css' %}?v=2">
 <link rel="stylesheet" href="{% static 'css/main.css' %}?v=5">
 
+<style>
+    @font-face {
+      font-family: "Roboto";
+      src: url("{% static 'vendored/Roboto-Regular.ttf' %}") format("truetype");
+    }
+</style>
+
 {% if not request.user.is_authenticated %}
     {% plausible script='script.outbound-links.js' %}
 {% endif %}

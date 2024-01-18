@@ -1,11 +1,11 @@
 import os
 from io import BytesIO
-from typing import Tuple, List, Union
+from typing import List, Tuple, Union
+from urllib.parse import urlsplit, urlunparse
 
 import cv2
 import numpy as np
 import pytz
-from PIL import Image as Img
 from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cmc
 from colormath.color_objects import LabColor, sRGBColor
@@ -14,13 +14,14 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
 from django.core.files.storage import default_storage
-from django.urls import reverse
 from django.db import models
 from django.db.models.query import QuerySet
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
-from skimage import io
 from martor.models import MartorField
+from PIL import Image as Img
+from skimage import io
 
 from filamentcolors.colors import Color
 from filamentcolors.social_media import send_to_social_media
@@ -33,6 +34,8 @@ class Manufacturer(models.Model):
         default=False,
         help_text="List the manufacturer purchase link above the Amazon button.",
     )
+    affiliate_portal = models.CharField(max_length=2000, null=True, blank=True)
+    affiliate_url_param = models.CharField(max_length=150, null=True, blank=True)
 
     @property
     def get_possessive_apostrophe(self):
@@ -618,10 +621,12 @@ class Swatch(models.Model):
         if not extra_args:
             extra_args = {}
 
+        if not self.hex_color:
+            raise AttributeError("No hex color to work with!")
+
         if not rgb:
             rgb = self.get_rgb(self.hex_color)
-        else:
-            target_color = rgb
+
         target_color = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
 
         options = queryset.filter(
@@ -804,8 +809,51 @@ class Swatch(models.Model):
         self.generate_closest_pantone()
         self.generate_rgb()
 
+    def update_affiliate_links(self):
+        """
+        Forcibly update the urls attached to a swatch with aff info.
+
+        There's one confusing piece in here; python's urllib marks 'params' as
+        something that looks like it's related to filesystems. Either way, it's
+        not a syntax I'm familiar with, and none of the examples in the docs
+        actually show it used. In the Manufacturer model, we use 'param' to refer
+        to the query string parameter, which is known as the `query` object from
+        urllib. Fun times for everyone.
+        """
+        # all of our short links start with `amzn.to`, so that's an easy check
+        if amazonlink := self.amazon_purchase_link:
+            if "amzn.to" not in amazonlink and len(amazonlink) > 26:
+                if "tag=fil" not in amazonlink:
+                    scheme, netloc, path, query, fragment = urlsplit(amazonlink)
+                    if query:
+                        query = query.split("&")
+                        query.append("tag=filamentcol0c-20")
+                        query = "&".join(query)
+                    else:
+                        query = "tag=filamentcol0c-20"
+                    # we have no 'params' in this url, so pass an empty string
+                    self.amazon_purchase_link = urlunparse(
+                        (scheme, netloc, path, "", query, fragment)
+                    )
+        if param := self.manufacturer.affiliate_url_param:
+            if mfr_url := self.mfr_purchase_link:
+                param = param.strip("&")
+                param = param.split("=")
+                if param[0] not in mfr_url and param[1] not in mfr_url:
+                    scheme, netloc, path, query, fragment = urlsplit(mfr_url)
+                    if query:
+                        query = query.split("&")
+                        query.append(f"{param[0]}={param[1]}")
+                        query = "&".join(query)
+                    else:
+                        query = f"{param[0]}={param[1]}"
+                    self.mfr_purchase_link = urlunparse(
+                        (scheme, netloc, path, "", query, fragment)
+                    )
+
     def save(self, *args, **kwargs):
         rebuild_matches = False
+        self.update_affiliate_links()
 
         if self.regenerate_info:
             # the joys of using flags on the models themselves. Because

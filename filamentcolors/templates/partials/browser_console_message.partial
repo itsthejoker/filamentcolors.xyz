@@ -2,4 +2,10 @@
     if ("{{ browser_console_message }}") {
         console.log("{{ browser_console_message }}")
     }
+    if ("{{ browser_console_message2 }}") {
+        console.log("{{ browser_console_message2 }}")
+    }
+    if ("{{ browser_console_message3 }}") {
+        console.log("{{ browser_console_message3 }}")
+    }
 </script>

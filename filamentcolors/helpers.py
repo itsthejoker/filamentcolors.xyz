@@ -88,6 +88,7 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
     :param title: str
     :return: dict
     """
+    debug_cookies_message = debug_check_for_cookies(request)
     return {
         "manufacturers": (
             Manufacturer.objects.exclude(
@@ -111,6 +112,7 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
         "user_settings": get_settings_cookies(request),
         "show_search_bar": library,
         "title": title or "FilamentColors",
+        "browser_console_message": debug_cookies_message
     }
 
 
@@ -123,6 +125,26 @@ def clean_collection_ids(ids: str) -> List:
         except ValueError:
             continue
     return cleaned_ids
+
+
+def debug_check_for_cookies(r: request):
+    type_settings = r.COOKIES.get(filament_type_settings_cookie)
+    show_dc = r.COOKIES.get(show_unavailable_cookie)
+    mfr_blacklist = r.COOKIES.get(mfr_blacklist_cookie)
+
+    message = "Missing: "
+    objs = []
+    if not type_settings:
+        objs.append('type_settings')
+    if not show_dc:
+        objs.append('show_dc')
+    if not mfr_blacklist:
+        objs.append("mfr_blacklist")
+    if not objs:
+        message = "all cookies accounted for"
+    else:
+        message = message + ', '.join(objs)
+    return message
 
 
 def get_settings_cookies(r: request) -> Dict:

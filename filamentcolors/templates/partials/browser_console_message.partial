@@ -1,0 +1,5 @@
+<script>
+    if ("{{ browser_console_message }}") {
+        console.log("{{ browser_console_message }}")
+    }
+</script>

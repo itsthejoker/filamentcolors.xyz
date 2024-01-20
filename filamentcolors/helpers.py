@@ -195,7 +195,7 @@ def get_settings_cookies(r: request) -> Dict:
 
 def generate_custom_library(data: Dict) -> bool:
     """
-    Return a boolean based on whether or not we actually need to generate
+    Return a boolean based on whether we actually need to generate
     our own queryset to do matching from. The data here is from the user's
     cookies that they send with the request, and their personal settings
     for the site may be different from the way we natively want to render

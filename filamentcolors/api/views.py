@@ -25,6 +25,7 @@ class SwatchViewSet(ReadOnlyModelViewSet):
     basename = "swatch"
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = {
+        "id": ["exact", "in"],
         "manufacturer": ["exact"],
         "manufacturer__name": ["exact", "icontains"],
         "manufacturer__id": ["exact"],
@@ -92,7 +93,7 @@ class ManufacturerViewSet(ReadOnlyModelViewSet):
     basename = "manufacturer"
     queryset = Manufacturer.objects.all().order_by(Lower("name"))
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = {"id": ["exact"], "name": ["exact", "icontains"]}
+    filterset_fields = {"id": ["exact", "in"], "name": ["exact", "icontains"]}
     throttle_classes = [BurstRateThrottle, SustainedRateThrottle]
 
 

@@ -112,7 +112,7 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
         "user_settings": get_settings_cookies(request),
         "show_search_bar": library,
         "title": title or "FilamentColors",
-        "browser_console_message": debug_cookies_message
+        "browser_console_message": debug_cookies_message,
     }
 
 
@@ -135,15 +135,15 @@ def debug_check_for_cookies(r: request):
     message = "Missing: "
     objs = []
     if not type_settings:
-        objs.append('type_settings')
+        objs.append("type_settings")
     if not show_dc:
-        objs.append('show_dc')
+        objs.append("show_dc")
     if not mfr_blacklist:
         objs.append("mfr_blacklist")
     if not objs:
         message = "all cookies accounted for"
     else:
-        message = message + ', '.join(objs)
+        message = message + ", ".join(objs)
     return message
 
 

@@ -63,7 +63,7 @@ def set_tasty_cookies(response) -> HttpResponse:
     # will break chrome testing locally.
     # https://bugs.chromium.org/p/chromium/issues/detail?id=757472
     response.set_cookie(
-        have_visited_before_cookie, "tasty_cookies", max_age=year, samesite="lax"
+        have_visited_before_cookie, "tasty_cookies", max_age=year, samesite="lax", secure=True
     )
     return response
 

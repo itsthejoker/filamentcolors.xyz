@@ -41,7 +41,7 @@
 <script src="{% static 'vendored/js/contract.js' %}"></script>
 <script src="{% static 'vendored/js/dispatcher.js' %}"></script>
 <script type="text/javascript" src="{% static 'vendored/js/toastify.js' %}" async defer></script>
-<script src="{% static 'js/cookies/cookie.js' %}"></script>
+<script src="{% static 'js/cookies/cookie.js' %}?v=1"></script>
 
 <script type="text/javascript" src="{% static "js/emailmagic.js" %}?v=2" async defer></script>
 <script src="{% static 'js/multistepmodal.js' %}" async></script>

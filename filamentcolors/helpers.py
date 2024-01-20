@@ -63,7 +63,11 @@ def set_tasty_cookies(response) -> HttpResponse:
     # will break chrome testing locally.
     # https://bugs.chromium.org/p/chromium/issues/detail?id=757472
     response.set_cookie(
-        have_visited_before_cookie, "tasty_cookies", max_age=year, samesite="lax", secure=True
+        have_visited_before_cookie,
+        "tasty_cookies",
+        max_age=year,
+        samesite="lax",
+        secure=True,
     )
     return response
 
@@ -94,9 +98,11 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
     settings = get_settings_cookies(request)
 
     settings_for_display = deepcopy(settings)
-    settings_for_display['types'] = [i.name for i in settings_for_display['types']]
-    settings_for_display['mfr_whitelist_count'] = len(settings_for_display['mfr_whitelist'])
-    del settings_for_display['mfr_whitelist']
+    settings_for_display["types"] = [i.name for i in settings_for_display["types"]]
+    settings_for_display["mfr_whitelist_count"] = len(
+        settings_for_display["mfr_whitelist"]
+    )
+    del settings_for_display["mfr_whitelist"]
     return {
         "manufacturers": (
             Manufacturer.objects.exclude(

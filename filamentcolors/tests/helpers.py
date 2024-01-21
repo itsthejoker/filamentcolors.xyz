@@ -32,7 +32,7 @@ BASE_MANUFACTURER_DATA = {
     "website": "",
     "swap_purchase_buttons": False,
     "affiliate_portal": "https://test.test/affiliate",
-    "affiliate_url_param": "&foo=bar"
+    "affiliate_url_param": "&foo=bar",
 }
 BASE_SWATCH_DATA = {
     "manufacturer": None,  # needs to be replaced
@@ -65,7 +65,7 @@ def get_filament_type(**kwargs) -> FilamentType:
     }
 
     if not info.get("parent_type"):
-        info['parent_type'] = get_generic_filament_type()
+        info["parent_type"] = get_generic_filament_type()
 
     obj, _ = FilamentType.objects.get_or_create(**info)
     return obj
@@ -76,10 +76,10 @@ def get_swatch(**kwargs) -> Swatch:
         **BASE_SWATCH_DATA,
         **{key: kwargs[key] for key in kwargs if key in dir(Swatch)},
     }
-    if not info.get('manufacturer'):
-        info['manufacturer'] = get_manufacturer()
+    if not info.get("manufacturer"):
+        info["manufacturer"] = get_manufacturer()
     if not info.get("filament_type"):
-        info['filament_type'] = get_filament_type()
+        info["filament_type"] = get_filament_type()
     obj, _ = Swatch.objects.get_or_create(**info)
     return obj
 

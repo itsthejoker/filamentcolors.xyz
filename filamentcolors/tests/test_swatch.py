@@ -1,4 +1,51 @@
+from filamentcolors.models import Swatch
+
 from filamentcolors.tests.helpers import get_swatch
+from filamentcolors.tests.constants import TestColors
+
+
+# def test_complement() -> None:
+#     # todo: broken test
+#     blue = get_swatch(hex_color=TestColors.BLUE1)
+#     yellow = get_swatch(hex_color=TestColors.YELLOW1)
+#     blue.update_all_color_matches(Swatch.objects.all())
+#
+#     assert blue.complement == yellow
+
+
+def test_pantone_and_ral_colors_get_automatically_added(
+    populate_pantone_and_ral,
+) -> None:
+    swatch = get_swatch()
+
+    assert swatch.closest_pantone_1 is not None
+    assert swatch.closest_pantone_2 is not None
+    assert swatch.closest_pantone_3 is not None
+    assert swatch.closest_ral_1 is not None
+    assert swatch.closest_ral_2 is not None
+    assert swatch.closest_ral_3 is not None
+
+
+def test_cropped_images_automatically_added() -> None:
+    swatch = get_swatch()
+
+    assert swatch.card_img is not None
+    assert swatch.card_img.height == 62
+    assert swatch.card_img.width == 200
+
+    assert swatch.image_front is not None
+    assert swatch.image_front.height == 2056
+    assert swatch.image_front.width == 2740
+
+    assert swatch.image_back is not None
+    assert swatch.image_back.height == 2056
+    assert swatch.image_back.width == 2740
+
+    # we don't do any special manipulation on the 'other' image,
+    # so it should be the same size as it started
+    assert swatch.image_other is not None
+    assert swatch.image_other.height == 3040
+    assert swatch.image_other.width == 4056
 
 
 def test_affiliate_link_update() -> None:

@@ -802,9 +802,9 @@ class Swatch(models.Model):
 
     def regenerate_all(self, long_way=False):
         # self.generate_hex_info(long_way)
+        self.generate_rgb()
         self.generate_closest_ral()
         self.generate_closest_pantone()
-        self.generate_rgb()
 
     def update_affiliate_links(self):
         """
@@ -885,7 +885,7 @@ class Swatch(models.Model):
 
             # have to save the model before we can send the tweet, otherwise
             # we won't have a swatch ID.
-            if not settings.DEBUG:
+            if not settings.DEBUG and settings.POST_TO_SOCIAL_MEDIA:
                 try:
                     send_to_social_media(swatch=self, new_swatch=True)
                 except Exception as e:

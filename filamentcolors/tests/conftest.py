@@ -3,11 +3,8 @@ import pytest
 from filamentcolors.management.commands import import_pantone_ral
 
 
-def pytest_sessionstart(session):
-    """
-    Called after the Session object has been created and
-    before performing collection and entering the run test loop.
-    """
+@pytest.fixture()
+def populate_pantone_and_ral() -> None:
     import_pantone_ral.Command().handle()
 
 

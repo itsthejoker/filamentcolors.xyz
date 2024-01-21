@@ -621,9 +621,6 @@ class Swatch(models.Model):
         if not extra_args:
             extra_args = {}
 
-        if not self.hex_color:
-            raise AttributeError("No hex color to work with!")
-
         if not rgb:
             rgb = self.get_rgb(self.hex_color)
 

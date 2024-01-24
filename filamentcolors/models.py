@@ -22,6 +22,7 @@ from django.utils.text import slugify
 from martor.models import MartorField
 from PIL import Image as Img
 from skimage import io
+from taggit.managers import TaggableManager
 
 from filamentcolors.colors import Color
 from filamentcolors.social_media import send_to_social_media
@@ -425,6 +426,8 @@ class Swatch(models.Model):
         related_name="ral_3",
         verbose_name="Computed RAL Design System+ color",
     )
+
+    tags = TaggableManager()
 
     # !!!!!!!!!!!!!!!!!!!!!!!!
 

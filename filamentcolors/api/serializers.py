@@ -2,6 +2,7 @@ from typing import Optional
 
 from rest_framework import serializers
 from rest_framework.serializers import HyperlinkedModelSerializer
+from taggit.serializers import TagListSerializerField
 
 from filamentcolors.models import RAL, FilamentType, Manufacturer, Pantone, Swatch
 
@@ -56,7 +57,7 @@ class SwatchSerializer(HyperlinkedModelSerializer):
     closest_ral_2 = RALColorSerializer(read_only=True)
     closest_ral_1 = RALColorSerializer(read_only=True)
 
-    tags = serializers.ListField(default=[])
+    tags = TagListSerializerField()
 
     class Meta:
         model = Swatch

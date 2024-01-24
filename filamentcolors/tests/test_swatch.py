@@ -1,8 +1,6 @@
 from filamentcolors.models import Swatch
-
-from filamentcolors.tests.helpers import get_swatch
 from filamentcolors.tests.constants import TestColors
-
+from filamentcolors.tests.helpers import get_swatch
 
 # def test_complement() -> None:
 #     # todo: broken test

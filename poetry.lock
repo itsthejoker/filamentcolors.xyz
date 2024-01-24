@@ -163,6 +163,23 @@ webencodings = "*"
 css = ["tinycss2 (>=1.1.0,<1.3)"]
 
 [[package]]
+name = "bugsnag"
+version = "4.6.1"
+description = "Automatic error monitoring for django, flask, etc."
+optional = false
+python-versions = ">=3.5, <4"
+files = [
+    {file = "bugsnag-4.6.1-py3-none-any.whl", hash = "sha256:6796e5ed331bd6015e8383d1c654bf08f59c699e5cb6bedc74986b1a778de0cb"},
+    {file = "bugsnag-4.6.1.tar.gz", hash = "sha256:1b3a6ea4bfb01362493d3f763bac99356668c28e9f5f352f92e043b4a2f51daa"},
+]
+
+[package.dependencies]
+webob = "*"
+
+[package.extras]
+flask = ["blinker", "flask"]
+
+[[package]]
 name = "certifi"
 version = "2023.11.17"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -2104,6 +2121,21 @@ files = [
 ]
 
 [[package]]
+name = "webob"
+version = "1.8.7"
+description = "WSGI request and response object"
+optional = false
+python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*"
+files = [
+    {file = "WebOb-1.8.7-py2.py3-none-any.whl", hash = "sha256:73aae30359291c14fa3b956f8b5ca31960e420c28c1bec002547fb04928cf89b"},
+    {file = "WebOb-1.8.7.tar.gz", hash = "sha256:b64ef5141be559cfade448f044fa45c2260351edcb6a8ef6b7e00c7dcef0c323"},
+]
+
+[package.extras]
+docs = ["Sphinx (>=1.7.5)", "pylons-sphinx-themes"]
+testing = ["coverage", "pytest (>=3.1.0)", "pytest-cov", "pytest-xdist"]
+
+[[package]]
 name = "wheel"
 version = "0.38.4"
 description = "A built-package format for Python"
@@ -2135,4 +2167,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "47dc12d2dd88681b36a30de0e07c912146da2f7d63b0048f597061f602f81819"
+content-hash = "723feed637f8f25a410a09357d9603d36a82140e85b75540c841fee72acc158a"

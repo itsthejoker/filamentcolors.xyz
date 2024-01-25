@@ -23,7 +23,7 @@ jobs:
               --request POST \
               --header "Content-Type: application/json" \
               --data '{
-                "apiKey": ${{ secrets.BUGSNAG_KEY }},
+                "apiKey": "${{ secrets.BUGSNAG_KEY }}",
                 "appVersion": "${{ env.VERSION }}",
                 "releaseStage": "production",
                 "builderName": "CI",

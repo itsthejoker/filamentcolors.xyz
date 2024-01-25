@@ -7,6 +7,6 @@ jobs:
   ping_bugsnag:
     runs-on: ubuntu-latest
     steps:
-      uses: psprings/bugsnag-release-action@v0.0.3
+    - uses: psprings/bugsnag-release-action@v0.0.3
       with:
         apiKey: ${{ secrets.BUGSNAG_KEY }}

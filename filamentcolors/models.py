@@ -90,33 +90,6 @@ class GenericFile(models.Model):
         return f"{self.name} - {self.file.name}" if self.name else self.file.name
 
 
-class Post(models.Model):
-    title = models.CharField(max_length=240)
-    subtitle = models.CharField(max_length=39, null=True, blank=True)
-    body = MartorField()
-    slug = models.SlugField(default="", editable=False, max_length=70)
-    published = models.BooleanField(default=False)
-    enable_preview = models.BooleanField(default=False)
-    date_added = models.DateTimeField(default=timezone.now)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title, allow_unicode=True)
-        if self.published:
-            self.enable_preview = False
-        super().save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        kwargs = {"slug": self.slug}
-        return reverse("postdetail", kwargs=kwargs)
-
-    def __str__(self):
-        if self.enable_preview:
-            pub = "preview"
-        else:
-            pub = "published" if self.published else "unpublished"
-        return f"{self.id} | {self.title} | {pub} | {self.get_absolute_url()}"
-
-
 class Pantone(models.Model):
     CATEGORIES = [
         "Fashion and Interior Designers",

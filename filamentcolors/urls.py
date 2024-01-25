@@ -23,7 +23,7 @@ from django.urls import include, path
 from filamentcolors import staff_views, views
 from filamentcolors.api.urls import urlpatterns as api_urls
 from filamentcolors.markdown_helpers.urls import urlpatterns as markdown_urls
-from filamentcolors.models import Post, Swatch
+from filamentcolors.models import Swatch
 from filamentcolors.sitemaps import StaticViewSitemap
 
 handler404 = "filamentcolors.views.error_404"
@@ -36,13 +36,7 @@ sitemaps = {
             "queryset": Swatch.objects.filter(published=True).order_by("id"),
             "date_field": "date_published",
         }
-    ),
-    "posts": GenericSitemap(
-        {
-            "queryset": Post.objects.filter(published=True).order_by("id"),
-            "date_field": "date_added",
-        }
-    ),
+    )
 }
 
 urlpatterns = [

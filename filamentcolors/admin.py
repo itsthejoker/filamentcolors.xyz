@@ -8,7 +8,6 @@ from filamentcolors.models import (
     GenericFilamentType,
     GenericFile,
     Manufacturer,
-    Post,
     Swatch,
 )
 
@@ -57,24 +56,8 @@ class FilamentTypeAdmin(admin.ModelAdmin):
     ordering = ("name",)
 
 
-class PostAdmin(admin.ModelAdmin):
-    formfield_overrides = {
-        models.TextField: {"widget": AdminMartorWidget},
-    }
-
-    def response_change(self, request, obj):
-        res = super().response_change(request, obj)
-        if "_post_preview" in request.POST:
-            return HttpResponseRedirect(
-                f"/post/{obj.slug}{'/preview/' if obj.enable_preview else ''}"
-            )
-        else:
-            return res
-
-
 admin.site.register(Swatch, SwatchAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(FilamentType, FilamentTypeAdmin)
 admin.site.register(GenericFile)
 admin.site.register(GenericFilamentType)
-admin.site.register(Post, PostAdmin)

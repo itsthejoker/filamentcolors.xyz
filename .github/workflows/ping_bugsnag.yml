@@ -7,6 +7,29 @@ jobs:
   ping_bugsnag:
     runs-on: ubuntu-latest
     steps:
-    - uses: psprings/bugsnag-release-action@v0.0.3
-      with:
-        apiKey: ${{ secrets.BUGSNAG_KEY }}
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.x'
+      - name: Install Env
+        # this should be all we need because shiv will download the deps itself
+        run: |
+          pip install --upgrade pip
+          pip install poetry
+          echo "VERSION=$(poetry version -s)" >> $GITHUB_ENV
+      - name: Ping Bugsnag
+        run: |
+          curl https://build.bugsnag.com/ \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --data '{
+                "apiKey": ${{ secrets.BUGSNAG_KEY }},
+                "appVersion": "${{ env.VERSION }}",
+                "releaseStage": "production",
+                "builderName": "CI",
+                "sourceControl": {
+                  "provider": "github",
+                  "repository": "https://github.com/itsthejoker/filamentcolors.xyz",
+                  "revision": "${{ github.sha }}"
+                }
+              }'

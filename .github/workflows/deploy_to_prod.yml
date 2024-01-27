@@ -39,15 +39,14 @@ jobs:
     needs: [ check_for_version_change ]
     if: needs.check_for_version_change.outputs.version_changed == 'True'
     steps:
-      - name: Deploy to prod
-        uses: garygrossgarten/github-action-ssh@release
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          command: ./update.sh
           host: ${{ secrets.SSH_HOSTNAME }}
           username: ${{ secrets.SSH_USERNAME }}
-          privateKey: ${{ secrets.SSH_PRIVATE_KEY}}
-        env:
-          CI: true
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: whoami
 
   ping_bugsnag:
     runs-on: ubuntu-latest

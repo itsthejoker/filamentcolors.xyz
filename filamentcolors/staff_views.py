@@ -211,28 +211,32 @@ def swatch_edit(request, swatch_id: int):
 @staff_member_required
 def add_inventory_swatch(request):
     # This is for adding a swatch that hasn't been printed yet.
+    data = build_data_dict(request)
+    data.update(
+        {
+            "header": "Inventory Add Form",
+            "subheader": "Unpublished swatches to pull from later!",
+            "header_link_buttons": [
+                {"text": "Add New Manufacturer", "reverse_url": "add_mfr"},
+                {"text": "Add Filament Type", "reverse_url": "add_filament_type"},
+            ],
+        }
+    )
     if request.method == "POST":
         # we're probably going to be adding multiples at once, so we'll just
         # redirect back to this page.
         form = InventoryForm(request.POST)
+        if not form.is_valid():
+            messages.error(request, "The form doesn't look right; please try again.")
+            data |= {"form": form}
+            return prep_request(request, "generic_form.html", data)
+
         new_inventory = form.save(commit=False)
         new_inventory.published = False
         new_inventory.save()
         return get_path_redirect(request, "add_inventory")
     else:
-        data = build_data_dict(request)
-        form = InventoryForm()
-        data.update(
-            {
-                "header": "Inventory Add Form",
-                "subheader": "Unpublished swatches to pull from later!",
-                "form": form,
-                "header_link_buttons": [
-                    {"text": "Add New Manufacturer", "reverse_url": "add_mfr"},
-                    {"text": "Add Filament Type", "reverse_url": "add_filament_type"},
-                ],
-            }
-        )
+        data |= {"form": InventoryForm()}
         return prep_request(request, "generic_form.html", data)
 
 

@@ -16,7 +16,7 @@ jobs:
     outputs:
       version_changed: ${{ steps.check_file_changed.outputs.version_changed }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         # Checkout as many commits as needed for the diff
         fetch-depth: 2
@@ -46,7 +46,10 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          script: poetry --version && ./update.sh
+          script: |
+            export PATH="${{ secrets.SSH_BASE_PATH }}/.local/bin:$PATH" \
+            && poetry --version \
+            && ./update.sh
 
   ping_bugsnag:
     runs-on: ubuntu-latest

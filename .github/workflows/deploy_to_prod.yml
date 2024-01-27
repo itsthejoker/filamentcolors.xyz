@@ -48,3 +48,34 @@ jobs:
           privateKey: ${{ secrets.SSH_PRIVATE_KEY}}
         env:
           CI: true
+
+  ping_bugsnag:
+    runs-on: ubuntu-latest
+    needs: [ check_for_version_change ]
+    if: needs.check_for_version_change.outputs.version_changed == 'True'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.x'
+      - name: Install Env
+        run: |
+          pip install --upgrade pip
+          pip install poetry
+          echo "VERSION=$(poetry version -s)" >> $GITHUB_ENV
+      - name: Ping Bugsnag
+        run: |
+          curl https://build.bugsnag.com/ \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --data '{
+                "apiKey": "${{ secrets.BUGSNAG_KEY }}",
+                "appVersion": "${{ env.VERSION }}",
+                "releaseStage": "production",
+                "builderName": "CI",
+                "sourceControl": {
+                  "provider": "github",
+                  "repository": "https://github.com/itsthejoker/filamentcolors.xyz",
+                  "revision": "${{ github.sha }}"
+                }
+              }'

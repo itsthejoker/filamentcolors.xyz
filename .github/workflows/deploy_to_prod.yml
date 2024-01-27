@@ -37,7 +37,7 @@ jobs:
   deploy:
     runs-on: 'ubuntu-latest'
     needs: [ check_for_version_change ]
-    if: needs.check_for_version_change.outputs.version_changed == 'True'
+    if: needs.check_for_version_change.outputs.version_changed == 'False'
     steps:
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@v1.0.3
@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          script: ./update.sh
+          script: poetry --version && ./update.sh
 
   ping_bugsnag:
     runs-on: ubuntu-latest

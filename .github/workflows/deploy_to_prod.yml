@@ -33,11 +33,10 @@ jobs:
         # Set the output named "version_changed"
         echo "version_changed=$GOTIME" >> $GITHUB_OUTPUT
 
-  # Run the job only with "version_changed" equals "True"
   deploy:
     runs-on: 'ubuntu-latest'
     needs: [ check_for_version_change ]
-    if: needs.check_for_version_change.outputs.version_changed == 'False'
+    if: needs.check_for_version_change.outputs.version_changed == 'True'
     steps:
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@v1.0.3
@@ -46,9 +45,10 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
+          # this is a non-login shell, so the path has to be manually adjusted
+          # here because bash_profile and bashrc will never run
           script: |
             export PATH="${{ secrets.SSH_BASE_PATH }}/.local/bin:$PATH" \
-            && poetry --version \
             && ./update.sh
 
   ping_bugsnag:

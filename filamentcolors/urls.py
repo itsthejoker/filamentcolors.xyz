@@ -36,7 +36,7 @@ sitemaps = {
             "queryset": Swatch.objects.filter(published=True).order_by("id"),
             "date_field": "date_published",
         }
-    )
+    ),
 }
 
 urlpatterns = [

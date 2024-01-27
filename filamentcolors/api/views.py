@@ -1,11 +1,10 @@
 from colormath.color_objects import sRGBColor
-from django.db.models import BooleanField, ExpressionWrapper, Q, JSONField
+from django.db.models import BooleanField, ExpressionWrapper, Q
 from django.db.models.functions import Lower
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.fields import ListField
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
@@ -38,8 +37,9 @@ class SwatchViewSet(ReadOnlyModelViewSet):
     def get_queryset(self):
         queryset = Swatch.objects.filter(published=True).annotate(
             is_available=ExpressionWrapper(
-                Q(amazon_purchase_link__isnull=False) & Q(mfr_purchase_link__isnull=False),
-                output_field=BooleanField()
+                Q(amazon_purchase_link__isnull=False)
+                & Q(mfr_purchase_link__isnull=False),
+                output_field=BooleanField(),
             )
         )
         # localhost:8000/api/swatch/?m=type

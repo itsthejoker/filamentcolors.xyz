@@ -134,13 +134,14 @@ def rgb_to_hex(rgb):
     return "#%02x%02x%02x".lower() % rgb
 
 
-def hex_to_rgb(in_col):
+def hex_to_rgb(in_col: str) -> tuple[int]:
     """
     Convert a hex color to RGB.
     Input should be a string. For example '#FFFFFF'.
     Output is a tuple of integers (R, G, B).
     """
     # make sure input is ok
+    in_col = in_col.strip()
     assert is_hex(in_col) is True, f"Error, {in_col} is not a valid hex color."
 
     # make the conversion

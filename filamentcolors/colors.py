@@ -89,7 +89,7 @@ def is_hex(in_col):
     Check whether an input string is a valid hex value.
     Return True if it is, otherwise False.
     """
-    if type(in_col) is not str:
+    if not isinstance(in_col, str):
         return False
 
     regular_expression = re.compile(
@@ -101,7 +101,7 @@ def is_hex(in_col):
         re.VERBOSE | re.MULTILINE,
     )
 
-    if regular_expression.match(in_col) == None:
+    if regular_expression.match(in_col) is None:
         return False
     else:
         return True

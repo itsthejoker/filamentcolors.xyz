@@ -1,0 +1,50 @@
+# Many thanks to
+# https://www.meziantou.net/executing-github-actions-jobs-or-steps-only-when-specific-files-change.htm
+# for providing the base that this uses
+
+name: Push to prod
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  check_for_version_change:
+    runs-on: 'ubuntu-latest'
+    # Declare outputs for next jobs
+    outputs:
+      version_changed: ${{ steps.check_file_changed.outputs.version_changed }}
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        # Checkout as many commits as needed for the diff
+        fetch-depth: 2
+    - id: check_file_changed
+      run: |
+        # Diff HEAD with the previous commit
+        if git diff HEAD^ HEAD pyproject.toml | grep -q "+version =";
+        then
+          GOTIME="True"
+        else
+          GOTIME="False"
+        fi
+        echo "::notice title=GOTIME::$GOTIME"
+        # Set the output named "version_changed"
+        echo "version_changed=$GOTIME" >> $GITHUB_OUTPUT
+
+  # Run the job only with "version_changed" equals "True"
+  deploy:
+    runs-on: 'ubuntu-latest'
+    needs: [ check_for_version_change ]
+    if: needs.check_for_version_change.outputs.version_changed == 'True'
+    steps:
+      - name: Deploy to prod
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: ./update.sh
+          host: ${{ secrets.SSH_HOSTNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
+          privateKey: ${{ secrets.SSH_PRIVATE_KEY}}
+        env:
+          CI: true

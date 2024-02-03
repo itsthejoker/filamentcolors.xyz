@@ -142,7 +142,7 @@
                 Toastify({
                     text: 'It looks like all filament types have been disabled.' +
                         ' Please enable at least one type.',
-                    duration: 3000,
+                    duration: 5000,
                     backgroundColor: "#d9534f"
                 }).showToast();
                 return
@@ -152,7 +152,7 @@
                 Toastify({
                     text: 'It looks like all manufacturers have been disabled.' +
                         ' Please enable at least one.',
-                    duration: 3000,
+                    duration: 5000,
                     backgroundColor: "#d9534f"
                 }).showToast();
                 return

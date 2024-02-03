@@ -8,21 +8,21 @@
         if (mfrName === "---------") {
             Toastify({
                 text: 'No manufacturer selected!',
-                duration: 3000,
+                duration: 5000,
                 backgroundColor: "#d9534f"
             }).showToast();
             return
         } else if (colorName === "") {
             Toastify({
                 text: 'No color name retrieved!',
-                duration: 3000,
+                duration: 5000,
                 backgroundColor: "#d9534f"
             }).showToast();
             return
         } else if (ftypeName === "---------") {
             Toastify({
                 text: 'No color type specified!',
-                duration: 3000,
+                duration: 5000,
                 backgroundColor: "#d9534f"
             }).showToast();
             return
@@ -36,7 +36,7 @@
         if (mfrID === "") {
             Toastify({
                 text: 'No manufacturer selected!',
-                duration: 3000,
+                duration: 5000,
                 backgroundColor: "#d9534f"
             }).showToast();
             return;
@@ -47,7 +47,7 @@
                 if (data.website === null) {
                     Toastify({
                         text: "API says there's no website!",
-                        duration: 3000,
+                        duration: 5000,
                         backgroundColor: "#d9534f"
                     }).showToast();
                     return

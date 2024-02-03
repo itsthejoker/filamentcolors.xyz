@@ -6,6 +6,7 @@ from django.db.models.functions import Lower
 from django.http import HttpResponse, request
 from django.shortcuts import render
 
+from filamentcolors import status as status_codes
 from filamentcolors.models import GenericFilamentType, Manufacturer, Swatch
 
 have_visited_before_cookie = "f"
@@ -243,3 +244,10 @@ def get_swatches(data: Dict) -> QuerySet:
             .filter(published=True)
         )
     return queryset
+
+
+class ErrorStatusResponse(HttpResponse):
+    def __init__(self, status: int = None) -> None:
+        super().__init__()
+        self.status_code = status
+        self._reason_phrase = status_codes.reasons.get(status, "Unknown Status Code")

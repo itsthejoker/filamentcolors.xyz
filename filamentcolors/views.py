@@ -12,7 +12,8 @@ from django.shortcuts import HttpResponseRedirect, reverse
 from django.views.decorators.csrf import csrf_exempt
 from plotly import graph_objects
 
-from filamentcolors.colors import hex_to_rgb
+from filamentcolors import status
+from filamentcolors.colors import hex_to_rgb, is_hex, is_short_hex, convert_short_to_full_hex
 from filamentcolors.helpers import (
     build_data_dict,
     clean_collection_ids,
@@ -20,7 +21,7 @@ from filamentcolors.helpers import (
     get_custom_library,
     get_hsv,
     get_swatches,
-    prep_request,
+    prep_request, ErrorStatusResponse,
 )
 from filamentcolors.models import GenericFilamentType, GenericFile, Manufacturer, Swatch
 
@@ -205,8 +206,11 @@ def colormatch(request: WSGIRequest) -> HttpResponse:
         incoming_color = request.POST.get("hex_color")
         if not incoming_color:
             # validation is always a good thing
-            return HttpResponse(status=400)
-
+            return ErrorStatusResponse(status=status.HTTP_702_MISSING_COLOR_CODE)
+        if is_short_hex(incoming_color):
+            incoming_color = convert_short_to_full_hex(incoming_color)
+        if not is_hex(incoming_color):
+            return ErrorStatusResponse(status=status.HTTP_701_BAD_COLOR_CODE)
         library = get_swatches(data)
         matches = []
 

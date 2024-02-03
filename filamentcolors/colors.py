@@ -84,7 +84,34 @@ def is_rgb(in_col):
         return False
 
 
-def is_hex(in_col):
+def is_short_hex(in_col) -> bool:
+    """
+    Check whether an input string is a short form RGB hex value.
+    """
+    if not isinstance(in_col, str):
+        return False
+
+    regular_expression = re.compile(
+        r"""^  # match beginning of string
+        [#]?  # exactly one hash, but optional
+        [0-9a-fA-F]{3}  # exactly three of the hex symbols 0 to 9, a to f
+        $  # match end of string
+        """,
+        re.VERBOSE | re.MULTILINE,
+    )
+
+    if regular_expression.match(in_col) is None:
+        return False
+    else:
+        return True
+
+
+def convert_short_to_full_hex(in_col: str) -> str:
+    in_col = in_col.strip("#")
+    return ''.join([val * 2 for val in in_col])
+
+
+def is_hex(in_col) -> bool:
     """
     Check whether an input string is a valid hex value.
     Return True if it is, otherwise False.

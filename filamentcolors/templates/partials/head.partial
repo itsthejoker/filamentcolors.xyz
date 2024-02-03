@@ -68,13 +68,27 @@
         }
     })
 
-    htmx.on("htmx:responseError", function(evt) {
+    function showToastError(message) {
         Toastify({
-            text: evt.detail.xhr.responseText + `<p>Status: ${evt.detail.xhr.status}</p>`,
-            className: "text-black text-center",
-            duration: 20000,
-            backgroundColor: "#fff"
+            text: message,
+            duration: 5000,
+            backgroundColor: "#d9534f"
         }).showToast();
+    }
+
+    htmx.on("htmx:responseError", function(evt) {
+        if (evt.detail.xhr.status === 701) {
+            showToastError("That doesn't look like a valid color. Try again?")
+        } else if (evt.detail.xhr.status === 702) {
+            showToastError("Missing color code - can't work on what I can't see!")
+        } else {
+            Toastify({
+                text: evt.detail.xhr.responseText + `<p>Status: ${evt.detail.xhr.status}</p>`,
+                className: "text-black text-center",
+                duration: 20000,
+                backgroundColor: "#fff"
+            }).showToast();
+        }
     })
 
     function lazyloadimages() {

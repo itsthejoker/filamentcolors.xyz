@@ -46,34 +46,32 @@
             </div>
             <div class="col-sm-2"></div>
         </div>
-        <div class="row mt-3">
-            <div class="col-md-6 col-lg-3 text-center mb-2">
-                <button type="button" class="btn bg-gradient-secondary" data-bs-toggle="modal"
-                        style="background: #f96854; border-color: #f96854; color: #ffffff"
-                        data-bs-target="#patreonModal">
-                    I'm on Patreon!
-                </button>
-            </div>
-            <div class="col-md-6 col-lg-3 text-center kofi-button mb-2 mt-1">
-                <a href="https://ko-fi.com/joekaufeld" class="btn bg-gradient-info">Buy me a coffee!</a>
-            </div>
-            <div class="col-md-6 col-lg-3 text-center mt-1 mb-2">
-                <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
-                    <img alt="Creative Commons License"
-                         loading="lazy"
-                         style="border-width:0"
-                         src="https://i.creativecommons.org/l/by/4.0/88x31.png"/>
-                </a>
-            </div>
-            <div class="col-md-6 col-lg-3 text-center">
-                <a href="https://www.3dgeeks.app" target="_blank" rel="noopener">
-                    <button type="button" class="btn btn-secondary" data-toggle="modal"
-                            style="background: #000000; border-color: #444444; color: #ffffff">
-                        3D Geeks App
+        <div class="row mt-3 justify-content-center">
+            <div class="flex-fill"></div>
+            <div class="col-sm-12 col-md-4 col-lg-3 text-center d-flex justify-content-center">
+                <div class="align-self-center">
+                    <button type="button" class="btn bg-gradient-secondary mt-2" data-bs-toggle="modal"
+                            style="background: #f96854; border-color: #f96854; color: #ffffff"
+                            data-bs-target="#patreonModal">
+                        I'm on Patreon!
                     </button>
-                </a>
+                </div>
             </div>
-
+            <div class="col-sm-12 col-md-4 col-lg-3 text-center kofi-button d-flex justify-content-center">
+                <div class="align-self-center">
+                    <a href="https://ko-fi.com/joekaufeld" class="btn bg-gradient-info mt-2">Buy me a coffee!</a>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-3 text-center mt-1 mb-2 d-flex justify-content-center">
+                <div class="align-self-center">
+                    <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+                        <img alt="Creative Commons License"
+                             loading="lazy"
+                             style="border-width:0"
+                             src="https://i.creativecommons.org/l/by/4.0/88x31.png"/>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </footer>

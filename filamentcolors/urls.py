@@ -68,6 +68,7 @@ urlpatterns = [
         name="color_family_sort",
     ),
     path("donating/", views.donation_page, name="donations"),
+    path("monetary_donating/", views.monetary_donation_page, name="monetary_donations"),
     path("inventory/", views.inventory_page, name="inventory"),
     path("about/", views.about_page, name="about"),
     path("colormatch/", views.colormatch, name="colormatch"),

@@ -317,6 +317,14 @@ def about_page(request: WSGIRequest) -> HttpResponse:
     )
 
 
+def monetary_donation_page(request: WSGIRequest) -> HttpResponse:
+    return prep_request(
+        request,
+        "standalone/monetary_donations.html",
+        build_data_dict(request, title="Monetary Donations")
+    )
+
+
 def donation_page(request: WSGIRequest) -> HttpResponse:
     return prep_request(
         request,

@@ -361,6 +361,68 @@
                         </div>
                     </div>
                 </li>
+                <li class="nav-item dropdown dropdown-hover mx-2 ps-0">
+                    <a class="nav-link d-flex cursor-pointer align-items-center"
+                       data-bs-toggle="dropdown" data-bs-auto-close="inside"
+                       aria-expanded="false" role="button">
+                        Donating
+                        <img src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/img/down-arrow-dark.svg' %}"
+                             alt="down-arrow" class="arrow ms-auto ms-md-2">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive dropdown-100 p-3 border-radius-lg mt-0 mt-lg-3"
+                         aria-labelledby="dropdownMenuBlocks"
+                         id="aboutDropDown"
+                    >
+                        {% comment %}
+                        DESKTOP MODE
+                        {% endcomment %}
+                        <div class="d-none d-lg-block">
+                            <ul class="list-group">
+                                <li class="nav-item list-group-item border-0 p-0">
+                                    <a href="{% url 'donations' %}"
+                                       tabindex="0"
+                                       class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                        <b>Filament donations</b>
+                                    </a>
+                                </li>
+                                <li class="nav-item list-group-item border-0 p-0">
+                                    <a href="{% url 'monetary_donations' %}"
+                                       tabindex="0"
+                                       class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                        <b>Monetary donations</b>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        {% comment %}
+                        MOBILE MODE
+                        {% endcomment %}
+                        <div class="row d-lg-none dropdown-100">
+                            <div class="col-md-12">
+                                <div class="d-flex mb-2">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <a href="{% url 'donations' %}"
+                                           data-bs-toggle="collapse"
+                                           data-bs-target="#navigation"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Filament donations</b>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <a href="{% url 'monetary_donations' %}"
+                                           data-bs-toggle="collapse"
+                                           data-bs-target="#navigation"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Monetary donations</b>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
                 <li class="mx-2">
                     <a class="nav-link d-flex justify-content-between cursor-pointer align-items-center"
                        role="button"

@@ -14,8 +14,8 @@
             FilamentColors.xyz
         </a>
         <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false"
-                aria-label="Toggle navigation">
+                data-bs-auto-close="inside" data-bs-target="#navigation" aria-controls="navigation"
+                aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon mt-2">
         <span class="navbar-toggler-bar bar1"></span>
         <span class="navbar-toggler-bar bar2"></span>
@@ -37,7 +37,7 @@
             <ul class="navbar-nav navbar-nav-hover mx-auto">
                 <li class="nav-item dropdown dropdown-hover mx-2 ps-0">
                     <a class="nav-link d-flex cursor-pointer align-items-center" id="dropdownMenuBlocks"
-                       data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                       data-bs-toggle="dropdown" data-bs-auto-close="inside" aria-expanded="false" role="button">
                         Browse by
                         <img src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/img/down-arrow-dark.svg' %}"
                              alt="down-arrow" class="arrow ms-auto ms-md-2">
@@ -72,6 +72,8 @@
                                         {% for m in manufacturers|slice:"9" %}
                                             <a class="dropdown-item ps-3 border-radius-md mb-1"
                                                tabindex="0"
+                                               data-bs-toggle="collapse"
+                                               data-bs-auto-close="inside"
                                                href="/library/manufacturer/{{ m.id }}"
                                             >{{ m.name }}</a>
                                         {% endfor %}
@@ -157,10 +159,15 @@
                                 </div>
                                 {% for m in manufacturers|slice:"9" %}
                                     <a class="dropdown-item ps-3 border-radius-md mb-1"
+                                       data-bs-toggle="collapse"
+                                       data-bs-target="#navigation"
                                        href="/library/manufacturer/{{ m.id }}">{{ m.name }}</a>
                                 {% endfor %}
                                 <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                   href="{% url 'mfr_list' %}"><strong>→ view all</strong></a>
+                                   href="{% url 'mfr_list' %}" data-bs-toggle="collapse"
+                                   data-bs-target="#navigation">
+                                    <strong>→ view all</strong>
+                                </a>
                                 <div class="d-flex mb-2 mt-3">
                                     <div class="w-100 d-flex align-items-center justify-content-between">
                                         <div>
@@ -171,7 +178,10 @@
                                 </div>
                                 {% for t in filament_types %}
                                     <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                       href="/library/filament_type/{{ t.id }}">{{ t.name }}</a>
+                                       href="/library/filament_type/{{ t.id }}"
+                                       data-bs-toggle="collapse"
+                                       data-bs-target="#navigation"
+                                    >{{ t.name }}</a>
                                 {% endfor %}
                                 <div class="d-flex mb-2 mt-3">
                                     <div class="w-100 d-flex align-items-center justify-content-between">
@@ -183,12 +193,16 @@
                                 </div>
                                 {% for c in color_family %}
                                     <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                       href="/library/color_family/{{ c.0 }}">{{ c.1 }}</a>
+                                       href="/library/color_family/{{ c.0 }}"
+                                       data-bs-toggle="collapse"
+                                       data-bs-target="#navigation">{{ c.1 }}</a>
                                 {% endfor %}
                                 <div class="d-flex mb-2 mt-3">
                                     <div class="w-100 d-flex align-items-center justify-content-between">
                                         <a href="/library/sort/random">
-                                            <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">
+                                            <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#navigation">
                                                 Random</h6>
                                         </a>
                                     </div>
@@ -196,7 +210,9 @@
                                 <div class="d-flex mb-2 mt-3">
                                     <div class="w-100 d-flex align-items-center justify-content-between">
                                         <a href="/library/sort/color">
-                                            <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0">
+                                            <h6 class="dropdown-header text-dark font-weight-bolder d-flex justify-content-center align-items-center p-0"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#navigation">
                                                 Color</h6>
                                         </a>
                                     </div>
@@ -244,6 +260,8 @@
                                 <div class="d-flex mb-2">
                                     <div class="w-100 d-flex align-items-center justify-content-between">
                                         <a href="{% url 'about' %}"
+                                           data-bs-toggle="collapse"
+                                           data-bs-target="#navigation"
                                            class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                             <b>The project</b>
                                         </a>
@@ -288,13 +306,6 @@
                         <div class="d-none d-lg-block">
                             <ul class="list-group">
                                 <li class="nav-item list-group-item border-0 p-0">
-                                    <a href="{% url 'donations' %}"
-                                       tabindex="0"
-                                       class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                                        <b>Filament donations</b>
-                                    </a>
-                                </li>
-                                <li class="nav-item list-group-item border-0 p-0">
                                     <a href="https://3dp.chat/@filamentcolors"
                                        rel="me"
                                        target="_blank"
@@ -322,14 +333,6 @@
                         {% endcomment %}
                         <div class="row d-lg-none dropdown-100">
                             <div class="col-md-12">
-                                <div class="d-flex mb-2">
-                                    <div class="w-100 d-flex align-items-center justify-content-between">
-                                        <a href="{% url 'donations' %}"
-                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                                            <b>Filament donations</b>
-                                        </a>
-                                    </div>
-                                </div>
                                 <div class="d-flex mb-2">
                                     <div class="w-100 d-flex align-items-center justify-content-between">
                                         <a href="https://3dp.chat/@filamentcolors"
@@ -426,6 +429,9 @@
                 <li class="mx-2">
                     <a class="nav-link d-flex justify-content-between cursor-pointer align-items-center"
                        role="button"
+                       data-bs-toggle="collapse"
+                       data-bs-auto-close="inside"
+                       data-bs-target="#navigation"
                        href="{% url 'colormatch' %}"
                        tabindex="0"
                     >
@@ -435,7 +441,8 @@
                 {% if request.user.is_authenticated %}
                     <li class="nav-item dropdown dropdown-hover mx-2 ps-0">
                         <a class="nav-link d-flex cursor-pointer align-items-center"
-                           data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                           data-bs-toggle="dropdown" data-bs-auto-close="inside" data-bs-target="#navigation"
+                           aria-expanded="false" role="button">
                             Admin
                             <img src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/img/down-arrow-dark.svg' %}"
                                  alt="down-arrow" class="arrow ms-auto ms-md-2">
@@ -512,6 +519,8 @@
                                     <div class="d-flex mb-2">
                                         <div class="w-100 d-flex align-items-center justify-content-between">
                                             <a href="{% url 'add_mfr' %}"
+                                               data-bs-toggle="collapse"
+                                               data-bs-target="#navigation"
                                                class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                                 <b>Add Manufacturer</b>
                                             </a>
@@ -520,6 +529,8 @@
                                     <div class="d-flex mb-2">
                                         <div class="w-100 d-flex align-items-center justify-content-between">
                                             <a href="{% url 'add_filament_type' %}"
+                                               data-bs-toggle="collapse"
+                                               data-bs-target="#navigation"
                                                class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                                 <b>Add Filament Type</b>
                                             </a>
@@ -528,6 +539,8 @@
                                     <div class="d-flex mb-2">
                                         <div class="w-100 d-flex align-items-center justify-content-between">
                                             <a href="{% url 'set_colors' %}"
+                                               data-bs-toggle="collapse"
+                                               data-bs-target="#navigation"
                                                class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                                 <b>Set Hex Color</b>
                                             </a>
@@ -562,7 +575,8 @@
             <ul class="navbar-nav">
                 <li class="d-md-block d-lg-none ps-2">
                     <div class="nav-link clickable" onclick="showSettings()" data-bs-toggle="collapse"
-                         data-bs-target="#navigation"><span class="icon-equalizer2"></span> Settings
+                         data-bs-auto-close="inside" data-bs-target="#navigation"><span class="icon-equalizer2"></span>
+                        Settings
                     </div>
                 </li>
                 <li class="d-none d-lg-block ps-2">

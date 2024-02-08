@@ -127,8 +127,9 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
         "user_settings": settings,
         "show_search_bar": library,
         "title": title or "FilamentColors",
-        "browser_console_message": debug_cookies_message,
-        "browser_console_message2": settings_for_display,
+        "browser_console_message": "",
+        "browser_console_message2": "",
+        "browser_console_message3": "",
     }
 
 

@@ -41,6 +41,34 @@
     </div>
     <div id="advancedSettingsContainer">
         <hr>
+            <div class="container">
+            <h5>Advanced Settings</h5>
+        </div>
+        <hr>
+        <div class="container">
+            <h5>Show Colormatch ΔE Distances</h5>
+            <p>
+                On the color match page, the matches that we provide are found by
+                calculating the
+                <a href="https://en.wikipedia.org/wiki/Color_difference#CMC_l:c_(1984)" target="_blank">ΔE (CMC) distance</a>
+                and picking the colors that have the smallest distances. For certain
+                situations, it can be useful to know the raw distance from the target
+                color. The closer to 0 the number is, the closer of a match the measured
+                color of the plastic is.
+            </p>
+            <div class="container">
+                <div class="ms-3 mt-3" id="filamentTypeSettings">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" style="margin-top: 9px" type="checkbox"
+                               id="showDeltaEValues" autocomplete="off">
+                        <label class="form-check-label fs-5" for="showDeltaEValues"
+                        >Show ΔE Distances</label>
+                    </div>
+            </div>
+            </div>
+        </div>
+    <hr>
+
         <div class="container">
             <h5>Toggle Specific Manufacturers</h5>
             <div class="container d-grid">
@@ -84,14 +112,14 @@
 {% block extra %}
     <script>
         function toggleShowHideMfrs() {
-            mfr = $("#mfrSettings")
+            const mfr = $("#mfrSettings")
             // for bootstrap 5 ditching jquery:
             // mfr = Array.from(document.getElementsByClassName("mfrSettings")).reverse()
 
-            btn = $("#showHideMfrsButton");
+            const btn = $("#showHideMfrsButton");
             btn.removeClass("focus");
 
-            var showAllBool = btn.hasClass('showall');
+            let showAllBool = btn.hasClass('showall');
 
             btn[0].innerText = (showAllBool ? "Select All" : "Deselect All");
 
@@ -110,17 +138,18 @@
         }
 
         function showHideAdvanced() {
-            el = $("#advancedSettingsContainer");
-            el.toggle();
-            btn = $("#advancedSettingsButton");
+            $("#advancedSettingsContainer").toggle();
+            const btn = $("#advancedSettingsButton");
             btn.text(btn.text().includes("Show") ? "Hide Advanced" : "Show Advanced")
         }
 
         function saveSettings() {
-            el = $("#filamentTypeSettings");
+            let el = $("#filamentTypeSettings");
             let fs = "";
 
-            mfr = $("#mfrSettings");
+            let showDelta = $("#showDeltaEValues").is(":checked");
+
+            let mfr = $("#mfrSettings");
             let mfr_list = "";
 
             $.each(
@@ -164,7 +193,7 @@
                 $("#unavailableCheckbox").is(':checked'),
                 365
             );
-
+            createCookie('show-delta-e-values', showDelta, 365);
             createCookie('mfr-blacklist', mfr_list, 365);
 
             // settings have been saved, time to actually load them
@@ -172,11 +201,12 @@
         }
 
         function loadSettings() {
-            fsettings = readCookie('show-types');
-            dsetting = readCookie('show-un');
-            msettings = readCookie('mfr-blacklist');
+            const fsettings = readCookie('show-types');
+            const dsetting = readCookie('show-un');
+            const msettings = readCookie('mfr-blacklist');
+            const showdeltaesetting = readCookie('show-delta-e-values');
 
-            {# Using a single equals for all of these kills me here, but it #}
+            {# Using a double equals for all of these kills me here, but it #}
             {# CANNOT be a !== because javascript sucks and it breaks. #}
             if (fsettings != null) {
                 $.each(fsettings.split("_").slice(0, -1), function (count, value) {
@@ -191,11 +221,7 @@
             // default to showing unavailable filament
             let unavailablecb = $("#unavailableCheckbox");
             if (dsetting != null) {
-                if (dsetting === "false") {
-                    unavailablecb.prop("checked", false)
-                }
-            } else {
-                unavailablecb.prop("checked", true)
+                unavailablecb.prop("checked", JSON.parse(dsetting.toLowerCase()))
             }
 
             if (msettings != null) {
@@ -209,6 +235,10 @@
                         obj.prop("checked", !obj.prop("checked"))
                     }
                 })
+            }
+            if (showdeltaesetting != null) {
+                const el = $("#showDeltaEValues")
+                el.prop("checked", JSON.parse(showdeltaesetting.toLowerCase()))
             }
         }
 

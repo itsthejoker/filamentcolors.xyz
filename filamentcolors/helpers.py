@@ -13,6 +13,7 @@ have_visited_before_cookie = "f"
 filament_type_settings_cookie = "show-types"
 show_unavailable_cookie = "show-un"
 mfr_blacklist_cookie = "mfr-blacklist"
+show_delta_e_values_cookie = "show-delta-e-values"
 
 
 def first_time_visitor(r: request) -> bool:
@@ -159,6 +160,7 @@ def get_settings_cookies(r: request) -> Dict:
     type_settings = r.COOKIES.get(filament_type_settings_cookie)
     show_dc = r.COOKIES.get(show_unavailable_cookie)
     mfr_blacklist = r.COOKIES.get(mfr_blacklist_cookie)
+    show_delta_e_values = r.COOKIES.get(show_delta_e_values_cookie)
 
     if type_settings:
         # It will be in this format: `1-true_2-true_3-true_6-false_9-false_`
@@ -188,6 +190,7 @@ def get_settings_cookies(r: request) -> Dict:
         "types": types,
         "show_unavailable": True if show_dc == "true" else False,
         "mfr_whitelist": mfr_blacklist_objects,
+        "show_delta_e_values": True if show_delta_e_values == "true" else False,
     }
 
 

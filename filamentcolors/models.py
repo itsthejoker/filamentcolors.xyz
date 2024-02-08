@@ -627,6 +627,11 @@ class Swatch(models.Model):
         except IndexError:
             return None
 
+    def get_distance_to(self, rgb: tuple[str]) -> float:
+        target_color = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
+        self_color = convert_color(sRGBColor.new_from_rgb_hex(self.hex_color), LabColor)
+        return delta_e_cmc(target_color, self_color)
+
     def generate_closest_pantone(self):
         fields = ["closest_pantone_1", "closest_pantone_2", "closest_pantone_3"]
         for index, category in enumerate(Pantone.CATEGORIES):

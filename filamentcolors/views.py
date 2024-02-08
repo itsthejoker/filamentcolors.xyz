@@ -218,7 +218,12 @@ def colormatch(request: WSGIRequest) -> HttpResponse:
             matching_swatch = Swatch().get_closest_color_swatch(
                 library, hex_to_rgb(incoming_color)
             )
-            matches.append(matching_swatch)
+            if data['user_settings'].get("show_delta_e_values"):
+                distance = matching_swatch.get_distance_to(hex_to_rgb(incoming_color))
+            else:
+                distance = None
+
+            matches.append([matching_swatch, distance])
             library = library.exclude(id=matching_swatch.id)
 
         data["colormatch_swatches"] = matches

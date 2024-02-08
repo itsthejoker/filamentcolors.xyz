@@ -93,17 +93,7 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
     :param title: str
     :return: dict
     """
-    from copy import deepcopy
-
-    debug_cookies_message = debug_check_for_cookies(request)
     settings = get_settings_cookies(request)
-
-    settings_for_display = deepcopy(settings)
-    settings_for_display["types"] = [i.name for i in settings_for_display["types"]]
-    settings_for_display["mfr_whitelist_count"] = len(
-        settings_for_display["mfr_whitelist"]
-    )
-    del settings_for_display["mfr_whitelist"]
     return {
         "manufacturers": (
             Manufacturer.objects.exclude(

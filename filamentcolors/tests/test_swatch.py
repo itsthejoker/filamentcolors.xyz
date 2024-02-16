@@ -1,6 +1,5 @@
-from filamentcolors.models import Swatch
-from filamentcolors.tests.constants import TestColors
-from filamentcolors.tests.helpers import get_swatch
+from filamentcolors.tests.helpers import get_swatch, get_purchase_location, get_retailer
+
 
 # def test_complement() -> None:
 #     # todo: broken test
@@ -91,3 +90,16 @@ def test_aff_link_already_present() -> None:
         == "https://example.com/aaaaaa/?tag=filamentcol0c-20"
     )
     assert swatch.mfr_purchase_link == "https://example.com/aaa?foo=bar"
+
+
+def test_aff_link_added_in_purchase_locations() -> None:
+    swatch = get_swatch()
+    retailer = get_retailer(affiliate_url_param="&hello=world")
+    location = get_purchase_location(swatch=swatch, retailer=retailer, url="https://example.com")
+    swatch.update_affiliate_links()
+    location.refresh_from_db()
+    assert location.url == "https://example.com?hello=world"
+    # now make sure that it doesn't do it twice
+    swatch.update_affiliate_links()
+    location.refresh_from_db()
+    assert location.url == "https://example.com?hello=world"

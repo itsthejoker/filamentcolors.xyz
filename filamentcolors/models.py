@@ -849,10 +849,26 @@ class Swatch(models.Model):
                     self.mfr_purchase_link = urlunparse(
                         (scheme, netloc, path, "", query, fragment)
                     )
+        for location in self.purchaselocation_set.all():
+            if location.url is None or location.url == "":
+                continue
+            if param := location.retailer.affiliate_url_param:
+                param = param.strip("&").split("=")
+                if param[0] not in location.url and param[1] not in location.url:
+                    scheme, netloc, path, query, fragment = urlsplit(location.url)
+                    if query:
+                        query = query.split("&")
+                        query.append(f"{param[0]}={param[1]}")
+                        query = "&".join(query)
+                    else:
+                        query = f"{param[0]}={param[1]}"
+                    location.url = urlunparse(
+                        (scheme, netloc, path, "", query, fragment)
+                    )
+                location.save()
 
     def save(self, *args, **kwargs):
         rebuild_matches = False
-        self.update_affiliate_links()
 
         if self.regenerate_info:
             # the joys of using flags on the models themselves. Because
@@ -885,6 +901,7 @@ class Swatch(models.Model):
 
             super(Swatch, self).save(*args, **kwargs)
 
+            self.update_affiliate_links()
             # have to save the model before we can send the tweet, otherwise
             # we won't have a swatch ID.
             if not settings.DEBUG and settings.POST_TO_SOCIAL_MEDIA:

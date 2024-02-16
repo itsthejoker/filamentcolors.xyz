@@ -9,6 +9,8 @@ from filamentcolors.models import (
     GenericFilamentType,
     Manufacturer,
     Swatch,
+    Retailer,
+    PurchaseLocation
 )
 from filamentcolors.tests.constants import TestColors
 
@@ -34,6 +36,10 @@ BASE_MANUFACTURER_DATA = {
     "affiliate_portal": "https://test.test/affiliate",
     "affiliate_url_param": "&foo=bar",
 }
+BASE_RETAILER_DATA = {
+    "name": "Tester Plastics Retail",
+    "website": "http://example.com"
+}
 BASE_SWATCH_DATA = {
     "manufacturer": None,  # needs to be replaced
     "filament_type": None,  # needs to be replaced
@@ -46,6 +52,11 @@ BASE_SWATCH_DATA = {
 }
 BASE_FILAMENT_TYPE_DATA = {"name": "Test", "parent_type": None}
 BASE_GENERIC_FILAMENT_TYPE_DATA = {"name": "TestBase"}
+BASE_PURCHASE_LOCATION_DATA = {
+    "retailer": None,
+    "url": "https://example.com/shop/stuff",
+    "swatch": None
+}
 
 
 def get_generic_filament_type(**kwargs) -> GenericFilamentType:
@@ -90,4 +101,26 @@ def get_manufacturer(**kwargs) -> Manufacturer:
         **{key: kwargs[key] for key in kwargs if key in dir(Manufacturer)},
     }
     obj, _ = Manufacturer.objects.get_or_create(**info)
+    return obj
+
+
+def get_retailer(**kwargs) -> Manufacturer:
+    info = {
+        **BASE_RETAILER_DATA,
+        **{key: kwargs[key] for key in kwargs if key in dir(Retailer)},
+    }
+    obj, _ = Retailer.objects.get_or_create(**info)
+    return obj
+
+
+def get_purchase_location(**kwargs) -> PurchaseLocation:
+    info = {
+        **BASE_PURCHASE_LOCATION_DATA,
+        **{key: kwargs[key] for key in kwargs if key in dir(PurchaseLocation)},
+    }
+    if not kwargs.get("swatch"):
+        info["swatch"] = get_swatch()
+    if not kwargs.get("retailer"):
+        info["retailer"] = get_retailer()
+    obj, _ = PurchaseLocation.objects.get_or_create(**info)
     return obj

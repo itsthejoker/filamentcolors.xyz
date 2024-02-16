@@ -1,5 +1,4 @@
-from filamentcolors.tests.helpers import get_swatch, get_purchase_location, get_retailer
-
+from filamentcolors.tests.helpers import get_purchase_location, get_retailer, get_swatch
 
 # def test_complement() -> None:
 #     # todo: broken test

@@ -8,9 +8,9 @@ from filamentcolors.models import (
     FilamentType,
     GenericFilamentType,
     Manufacturer,
-    Swatch,
-    Retailer,
     PurchaseLocation,
+    Retailer,
+    Swatch,
 )
 from filamentcolors.tests.constants import TestColors
 

@@ -6,9 +6,9 @@ from filamentcolors.models import (
     GenericFilamentType,
     GenericFile,
     Manufacturer,
-    Swatch,
-    Retailer,
     PurchaseLocation,
+    Retailer,
+    Swatch,
 )
 
 

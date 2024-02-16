@@ -5,9 +5,9 @@ from django.forms import ClearableFileInput
 from filamentcolors.models import (
     FilamentType,
     Manufacturer,
-    Swatch,
-    Retailer,
     PurchaseLocation,
+    Retailer,
+    Swatch,
 )
 
 

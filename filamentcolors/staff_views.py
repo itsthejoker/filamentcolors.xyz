@@ -11,14 +11,14 @@ from filamentcolors.forms import (
     ListSwatchInventoryForm,
     ManualHexValueForm,
     ManufacturerForm,
+    PurchaseLocationForm,
+    RetailerForm,
     SwatchForm,
     SwatchFormNoImages,
     SwatchUpdateImagesForm,
-    RetailerForm,
-    PurchaseLocationForm,
 )
 from filamentcolors.helpers import build_data_dict, prep_request
-from filamentcolors.models import Swatch, PurchaseLocation
+from filamentcolors.models import PurchaseLocation, Swatch
 
 
 def get_path_redirect(request, viewname: str, *args, **kwargs):

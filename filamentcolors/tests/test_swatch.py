@@ -95,7 +95,9 @@ def test_aff_link_already_present() -> None:
 def test_aff_link_added_in_purchase_locations() -> None:
     swatch = get_swatch()
     retailer = get_retailer(affiliate_url_param="&hello=world")
-    location = get_purchase_location(swatch=swatch, retailer=retailer, url="https://example.com")
+    location = get_purchase_location(
+        swatch=swatch, retailer=retailer, url="https://example.com"
+    )
     swatch.update_affiliate_links()
     location.refresh_from_db()
     assert location.url == "https://example.com?hello=world"

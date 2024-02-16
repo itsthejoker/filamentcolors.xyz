@@ -10,7 +10,7 @@ from filamentcolors.models import (
     Manufacturer,
     Swatch,
     Retailer,
-    PurchaseLocation
+    PurchaseLocation,
 )
 from filamentcolors.tests.constants import TestColors
 
@@ -36,10 +36,7 @@ BASE_MANUFACTURER_DATA = {
     "affiliate_portal": "https://test.test/affiliate",
     "affiliate_url_param": "&foo=bar",
 }
-BASE_RETAILER_DATA = {
-    "name": "Tester Plastics Retail",
-    "website": "http://example.com"
-}
+BASE_RETAILER_DATA = {"name": "Tester Plastics Retail", "website": "http://example.com"}
 BASE_SWATCH_DATA = {
     "manufacturer": None,  # needs to be replaced
     "filament_type": None,  # needs to be replaced
@@ -55,7 +52,7 @@ BASE_GENERIC_FILAMENT_TYPE_DATA = {"name": "TestBase"}
 BASE_PURCHASE_LOCATION_DATA = {
     "retailer": None,
     "url": "https://example.com/shop/stuff",
-    "swatch": None
+    "swatch": None,
 }
 
 

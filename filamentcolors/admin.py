@@ -8,7 +8,7 @@ from filamentcolors.models import (
     Manufacturer,
     Swatch,
     Retailer,
-    PurchaseLocation
+    PurchaseLocation,
 )
 
 

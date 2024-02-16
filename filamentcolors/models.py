@@ -50,6 +50,7 @@ class Manufacturer(models.Model):
 class Retailer(models.Model):
     """A retailer is where filament can be purchased as an alternate to direct from
     manufacturer or Amazon."""
+
     name = models.CharField(max_length=160)
     website = models.URLField(null=True, blank=True, max_length=2000)
     affiliate_url_param = models.CharField(max_length=150, null=True, blank=True)

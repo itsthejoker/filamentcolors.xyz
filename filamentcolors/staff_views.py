@@ -13,7 +13,9 @@ from filamentcolors.forms import (
     ManufacturerForm,
     SwatchForm,
     SwatchFormNoImages,
-    SwatchUpdateImagesForm, RetailerForm, PurchaseLocationForm,
+    SwatchUpdateImagesForm,
+    RetailerForm,
+    PurchaseLocationForm,
 )
 from filamentcolors.helpers import build_data_dict, prep_request
 from filamentcolors.models import Swatch, PurchaseLocation
@@ -286,9 +288,7 @@ def add_purchase_location(request, swatch_id):
         if form.is_valid():
             data = form.cleaned_data
             PurchaseLocation.objects.create(
-                retailer_id=data["retailer"],
-                swatch_id=swatch_id,
-                url=data["url"]
+                retailer_id=data["retailer"], swatch_id=swatch_id, url=data["url"]
             )
             return HttpResponseRedirect(
                 reverse("view_purchase_locations", kwargs={"swatch_id": swatch_id})
@@ -320,11 +320,19 @@ def edit_purchase_location(request, swatch_id: int, location_id: int):
                 reverse("view_purchase_locations", kwargs={"swatch_id": swatch_id})
             )
         return HttpResponseRedirect(
-            reverse("edit_purchase_location", kwargs={"swatch_id": swatch_id, "location_id": location_id})
+            reverse(
+                "edit_purchase_location",
+                kwargs={"swatch_id": swatch_id, "location_id": location_id},
+            )
         )
     else:
         data = build_data_dict(request)
-        form = PurchaseLocationForm(initial={'url': target_location.url, 'retailer': target_location.retailer.id})
+        form = PurchaseLocationForm(
+            initial={
+                "url": target_location.url,
+                "retailer": target_location.retailer.id,
+            }
+        )
         data.update(
             {
                 "header": "Edit Swatch",
@@ -334,12 +342,14 @@ def edit_purchase_location(request, swatch_id: int, location_id: int):
         )
         return prep_request(request, "generic_form.html", data)
 
+
 @staff_member_required
 def view_purchase_locations(request, swatch_id: int):
     data = build_data_dict(request)
     data["locations"] = PurchaseLocation.objects.filter(swatch__id=swatch_id)
     data["swatch_id"] = swatch_id
     return prep_request(request, "standalone/view_purchase_locations.html", data)
+
 
 @staff_member_required
 def add_filament_type(request):

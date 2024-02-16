@@ -126,10 +126,9 @@ class RetailerForm(forms.ModelForm):
 
 
 class PurchaseLocationForm(forms.Form):
-    retailer = forms.CharField()
-    # retailer = forms.CharField(
-    #     widget=forms.Select(choices=Retailer.objects.all().values_list("id", "name"))
-    # )
+    retailer = forms.CharField(
+        widget=forms.Select(choices=Retailer.objects.all().values_list("id", "name"))
+    )
     url = forms.URLField()
 
 

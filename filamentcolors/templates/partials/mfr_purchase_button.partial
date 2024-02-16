@@ -4,4 +4,11 @@
        role="button"
        rel="noopener"
     >Buy from {{ swatch.manufacturer.parent_company_name|default:swatch.manufacturer.name }}</a>
+    {% for loc in swatch.purchaselocation_set.all %}
+        <a class="btn btn-secondary" href="{{ loc.url }}"
+           target="_blank"
+           role="button"
+           rel="noopener"
+           >Buy from {{ loc.retailer.name }}</a>
+    {% endfor %}
 {% endif %}

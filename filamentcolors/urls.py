@@ -101,6 +101,7 @@ urlpatterns = [
     path("add/manufacturer/", staff_views.add_manufacturer, name="add_mfr"),
     path("add/filamenttype/", staff_views.add_filament_type, name="add_filament_type"),
     path("add/inventory/", staff_views.add_inventory_swatch, name="add_inventory"),
+    path("add/retailer/", staff_views.add_retailer, name="add_retailer"),
     path(
         "recalculate_color/<int:swatch_id>/",
         staff_views.recalculate_color,
@@ -121,6 +122,9 @@ urlpatterns = [
         staff_views.update_swatch_images,
         name="update_images",
     ),
+    path("edit/<int:swatch_id>/purchase_locations/", staff_views.view_purchase_locations, name="view_purchase_locations"),
+    path("edit/<int:swatch_id>/purchase_location/<int:location_id>", staff_views.edit_purchase_location, name="edit_purchase_location"),
+    path("add/<int:swatch_id>/purchase_location/", staff_views.add_purchase_location, name="add_purchase_location"),
     path(
         "edit/<int:swatch_id>/",
         staff_views.swatch_edit,

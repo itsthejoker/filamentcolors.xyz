@@ -2,7 +2,7 @@ from django import forms
 from django.db.models.functions import Lower
 from django.forms import ClearableFileInput
 
-from filamentcolors.models import FilamentType, Manufacturer, Swatch
+from filamentcolors.models import FilamentType, Manufacturer, Swatch, Retailer, PurchaseLocation
 
 
 class CustomClearableFileInputField(ClearableFileInput):
@@ -111,6 +111,17 @@ class ManufacturerForm(forms.ModelForm):
     class Meta:
         model = Manufacturer
         fields = ["name", "website"]
+
+
+class RetailerForm(forms.ModelForm):
+    class Meta:
+        model = Retailer
+        fields = "__all__"
+
+
+class PurchaseLocationForm(forms.Form):
+    retailer = forms.CharField(widget=forms.Select(choices=Retailer.objects.all().values_list("id", "name")))
+    url = forms.URLField()
 
 
 class FilamentTypeForm(forms.ModelForm):

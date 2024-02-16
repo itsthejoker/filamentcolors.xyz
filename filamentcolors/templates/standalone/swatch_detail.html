@@ -151,6 +151,13 @@
                                                 </a>
                                             </li>
                                             <li>
+                                                <a class="dropdown-item"
+                                                   tabindex="0"
+                                                   href="{% url 'view_purchase_locations' swatch.id %}">
+                                                    Edit Purchase Locations
+                                                </a>
+                                            </li>
+                                            <li>
                                                 <a class="dropdown-item" hx-boost="false"
                                                    href="/admin/filamentcolors/swatch/{{ swatch.id }}/change/">
                                                     Admin Panel

@@ -47,6 +47,26 @@ class Manufacturer(models.Model):
         return self.name
 
 
+class Retailer(models.Model):
+    """A retailer is where filament can be purchased as an alternate to direct from
+    manufacturer or Amazon."""
+    name = models.CharField(max_length=160)
+    website = models.URLField(null=True, blank=True, max_length=2000)
+    affiliate_url_param = models.CharField(max_length=150, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class PurchaseLocation(models.Model):
+    retailer = models.ForeignKey(Retailer, on_delete=models.CASCADE)
+    url = models.URLField(null=True, blank=True, max_length=2000)
+    swatch = models.ForeignKey("Swatch", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.retailer.name} - {self.swatch.manufacturer.name} {self.swatch.color_name} {self.swatch.filament_type.name}"
+
+
 class GenericFilamentType(models.Model):
     """
     This is to keep track of the basics: PLA, ABS, etc. Searching by type is

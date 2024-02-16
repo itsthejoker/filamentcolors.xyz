@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.db import models
 from django.shortcuts import HttpResponseRedirect
 
 from filamentcolors.models import (
@@ -8,6 +7,8 @@ from filamentcolors.models import (
     GenericFile,
     Manufacturer,
     Swatch,
+    Retailer,
+    PurchaseLocation
 )
 
 
@@ -60,3 +61,5 @@ admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(FilamentType, FilamentTypeAdmin)
 admin.site.register(GenericFile)
 admin.site.register(GenericFilamentType)
+admin.site.register(Retailer)
+admin.site.register(PurchaseLocation)

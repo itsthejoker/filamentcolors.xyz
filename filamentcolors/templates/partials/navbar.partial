@@ -479,6 +479,13 @@
                                         </a>
                                     </li>
                                     <li class="nav-item list-group-item border-0 p-0">
+                                        <a href="{% url 'add_retailer' %}"
+                                           tabindex="0"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Add Retailer</b>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item list-group-item border-0 p-0">
                                         <a href="{% url 'set_colors' %}"
                                            tabindex="0"
                                            class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
@@ -533,6 +540,16 @@
                                                data-bs-target="#navigation"
                                                class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                                 <b>Add Filament Type</b>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-2">
+                                        <div class="w-100 d-flex align-items-center justify-content-between">
+                                            <a href="{% url 'add_retailer' %}"
+                                               data-bs-toggle="collapse"
+                                               data-bs-target="#navigation"
+                                               class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                                <b>Add Retailer</b>
                                             </a>
                                         </div>
                                     </div>

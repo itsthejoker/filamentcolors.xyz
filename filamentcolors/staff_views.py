@@ -13,10 +13,10 @@ from filamentcolors.forms import (
     ManufacturerForm,
     SwatchForm,
     SwatchFormNoImages,
-    SwatchUpdateImagesForm,
+    SwatchUpdateImagesForm, RetailerForm, PurchaseLocationForm,
 )
 from filamentcolors.helpers import build_data_dict, prep_request
-from filamentcolors.models import Swatch
+from filamentcolors.models import Swatch, PurchaseLocation
 
 
 def get_path_redirect(request, viewname: str, *args, **kwargs):
@@ -258,6 +258,88 @@ def add_manufacturer(request):
         )
         return prep_request(request, "generic_form.html", data)
 
+
+@staff_member_required
+def add_retailer(request):
+    if request.method == "POST":
+        form = RetailerForm(request.POST)
+        form.save()
+        return get_path_redirect(request, "add_retailer")
+    else:
+        data = build_data_dict(request)
+        form = RetailerForm()
+        data.update(
+            {
+                "header": "Retailer Add Form",
+                "subheader": "A new place that sells filament?",
+                "form": form,
+            }
+        )
+        return prep_request(request, "generic_form.html", data)
+
+
+@staff_member_required
+def add_purchase_location(request, swatch_id):
+    swatch = Swatch.objects.get(id=swatch_id)
+    if request.method == "POST":
+        form = PurchaseLocationForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            PurchaseLocation.objects.create(
+                retailer_id=data["retailer"],
+                swatch_id=swatch_id,
+                url=data["url"]
+            )
+            return HttpResponseRedirect(
+                reverse("view_purchase_locations", kwargs={"swatch_id": swatch_id})
+            )
+    else:
+        data = build_data_dict(request)
+        form = PurchaseLocationForm()
+        data.update(
+            {
+                "header": "Purchase Location Form",
+                "subheader": f"Where can we buy {swatch}?",
+                "form": form,
+            }
+        )
+        return prep_request(request, "generic_form.html", data)
+
+
+@staff_member_required
+def edit_purchase_location(request, swatch_id: int, location_id: int):
+    target_location = PurchaseLocation.objects.get(swatch__id=swatch_id, id=location_id)
+    if request.method == "POST":
+        form = PurchaseLocationForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            target_location.retailer_id = data["retailer"]
+            target_location.url = data["url"]
+            target_location.save()
+            return HttpResponseRedirect(
+                reverse("view_purchase_locations", kwargs={"swatch_id": swatch_id})
+            )
+        return HttpResponseRedirect(
+            reverse("edit_purchase_location", kwargs={"swatch_id": swatch_id, "location_id": location_id})
+        )
+    else:
+        data = build_data_dict(request)
+        form = PurchaseLocationForm(initial={'url': target_location.url, 'retailer': target_location.retailer.id})
+        data.update(
+            {
+                "header": "Edit Swatch",
+                "subheader": "Edit Purchase Location",
+                "form": form,
+            }
+        )
+        return prep_request(request, "generic_form.html", data)
+
+@staff_member_required
+def view_purchase_locations(request, swatch_id: int):
+    data = build_data_dict(request)
+    data["locations"] = PurchaseLocation.objects.filter(swatch__id=swatch_id)
+    data["swatch_id"] = swatch_id
+    return prep_request(request, "standalone/view_purchase_locations.html", data)
 
 @staff_member_required
 def add_filament_type(request):

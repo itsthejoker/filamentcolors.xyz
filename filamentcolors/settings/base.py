@@ -62,7 +62,6 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "filamentcolors",
     "rest_framework",
-    "martor",
     "django_filters",
     "django_htmx",
     "plausible_proxy",
@@ -167,60 +166,6 @@ REST_FRAMEWORK = {
         "sustained": "18000/hour",
     },
 }
-
-# Global martor settings
-# Input: string boolean, `true/false`
-MARTOR_ENABLE_CONFIGS = {
-    "emoji": "true",  # to enable/disable emoji icons.
-    "imgur": "true",  # to enable/disable imgur/custom uploader.
-    "mention": "true",  # to enable/disable mention
-    "jquery": "true",  # to include/revoke jquery (require for admin default django)
-    "living": "false",  # to enable/disable live updates in preview
-    "spellcheck": "true",  # to enable/disable spellcheck in form textareas
-    "hljs": "true",  # to enable/disable hljs highlighting in preview
-}
-
-MARTOR_MARKDOWN_EXTENSIONS = [
-    "markdown.extensions.extra",
-    "markdown.extensions.nl2br",
-    "markdown.extensions.smarty",
-    "markdown.extensions.fenced_code",
-    # Custom markdown extensions.
-    "martor.extensions.urlize",  # handle inline URLs
-    "martor.extensions.del_ins",  # ~~strikethrough~~ and ++underscores++
-    "filamentcolors.markdown_helpers.twitter_mention",  # to parse markdown mention
-    "martor.extensions.emoji",  # to parse markdown emoji
-    "martor.extensions.mdx_video",  # to parse embed/iframe video
-    "filamentcolors.markdown_helpers.admonition",
-    "filamentcolors.markdown_helpers.image_helper",
-]
-
-# To show the toolbar buttons
-MARTOR_TOOLBAR_BUTTONS = [
-    "bold",
-    "italic",
-    "horizontal",
-    "heading",
-    "pre-code",
-    "blockquote",
-    "unordered-list",
-    "ordered-list",
-    "link",
-    "image-link",
-    "image-upload",
-    "emoji",
-    "direct-mention",
-    "toggle-maximize",
-    "help",
-]
-MARTOR_SEARCH_USERS_URL = "/martor/search-user/"  # default
-
-# Markdown Extensions
-MARTOR_MARKDOWN_BASE_EMOJI_URL = "https://github.githubassets.com/images/icons/emoji/"
-MARTOR_MARKDOWN_BASE_MENTION_URL = "https://twitter.com/"
-
-MARTOR_UPLOAD_PATH = "images/uploads/{}".format(time.strftime("%Y/%m/%d/"))
-MARTOR_UPLOAD_URL = "/api/uploader/"  # change to local uploader
 
 # Maximum Upload Image
 # 2.5MB - 2621440

@@ -18,8 +18,6 @@ from django.db import models
 from django.db.models.query import QuerySet
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.text import slugify
-from martor.models import MartorField
 from PIL import Image as Img
 from skimage import io
 from taggit.managers import TaggableManager

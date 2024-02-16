@@ -2,7 +2,6 @@
 
 from django.db import migrations, models
 import django.utils.timezone
-import martor.models
 
 
 class Migration(migrations.Migration):
@@ -26,7 +25,6 @@ class Migration(migrations.Migration):
                 ),
                 ("title", models.CharField(max_length=240)),
                 ("subtitle", models.CharField(blank=True, max_length=39, null=True)),
-                ("body", martor.models.MartorField()),
                 ("slug", models.SlugField(default="", editable=False, max_length=70)),
                 ("published", models.BooleanField(default=False)),
                 ("date_added", models.DateTimeField(default=django.utils.timezone.now)),

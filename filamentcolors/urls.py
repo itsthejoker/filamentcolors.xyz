@@ -22,7 +22,6 @@ from django.urls import include, path
 
 from filamentcolors import staff_views, views
 from filamentcolors.api.urls import urlpatterns as api_urls
-from filamentcolors.markdown_helpers.urls import urlpatterns as markdown_urls
 from filamentcolors.models import Swatch
 from filamentcolors.sitemaps import StaticViewSitemap
 
@@ -145,4 +144,3 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += api_urls
-urlpatterns += markdown_urls

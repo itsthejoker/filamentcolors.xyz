@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.db import models
 from django.shortcuts import HttpResponseRedirect
-from martor.widgets import AdminMartorWidget
 
 from filamentcolors.models import (
     FilamentType,

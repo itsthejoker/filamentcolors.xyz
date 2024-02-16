@@ -1,10 +1,9 @@
 from rest_framework.status import *
 
-
 HTTP_701_BAD_COLOR_CODE = 701
 HTTP_702_MISSING_COLOR_CODE = 702
 
 reasons = {
     HTTP_701_BAD_COLOR_CODE: "Invalid Color",
-    HTTP_702_MISSING_COLOR_CODE: "Missing Color"
+    HTTP_702_MISSING_COLOR_CODE: "Missing Color",
 }

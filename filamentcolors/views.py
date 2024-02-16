@@ -13,15 +13,21 @@ from django.views.decorators.csrf import csrf_exempt
 from plotly import graph_objects
 
 from filamentcolors import status
-from filamentcolors.colors import hex_to_rgb, is_hex, is_short_hex, convert_short_to_full_hex
+from filamentcolors.colors import (
+    convert_short_to_full_hex,
+    hex_to_rgb,
+    is_hex,
+    is_short_hex,
+)
 from filamentcolors.helpers import (
+    ErrorStatusResponse,
     build_data_dict,
     clean_collection_ids,
     generate_custom_library,
     get_custom_library,
     get_hsv,
     get_swatches,
-    prep_request, ErrorStatusResponse,
+    prep_request,
 )
 from filamentcolors.models import GenericFilamentType, GenericFile, Manufacturer, Swatch
 
@@ -218,7 +224,7 @@ def colormatch(request: WSGIRequest) -> HttpResponse:
             matching_swatch = Swatch().get_closest_color_swatch(
                 library, hex_to_rgb(incoming_color)
             )
-            if data['user_settings'].get("show_delta_e_values"):
+            if data["user_settings"].get("show_delta_e_values"):
                 distance = matching_swatch.get_distance_to(hex_to_rgb(incoming_color))
             else:
                 distance = None
@@ -326,7 +332,7 @@ def monetary_donation_page(request: WSGIRequest) -> HttpResponse:
     return prep_request(
         request,
         "standalone/monetary_donations.html",
-        build_data_dict(request, title="Monetary Donations")
+        build_data_dict(request, title="Monetary Donations"),
     )
 
 

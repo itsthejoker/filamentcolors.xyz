@@ -108,7 +108,7 @@ def is_short_hex(in_col) -> bool:
 
 def convert_short_to_full_hex(in_col: str) -> str:
     in_col = in_col.strip("#")
-    return ''.join([val * 2 for val in in_col])
+    return "".join([val * 2 for val in in_col])
 
 
 def is_hex(in_col) -> bool:

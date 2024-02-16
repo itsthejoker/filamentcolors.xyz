@@ -35,6 +35,9 @@ class Manufacturer(models.Model):
     )
     affiliate_portal = models.CharField(max_length=2000, null=True, blank=True)
     affiliate_url_param = models.CharField(max_length=150, null=True, blank=True)
+    parent_company_name = models.CharField(
+        max_length=160, null=True, blank=True, help_text="Used for purchase buttons."
+    )
 
     @property
     def get_possessive_apostrophe(self):

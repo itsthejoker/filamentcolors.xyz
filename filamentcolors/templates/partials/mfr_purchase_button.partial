@@ -3,5 +3,5 @@
        target="_blank"
        role="button"
        rel="noopener"
-    >Buy from {{ swatch.manufacturer.name }}</a>
+    >Buy from {{ swatch.manufacturer.parent_company_name|default:swatch.manufacturer.name }}</a>
 {% endif %}

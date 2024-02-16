@@ -1,3 +1,4 @@
+import django.db.utils
 from django import forms
 from django.db.models.functions import Lower
 from django.forms import ClearableFileInput
@@ -126,9 +127,7 @@ class RetailerForm(forms.ModelForm):
 
 
 class PurchaseLocationForm(forms.Form):
-    retailer = forms.CharField(
-        widget=forms.Select(choices=Retailer.objects.all().values_list("id", "name"))
-    )
+    retailer = forms.ModelChoiceField(queryset=Retailer.objects.all())
     url = forms.URLField()
 
 

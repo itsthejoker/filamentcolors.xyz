@@ -288,7 +288,7 @@ def add_purchase_location(request, swatch_id):
         if form.is_valid():
             data = form.cleaned_data
             PurchaseLocation.objects.create(
-                retailer_id=data["retailer"], swatch_id=swatch_id, url=data["url"]
+                retailer=data["retailer"], swatch_id=swatch_id, url=data["url"]
             )
             return HttpResponseRedirect(
                 reverse("view_purchase_locations", kwargs={"swatch_id": swatch_id})

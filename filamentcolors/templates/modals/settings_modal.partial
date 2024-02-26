@@ -50,7 +50,7 @@
             <p>
                 On the color match page, the matches that we provide are found by
                 calculating the
-                <a href="https://en.wikipedia.org/wiki/Color_difference#CMC_l:c_(1984)" target="_blank">ΔE (CMC) distance</a>
+                <a href="https://en.wikipedia.org/wiki/Color_difference#CIEDE2000" target="_blank">ΔE (CIE) distance</a>
                 and picking the colors that have the smallest distances. For certain
                 situations, it can be useful to know the raw distance from the target
                 color. The closer to 0 the number is, the closer of a match the measured

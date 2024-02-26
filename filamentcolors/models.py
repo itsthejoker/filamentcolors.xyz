@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 import pytz
 from colormath.color_conversions import convert_color
-from colormath.color_diff import delta_e_cmc
+from colormath.color_diff import delta_e_cie2000
 from colormath.color_objects import LabColor, sRGBColor
 from colorthief import ColorThief
 from django.conf import settings
@@ -595,7 +595,7 @@ class Swatch(models.Model):
             possible_color = convert_color(
                 sRGBColor.new_from_rgb_hex(option.hex_color), LabColor
             )
-            distance = delta_e_cmc(target_color, possible_color)
+            distance = delta_e_cie2000(target_color, possible_color)
             distance_dict.update({option: distance})
 
         distance_dict = {
@@ -610,7 +610,7 @@ class Swatch(models.Model):
     def get_distance_to(self, rgb: tuple[str]) -> float:
         target_color = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
         self_color = convert_color(sRGBColor.new_from_rgb_hex(self.hex_color), LabColor)
-        return delta_e_cmc(target_color, self_color)
+        return delta_e_cie2000(target_color, self_color)
 
     def generate_closest_pantone(self):
         fields = ["closest_pantone_1", "closest_pantone_2", "closest_pantone_3"]

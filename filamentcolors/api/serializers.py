@@ -96,10 +96,9 @@ class SwatchSerializer(HyperlinkedModelSerializer):
             "square_3",
             "closest_1",
             "closest_2",
-            "tags",  # remove after 10/23/22
+            "tags",
             "card_img",
             "hex_color",
-            "complement_hex",
             "human_readable_date",
             "is_available",
         )

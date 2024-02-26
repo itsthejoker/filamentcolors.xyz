@@ -367,9 +367,6 @@ class Swatch(models.Model):
     hex_color = models.CharField(
         max_length=6, blank=True, verbose_name="Measured hex value"
     )
-    complement_hex = models.CharField(
-        max_length=6, blank=True, verbose_name="DO NOT ADD! Computed Complement Hex"
-    )
     rgb_r = models.IntegerField(null=True, blank=True)
     rgb_g = models.IntegerField(null=True, blank=True)
     rgb_b = models.IntegerField(null=True, blank=True)
@@ -451,12 +448,6 @@ class Swatch(models.Model):
         if c < b:
             b, c = c, b
         return a + c
-
-    def get_complement(self, hex: str) -> str:
-        r, g, b = self.get_rgb(hex)
-        # courtesy of https://stackoverflow.com/a/40234924
-        k = self.rgb_hilo(r, g, b)
-        return self.get_hex(tuple(k - u for u in (r, g, b)))
 
     def _save_image(self, i, image_type: str) -> str:
         # https://stackoverflow.com/a/24380132
@@ -556,39 +547,6 @@ class Swatch(models.Model):
         path = os.path.join(settings.MEDIA_ROOT, filename)
         self.card_img = ImageFile(open(path, "rb"))
         self.card_img.name = filename
-
-    # noinspection PyUnresolvedReferences
-    def generate_hex_info(self, long_way: bool = False) -> None:
-        if long_way:
-            # This method is much more computationally intensive and much more
-            # difficult to debug, but it's generally more accurate and doesn't
-            # fail as much as colorthief does. We can optionally trigger this
-            # method through the admin panel if colorthief returns a result that
-            # is wildly wrong.
-            # lovingly ripped from https://stackoverflow.com/a/43111221
-            self.card_img.file.seek(0)
-            img = io.imread(self.card_img.file)
-
-            pixels = np.float32(img.reshape(-1, 3))
-
-            n_colors = 5
-            criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, 0.1)
-            flags = cv2.KMEANS_RANDOM_CENTERS
-
-            # this line is super painful in computation time. We kind of get
-            # around that by only having it parse the resized small card image;
-            # if it runs on the full-size image, it could take a minute or two
-            # to complete.
-            _, labels, palette = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
-            _, counts = np.unique(labels, return_counts=True)
-            dominant = palette[np.argmax(counts)]
-
-            self.hex_color = self.get_hex(dominant)
-        else:
-            ct_image = ColorThief(self.card_img.path)
-            self.hex_color = self.get_hex(ct_image.get_color(quality=1))
-
-        self.complement_hex = self.get_complement(self.hex_color)
 
     def get_closest_color_swatch(self, library: Union[QuerySet, List], rgb: tuple):
         """Get a swatch that fits with progressively less-strict clamps."""
@@ -803,8 +761,7 @@ class Swatch(models.Model):
         l = Swatch.objects.filter(published=True)
         return self._get_closest_color_swatch(l, color_to_match)
 
-    def regenerate_all(self, long_way=False):
-        # self.generate_hex_info(long_way)
+    def regenerate_all(self):
         self.generate_rgb()
         self.generate_closest_ral()
         self.generate_closest_pantone()

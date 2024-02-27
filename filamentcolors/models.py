@@ -26,6 +26,13 @@ from filamentcolors.colors import Color
 from filamentcolors.social_media import send_to_social_media
 
 
+class DistanceMixin:
+    def get_distance_to(self, rgb: tuple[str]) -> float:
+        target_color = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
+        self_color = convert_color(sRGBColor.new_from_rgb_hex(self.hex_color), LabColor)
+        return delta_e_cie2000(target_color, self_color)
+
+
 class Manufacturer(models.Model):
     name = models.CharField(max_length=160)
     website = models.URLField(null=True, blank=True, max_length=2000)
@@ -112,7 +119,7 @@ class GenericFile(models.Model):
         return f"{self.name} - {self.file.name}" if self.name else self.file.name
 
 
-class Pantone(models.Model):
+class Pantone(models.Model, DistanceMixin):
     CATEGORIES = [
         "Fashion and Interior Designers",
         "Industrial Designers",
@@ -132,6 +139,7 @@ class Pantone(models.Model):
 
 
 class RAL(models.Model):
+class RAL(models.Model, DistanceMixin):
     CATEGORIES = ["RAL Classic", "RAL Effect", "RAL Design System+"]
 
     code = models.CharField(max_length=48)
@@ -146,7 +154,7 @@ class RAL(models.Model):
         return self.code
 
 
-class Swatch(models.Model):
+class Swatch(models.Model, DistanceMixin):
     """
     The swatch model is used to keep track of two states of swatch;
     if the swatch is unpublished, then it's treated as a swatch that's
@@ -557,7 +565,8 @@ class Swatch(models.Model):
     def get_closest_third_party_color(self, model, category):
         """Get a swatch that fits with progressively less-strict clamps."""
         self_color = self.get_rgb(self.hex_color)
-        queryset = model.objects.all()
+        queryset = queryset if queryset else model.objects.all()
+        extra_args = {"category": category} if category else None
 
         for step_option in self.STEP_OPTIONS:
             if result := self._get_closest_color(

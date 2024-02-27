@@ -4,7 +4,8 @@ import sqlite3
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from filamentcolors.models import RAL, Pantone
+from filamentcolors.colors import hex_to_rgb
+from filamentcolors.models import RAL, Pantone, PantonePMS, Swatch
 
 
 class Command(BaseCommand):
@@ -64,9 +65,32 @@ class Command(BaseCommand):
                 self.style.ERROR("There are already RAL objects present. Skipping.")
             )
 
-        #
-        # self.stdout.write(self.style.SUCCESS("Loading data..."))
-        # for s in Swatch.objects.filter(published=True):
-        #     s.update_all_color_matches(Swatch.objects.filter(published=True))
-        #     s.save()
-        # self.stdout.write(self.style.SUCCESS("Rebuild complete!"))
+        if PantonePMS.objects.count() == 0:
+            to_write = []
+            for obj in cur.execute("select * from pms").fetchall():
+                code, hex_code = obj
+                r, g, b = hex_to_rgb(hex_code)
+                to_write.append(
+                    PantonePMS(
+                        code=code,
+                        rgb_r=r,
+                        rgb_g=g,
+                        rgb_b=b,
+                        hex_color=hex_code
+                    )
+                )
+            PantonePMS.objects.bulk_create(to_write)
+            self.stdout.write(
+                self.style.SUCCESS(f"Created {PantonePMS.objects.count()} objects!")
+            )
+        else:
+            self.stdout.write(
+                self.style.ERROR("There are already PantonePMS objects present. Skipping.")
+            )
+
+
+        self.stdout.write(self.style.SUCCESS("Loading data..."))
+        for s in Swatch.objects.filter(published=True):
+            # s.update_all_color_matches(Swatch.objects.filter(published=True))
+            s.save()
+        self.stdout.write(self.style.SUCCESS("Rebuild complete!"))

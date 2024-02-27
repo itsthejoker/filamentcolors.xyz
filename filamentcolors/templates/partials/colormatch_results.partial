@@ -7,21 +7,7 @@
             <div class="col-md-{% if forloop.last %}12{% else %}6{% endif %} col-xl-4">
                 {% include 'partials/card.partial' with obj=option.0 %}
                 {% if user_settings.show_delta_e_values %}
-                    <div class="row">
-                        <div class="col"></div>
-                        <div class="col-6 text-center mb-3 d-grid">
-                            <div
-                                    class="badge badge-secondary"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    data-container="body"
-                                    data-animation="true"
-                                    title="ΔE (CMC) Distance from the requested color.">
-                                ΔE: {{ option.1 }}
-                            </div>
-                        </div>
-                        <div class="col"></div>
-                    </div>
+                    {% include 'partials/delta_e_badge.partial' with value=option.1 %}
                 {% endif %}
                 <div class="text-center">
                     <a

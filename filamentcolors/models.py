@@ -441,6 +441,30 @@ class Swatch(models.Model, DistanceMixin):
         related_name="ral_3",
         verbose_name="Computed RAL Design System+ color",
     )
+    closest_pms_1 = models.ForeignKey(
+        PantonePMS,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="pms_1",
+        verbose_name="Computed Pantone PMS color 1"
+    )
+    closest_pms_2 = models.ForeignKey(
+        PantonePMS,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="pms_2",
+        verbose_name="Computed Pantone PMS color 2"
+    )
+    closest_pms_3 = models.ForeignKey(
+        PantonePMS,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="pms_3",
+        verbose_name="Computed Pantone PMS color 3"
+    )
 
     tags = TaggableManager()
 
@@ -577,7 +601,7 @@ class Swatch(models.Model, DistanceMixin):
             if result := self._get_closest_color(library, rgb=rgb, step=step_option):
                 return result
 
-    def get_closest_third_party_color(self, model, category):
+    def get_closest_third_party_color(self, model, category=None, queryset=None):
         """Get a swatch that fits with progressively less-strict clamps."""
         self_color = self.get_rgb(self.hex_color)
         queryset = queryset if queryset else model.objects.all()
@@ -588,7 +612,7 @@ class Swatch(models.Model, DistanceMixin):
                 queryset,
                 rgb=self_color,
                 step=step_option,
-                extra_args={"category": category},
+                extra_args=extra_args,
             ):
                 return result
 
@@ -646,6 +670,15 @@ class Swatch(models.Model, DistanceMixin):
             setattr(
                 self, fields[index], self.get_closest_third_party_color(RAL, category)
             )
+
+    def generate_closest_pms(self):
+        fields = ["closest_pms_1", "closest_pms_2", "closest_pms_3"]
+        qs = PantonePMS.objects.all()
+
+        for index in range(3):
+            result = self.get_closest_third_party_color(PantonePMS, queryset=qs)
+            qs = qs.exclude(id=result.id)
+            setattr(self, fields[index], result)
 
     def generate_rgb(self):
         rgb = self.get_rgb(self.hex_color)
@@ -784,6 +817,7 @@ class Swatch(models.Model, DistanceMixin):
         self.generate_rgb()
         self.generate_closest_ral()
         self.generate_closest_pantone()
+        self.generate_closest_pms()
 
     def update_affiliate_links(self):
         """

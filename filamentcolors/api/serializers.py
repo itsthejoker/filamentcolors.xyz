@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.serializers import HyperlinkedModelSerializer
 from taggit.serializers import TagListSerializerField
 
-from filamentcolors.models import RAL, FilamentType, Manufacturer, Pantone, Swatch
+from filamentcolors.models import RAL, FilamentType, Manufacturer, Pantone, Swatch, PantonePMS
 
 
 class FilamentTypeSerializer(HyperlinkedModelSerializer):
@@ -38,6 +38,14 @@ class PantoneColorSerializer(HyperlinkedModelSerializer, ColorSerializerHelpers)
         fields = ("code", "name", "hex_color", "category")
 
 
+class PantonePMSSerializer(HyperlinkedModelSerializer, ColorSerializerHelpers):
+    hex_color = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PantonePMS
+        fields = ("code", "hex_color")
+
+
 class RALColorSerializer(HyperlinkedModelSerializer, ColorSerializerHelpers):
     name = serializers.SerializerMethodField()
     hex_color = serializers.SerializerMethodField()
@@ -56,6 +64,9 @@ class SwatchSerializer(HyperlinkedModelSerializer):
     closest_ral_3 = RALColorSerializer(read_only=True)
     closest_ral_2 = RALColorSerializer(read_only=True)
     closest_ral_1 = RALColorSerializer(read_only=True)
+    closest_pms_1 = PantonePMSSerializer(read_only=True)
+    closest_pms_2 = PantonePMSSerializer(read_only=True)
+    closest_pms_3 = PantonePMSSerializer(read_only=True)
 
     tags = TagListSerializerField()
 
@@ -78,6 +89,9 @@ class SwatchSerializer(HyperlinkedModelSerializer):
             "closest_pantone_1",
             "closest_pantone_2",
             "closest_pantone_3",
+            "closest_pms_1",
+            "closest_pms_2",
+            "closest_pms_3",
             "closest_ral_1",
             "closest_ral_2",
             "closest_ral_3",

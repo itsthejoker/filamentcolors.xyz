@@ -138,7 +138,22 @@ class Pantone(models.Model, DistanceMixin):
         return self.code
 
 
-class RAL(models.Model):
+class PantonePMS(models.Model, DistanceMixin):
+    """Shortened version of the most common graphic designers colors.
+
+    These are the colors that are likely to appear in Photoshop, for example.
+    """
+
+    code = models.CharField(max_length=48)
+    rgb_r = models.IntegerField()
+    rgb_g = models.IntegerField()
+    rgb_b = models.IntegerField()
+    hex_color = models.CharField(max_length=6, null=True, blank=True)
+
+    def __str__(self):
+        return self.code
+
+
 class RAL(models.Model, DistanceMixin):
     CATEGORIES = ["RAL Classic", "RAL Effect", "RAL Design System+"]
 
@@ -615,11 +630,6 @@ class Swatch(models.Model, DistanceMixin):
             return sorted_distance_list[0][0]
         except IndexError:
             return None
-
-    def get_distance_to(self, rgb: tuple[str]) -> float:
-        target_color = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
-        self_color = convert_color(sRGBColor.new_from_rgb_hex(self.hex_color), LabColor)
-        return delta_e_cie2000(target_color, self_color)
 
     def generate_closest_pantone(self):
         fields = ["closest_pantone_1", "closest_pantone_2", "closest_pantone_3"]

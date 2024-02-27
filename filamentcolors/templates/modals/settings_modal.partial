@@ -41,20 +41,24 @@
     </div>
     <div id="advancedSettingsContainer">
         <hr>
-            <div class="container">
+        <div class="container">
             <h5>Advanced Settings</h5>
         </div>
         <hr>
         <div class="container">
-            <h5>Show Colormatch ΔE Distances</h5>
+            <h5>Show ΔE Distances</h5>
             <p>
-                On the color match page, the matches that we provide are found by
-                calculating the
+                The matches that we provide are found by calculating the
                 <a href="https://en.wikipedia.org/wiki/Color_difference#CIEDE2000" target="_blank">ΔE (CIE) distance</a>
                 and picking the colors that have the smallest distances. For certain
                 situations, it can be useful to know the raw distance from the target
                 color. The closer to 0 the number is, the closer of a match the measured
                 color of the plastic is.
+            </p>
+            <p>
+                <strong>Note:</strong> Enabling this will
+                slightly increase the loading time for the site as these values are
+                calculated.
             </p>
             <div class="container">
                 <div class="ms-3 mt-3" id="filamentTypeSettings">
@@ -64,10 +68,10 @@
                         <label class="form-check-label fs-5" for="showDeltaEValues"
                         >Show ΔE Distances</label>
                     </div>
-            </div>
+                </div>
             </div>
         </div>
-    <hr>
+        <hr>
 
         <div class="container">
             <h5>Toggle Specific Manufacturers</h5>

@@ -813,7 +813,11 @@ class Swatch(models.Model, DistanceMixin):
         l = Swatch.objects.filter(published=True)
         return self._get_closest_color_swatch(l, color_to_match)
 
-    def regenerate_all(self):
+    def regenerate_all(self, library: QuerySet=None):
+        if library:
+            # this should only run when we pass a queryset in, otherwise
+            # just handle the things that we can directly access easily
+            self.update_all_color_matches(library)
         self.generate_rgb()
         self.generate_closest_ral()
         self.generate_closest_pantone()

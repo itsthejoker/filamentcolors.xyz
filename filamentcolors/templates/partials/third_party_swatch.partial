@@ -1,3 +1,5 @@
+{% load delta_e %}
+
 <div id="s{{ obj.id }}" class="cardBox anim" align="center">
     <div class="card mb-4 shadow" style="width: 18rem;">
         <div class="card-img-container">
@@ -11,7 +13,11 @@
             <h5 class="card-title">
                 #{{ obj.hex_color }}
             </h5>
-            <p class="card-text">{{ obj.category }} {{ obj.code }} {{ obj.filament_type.name }}</p>
+            <p class="card-text">{{ obj.category|default:"Pantone PMS" }} {{ obj.code }} {{ obj.filament_type.name }}</p>
         </div>
     </div>
+    {% if user_settings.show_delta_e_values %}
+        {% delta_e swatch obj as value %}
+        {% include 'partials/delta_e_badge.partial' with value=value%}
+    {% endif %}
 </div>

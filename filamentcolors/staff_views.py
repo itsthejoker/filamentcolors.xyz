@@ -108,8 +108,10 @@ def add_swatch(request, swatch_id: int = None):
             form = SwatchForm(instance=Swatch.objects.get(id=swatch_id))
         else:
             form = SwatchForm()
-        mfrs = Manufacturer.objects.filter(affiliate_portal__isnull=False).values("id", "affiliate_portal")
-        mfrs = {mfr['id']: mfr['affiliate_portal'] for mfr in mfrs}
+        mfrs = Manufacturer.objects.filter(affiliate_portal__isnull=False).values(
+            "id", "affiliate_portal"
+        )
+        mfrs = {mfr["id"]: mfr["affiliate_portal"] for mfr in mfrs}
         data.update({"aff_data": mfrs})
     data.update({"form": form})
 

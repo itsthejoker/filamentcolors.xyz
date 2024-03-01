@@ -71,13 +71,7 @@ class Command(BaseCommand):
                 code, hex_code = obj
                 r, g, b = hex_to_rgb(hex_code)
                 to_write.append(
-                    PantonePMS(
-                        code=code,
-                        rgb_r=r,
-                        rgb_g=g,
-                        rgb_b=b,
-                        hex_color=hex_code
-                    )
+                    PantonePMS(code=code, rgb_r=r, rgb_g=g, rgb_b=b, hex_color=hex_code)
                 )
             PantonePMS.objects.bulk_create(to_write)
             self.stdout.write(
@@ -85,9 +79,10 @@ class Command(BaseCommand):
             )
         else:
             self.stdout.write(
-                self.style.ERROR("There are already PantonePMS objects present. Skipping.")
+                self.style.ERROR(
+                    "There are already PantonePMS objects present. Skipping."
+                )
             )
-
 
         self.stdout.write(self.style.SUCCESS("Loading data..."))
         count = 0

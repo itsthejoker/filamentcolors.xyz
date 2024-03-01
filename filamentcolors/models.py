@@ -447,7 +447,7 @@ class Swatch(models.Model, DistanceMixin):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="pms_1",
-        verbose_name="Computed Pantone PMS color 1"
+        verbose_name="Computed Pantone PMS color 1",
     )
     closest_pms_2 = models.ForeignKey(
         PantonePMS,
@@ -455,7 +455,7 @@ class Swatch(models.Model, DistanceMixin):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="pms_2",
-        verbose_name="Computed Pantone PMS color 2"
+        verbose_name="Computed Pantone PMS color 2",
     )
     closest_pms_3 = models.ForeignKey(
         PantonePMS,
@@ -463,7 +463,7 @@ class Swatch(models.Model, DistanceMixin):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="pms_3",
-        verbose_name="Computed Pantone PMS color 3"
+        verbose_name="Computed Pantone PMS color 3",
     )
 
     tags = TaggableManager()
@@ -813,7 +813,7 @@ class Swatch(models.Model, DistanceMixin):
         l = Swatch.objects.filter(published=True)
         return self._get_closest_color_swatch(l, color_to_match)
 
-    def regenerate_all(self, library: QuerySet=None):
+    def regenerate_all(self, library: QuerySet = None):
         if library:
             # this should only run when we pass a queryset in, otherwise
             # just handle the things that we can directly access easily

@@ -4,7 +4,14 @@ from rest_framework import serializers
 from rest_framework.serializers import HyperlinkedModelSerializer
 from taggit.serializers import TagListSerializerField
 
-from filamentcolors.models import RAL, FilamentType, Manufacturer, Pantone, Swatch, PantonePMS
+from filamentcolors.models import (
+    RAL,
+    FilamentType,
+    Manufacturer,
+    Pantone,
+    Swatch,
+    PantonePMS,
+)
 
 
 class FilamentTypeSerializer(HyperlinkedModelSerializer):

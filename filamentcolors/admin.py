@@ -13,6 +13,7 @@ from filamentcolors.models import (
 
 
 class SwatchAdmin(admin.ModelAdmin):
+    list_display = ["color_name", "manufacturer", "filament_type", "published"]
     ordering = ("manufacturer__name",)
     search_fields = ["color_name", "manufacturer__name"]
     exclude = (
@@ -47,9 +48,18 @@ class SwatchAdmin(admin.ModelAdmin):
             return res
 
 
+@admin.action(description="Recalculate affiliate links")
+def recalculate_aff_links(modeladmin, request, queryset):
+    s = Swatch.objects.filter(manufacturer__in=queryset.values_list("id", flat=True))
+    for obj in s:
+        obj.update_affiliate_links()
+        obj.save()
+
+
 class ManufacturerAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     ordering = ("name",)
+    actions = [recalculate_aff_links]
 
 
 class FilamentTypeAdmin(admin.ModelAdmin):

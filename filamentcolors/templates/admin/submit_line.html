@@ -1,4 +1,9 @@
 {% load i18n admin_urls %}
+<style>
+    .submit-row input {
+        margin: 3px 0
+    }
+</style>
 <div class="submit-row">
     {% block submit-row %}
         {% if 'swatch' in request.path %}

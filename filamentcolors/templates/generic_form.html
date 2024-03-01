@@ -12,6 +12,9 @@
             <div class="col"></div>
             <div class="col-md-8 col-lg-8 col-xl-8">
                 {% if "/add/" in request.path %}
+                    <div class="alert alert-warning text-black-50" role="alert" id="mfrAffAlert" style="display: none" role="alert">
+                        <strong><span id="mfrAffName"></span></strong> has an affiliate portal! Link: <a href="#" id="mfrAffAlertLink" target="_blank" class="alert-link"></a>
+                    </div>
                     <div id="similar-swatch-alert" style="display: none">
                         <div class="alert alert-danger text-white" role="alert">
                             Found similar swatches...

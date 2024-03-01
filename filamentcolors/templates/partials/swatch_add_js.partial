@@ -70,4 +70,28 @@
         searchstring = encodeURI(mfrName + " " + colorName + " " + ftypeName)
         window.open("https://www.amazon.com/s?k=" + searchstring, '_blank').focus()
     }
+
+    function checkForAffPortal(value) {
+        const affData = JSON.parse(document.getElementById('affiliate-data').textContent);
+        if (affData[value]) {
+            $("#mfrAffName").text($("#id_manufacturer").children("option").filter(":selected").text())
+            const link = $("#mfrAffAlertLink");
+            link.attr("href", affData[value]);
+            link.text(affData[value]);
+            $("#mfrAffAlert").css("display", "block")
+        } else {
+            $("#mfrAffAlert").css("display", "none")
+        }
+    }
+
+    $('#id_manufacturer').on('change', function () {
+        checkForAffPortal(this.value.toString())
+    })
+
+    $(document).ready(function() {
+        // run once manually on page load
+        checkForAffPortal($("#id_manufacturer").val())
+    })
 </script>
+
+{{ aff_data|json_script:"affiliate-data" }}

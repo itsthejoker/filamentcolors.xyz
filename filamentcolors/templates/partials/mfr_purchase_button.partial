@@ -2,13 +2,16 @@
     <a class="btn btn-success" href="{{ swatch.mfr_purchase_link }}"
        target="_blank"
        role="button"
-       rel="noopener"
-    >Buy from {{ swatch.manufacturer.parent_company_name|default:swatch.manufacturer.name }}</a>
+       rel="noopener">Buy from {{ swatch.manufacturer.parent_company_name|default:swatch.manufacturer.name }}
+        {% if swatch.manufacturer.affiliate_portal or swatch.manufacturer.affiliate_url_param %}
+            <br><span style="font-size: smaller">(affiliate link)</span>
+        {% endif %}
+    </a>
     {% for loc in swatch.purchaselocation_set.all %}
         <a class="btn btn-secondary" href="{{ loc.url }}"
            target="_blank"
            role="button"
            rel="noopener"
-           >Buy from {{ loc.retailer.name }}</a>
+        >Buy from {{ loc.retailer.name }}</a>
     {% endfor %}
 {% endif %}

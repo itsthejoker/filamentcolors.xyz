@@ -85,8 +85,8 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
 
 def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
     html = "standalone/library.html"
-    # if family_id not in Swatch.BASE_COLOR_OPTIONS:
-    #     raise SuspiciousOperation
+    if family_id not in [i[0] for i in Swatch.BASE_COLOR_OPTIONS]:
+        raise SuspiciousOperation
     family_name = [i[1] for i in Swatch.BASE_COLOR_OPTIONS if i[0] == family_id][0]
 
     data = build_data_dict(request, library=True, title=f"{family_name} Swatches")

@@ -4,6 +4,7 @@ from typing import Any
 
 import numpy
 import pandas
+from django.core.exceptions import SuspiciousOperation
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q
 from django.db.models.functions import Lower
@@ -84,6 +85,8 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
 
 def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
     html = "standalone/library.html"
+    if family_id not in Swatch.BASE_COLOR_OPTIONS:
+        raise SuspiciousOperation
     family_name = [i[1] for i in Swatch.BASE_COLOR_OPTIONS if i[0] == family_id][0]
 
     data = build_data_dict(request, library=True, title=f"{family_name} Swatches")
@@ -341,6 +344,15 @@ def donation_page(request: WSGIRequest) -> HttpResponse:
         request,
         "standalone/donations.html",
         build_data_dict(request, title="Donations"),
+    )
+
+
+def error_400(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+    return prep_request(
+        request,
+        "400.html",
+        build_data_dict(request, title="Something's not right..."),
+        status=400,
     )
 
 

@@ -25,6 +25,7 @@ from filamentcolors.api.urls import urlpatterns as api_urls
 from filamentcolors.models import Swatch
 from filamentcolors.sitemaps import StaticViewSitemap
 
+handler400 = "filamentcolors.views.error_400"
 handler404 = "filamentcolors.views.error_404"
 handler500 = "filamentcolors.views.error_500"
 

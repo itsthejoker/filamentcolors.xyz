@@ -9,9 +9,7 @@ from filamentcolors.tests.helpers import get_purchase_location, get_retailer, ge
 #     assert blue.complement == yellow
 
 
-def test_pantone_and_ral_colors_get_automatically_added(
-    populate_pantone_and_ral,
-) -> None:
+def test_pantone_and_ral_colors_get_automatically_added() -> None:
     swatch = get_swatch()
 
     assert swatch.closest_pantone_1 is not None

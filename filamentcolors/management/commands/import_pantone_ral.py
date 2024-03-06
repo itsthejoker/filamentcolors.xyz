@@ -84,13 +84,13 @@ class Command(BaseCommand):
                 )
             )
 
-        self.stdout.write(self.style.SUCCESS("Loading data..."))
-        count = 0
-        for s in Swatch.objects.filter(published=True):
-            # s.regenerate_all(Swatch.objects.filter(published=True))
-            s.generate_closest_pms()
-            s.save()
-            count += 1
-            if count % 50 == 0:
-                self.stdout.write(f"Rebuilt {count}...")
+        # self.stdout.write(self.style.SUCCESS("Loading data..."))
+        # count = 0
+        # for s in Swatch.objects.filter(published=True):
+        #     # s.regenerate_all(Swatch.objects.filter(published=True))
+        #     s.generate_closest_pms()
+        #     s.save()
+        #     count += 1
+        #     if count % 50 == 0:
+        #         self.stdout.write(f"Rebuilt {count}...")
         self.stdout.write(self.style.SUCCESS("Rebuild complete!"))

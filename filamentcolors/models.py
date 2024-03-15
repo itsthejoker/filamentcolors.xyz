@@ -917,6 +917,8 @@ class Swatch(models.Model, DistanceMixin):
             super(Swatch, self).save(*args, **kwargs)
 
             self.update_affiliate_links()
+            super(Swatch, self).save(*args, **kwargs)
+
             # have to save the model before we can send the tweet, otherwise
             # we won't have a swatch ID.
             if not settings.DEBUG and settings.POST_TO_SOCIAL_MEDIA:

@@ -1,0 +1,30 @@
+<div class="alert alert-info alert-dismissible fade show rounded-0 mb-0"
+     id="{{ navbar_message_id|default:'navbarMessage1' }}"
+     role="alert">
+    <div class="container text-center">
+        <span class="alert-text text-white">{{ navbar_message|safe }}</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        </button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+            // set up close listener
+            const myAlert = document.getElementById("{{ navbar_message_id|default:'navbarMessage1' }}")
+            myAlert.addEventListener('closed.bs.alert', event => {
+                createCookie("hideNavbarAlert-{{ navbar_message_id }}", true, 365);
+            })
+
+            // auto hide the thing if the cookie is present
+            const navbarMessageSettings = readCookie("hideNavbarAlert-{{ navbar_message_id }}");
+            const el = $("#{{ navbar_message_id|default:'navbarMessage1' }}")
+            if (navbarMessageSettings != null) {
+                el.css("display", "none")
+            } else {
+                el.css("display", "block")
+            }
+        }
+    )
+
+</script>

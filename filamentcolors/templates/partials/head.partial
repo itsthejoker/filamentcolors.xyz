@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="{% static 'vendored/icomoon/style.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/nucleo-icons.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/nucleo-svg.css' %}">
-<link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/material-kit-pro.css' %}?v=2">
+<link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/material-kit-pro.css' %}?v=3">
 <link rel="stylesheet" href="{% static 'css/main.css' %}?v=5">
 
 <style>

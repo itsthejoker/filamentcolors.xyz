@@ -95,7 +95,7 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
     :return: dict
     """
     settings = get_settings_cookies(request)
-    return {
+    data = {
         "manufacturers": (
             Manufacturer.objects.exclude(
                 id__in=(
@@ -122,6 +122,12 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
         "browser_console_message2": "",
         "browser_console_message3": "",
     }
+    if data.get("navbar_message_id") in settings.get("hide_alert_ids"):
+        # they've manually dismissed it, so remove the message. If we change the message
+        # (and the corresponding ID) then it will display until they click the close
+        # button again.
+        del data["navbar_message"]
+    return data
 
 
 def clean_collection_ids(ids: str) -> List:
@@ -157,10 +163,16 @@ def debug_check_for_cookies(r: request):
 
 def get_settings_cookies(r: request) -> Dict:
     # both of these cookies are set by the javascript in the frontend.
+    navbar_alert_key = "hideNavbarAlert-"
     type_settings = r.COOKIES.get(filament_type_settings_cookie)
     show_dc = r.COOKIES.get(show_unavailable_cookie)
     mfr_blacklist = r.COOKIES.get(mfr_blacklist_cookie)
     show_delta_e_values = r.COOKIES.get(show_delta_e_values_cookie)
+    hide_alert_ids = [
+        i[len(navbar_alert_key) :]
+        for i in r.COOKIES.keys()
+        if i.startswith(navbar_alert_key)
+    ]
 
     if type_settings:
         # It will be in this format: `1-true_2-true_3-true_6-false_9-false_`
@@ -191,6 +203,7 @@ def get_settings_cookies(r: request) -> Dict:
         "show_unavailable": True if show_dc == "true" else False,
         "mfr_whitelist": mfr_blacklist_objects,
         "show_delta_e_values": True if show_delta_e_values == "true" else False,
+        "hide_alert_ids": hide_alert_ids,
     }
 
 

@@ -118,6 +118,11 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
         "user_settings": settings,
         "show_search_bar": library,
         "title": title or "FilamentColors",
+        "navbar_message": (
+            "<strong>Hey!</strong> Are you coming to RMRRF? Stop by the booth on April"
+            " 20th and 21st in Loveland, CO to grab some stickers and talk about colors!"
+        ),
+        "navbar_message_id": "navbarMessage1",
         "browser_console_message": "",
         "browser_console_message2": "",
         "browser_console_message3": "",

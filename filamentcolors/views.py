@@ -135,10 +135,76 @@ def typesort(request: WSGIRequest, id: int) -> HttpResponse:
 
 def swatch_detail(request: WSGIRequest, id: int) -> HttpResponse:
     html = "standalone/swatch_detail.html"
-    swatch = Swatch.objects.filter(id=id).first()
     data = build_data_dict(request)
 
-    if not swatch or not swatch.published:
+    if not Swatch.objects.filter(id=id).exists():
+        raise Http404
+
+    swatch = Swatch.objects.filter(id=id).select_related(
+        "complement",
+        "complement__manufacturer",
+        "complement__filament_type",
+        "analogous_1",
+        "analogous_1__manufacturer",
+        "analogous_1__filament_type",
+        "analogous_2",
+        "analogous_2__filament_type",
+        "analogous_2__manufacturer",
+        "triadic_1",
+        "triadic_1__filament_type",
+        "triadic_1__manufacturer",
+        "triadic_2",
+        "triadic_2__filament_type",
+        "triadic_2__manufacturer",
+        "split_complement_1",
+        "split_complement_1__filament_type",
+        "split_complement_1__manufacturer",
+        "split_complement_2",
+        "split_complement_2__filament_type",
+        "split_complement_2__manufacturer",
+        "tetradic_1",
+        "tetradic_1__filament_type",
+        "tetradic_1__manufacturer",
+        "tetradic_2",
+        "tetradic_2__filament_type",
+        "tetradic_2__manufacturer",
+        "tetradic_3",
+        "tetradic_3__filament_type",
+        "tetradic_3__manufacturer",
+        "square_1",
+        "square_1__filament_type",
+        "square_1__manufacturer",
+        "square_2",
+        "square_2__filament_type",
+        "square_2__manufacturer",
+        "square_3",
+        "square_3__filament_type",
+        "square_3__manufacturer",
+        "closest_1",
+        "closest_1__filament_type",
+        "closest_1__manufacturer",
+        "closest_2",
+        "closest_2__filament_type",
+        "closest_2__manufacturer",
+        "closest_pantone_1",
+        "closest_pantone_2",
+        "closest_pantone_3",
+        "closest_pms_1",
+        "closest_pms_2",
+        "closest_pms_3",
+        "closest_ral_1",
+        "closest_ral_2",
+        "closest_ral_3",
+        "closest_pms_1",
+        "closest_pms_2",
+        "closest_pms_3",
+        "manufacturer",
+        "filament_type",
+    )
+
+    swatch = swatch.first()
+
+    if not swatch.published:
         raise Http404
     else:
         swatch.refresh_cache_if_needed()

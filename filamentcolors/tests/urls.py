@@ -10,6 +10,7 @@ handler500 = "filamentcolors.views.error_500"
 def example_view(request, *args, **kwargs):
     pass
 
+
 def fourzerofour(request):
     raise Http404
 
@@ -31,7 +32,11 @@ urlpatterns = [
     path("donations/", example_view, name="donations"),
     path("monetary_donations/", example_view, name="monetary_donations"),
     path("monetary_donations/", example_view, name="colormatch"),
-    path("welcome_experience_image/<int:image_id>/", example_view, name="welcome_experience_image"),
+    path(
+        "welcome_experience_image/<int:image_id>/",
+        example_view,
+        name="welcome_experience_image",
+    ),
     path("welcome_experience_video", example_view, name="welcome_experience_video"),
     path("400/", fourhundred, name="400"),
     path("404/", fourzerofour, name="404"),

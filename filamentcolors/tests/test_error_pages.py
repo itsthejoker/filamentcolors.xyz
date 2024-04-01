@@ -8,7 +8,10 @@ def test_500_page(client: Client) -> None:
     client.raise_request_exception = False
     response = client.get("/500/")
     assert response.status_code == 500
-    assert "Please try your action again -- if it continues to happen" in response.content.decode()
+    assert (
+        "Please try your action again -- if it continues to happen"
+        in response.content.decode()
+    )
 
 
 @pytest.mark.urls("filamentcolors.tests.urls")

@@ -39,12 +39,20 @@ def prep_request(
     # If we're returning a proper HTMX component, it will completely ignore
     # this template and just return the HTML we tell it to. If we're returning
     # a full page, we need to tell it which template to use.
-    if r.htmx and not r.htmx.history_restore_request:
-        data |= {"base_template": "partial_base.html"}
-    else:
+    # TODO: There are a bunch of errors that say the htmx attribute doesn't
+    #  exist. Figure out why. In the meantime, just do a check to see if the
+    #  attribute is there, and if not, treat it like a full page load.
+    if not hasattr(r, "htmx"):
         data |= {
             "base_template": "base.html",
         }
+    else:
+        if r.htmx and not r.htmx.history_restore_request:
+            data |= {"base_template": "partial_base.html"}
+        else:
+            data |= {
+                "base_template": "base.html",
+            }
 
     response = render(r, html, context=data, *args, **kwargs)
     response = set_tasty_cookies(response)

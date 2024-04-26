@@ -7,6 +7,7 @@ from django.http import HttpResponse, request
 from django.shortcuts import render
 
 from filamentcolors import status as status_codes
+from filamentcolors import NAVBAR_MESSAGE, NAVBAR_MESSAGE_ID
 from filamentcolors.models import GenericFilamentType, Manufacturer, Swatch
 
 have_visited_before_cookie = "f"
@@ -91,12 +92,22 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
       manufacturers               |   used to populate dropdown from navbar
       filament_types              |   ...
       color_family                |   ...
-      welcome_experience_images   |   the urls for the example images shown in
-                                  |       "how to use the site" modals.
       settings_buttons            |   model objects that power the settings page
       search_prefill              |   prepopulate the filter bar at top of page
       user_settings               |   a dict pulled from the user's browser
-      show_search_bar             |   a boolean; only show search bar on the library.
+      show_search_bar             |   a boolean or boolean-like; only show search
+                                  |     bar on the library.
+      title                       |   the title of the page in the browser
+      navbar_message              |   the text of an optional banner message
+                                  |     or announcement at the top of the site.
+      navbar_message_id           |   the ID of that particular message. Each
+                                  |     message can be dismissed separately, so
+                                  |     each one having its own ID is important.
+      browser_console_message     |   for debugging. Pass a string in here to have
+                                  |     it written as a JS console log in the browser.
+      browser_console_message2    |   ...
+      browser_console_message3    |   ...
+
     :param request: Request
     :param library: bool
     :param title: str
@@ -126,11 +137,8 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
         "user_settings": settings,
         "show_search_bar": library,
         "title": title or "FilamentColors",
-        "navbar_message": (
-            "<strong>Hey!</strong> Are you coming to RMRRF? Stop by the booth on April"
-            " 20th and 21st in Loveland, CO to grab some stickers and talk about colors!"
-        ),
-        "navbar_message_id": "navbarMessage1",
+        "navbar_message": NAVBAR_MESSAGE,
+        "navbar_message_id": NAVBAR_MESSAGE_ID,
         "browser_console_message": "",
         "browser_console_message2": "",
         "browser_console_message3": "",

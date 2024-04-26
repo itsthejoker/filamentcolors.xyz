@@ -48,11 +48,20 @@ class SwatchAdmin(admin.ModelAdmin):
             return res
 
 
-@admin.action(description="Recalculate affiliate links")
+@admin.action(description="Recalculate Affiliate Links")
 def recalculate_aff_links(modeladmin, request, queryset):
     s = Swatch.objects.filter(manufacturer__in=queryset.values_list("id", flat=True))
     for obj in s:
         obj.update_affiliate_links()
+        obj.save()
+
+
+@admin.action(description="Remove Purchase Links")
+def remove_purchase_links(modeladmin, request, queryset):
+    s = Swatch.objects.filter(manufacturer__in=queryset.values_list("id", flat=True))
+    for obj in s:
+        obj.amazon_purchase_link = None
+        obj.mfr_purchase_link = None
         obj.save()
 
 

@@ -72,7 +72,10 @@ class PurchaseLocation(models.Model):
     swatch = models.ForeignKey("Swatch", on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.retailer.name} - {self.swatch.manufacturer.name} {self.swatch.color_name} {self.swatch.filament_type.name}"
+        return (
+            f"{self.retailer.name} - {self.swatch.manufacturer.name}"
+            f" {self.swatch.color_name} {self.swatch.filament_type.name}"
+        )
 
 
 class GenericFilamentType(models.Model):

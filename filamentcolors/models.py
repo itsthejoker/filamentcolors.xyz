@@ -16,6 +16,7 @@ from django.core.files.images import ImageFile
 from django.core.files.storage import default_storage
 from django.db import models
 from django.db.models.query import QuerySet
+from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
 from PIL import Image as Img
@@ -23,6 +24,7 @@ from skimage import io
 from taggit.managers import TaggableManager
 
 from filamentcolors.colors import Color
+from filamentcolors.exceptions import UnknownSlugOrID
 from filamentcolors.social_media import send_to_social_media
 
 
@@ -208,6 +210,9 @@ class Swatch(models.Model, DistanceMixin):
         (GREY, "Grey"),
         (TRANSLUCENT, "Translucent"),
     ]
+
+    BASE_COLOR_IDS = [i[0] for i in BASE_COLOR_OPTIONS]
+    BASE_COLOR_SLUGS = [slugify(i[1]).lower() for i in BASE_COLOR_OPTIONS]
 
     STEP_OPTIONS = [16, 32, 48, 64, 80, 96, 112, 128]
 
@@ -884,6 +889,17 @@ class Swatch(models.Model, DistanceMixin):
                         (scheme, netloc, path, "", query, fragment)
                     )
                 location.save()
+    
+    def get_color_id_from_slug_or_id(self, slug_or_id: str) -> str:
+            slug_or_id = slug_or_id.upper()
+            if slug_or_id in self.BASE_COLOR_IDS:
+                return slug_or_id
+            
+            slug_or_id = slug_or_id.lower()
+            if slug_or_id in self.BASE_COLOR_SLUGS:
+                return self.BASE_COLOR_IDS[self.BASE_COLOR_SLUGS.index(slug_or_id)]
+
+            raise UnknownSlugOrID
 
     def save(self, *args, **kwargs):
         rebuild_matches = False

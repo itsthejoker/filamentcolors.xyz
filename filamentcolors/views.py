@@ -20,6 +20,7 @@ from filamentcolors.colors import (
     is_hex,
     is_short_hex,
 )
+from filamentcolors.exceptions import UnknownSlugOrID
 from filamentcolors.helpers import (
     ErrorStatusResponse,
     build_data_dict,
@@ -85,14 +86,18 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
 
 def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
     html = "standalone/library.html"
-    # if family_id not in [i[0] for i in Swatch.BASE_COLOR_OPTIONS]:
-    #     raise SuspiciousOperation
-    family_name = [i[1] for i in Swatch.BASE_COLOR_OPTIONS if i[0] == family_id][0]
+    
+    try:
+        f_id = Swatch().get_color_id_from_slug_or_id(family_id)
+    except UnknownSlugOrID:
+        raise Http404
+    
+    family_name = [i[1] for i in Swatch.BASE_COLOR_OPTIONS if i[0] == f_id][0]
 
     data = build_data_dict(request, library=True, title=f"{family_name} Swatches")
     s = get_swatches(data)
 
-    s = s.filter(Q(color_parent=family_id) | Q(alt_color_parent=family_id))
+    s = s.filter(Q(color_parent=f_id) | Q(alt_color_parent=f_id))
 
     data.update({"swatches": s})
 

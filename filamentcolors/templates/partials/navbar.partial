@@ -124,7 +124,7 @@
                                         {% for c in color_family %}
                                             <a class="dropdown-item ps-3 border-radius-md mb-1"
                                                tabindex="0"
-                                               href="/library/color_family/{{ c.0 }}">{{ c.1 }}</a>
+                                               href="/library/color_family/{{ c.1|slugify }}">{{ c.1 }}</a>
                                         {% endfor %}
                                     </div>
                                 </li>
@@ -193,7 +193,7 @@
                                 </div>
                                 {% for c in color_family %}
                                     <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                       href="/library/color_family/{{ c.0 }}"
+                                       href="/library/color_family/{{ c.1|slugify }}"
                                        data-bs-toggle="collapse"
                                        data-bs-target="#navigation">{{ c.1 }}</a>
                                 {% endfor %}

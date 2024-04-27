@@ -58,6 +58,7 @@ def recalculate_aff_links(modeladmin, request, queryset):
 
 @admin.action(description="Remove Purchase Links")
 def remove_purchase_links(modeladmin, request, queryset):
+    # todo: make this also work for retailer links
     s = Swatch.objects.filter(manufacturer__in=queryset.values_list("id", flat=True))
     for obj in s:
         obj.amazon_purchase_link = None
@@ -68,7 +69,7 @@ def remove_purchase_links(modeladmin, request, queryset):
 class ManufacturerAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     ordering = ("name",)
-    actions = [recalculate_aff_links]
+    actions = [recalculate_aff_links, remove_purchase_links]
 
 
 class FilamentTypeAdmin(admin.ModelAdmin):

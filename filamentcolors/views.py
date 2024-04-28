@@ -128,10 +128,17 @@ def manufacturersort(request: WSGIRequest, mfr_id: str) -> HttpResponse:
     return prep_request(request, html, data)
 
 
-def typesort(request: WSGIRequest, id: int) -> HttpResponse:
+def typesort(request: WSGIRequest, f_type_id: int) -> HttpResponse:
     html = "standalone/library.html"
 
-    f_type = GenericFilamentType.objects.filter(id=id).first()
+    try:
+        # it can either be the ID or the slug
+        f_type_id = int(f_type_id)
+        args = {"id": f_type_id}
+    except ValueError:
+        args = {"slug": f_type_id}
+
+    f_type = GenericFilamentType.objects.filter(**args).first()
 
     if not f_type:
         raise Http404

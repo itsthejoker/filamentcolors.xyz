@@ -101,7 +101,7 @@
                                         {% for t in filament_types %}
                                             <a class="dropdown-item ps-3 border-radius-md mb-1"
                                                tabindex="0"
-                                               href="/library/filament_type/{{ t.id }}"
+                                               href="/library/filament_type/{{ t.slug }}"
                                             >{{ t.name }}</a>
                                         {% endfor %}
                                     </div>
@@ -178,7 +178,7 @@
                                 </div>
                                 {% for t in filament_types %}
                                     <a class="dropdown-item ps-3 border-radius-md mb-1"
-                                       href="/library/filament_type/{{ t.id }}"
+                                       href="/library/filament_type/{{ t.slug }}"
                                        data-bs-toggle="collapse"
                                        data-bs-target="#navigation"
                                     >{{ t.name }}</a>

@@ -86,12 +86,12 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
 
 def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
     html = "standalone/library.html"
-    
+
     try:
         f_id = Swatch().get_color_id_from_slug_or_id(family_id)
     except UnknownSlugOrID:
         raise Http404
-    
+
     family_name = [i[1] for i in Swatch.BASE_COLOR_OPTIONS if i[0] == f_id][0]
 
     data = build_data_dict(request, library=True, title=f"{family_name} Swatches")

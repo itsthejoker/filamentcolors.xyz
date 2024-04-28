@@ -819,7 +819,7 @@ class Swatch(models.Model, DistanceMixin):
         # Should return the closest element to a given hex string.
         color_to_match = convert_color(sRGBColor.new_from_rgb_hex(hex), LabColor)
         l = Swatch.objects.filter(published=True)
-        return self._get_closest_color_swatch(l, color_to_match)
+        return self.get_closest_color_swatch(l, color_to_match)
 
     def regenerate_all(self, library: QuerySet = None):
         if library:
@@ -918,7 +918,7 @@ class Swatch(models.Model, DistanceMixin):
             rebuild_matches = True
 
         if self.rebuild_long_way:
-            self.regenerate_all(long_way=True)
+            self.regenerate_all()
             self.rebuild_long_way = False
             rebuild_matches = True
 

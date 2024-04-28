@@ -3,8 +3,6 @@ from io import BytesIO
 from typing import List, Tuple, Union
 from urllib.parse import urlsplit, urlunparse
 
-import cv2
-import numpy as np
 import pytz
 from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cie2000
@@ -20,7 +18,6 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
 from PIL import Image as Img
-from skimage import io
 from taggit.managers import TaggableManager
 
 from filamentcolors.colors import Color
@@ -47,10 +44,18 @@ class Manufacturer(models.Model):
     parent_company_name = models.CharField(
         max_length=160, null=True, blank=True, help_text="Used for purchase buttons."
     )
+    slug = models.SlugField(max_length=160, null=True, blank=True)
 
     @property
     def get_possessive_apostrophe(self):
         return "'" if self.name.endswith("s") else "'s"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(
+                self.parent_company_name if self.parent_company_name else self.name
+            )
+        super(Manufacturer, self).save(args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -87,6 +92,12 @@ class GenericFilamentType(models.Model):
     """
 
     name = models.CharField(max_length=24, default="PLA")
+    slug = models.SlugField(max_length=24, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(GenericFilamentType, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -272,6 +283,7 @@ class Swatch(models.Model, DistanceMixin):
     notes = models.TextField(max_length=4000, null=True, blank=True)
     amazon_purchase_link = models.URLField(null=True, blank=True, max_length=2000)
     mfr_purchase_link = models.URLField(null=True, blank=True, max_length=2000)
+    slug = models.SlugField(max_length=400, null=True, blank=True)
 
     complement = models.ForeignKey(
         "self",
@@ -889,17 +901,17 @@ class Swatch(models.Model, DistanceMixin):
                         (scheme, netloc, path, "", query, fragment)
                     )
                 location.save()
-    
-    def get_color_id_from_slug_or_id(self, slug_or_id: str) -> str:
-            slug_or_id = slug_or_id.upper()
-            if slug_or_id in self.BASE_COLOR_IDS:
-                return slug_or_id
-            
-            slug_or_id = slug_or_id.lower()
-            if slug_or_id in self.BASE_COLOR_SLUGS:
-                return self.BASE_COLOR_IDS[self.BASE_COLOR_SLUGS.index(slug_or_id)]
 
-            raise UnknownSlugOrID
+    def get_color_id_from_slug_or_id(self, slug_or_id: str) -> str:
+        slug_or_id = slug_or_id.upper()
+        if slug_or_id in self.BASE_COLOR_IDS:
+            return slug_or_id
+
+        slug_or_id = slug_or_id.lower()
+        if slug_or_id in self.BASE_COLOR_SLUGS:
+            return self.BASE_COLOR_IDS[self.BASE_COLOR_SLUGS.index(slug_or_id)]
+
+        raise UnknownSlugOrID
 
     def save(self, *args, **kwargs):
         rebuild_matches = False
@@ -924,6 +936,12 @@ class Swatch(models.Model, DistanceMixin):
 
         if rebuild_matches:
             self.update_all_color_matches(Swatch.objects.filter(published=True))
+
+        if not self.slug:
+            self.slug = slugify(
+                f"{self.manufacturer.slug} {self.color_name}"
+                f" {self.filament_type.name} {self.id}"
+            )
 
         if self.card_img or not self.published:
             # we already have a card image, so just save everything and abort.

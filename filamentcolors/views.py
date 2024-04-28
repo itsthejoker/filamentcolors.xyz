@@ -138,14 +138,20 @@ def typesort(request: WSGIRequest, id: int) -> HttpResponse:
     return prep_request(request, html, data)
 
 
-def swatch_detail(request: WSGIRequest, id: int) -> HttpResponse:
+def swatch_detail(request: WSGIRequest, swatch_id: str) -> HttpResponse:
     html = "standalone/swatch_detail.html"
     data = build_data_dict(request)
+    try:
+        # it can either be the ID of the swatch itself or the slug
+        swatch_id = int(swatch_id)
+        args = {"id": swatch_id}
+    except ValueError:
+        args = {"slug": swatch_id}
 
-    if not Swatch.objects.filter(id=id).exists():
+    if not Swatch.objects.filter(**args).exists():
         raise Http404
 
-    swatch = Swatch.objects.filter(id=id).select_related(
+    swatch = Swatch.objects.filter(**args).select_related(
         "complement",
         "complement__manufacturer",
         "complement__filament_type",
@@ -219,7 +225,10 @@ def swatch_detail(request: WSGIRequest, id: int) -> HttpResponse:
         data.update(
             {
                 "swatch": swatch,
-                "title": f"{swatch.manufacturer.name} - {swatch.color_name} {swatch.filament_type.name}",
+                "title": (
+                    f"{swatch.manufacturer.name} - {swatch.color_name}"
+                    f" {swatch.filament_type.name}"
+                ),
             }
         )
 

@@ -74,7 +74,7 @@
                                                tabindex="0"
                                                data-bs-toggle="collapse"
                                                data-bs-auto-close="inside"
-                                               href="/library/manufacturer/{{ m.id }}"
+                                               href="/library/manufacturer/{{ m.slug }}"
                                             >{{ m.name }}</a>
                                         {% endfor %}
                                         <a class="dropdown-item ps-3 border-radius-md mb-1"
@@ -161,7 +161,7 @@
                                     <a class="dropdown-item ps-3 border-radius-md mb-1"
                                        data-bs-toggle="collapse"
                                        data-bs-target="#navigation"
-                                       href="/library/manufacturer/{{ m.id }}">{{ m.name }}</a>
+                                       href="/library/manufacturer/{{ m.slug }}">{{ m.name }}</a>
                                 {% endfor %}
                                 <a class="dropdown-item ps-3 border-radius-md mb-1"
                                    href="{% url 'mfr_list' %}" data-bs-toggle="collapse"

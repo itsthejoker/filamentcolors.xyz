@@ -104,11 +104,20 @@ def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
     return prep_request(request, html, data)
 
 
-def manufacturersort(request: WSGIRequest, id: int) -> HttpResponse:
+def manufacturersort(request: WSGIRequest, mfr_id: str) -> HttpResponse:
     html = "standalone/library.html"
-    mfr = Manufacturer.objects.filter(id=id).first()
+    try:
+        # it can either be the ID of the swatch itself or the slug
+        mfr_id = int(mfr_id)
+        args = {"id": mfr_id}
+    except ValueError:
+        args = {"slug": mfr_id}
+
+    mfr = Manufacturer.objects.filter(**args).first()
+
     if not mfr:
         raise Http404
+
     data = build_data_dict(request, library=True, title=f"{mfr.name} Swatches")
     s = get_swatches(data)
 

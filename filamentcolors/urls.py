@@ -57,7 +57,7 @@ urlpatterns = [
     path("library/", views.librarysort, name="library"),
     path("swatch/<str:swatch_id>/", views.swatch_detail, name="swatchdetail"),
     path(
-        "library/manufacturer/<int:id>/",
+        "library/manufacturer/<str:mfr_id>/",
         views.manufacturersort,
         name="manufacturersort",
     ),

@@ -54,7 +54,6 @@
         $('#filterInput').keyup(delay(function (e) {
             filterStuff();
         }, 200));
-
-        filterStuff();
     });
+    filterStuff();
 </script>

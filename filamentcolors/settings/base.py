@@ -56,8 +56,6 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "corsheaders",
     "debug_toolbar",
-    # We don't use taggit anymore but removing it from the migrations is a pain
-    # so I'm shoving that off on future me. Keeping it enabled for now.
     "taggit",
     "widget_tweaks",
     "filamentcolors",
@@ -69,6 +67,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "django.middleware.gzip.GZipMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",

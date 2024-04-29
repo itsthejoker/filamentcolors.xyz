@@ -19,6 +19,10 @@
     <meta name="og:image:width" content="280">
     <meta name="og:image:height" content="150">
 
+    <meta name="description"
+          content="Color info on {{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}: {{ swatch.hex_color }}!"
+    >
+
     <div class="container mt-3">
         {% include 'partials/messages.partial' %}
         {% if error %}
@@ -36,7 +40,9 @@
                                     <a class="lightbox" href="{{ swatch.image_front.url }}"
                                        title="Representative picture of the swatch front">
                                         <img class="img-fluid image scale-on-hover" src="{{ swatch.image_front.url }}"
-                                             alt="An image of the front of the color swatch.">
+                                             alt="An image of the front of the color swatch."
+                                             fetchpriority="high"
+                                        >
                                     </a>
                                 </div>
                                 {% if swatch.image_other %}

@@ -8,7 +8,7 @@
 
 <script src="{% static 'vendored/js/htmx.min.js' %}?v=1.9.9"></script>
 {% django_htmx_script %}
-<link rel="stylesheet" href="{% static 'vendored/css/bootstrap.min.css' %}">
+{#<link rel="stylesheet" href="{% static 'vendored/css/bootstrap.min.css' %}">#}
 <link rel="stylesheet" href="{% static 'vendored/css/baguetteBox.min.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/css/material_icons.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/css/toastify.css' %}">
@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/nucleo-svg.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/material-kit-pro.css' %}?v=3">
 <link rel="stylesheet" href="{% static 'css/main.css' %}?v=5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 
 <style>
     @font-face {
@@ -35,12 +36,12 @@
 <script src="{% static 'vendored/js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'vendored/js/masonry.min.js' %}"></script>
 <script src="{% static 'vendored/js/long_press.js' %}" async defer></script>
-<script src="{% static 'vendored/js/jscolor.js' %}" async></script>
+<script src="{% static 'vendored/js/jscolor.min.js' %}" async></script>
 <script src="{% static 'vendored/js/color.global.min.js' %}"></script>
 
 <script src="{% static 'vendored/js/contract.js' %}"></script>
 <script src="{% static 'vendored/js/dispatcher.js' %}"></script>
-<script type="text/javascript" src="{% static 'vendored/js/toastify.js' %}" async defer></script>
+<script type="text/javascript" src="{% static 'vendored/js/toastify.min.js' %}" async defer></script>
 <script src="{% static 'js/cookies/cookie.js' %}?v=1"></script>
 
 <script type="text/javascript" src="{% static "js/emailmagic.js" %}?v=2" async defer></script>

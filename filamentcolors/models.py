@@ -812,7 +812,7 @@ class Swatch(models.Model, DistanceMixin):
 
     def update_all_color_matches(self, library: QuerySet) -> None:
         # NOTE: This does not save to the database!!! This is deliberate -
-        # we only want to save it if we're updating the defaults. Otherwise
+        # we only want to save it if we're updating the defaults. Otherwise,
         # this allows us to modify the defaults out of any given library, built
         # from the settings that the end user has requested.
         self.update_complement_swatch(library)

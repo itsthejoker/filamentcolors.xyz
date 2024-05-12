@@ -227,6 +227,9 @@ def swatch_detail(request: WSGIRequest, swatch_id: str) -> HttpResponse:
         "closest_pms_3",
         "manufacturer",
         "filament_type",
+    ).prefetch_related(
+        "usersubmittedtd_set",
+        "purchaselocation_set",
     )
 
     swatch = swatch.first()

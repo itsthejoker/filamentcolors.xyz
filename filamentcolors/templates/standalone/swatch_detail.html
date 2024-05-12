@@ -119,6 +119,14 @@
                                     <td class="ps-4">Date added</td>
                                     <td>{{ swatch.human_readable_date }}</td>
                                 </tr>
+                                {% with swatch.get_td as td %}
+                                    {% if td %}
+                                        <tr>
+                                            <td class="ps-4">TD Value</td>
+                                            <td>{{ td }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endwith %}
                                 {% if swatch.donated_by %}
                                     <tr>
                                         <td class="ps-4">Donated by</td>

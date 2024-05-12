@@ -185,6 +185,18 @@ class RAL(models.Model, DistanceMixin):
         return self.code
 
 
+class UserSubmittedTD(models.Model):
+    swatch = models.ForeignKey("Swatch", on_delete=models.CASCADE)
+    td = models.FloatField()
+    # todo: if the same ip address submits again for the same swatch,
+    #  update the previously stored value instead of storing another one.
+    ip = models.GenericIPAddressField(null=True, blank=True)
+    date_added = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{str(self.swatch)} - {self.td}"
+
+
 class Swatch(models.Model, DistanceMixin):
     """
     The swatch model is used to keep track of two states of swatch;
@@ -284,6 +296,7 @@ class Swatch(models.Model, DistanceMixin):
     amazon_purchase_link = models.URLField(null=True, blank=True, max_length=2000)
     mfr_purchase_link = models.URLField(null=True, blank=True, max_length=2000)
     slug = models.SlugField(max_length=400, null=True, blank=True)
+    td = models.FloatField(null=True, blank=True)
 
     complement = models.ForeignKey(
         "self",
@@ -497,6 +510,17 @@ class Swatch(models.Model, DistanceMixin):
             return self.date_published.strftime(format)
         else:
             return self.date_added.strftime(format)
+
+    def get_td(self) -> float | None:
+        if self.td:
+            return self.td
+
+        if self.usersubmittedtd_set.all():
+            return (
+                sum([i.td for i in self.usersubmittedtd_set.all()])
+                / self.usersubmittedtd_set.count()
+            )
+        return None
 
     def get_rgb(self, hex: str) -> Tuple[int, ...]:
         return tuple(int(hex[i : i + 2], 16) for i in (0, 2, 4))

@@ -9,7 +9,13 @@ from filamentcolors.models import (
     PurchaseLocation,
     Retailer,
     Swatch,
+    UserSubmittedTD
 )
+
+
+class UserSubmittedTDAdmin(admin.ModelAdmin):
+    ordering = ("swatch__color_name", "swatch__manufacturer__name")
+    search_fields = ("swatch__color_name",)
 
 
 class SwatchAdmin(admin.ModelAdmin):
@@ -79,6 +85,7 @@ class FilamentTypeAdmin(admin.ModelAdmin):
 admin.site.register(Swatch, SwatchAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(FilamentType, FilamentTypeAdmin)
+admin.site.register(UserSubmittedTD, UserSubmittedTDAdmin)
 admin.site.register(GenericFile)
 admin.site.register(GenericFilamentType)
 admin.site.register(Retailer)

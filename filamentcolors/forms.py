@@ -36,6 +36,7 @@ class SwatchForm(forms.ModelForm):
             "manufacturer",
             "color_name",
             "hex_color",
+            "td",
             "filament_type",
             "color_parent",
             "alt_color_parent",
@@ -69,6 +70,7 @@ class SwatchFormNoImages(forms.ModelForm):
     filament_type = forms.ModelChoiceField(
         queryset=FilamentType.objects.all().order_by(Lower("name"))
     )
+    td = forms.FloatField(required=False)
 
     class Meta:
         model = Swatch
@@ -76,6 +78,7 @@ class SwatchFormNoImages(forms.ModelForm):
             "manufacturer",
             "color_name",
             "hex_color",
+            "td",
             "filament_type",
             "color_parent",
             "alt_color_parent",

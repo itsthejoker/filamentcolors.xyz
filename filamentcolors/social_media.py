@@ -132,7 +132,7 @@ def send_to_social_media(message: str = None, swatch=None, new_swatch=False) -> 
             caption=tumblr_message,
             format="markdown",
             link="https://filamentcolors.xyz"
-            + reverse("swatchdetail", kwargs={"id": swatch.id})
+            + reverse("swatchdetail", kwargs={"swatch_id": swatch.slug})
             + f"?ref={'newswatchtumbl' if new_swatch else 'autotumbl'}",
             data=swatch.image_front.path,
         )

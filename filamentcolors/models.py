@@ -977,7 +977,7 @@ class Swatch(models.Model, DistanceMixin):
         return f"{mfr} - {self.color_name} {ft}"
 
     def get_absolute_url(self):
-        return reverse("swatchdetail", args=(self.id,))
+        return reverse("swatchdetail", args=(self.slug,))
 
     class Meta:
         verbose_name_plural = "swatches"

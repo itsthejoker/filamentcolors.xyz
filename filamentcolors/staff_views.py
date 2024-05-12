@@ -101,7 +101,7 @@ def add_swatch(request, swatch_id: int = None):
         new_swatch.date_published = timezone.now()
         new_swatch.save()
         return HttpResponseRedirect(
-            reverse("swatchdetail", kwargs={"id": new_swatch.id})
+            reverse("swatchdetail", kwargs={"swatch_id": new_swatch.id})
         )
     else:
         if swatch_id:
@@ -167,7 +167,7 @@ def update_swatch_images(request, swatch_id: int):
         updated_swatch.crop_and_save_images()
         updated_swatch.save()
         return HttpResponseRedirect(
-            reverse("swatchdetail", kwargs={"id": target_swatch.id})
+            reverse("swatchdetail", kwargs={"swatch_id": target_swatch.id})
         )
     else:
         data = build_data_dict(request)
@@ -195,7 +195,7 @@ def swatch_edit(request, swatch_id: int):
         updated_swatch.save()
 
         return HttpResponseRedirect(
-            reverse("swatchdetail", kwargs={"id": target_swatch.id})
+            reverse("swatchdetail", kwargs={"swatch_id": target_swatch.id})
         )
     else:
         data = build_data_dict(request)
@@ -380,7 +380,7 @@ def recalculate_color(request, swatch_id: int):
     swatch = get_object_or_404(Swatch, id=swatch_id)
     swatch.rebuild_long_way = True
     swatch.save()
-    return HttpResponseRedirect(reverse("swatchdetail", kwargs={"id": swatch.id}))
+    return HttpResponseRedirect(reverse("swatchdetail", kwargs={"swatch_id": swatch.id}))
 
 
 @staff_member_required
@@ -398,7 +398,7 @@ def force_hex_color(request, swatch_id: int):
             swatch.update_all_color_matches(Swatch.objects.filter(published=True))
             swatch.save()
             return HttpResponseRedirect(
-                reverse("swatchdetail", kwargs={"id": swatch.id})
+                reverse("swatchdetail", kwargs={"swatch_id": swatch.id})
             )
     form = ManualHexValueForm()
     return prep_request(request, "generic_form.html", {"form": form, "swatch": swatch})

@@ -499,7 +499,7 @@ class Swatch(models.Model, DistanceMixin):
         verbose_name="Computed Pantone PMS color 3",
     )
 
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     # !!!!!!!!!!!!!!!!!!!!!!!!
 

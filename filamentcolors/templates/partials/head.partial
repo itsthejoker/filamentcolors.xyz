@@ -8,7 +8,6 @@
 
 <script src="{% static 'vendored/js/htmx.min.js' %}?v=1.9.9"></script>
 {% django_htmx_script %}
-{#<link rel="stylesheet" href="{% static 'vendored/css/bootstrap.min.css' %}">#}
 <link rel="stylesheet" href="{% static 'vendored/css/baguetteBox.min.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/css/material_icons.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/css/toastify.css' %}">

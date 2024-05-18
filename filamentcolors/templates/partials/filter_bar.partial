@@ -6,54 +6,141 @@
                 <input
                         class="form-control"
                         id="filterInput"
-                        placeholder="Filter Library..."
+                        placeholder="Search Library..."
                         type="text"
                         aria-label="Search"
                         value="{{ search_prefill }}"
+                        hx-trigger="keyup changed delay:0.4s"
+                        hx-get="/library"
+                        name="f"
+                        hx-vals="{{ active_filters }}"
                 >
             </div>
         </div>
     </div>
+{#    {% if 'manufacturer' not in request.path %}#}
+{#    <div class="text-center mb-4">#}
+{#      <div class="mb-2">Filters:</div>#}
+{#      <div class="gap-1">#}
+{#        <button#}
+{#          type="button"#}
+{#          id="mfrFilterModalButton"#}
+{#          class="btn btn-primary"#}
+{#          data-bs-toggle="modal"#}
+{#          data-bs-target="#mfrFilterModal"#}
+{#        >Manufacturer</button>#}
+{#        <button type="button" class="btn btn-success">Color Family</button>#}
+{#        <button type="button" class="btn btn-info">Filament Type</button>#}
+{#      </div>#}
+{#    </div>#}
+{#    {% endif %}#}
 </div>
+
+<!-- Manufacturer Filter Modal -->
+<div class="modal fade" id="mfrFilterModal" tabindex="-1" aria-labelledby="mfrFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="mfrFilterModalLabel">Filter by Manufacturer</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group input-group-dynamic mb-4">
+              <span class="input-group-text"><span class="icon-search"></span></span>
+              <input
+                      class="form-control"
+                      id="mfrFilterInput"
+                      placeholder="Got someone in mind?"
+                      type="text"
+                      aria-label="Search"
+              >
+          </div>
+        <div class="list-group" id="mfrFilterListGroup">
+          <div
+            id="filterMfrNone"
+            class="list-group-item list-group-item-action active"
+            onclick="clearMfrFilter()"
+          >
+            No Filter
+          </div>
+          {% for mfr in manufacturers %}
+          <div
+            id="filter-{{ mfr.slug }}"
+            data-mfr-slug="{{ mfr.slug }}"
+            class="list-group-item list-group-item-action mfrFilterEntry"
+            onclick="selectMfrFilter(this)"
+          >
+              {{ mfr.get_display_name }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Color Family Filter Modal -->
+<div class="modal fade" id="mfrFilterModal" tabindex="-1" aria-labelledby="mfrFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="mfrFilterModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="list-group" id="mfrFilterListGroup">
+          <div
+            id="filterMfrNone"
+            class="list-group-item list-group-item-action active"
+            onclick="clearMfrFilter()"
+          >
+            No Filter
+          </div>
+          {% for mfr in manufacturers %}
+          <div
+            id="filter-{{ mfr.slug }}"
+            data-mfr-slug="{{ mfr.slug }}"
+            class="list-group-item list-group-item-action mfrFilterEntry"
+            onclick="selectMfrFilter(this)"
+          >
+              {{ mfr.name }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-    function filterStuff() {
-        var input, filter, elements, text, i, txtValue, filterArray;
-        input = document.getElementById("filterInput");
-        filter = input.value.toUpperCase();
-        filterArray = filter.split(" ");
-        elements = document.getElementsByClassName("cardBox");
+  function clearMfrFilter() {
+    let newUrl = new URL(window.location.href);
+    $("#mfrFilterModalButton").text("Manufacturer")
+    newUrl.searchParams.delete('mfr');
+    window.location.assign(newUrl)
+  }
 
-        for (i = 0; i < elements.length; i++) {
-            text = elements[i].getElementsByClassName("card-text")[0];
-            if (text) {
-                txtValue = text.textContent || text.innerText;
-                txtValue = txtValue.toUpperCase();
-                if (filterArray.every(function (element) {
-                    return txtValue.indexOf(element) > -1
-                })) {
-                    elements[i].style.display = "";
-                } else {
-                    elements[i].style.display = "none";
-                }
-            }
-        }
-        // regenerate the layout
-        $('#deck-of-many-things').masonry('layout');
-    }
+  function selectMfrFilter(el) {
+    let mfrSlug = el.getAttribute('data-mfr-slug');
+    let newUrl = new URL(window.location.href);
+    // clear old value, add new value
+    newUrl.searchParams.delete('mfr');
+    newUrl.searchParams.append('mfr', mfrSlug);
+    window.location.assign(newUrl)
+  }
 
-    $(document).ready(function () {
-        function delay(fn, ms) {
-            // https://stackoverflow.com/a/1909508
-            let timer = 0
-            return function (...args) {
-                clearTimeout(timer)
-                timer = setTimeout(fn.bind(this, ...args), ms || 0)
-            }
-        }
-
-        $('#filterInput').keyup(delay(function (e) {
-            filterStuff();
-        }, 200));
+  $("#mfrFilterInput").on("keyup", function() {
+    let value = $(this).val().toLowerCase();
+    $("#mfrFilterListGroup .mfrFilterEntry").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
-    filterStuff();
+  });
 </script>

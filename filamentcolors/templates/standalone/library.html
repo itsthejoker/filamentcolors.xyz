@@ -16,11 +16,21 @@
         {% if swatches %}
             <div class="row" id="deck-of-many-things" data-masonry='{"percentPosition": true }'
                  data-long-press-delay="250">
-                {% for s in swatches %}
-                    <div class="col-md-6 col-lg-4 col-xl-4 col-xxl-3">
-                        {% include 'partials/card.partial' with obj=s %}
-                    </div>
-                {% endfor %}
+                {% include 'partials/multiple_swatch_cards.partial' %}
+            </div>
+            {% if swatches.has_next %}
+            <!-- kickstart pagination -->
+              <p class="pagination d-none">
+                <a class="pagination__next" href="/library/?p={{ swatches.next_page_number }}">Next page</a>
+              </p>
+              {% include 'partials/pagination_extras.partial' %}
+            {% endif %}
+        {% elif not swatches and show_search_bar %}
+            {% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
+            <div class="container text-center mt-5">
+                <h4>No results!</h4>
+                <p></p>
+                <h4>Try relaxing your search criteria.</h4>
             </div>
         {% else %}
             <div class="container text-center mt-5">

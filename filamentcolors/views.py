@@ -1,11 +1,12 @@
 import colorsys
+import json
 import random
 from typing import Any
 
 import numpy
 import pandas
-from django.core.exceptions import SuspiciousOperation
 from django.core.handlers.wsgi import WSGIRequest
+from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q
 from django.db.models.functions import Lower
 from django.http import Http404, HttpResponse
@@ -57,6 +58,43 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
     html = "standalone/library.html"
     data = build_data_dict(request, library=True)
     items = get_swatches(data)
+    filter_str = request.GET.get("f", None)
+    color_family_str = request.GET.get("cf", None)
+    mfr_str = request.GET.get("mfr", None)
+    f_type_str = request.GET.get("ft", None)
+    if not method:
+        method = request.GET.get("m", None)
+
+    if filter_str:
+        data.update({"search_prefill": filter_str})
+        items = items.filter(
+            Q(color_name__icontains=filter_str)
+            | Q(manufacturer__name__icontains=filter_str)
+            | Q(filament_type__name__icontains=filter_str)
+        )
+
+    if color_family_str:
+        try:
+            f_id = Swatch().get_color_id_from_slug_or_id(color_family_str)
+        except UnknownSlugOrID:
+            raise Http404
+
+        items = items.filter(Q(color_parent=f_id) | Q(alt_color_parent=f_id))
+
+    if mfr_str:
+        try:
+            mfr_id = Manufacturer().get_slug_from_id_or_slug(mfr_str)
+        except Manufacturer.DoesNotExist:
+            raise Http404
+
+        items = items.filter(manufacturer__slug=mfr_id)
+
+    if f_type_str:
+        try:
+            int(f_type_str)  # will explode if it's not an int
+            items = items.filter(filament_type__parent_type__id=f_type_str)
+        except ValueError:
+            items = items.filter(filament_type__parent_type__slug=f_type_str)
 
     if method == "type":
         items = items.order_by("filament_type")
@@ -79,7 +117,43 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
     else:
         items = items.order_by("-date_published")
 
-    data.update({"swatches": items, "show_filter_bar": True})
+    # Now that we've finished filtering, we can build the paginator
+    paginator = Paginator(items, 30)
+    data.update({"paginator": paginator})
+    requested_page = request.GET.get("p", None)
+    if not requested_page:
+        requested_page = 1
+    else:
+        try:
+            requested_page = int(requested_page)
+        except ValueError:
+            requested_page = 1
+
+    if requested_page < 1:
+        requested_page = 1
+
+    if requested_page > 1:
+        # don't render the rest of the page, just the cards
+        html = "partials/multiple_swatch_cards.partial"
+
+    try:
+        page = paginator.page(requested_page)
+    except EmptyPage:
+        page = Swatch.objects.none()
+
+    # htmx needs to pass the existing filters along with the search
+    # bar, so we have to provide it the filters to pass along
+    params_minus_filter = {
+        'm': method,
+        'cf': color_family_str,
+        'mfr': mfr_str,
+        'ft': f_type_str,
+    }
+    params_minus_filter = {k: v for k, v in params_minus_filter.items() if v is not None}
+    if params_minus_filter:
+        params_minus_filter = json.dumps(params_minus_filter)
+
+    data.update({"swatches": page, "show_filter_bar": True, "active_filters": params_minus_filter})
 
     return prep_request(request, html, data)
 

@@ -34,6 +34,7 @@
 <script src="{% static 'vendored/js/baguetteBox.min.js' %}"></script>
 <script src="{% static 'vendored/js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'vendored/js/masonry.min.js' %}"></script>
+<script src="{% static 'vendored/js/infinite-scroll.pkgd.min.js' %}"></script>
 <script src="{% static 'vendored/js/long_press.js' %}" async defer></script>
 <script src="{% static 'vendored/js/jscolor.min.js' %}" async></script>
 <script src="{% static 'vendored/js/color.global.min.js' %}"></script>
@@ -57,6 +58,15 @@
 <meta name="theme-color" content="#ffffff">
 
 <script>
+    function getTextCursorPosition(el) {
+        return el.prop("selectionStart");
+    }
+
+    function setTextCursorPosition(el, pos) {
+        el.prop("selectionStart", pos);
+        el.prop("selectionEnd", pos);
+    }
+
     htmx.onLoad(function (t) {
         tooltips();
         lazyloadimages();
@@ -64,7 +74,45 @@
         let deck = $('#deck-of-many-things');
         if (deck.length) {
             // reinit masonry if we need to
-            deck.masonry({"percentPosition": true})
+            const $deck = deck.masonry(
+              {
+                "percentPosition": true,
+                "itemSelector": ".swatchbox",
+                transitionDuration: 0
+              })
+            window.msnry = $deck.data('masonry')
+        }
+
+        // set the display information for the filter modals
+        currentUrl = new URL(window.location.href)
+        if (currentUrl.searchParams.has("mfr") ) {
+            const filterEntry = $(`#filter-${currentUrl.searchParams.get("mfr")}`)
+            filterEntry.addClass("active");
+            $("#filterMfrNone").removeClass("active");
+            $("#mfrFilterModalButton").text(filterEntry.text());
+        } else {
+            $("#filterMfrNone").addClass("active");
+            $(".mfrFilterEntry").each(function() {
+                $(this).removeClass("active");
+            })
+        }
+    })
+
+    htmx.on("htmx:beforeRequest", function (evt) {
+        // lock the filterInput during requests
+        const filterInput = $('#filterInput');
+        window.inputIsFocused = filterInput.is(":focus");
+        window.inputCursorPosition = getTextCursorPosition(filterInput);
+        filterInput.prop('disabled', true);
+    })
+
+    htmx.on("htmx:afterRequest", function(evt) {
+        // unlock the filterInput after loads
+        const filterInput = $("#filterInput");
+        filterInput.prop("disabled", false);
+        if (window.inputIsFocused) {
+            filterInput.focus();
+            setTextCursorPosition(filterInput, window.inputCursorPosition);
         }
     })
 
@@ -140,5 +188,24 @@
         jscolor.presets.default = {
             format: 'hex'
         };
+        const $deck = $('#deck-of-many-things')
+        $deck.infiniteScroll({
+            // options
+            path: function() {
+              let currentURL = new URL(window.location.href);
+              currentURL.searchParams.set('p', this.loadCount + 1);
+              return currentURL.toString();
+            },
+            append: '.swatchbox',
+            history: false,
+            outlayer: window.msnry,
+            status: '.page-load-status',
+            prefill: true,
+            percentPosition: true,
+        });
+        $deck.on( 'append.infiniteScroll', function( event, body, path, items, response ) {
+            lazyloadimages();
+        });
     })
+
 </script>

@@ -1,0 +1,5 @@
+{% for s in swatches %}
+    <div class="col-md-6 col-lg-4 col-xl-4 col-xxl-3 swatchbox">
+        {% include 'partials/card.partial' with obj=s %}
+    </div>
+{% endfor %}

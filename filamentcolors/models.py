@@ -57,6 +57,20 @@ class Manufacturer(models.Model):
             )
         super(Manufacturer, self).save(args, **kwargs)
 
+    def get_slug_from_id_or_slug(self, slug_or_id: str | int) -> str:
+        mfr_id = False
+        if isinstance(slug_or_id, int) or slug_or_id.isdigit():
+            mfr_id = True
+
+        if mfr_id:
+            return Manufacturer.objects.get(id=slug_or_id).slug
+
+        # we must have a slug left. May not be valid... but we'll try it later.
+        return slug_or_id
+
+    def get_display_name(self):
+        return self.parent_company_name if self.parent_company_name else self.name
+
     def __str__(self):
         return self.name
 

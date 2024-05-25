@@ -1,14 +1,27 @@
 <div class="my-3">
-{% for message in messages %}
-    <div class="alert
+  {% for message in messages %}
+    <div class="alert alert-dismissible fade show
     {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
         alert-danger text-white
     {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
         alert-warning
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        alert-success text-white
+    {% else %}
+        alert-info text-white
     {% endif %}
      " role="alert">
-        {{ message }}
-        <div id="similar-swatch-content"></div>
+      {{ message }}
+      <div id="similar-swatch-content"></div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        <span class="icon-times" aria-hidden=true
+          {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+              style="color:black;"
+          {% else %}
+              style="color:white;"
+          {% endif %}
+        ></span>
+      </button>
     </div>
-{% endfor %}
+  {% endfor %}
 </div>

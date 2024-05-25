@@ -443,7 +443,7 @@
                         <a class="nav-link d-flex cursor-pointer align-items-center"
                            data-bs-toggle="dropdown" data-bs-auto-close="inside" data-bs-target="#navigation"
                            aria-expanded="false" role="button">
-                            Admin
+                            Admin {% if deadlink_count %}(+{{ deadlink_count }}){% endif %}
                             <img src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/img/down-arrow-dark.svg' %}"
                                  alt="down-arrow" class="arrow ms-auto ms-md-2">
                         </a>

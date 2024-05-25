@@ -1,14 +1,15 @@
 import colorsys
 from typing import Any, Dict, List
 
+from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Count, F, Q, QuerySet
 from django.db.models.functions import Lower
-from django.http import HttpResponse, request
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from filamentcolors import status as status_codes
 from filamentcolors import NAVBAR_MESSAGE, NAVBAR_MESSAGE_ID
-from filamentcolors.models import GenericFilamentType, Manufacturer, Swatch
+from filamentcolors.models import GenericFilamentType, Manufacturer, Swatch, DeadLink
 
 have_visited_before_cookie = "f"
 filament_type_settings_cookie = "show-types"
@@ -17,12 +18,12 @@ mfr_blacklist_cookie = "mfr-blacklist"
 show_delta_e_values_cookie = "show-delta-e-values"
 
 
-def first_time_visitor(r: request) -> bool:
+def first_time_visitor(r: WSGIRequest) -> bool:
     return False if r.COOKIES.get(have_visited_before_cookie) else True
 
 
 def prep_request(
-    r: request, html: str, data: Dict = None, *args: Any, **kwargs: Any
+    r: WSGIRequest, html: str, data: Dict = None, *args: Any, **kwargs: Any
 ) -> HttpResponse:
     """
     Prepare the actual request for serving.
@@ -83,7 +84,7 @@ def set_tasty_cookies(response) -> HttpResponse:
     return response
 
 
-def build_data_dict(r: request, library: bool = False, title: str = None) -> Dict:
+def build_data_dict(r: WSGIRequest, library: bool = False, title: str = None) -> Dict:
     """
     This request requires rendering the base template, so perform all
     the queries needed to populate it.
@@ -148,6 +149,8 @@ def build_data_dict(r: request, library: bool = False, title: str = None) -> Dic
         # (and the corresponding ID) then it will display until they click the close
         # button again.
         del data["navbar_message"]
+    if r.user.is_staff:
+        data["deadlink_count"] = DeadLink.objects.count()
     return data
 
 
@@ -162,7 +165,7 @@ def clean_collection_ids(ids: str) -> List:
     return cleaned_ids
 
 
-def debug_check_for_cookies(r: request):
+def debug_check_for_cookies(r: WSGIRequest):
     type_settings = r.COOKIES.get(filament_type_settings_cookie)
     show_dc = r.COOKIES.get(show_unavailable_cookie)
     mfr_blacklist = r.COOKIES.get(mfr_blacklist_cookie)
@@ -182,7 +185,7 @@ def debug_check_for_cookies(r: request):
     return message
 
 
-def get_settings_cookies(r: request) -> Dict:
+def get_settings_cookies(r: WSGIRequest) -> Dict:
     # both of these cookies are set by the javascript in the frontend.
     navbar_alert_key = "hideNavbarAlert-"
     type_settings = r.COOKIES.get(filament_type_settings_cookie)

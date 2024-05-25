@@ -83,7 +83,7 @@ def set_tasty_cookies(response) -> HttpResponse:
     return response
 
 
-def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
+def build_data_dict(r: request, library: bool = False, title: str = None) -> Dict:
     """
     This request requires rendering the base template, so perform all
     the queries needed to populate it.
@@ -108,12 +108,12 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
       browser_console_message2    |   ...
       browser_console_message3    |   ...
 
-    :param request: Request
+    :param r: Request
     :param library: bool
     :param title: str
     :return: dict
     """
-    settings = get_settings_cookies(request)
+    settings = get_settings_cookies(r)
     data = {
         "manufacturers": (
             Manufacturer.objects.exclude(
@@ -133,7 +133,7 @@ def build_data_dict(request, library: bool = False, title: str = None) -> Dict:
         "filament_types": GenericFilamentType.objects.order_by(Lower("name")),
         "color_family": Swatch.BASE_COLOR_OPTIONS,
         "settings_buttons": GenericFilamentType.objects.all(),
-        "search_prefill": request.GET.get("q", ""),
+        "search_prefill": r.GET.get("q", ""),
         "user_settings": settings,
         "show_search_bar": library,
         "title": title or "FilamentColors",

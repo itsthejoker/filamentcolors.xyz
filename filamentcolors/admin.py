@@ -9,7 +9,7 @@ from filamentcolors.models import (
     PurchaseLocation,
     Retailer,
     Swatch,
-    UserSubmittedTD
+    UserSubmittedTD,
 )
 
 

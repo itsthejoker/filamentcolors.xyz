@@ -1,17 +1,71 @@
 {% if swatch.mfr_purchase_link %}
+  <div class="btn-group" role="group" aria-label="Manufacturer purchase button with nested dropdown">
     <a class="btn btn-success" href="{{ swatch.mfr_purchase_link }}"
        target="_blank"
        role="button"
        rel="noopener">Buy from {{ swatch.manufacturer.parent_company_name|default:swatch.manufacturer.name }}
-        {% if swatch.manufacturer.affiliate_portal or swatch.manufacturer.affiliate_url_param %}
-            <br><span style="font-size: smaller">(affiliate link)</span>
-        {% endif %}
+      {% if swatch.manufacturer.affiliate_portal or swatch.manufacturer.affiliate_url_param %}
+        <br><span style="font-size: smaller">(affiliate link)</span>
+      {% endif %}
     </a>
-    {% for loc in swatch.purchaselocation_set.all %}
-        <a class="btn btn-secondary" href="{{ loc.url }}"
-           target="_blank"
-           role="button"
-           rel="noopener"
-        >Buy from {{ loc.retailer.name }}</a>
-    {% endfor %}
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        Options
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#badMfrLinkModal">Report dead link
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  {% for loc in swatch.purchaselocation_set.all %}
+    <a class="btn btn-secondary" href="{{ loc.url }}"
+       target="_blank"
+       role="button"
+       rel="noopener"
+    >Buy from {{ loc.retailer.name }}</a>
+  {% endfor %}
+
+  <div class="modal fade" id="badMfrLinkModal" tabindex="-1" aria-labelledby="badMfrLinkModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="badMfrLinkModalLabel">Found a bad link?</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Is this link bad? Submit this form and I'll get it fixed!
+            The link you're reporting is:
+          </p>
+          <p>
+            <a href="{{ swatch.mfr_purchase_link }}" target="_blank"
+               rel="noopener">{{ swatch.mfr_purchase_link }}</a>
+          </p>
+          <p>
+            If you know the new link, please provide it below before clicking submit.
+            Otherwise, just click submit and we will look for a new link ASAP!
+          </p>
+          <form action="/reportbadlink/{{ swatch.id }}/mfr/" id="mfrBadLinkForm" method="POST" hx-boost="false">
+            <div class="input-group input-group-lg input-group-outline my-3">
+              <label class="form-label" for="newAmazonLink">New Manufacturer Link</label>
+              <input name="newLink" type="text" id="newAmazonLink" class="form-control form-control-lg">
+              <input name="currentLink" type="hidden" value="{{ swatch.mfr_purchase_link }}">
+            </div>
+          </form>
+          <p>
+            Thanks for your help!
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" form="mfrBadLinkForm" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endif %}

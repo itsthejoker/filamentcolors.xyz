@@ -88,6 +88,11 @@ urlpatterns = [
         views.get_welcome_experience_video,
         name="welcome_experience_video",
     ),
+    path(
+        "reportbadlink/<int:swatch_id>/<str:link_type>/",
+        views.report_bad_link,
+        name="report_bad_link",
+    ),
     path("visualizer/", views.swatch_field_visualizer, name="visualizer"),
     path("", include("plausible_proxy.urls")),
     # Admin urls

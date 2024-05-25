@@ -4,8 +4,8 @@ from typing import Any
 
 import numpy
 import pandas
-from django.core.exceptions import SuspiciousOperation
 from django.core.handlers.wsgi import WSGIRequest
+from django.contrib import messages
 from django.db.models import Q
 from django.db.models.functions import Lower
 from django.http import Http404, HttpResponse
@@ -31,7 +31,13 @@ from filamentcolors.helpers import (
     get_swatches,
     prep_request,
 )
-from filamentcolors.models import GenericFilamentType, GenericFile, Manufacturer, Swatch
+from filamentcolors.models import (
+    GenericFilamentType,
+    GenericFile,
+    Manufacturer,
+    Swatch,
+    DeadLink,
+)
 
 
 def homepage(request: WSGIRequest) -> HttpResponseRedirect:
@@ -308,6 +314,30 @@ def inventory_page(request: WSGIRequest) -> HttpResponse:
     }
     data |= {"published_count": data["swatches"].filter(published=True).count()}
     return prep_request(request, "standalone/inventory.html", data)
+
+
+@csrf_exempt
+def report_bad_link(
+    request: WSGIRequest, swatch_id: int, link_type: str
+) -> HttpResponse:
+    try:
+        swatch = Swatch.objects.get(id=swatch_id, published=True)
+    except Swatch.DoesNotExist:
+        raise Http404()
+
+    DeadLink.objects.create(
+        swatch=swatch,
+        link_type=link_type,
+        current_url=request.POST.get("currentLink"),
+        suggested_url=request.POST.get("newLink"),
+    )
+
+    messages.success(
+        request,
+        "Thanks! We've received your report.",
+    )
+
+    return HttpResponseRedirect(reverse("swatchdetail", args=[swatch_id]))
 
 
 @csrf_exempt

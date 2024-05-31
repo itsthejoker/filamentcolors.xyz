@@ -325,10 +325,21 @@ def report_bad_link(
     except Swatch.DoesNotExist:
         raise Http404()
 
+    current_link = request.POST.get("currentLink")
+
+    if not current_link:
+        messages.error(
+            request,
+            "Something went wrong with your request."
+            " Please send me an email at joe@filamentcolors.xyz"
+            " with the link you tried to report. Thanks!",
+        )
+        return HttpResponseRedirect(reverse("swatchdetail", args=[swatch_id]))
+
     DeadLink.objects.create(
         swatch=swatch,
         link_type=link_type,
-        current_url=request.POST.get("currentLink"),
+        current_url=current_link,
         suggested_url=request.POST.get("newLink"),
     )
 

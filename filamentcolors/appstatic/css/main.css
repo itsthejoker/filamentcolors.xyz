@@ -443,3 +443,16 @@ hr {
 .inventory-row:hover {
     background-color: rgba(0, 0, 0, 0.1)
 }
+
+.grid--masonry {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 300px);
+    justify-content: center;
+    grid-gap: 0.5em;
+    padding: 0.5em;
+    /* will only work in experimental builds of firefox with the
+     flag turned on but it's worth a shot */
+    grid-template-rows: masonry;
+
+  > * { width: 0.5em }
+}

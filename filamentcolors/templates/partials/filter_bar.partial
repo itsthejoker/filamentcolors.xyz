@@ -1,59 +1,91 @@
 <div class="container mt-4">
-    <div class="row justify-space-between py-2">
-        <div class="col-lg-4 mx-auto">
-            <div class="input-group input-group-dynamic mb-4">
-                <span class="input-group-text"><span class="icon-search"></span></span>
-                <input
-                        class="form-control"
-                        id="filterInput"
-                        placeholder="Filter Library..."
-                        type="text"
-                        aria-label="Search"
-                        value="{{ search_prefill }}"
-                >
-            </div>
-        </div>
+  <div class="row justify-space-between py-2">
+    <div class="col-lg-4 mx-auto">
+      <div class="input-group input-group-dynamic mb-4">
+        <span class="input-group-text"><span class="icon-search"></span></span>
+        <input
+          class="form-control"
+          id="filterInput"
+          placeholder="Filter Library..."
+          type="text"
+          aria-label="Search"
+          value="{{ search_prefill }}"
+        >
+      </div>
     </div>
+  </div>
 </div>
 <script>
-    function filterStuff() {
-        var input, filter, elements, text, i, txtValue, filterArray;
-        input = document.getElementById("filterInput");
-        filter = input.value.toUpperCase();
-        filterArray = filter.split(" ");
-        elements = document.getElementsByClassName("cardBox");
+  let elements, input, spinner;
+  elements = document.getElementsByClassName("cardBox");
+  input = document.getElementById("filterInput");
+  spinner = document.getElementById("loading2");
 
-        for (i = 0; i < elements.length; i++) {
-            text = elements[i].getElementsByClassName("card-text")[0];
-            if (text) {
-                txtValue = text.textContent || text.innerText;
-                txtValue = txtValue.toUpperCase();
-                if (filterArray.every(function (element) {
-                    return txtValue.indexOf(element) > -1
-                })) {
-                    elements[i].style.display = "";
-                } else {
-                    elements[i].style.display = "none";
-                }
-            }
-        }
-        // regenerate the layout
-        $('#deck-of-many-things').masonry('layout');
+  function filterStuff() {
+    spinner.classList.remove("d-none");
+
+    let filter, filterArray, filterRegExes, text, i, txtValue;
+    filter = input.value.toUpperCase();
+    filterArray = filter.split(" ");
+
+    // If the filter array contains "gray", replace it with ["grey", "gray"]
+    if (filterArray.includes("GRAY") || filterArray.includes("GREY")) {
+      filterArray = filterArray.map(function(element) {
+        return (element === "GRAY" || element === "GREY") ? ["grey", "gray"] : element;
+      });
     }
 
-    $(document).ready(function () {
-        function delay(fn, ms) {
-            // https://stackoverflow.com/a/1909508
-            let timer = 0
-            return function (...args) {
-                clearTimeout(timer)
-                timer = setTimeout(fn.bind(this, ...args), ms || 0)
-            }
-        }
-
-        $('#filterInput').keyup(delay(function (e) {
-            filterStuff();
-        }, 200));
+    // Create and cache the regexes outside the loops
+    filterRegExes = filterArray.map(function(element) {
+      if (Array.isArray(element)) {
+        return [new RegExp(element[0], "i"), new RegExp(element[1], "i")];
+      } else {
+        return new RegExp(element, "i");
+      }
     });
-    filterStuff();
+
+    for (i = 0; i < elements.length; i++) {
+      text = elements[i].getElementsByClassName("card-text")[0];
+      if (text) {
+        txtValue = text.textContent;
+
+        // Test the txtValue against the cached regexes
+        if (filterRegExes.every(function(element) {
+          if (Array.isArray(element)) {
+            return element[0].test(txtValue) || element[1].test(txtValue);
+          } else {
+            return element.test(txtValue);
+          }
+        })) {
+          elements[i].classList.remove("d-none");
+        } else {
+          elements[i].classList.add("d-none");
+        }
+      }
+    }
+
+    // regenerate the layout on desktop
+    if (!window.isMobile) {
+      // hrm
+      {#$("#deck-of-many-things").isotope("layout");#}
+    }
+
+    spinner.classList.add("d-none");
+  }
+
+  function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+      const context = this;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+  }
+
+  const debouncedFilterStuff = debounce(filterStuff, window.isMobile ? 350 : 200);
+
+  $(document).ready(function() {
+    input.addEventListener("input", debouncedFilterStuff);
+  });
+  filterStuff();
 </script>

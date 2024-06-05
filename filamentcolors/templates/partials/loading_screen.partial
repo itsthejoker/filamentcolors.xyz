@@ -5,3 +5,8 @@
         <img src="{% static 'swatch-loading-animation.gif' %}" style="height: auto; width: 100%; max-width: 400px" alt="A spinning swatch loading animation.">
     </div>
 </div>
+<div id="loading2" class="overlay d-none">
+    <div class="overlay-content">
+        <img src="{% static 'swatch-loading-animation.gif' %}" style="height: auto; width: 100%; max-width: 400px" alt="A spinning swatch loading animation.">
+    </div>
+</div>

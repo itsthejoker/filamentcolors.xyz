@@ -2,8 +2,8 @@
 
 <div
         id="s{{ obj.id }}"
-        class="card mb-4 shadow swatchcard cardBox anim mx-auto"
-        style="width: 18rem;"
+        class="card mb-4 shadow swatchcard cardBox anim"
+        style="width: 18rem"
         data-swatch-id="{{ obj.id }}"
 >
     <div class="card-img-overlay p-0"></div>

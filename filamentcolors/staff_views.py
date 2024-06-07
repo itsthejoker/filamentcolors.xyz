@@ -380,7 +380,9 @@ def recalculate_color(request, swatch_id: int):
     swatch = get_object_or_404(Swatch, id=swatch_id)
     swatch.rebuild_long_way = True
     swatch.save()
-    return HttpResponseRedirect(reverse("swatchdetail", kwargs={"swatch_id": swatch.id}))
+    return HttpResponseRedirect(
+        reverse("swatchdetail", kwargs={"swatch_id": swatch.id})
+    )
 
 
 @staff_member_required

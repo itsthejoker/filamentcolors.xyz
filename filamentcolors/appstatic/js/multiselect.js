@@ -1,9 +1,16 @@
+overlays = $(".card-img-overlay");
+
 function multiselect_main() {
-    window.multiselectArray = [];
-    // reset cards from an htmx load if necessary
-    $(".swatchcard.selected-card").each(function () {
-        $(this).removeClass("selected-card")
-    })
+    if (window.collectionModeEnabled) {
+        enableCollectionMode();
+    } else {
+        window.multiselectArray = [];
+        // reset cards from a htmx load if necessary
+        $(".swatchcard.selected-card").each(function () {
+            $(this).removeClass("selected-card")
+        })
+    }
+
     // this is a global variable that is set by the template
     if (preselected !== "") {
         preselect_items(preselected)
@@ -52,23 +59,26 @@ function hideCollectionCounter() {
 
 
 function enableCollectionMode() {
+    window.collectionModeEnabled = true;
     enable_overlays();
     showCollectionCounter();
-    swatches = $(".swatchcard")
+    let swatches = $(".swatchcard")
     swatches.each(function () {
         $(this).closest(".card-img-overlay").css("display", "block")
     })
 }
 
 
-function getID(obj) {
+function getID($obj) {
     // expects a jquery obj
-    return obj.data()['swatchId']
+    return $obj.data()['swatchId']
 }
 
 
 function updateCounter() {
-    document.getElementById("multiselect-badge").innerText = window.multiselectArray.length;
+    document.getElementById(
+      "multiselect-badge"
+    ).innerText = window.multiselectArray.length.toString();
 }
 
 function getCounter() {
@@ -92,27 +102,27 @@ function select_item(obj) {
 }
 
 
-function deselect_item(obj) {
-    // this expects a jquery obj of a single swatch
-    let id = getID(obj)
+function deselect_item($obj) {
+    let id = getID($obj)
+
     window.multiselectArray = window.multiselectArray.filter(item => item !== id)
 
-    obj.removeClass("selected-card")
-    obj.addClass("shadow");
-    obj.css("transform", "");
-    obj.removeClass('big-shadow');
+    $obj.removeClass("selected-card")
+    $obj.addClass("shadow");
+    $obj.css("transform", "");
+    $obj.removeClass('big-shadow');
 }
 
 
 function enable_overlays() {
-    $(".card-img-overlay").each(function () {
+    overlays.each(function () {
         $(this).css("display", "block").css("height", "100%").css("width", "100%")
     })
 }
 
 
 function disableOverlays() {
-    $(".card-img-overlay").each(function () {
+    overlays.each(function () {
         $(this).css("display", "")
     })
 }
@@ -120,15 +130,17 @@ function disableOverlays() {
 
 function preselect_items(ids) {
     ids.forEach(item => {
-        obj = $(`#s${item}`);
-        select_item(obj)
+        let obj = $(`#s${item}`);
+        if (obj.exists()) {
+            select_item(obj)
+        }
     });
     updateCounter();
     showCollectionCounter();
     enable_overlays();
 }
 
-$(".card-img-overlay").each(function () {
+overlays.each(function () {
     $(this).on("click", function (evt) {
         let card = $(this).closest(".swatchcard");
         is_selected(card) ? deselect_item(card) : select_item(card)
@@ -141,12 +153,20 @@ $(".card-img-overlay").each(function () {
 })
 
 $('#go-button').on('click', function (evt) {
+    window.collectionModeEnabled = false;
     url = window.location.origin + "/library/collection/" + window.multiselectArray.join();
     window.location.assign(url);
 });
 
 $('#clear-button').on('click', function (evt) {
-    window.multiselectArray.forEach(id => deselect_item($(`#s${id}`)));
+    window.multiselectArray.forEach(id => {
+        let $item = $(`#s${id}`);
+        if ($item.exists()) {
+            // might be hidden / not on the page
+            deselect_item($item);
+        }
+    });
+    window.collectionModeEnabled = false;
     updateCounter();
     disableOverlays();
     hideCollectionCounter();

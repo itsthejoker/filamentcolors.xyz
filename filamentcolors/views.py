@@ -6,8 +6,7 @@ from typing import Any
 import numpy
 import pandas
 from django.core.handlers.wsgi import WSGIRequest
-from django.core.paginator import Paginator, EmptyPage
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from django.db.models.functions import Lower
 from django.http import Http404, HttpResponse
 from django.shortcuts import HttpResponseRedirect, reverse
@@ -31,6 +30,8 @@ from filamentcolors.helpers import (
     get_hsv,
     get_swatches,
     prep_request,
+    is_infinite_scroll,
+    get_swatch_paginator,
 )
 from filamentcolors.models import GenericFilamentType, GenericFile, Manufacturer, Swatch
 
@@ -39,7 +40,20 @@ def homepage(request: WSGIRequest) -> HttpResponseRedirect:
     return HttpResponseRedirect(reverse("library"))
 
 
-def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
+#   _________                __         .__
+#  /   _____/_  _  _______ _/  |_  ____ |  |__   ____   ______
+#  \_____  \\ \/ \/ /\__  \\   __\/ ___\|  |  \_/ __ \ /  ___/
+#  /        \\     /  / __ \|  | \  \___|   Y  \  ___/ \___ \
+# /_______  / \/\_/  (____  /__|  \___  >___|  /\___  >____  >
+#         \/              \/          \/     \/     \/     \/
+
+
+def librarysort(
+    request: WSGIRequest,
+    method: str = None,
+    library: QuerySet[Swatch] = None,
+    prebuilt_data: dict = None,
+) -> HttpResponse:
     """
     Available options:
 
@@ -53,25 +67,36 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
 
     :param request: the django request.
     :param method: the string which determines how to sort the results.
+    :param library: the queryset of swatches to sort. Optional.
+    :param prebuilt_data: the data dict to use. Optional.
     :return:
     """
     html = "standalone/library.html"
-    data = build_data_dict(request, library=True)
-    items = get_swatches(data)
+    data = prebuilt_data if prebuilt_data else build_data_dict(request, library=True)
+    if isinstance(library, QuerySet):
+        items = library
+    else:
+        items = get_swatches(data)
     filter_str = request.GET.get("f", None)
     color_family_str = request.GET.get("cf", None)
     mfr_str = request.GET.get("mfr", None)
     f_type_str = request.GET.get("ft", None)
+
+    if filter_str == "null":
+        filter_str = None
+
     if not method:
         method = request.GET.get("m", None)
 
     if filter_str:
+        split_filter_str = filter_str.strip().lower().split()
         data.update({"search_prefill": filter_str})
-        items = items.filter(
-            Q(color_name__icontains=filter_str)
-            | Q(manufacturer__name__icontains=filter_str)
-            | Q(filament_type__name__icontains=filter_str)
-        )
+        for section in split_filter_str:
+            items = items.filter(
+                Q(color_name__icontains=section)
+                | Q(manufacturer__name__icontains=section)
+                | Q(filament_type__name__icontains=section)
+            )
 
     if color_family_str:
         try:
@@ -117,50 +142,50 @@ def librarysort(request: WSGIRequest, method: str = None) -> HttpResponse:
     else:
         items = items.order_by("-date_published")
 
-    # Now that we've finished filtering, we can build the paginator
-    paginator = Paginator(items, 30)
-    data.update({"paginator": paginator})
-    requested_page = request.GET.get("p", None)
-    if not requested_page:
-        requested_page = 1
-    else:
-        try:
-            requested_page = int(requested_page)
-        except ValueError:
-            requested_page = 1
+    # this loads the data obj with everything needed to render
+    # the swatches
+    data |= get_swatch_paginator(request, items)
 
-    if requested_page < 1:
-        requested_page = 1
+    is_infinite = is_infinite_scroll(request)
 
-    if requested_page > 1:
+    if is_infinite:
         # don't render the rest of the page, just the cards
         html = "partials/multiple_swatch_cards.partial"
-
-    try:
-        page = paginator.page(requested_page)
-    except EmptyPage:
-        page = Swatch.objects.none()
 
     # htmx needs to pass the existing filters along with the search
     # bar, so we have to provide it the filters to pass along
     params_minus_filter = {
-        'm': method,
-        'cf': color_family_str,
-        'mfr': mfr_str,
-        'ft': f_type_str,
+        "m": method,
+        "cf": color_family_str,
+        "mfr": mfr_str,
+        "ft": f_type_str,
     }
-    params_minus_filter = {k: v for k, v in params_minus_filter.items() if v is not None}
+    params_minus_filter = {
+        k: v for k, v in params_minus_filter.items() if v is not None
+    }
+
+    if data["swatches"].has_next():
+        params_plus_next_page = {
+            **params_minus_filter,
+            "p": data["requested_page"] + 1,
+            "f": filter_str,
+        }
+        data.update({"infinite_scroll_params": json.dumps(params_plus_next_page)})
+
     if params_minus_filter:
         params_minus_filter = json.dumps(params_minus_filter)
 
-    data.update({"swatches": page, "show_filter_bar": True, "active_filters": params_minus_filter})
+    data.update(
+        {
+            "show_filter_bar": True,
+            "active_filters": params_minus_filter,
+        }
+    )
 
     return prep_request(request, html, data)
 
 
 def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
-    html = "standalone/library.html"
-
     try:
         f_id = Swatch().get_color_id_from_slug_or_id(family_id)
     except UnknownSlugOrID:
@@ -173,13 +198,10 @@ def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
 
     s = s.filter(Q(color_parent=f_id) | Q(alt_color_parent=f_id))
 
-    data.update({"swatches": s})
-
-    return prep_request(request, html, data)
+    return librarysort(request, library=s, prebuilt_data=data)
 
 
 def manufacturersort(request: WSGIRequest, mfr_id: str) -> HttpResponse:
-    html = "standalone/library.html"
     try:
         # it can either be the ID of the swatch itself or the slug
         mfr_id = int(mfr_id)
@@ -197,14 +219,10 @@ def manufacturersort(request: WSGIRequest, mfr_id: str) -> HttpResponse:
 
     s = s.filter(manufacturer=mfr)
 
-    data.update({"swatches": s})
-
-    return prep_request(request, html, data)
+    return librarysort(request, library=s, prebuilt_data=data)
 
 
 def typesort(request: WSGIRequest, f_type_id: int) -> HttpResponse:
-    html = "standalone/library.html"
-
     try:
         # it can either be the ID or the slug
         f_type_id = int(f_type_id)
@@ -223,9 +241,44 @@ def typesort(request: WSGIRequest, f_type_id: int) -> HttpResponse:
 
     s = s.filter(filament_type__parent_type=f_type)
 
-    data.update({"swatches": s})
+    return librarysort(request, library=s, prebuilt_data=data)
 
-    return prep_request(request, html, data)
+
+def swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
+    cleaned_ids = clean_collection_ids(ids)
+
+    collection = Swatch.objects.filter(id__in=cleaned_ids, published=True)
+
+    data = build_data_dict(
+        request,
+        library=True,
+        collection_ids=",".join([str(i) for i in cleaned_ids]),
+        show_collection_edit_button=True,
+        title="View Collection",
+    )
+
+    return librarysort(request, library=collection, prebuilt_data=data)
+
+
+def edit_swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
+    cleaned_ids = clean_collection_ids(ids)
+    data = build_data_dict(
+        request,
+        library=True,
+        preselect_collection=cleaned_ids,
+        title="Edit Collection",
+    )
+    library = get_swatches(data).order_by("-date_published")
+
+    return librarysort(request, library=library, prebuilt_data=data)
+
+
+#   _________ __                     .___      .__
+#  /   _____//  |______    ____    __| _/____  |  |   ____   ____   ____
+#  \_____  \\   __\__  \  /    \  / __ |\__  \ |  |  /  _ \ /    \_/ __ \
+#  /        \|  |  / __ \|   |  \/ /_/ | / __ \|  |_(  <_> )   |  \  ___/
+# /_______  /|__| (____  /___|  /\____ |(____  /____/\____/|___|  /\___  >
+#         \/           \/     \/      \/     \/                 \/     \/
 
 
 def swatch_detail(request: WSGIRequest, swatch_id: str) -> HttpResponse:
@@ -241,69 +294,73 @@ def swatch_detail(request: WSGIRequest, swatch_id: str) -> HttpResponse:
     if not Swatch.objects.filter(**args).exists():
         raise Http404
 
-    swatch = Swatch.objects.filter(**args).select_related(
-        "complement",
-        "complement__manufacturer",
-        "complement__filament_type",
-        "analogous_1",
-        "analogous_1__manufacturer",
-        "analogous_1__filament_type",
-        "analogous_2",
-        "analogous_2__filament_type",
-        "analogous_2__manufacturer",
-        "triadic_1",
-        "triadic_1__filament_type",
-        "triadic_1__manufacturer",
-        "triadic_2",
-        "triadic_2__filament_type",
-        "triadic_2__manufacturer",
-        "split_complement_1",
-        "split_complement_1__filament_type",
-        "split_complement_1__manufacturer",
-        "split_complement_2",
-        "split_complement_2__filament_type",
-        "split_complement_2__manufacturer",
-        "tetradic_1",
-        "tetradic_1__filament_type",
-        "tetradic_1__manufacturer",
-        "tetradic_2",
-        "tetradic_2__filament_type",
-        "tetradic_2__manufacturer",
-        "tetradic_3",
-        "tetradic_3__filament_type",
-        "tetradic_3__manufacturer",
-        "square_1",
-        "square_1__filament_type",
-        "square_1__manufacturer",
-        "square_2",
-        "square_2__filament_type",
-        "square_2__manufacturer",
-        "square_3",
-        "square_3__filament_type",
-        "square_3__manufacturer",
-        "closest_1",
-        "closest_1__filament_type",
-        "closest_1__manufacturer",
-        "closest_2",
-        "closest_2__filament_type",
-        "closest_2__manufacturer",
-        "closest_pantone_1",
-        "closest_pantone_2",
-        "closest_pantone_3",
-        "closest_pms_1",
-        "closest_pms_2",
-        "closest_pms_3",
-        "closest_ral_1",
-        "closest_ral_2",
-        "closest_ral_3",
-        "closest_pms_1",
-        "closest_pms_2",
-        "closest_pms_3",
-        "manufacturer",
-        "filament_type",
-    ).prefetch_related(
-        "usersubmittedtd_set",
-        "purchaselocation_set",
+    swatch = (
+        Swatch.objects.filter(**args)
+        .select_related(
+            "complement",
+            "complement__manufacturer",
+            "complement__filament_type",
+            "analogous_1",
+            "analogous_1__manufacturer",
+            "analogous_1__filament_type",
+            "analogous_2",
+            "analogous_2__filament_type",
+            "analogous_2__manufacturer",
+            "triadic_1",
+            "triadic_1__filament_type",
+            "triadic_1__manufacturer",
+            "triadic_2",
+            "triadic_2__filament_type",
+            "triadic_2__manufacturer",
+            "split_complement_1",
+            "split_complement_1__filament_type",
+            "split_complement_1__manufacturer",
+            "split_complement_2",
+            "split_complement_2__filament_type",
+            "split_complement_2__manufacturer",
+            "tetradic_1",
+            "tetradic_1__filament_type",
+            "tetradic_1__manufacturer",
+            "tetradic_2",
+            "tetradic_2__filament_type",
+            "tetradic_2__manufacturer",
+            "tetradic_3",
+            "tetradic_3__filament_type",
+            "tetradic_3__manufacturer",
+            "square_1",
+            "square_1__filament_type",
+            "square_1__manufacturer",
+            "square_2",
+            "square_2__filament_type",
+            "square_2__manufacturer",
+            "square_3",
+            "square_3__filament_type",
+            "square_3__manufacturer",
+            "closest_1",
+            "closest_1__filament_type",
+            "closest_1__manufacturer",
+            "closest_2",
+            "closest_2__filament_type",
+            "closest_2__manufacturer",
+            "closest_pantone_1",
+            "closest_pantone_2",
+            "closest_pantone_3",
+            "closest_pms_1",
+            "closest_pms_2",
+            "closest_pms_3",
+            "closest_ral_1",
+            "closest_ral_2",
+            "closest_ral_3",
+            "closest_pms_1",
+            "closest_pms_2",
+            "closest_pms_3",
+            "manufacturer",
+            "filament_type",
+        )
+        .prefetch_related(
+            "usersubmittedtd_set",
+            "purchaselocation_set",
+        )
     )
 
     swatch = swatch.first()
@@ -326,46 +383,6 @@ def swatch_detail(request: WSGIRequest, swatch_id: str) -> HttpResponse:
         )
 
         return prep_request(request, html, data)
-
-
-def swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
-    data = build_data_dict(request, library=True)
-
-    cleaned_ids = clean_collection_ids(ids)
-
-    swatch_collection = list()
-
-    for item in cleaned_ids:
-        result = Swatch.objects.filter(id=item).first()
-        if result:
-            swatch_collection.append(result)
-
-    data.update(
-        {
-            "swatches": swatch_collection,
-            "collection_ids": ",".join([str(i) for i in cleaned_ids]),
-            "show_collection_edit_button": True,
-            "title": "View Collection",
-        }
-    )
-
-    return prep_request(request, "standalone/library.html", data)
-
-
-def edit_swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
-    html = "standalone/library.html"
-    data = build_data_dict(request, library=True)
-    cleaned_ids = clean_collection_ids(ids)
-
-    data.update({"preselect_collection": cleaned_ids})
-    data.update(
-        {
-            "swatches": get_swatches(data).order_by("-date_published"),
-            "title": "Edit Collection",
-        }
-    )
-
-    return prep_request(request, html, data)
 
 
 def inventory_page(request: WSGIRequest) -> HttpResponse:
@@ -412,19 +429,6 @@ def colormatch(request: WSGIRequest) -> HttpResponse:
         return prep_request(request, "partials/colormatch_results.partial", data)
 
     return prep_request(request, "standalone/colormatch.html", data)
-
-
-def single_swatch_card(request: WSGIRequest, swatch_id: int) -> HttpResponse:
-    """For the color match page, this is used to populate the 'saved' functionality."""
-    data = build_data_dict(request)
-    data.update(
-        {
-            "swatch": Swatch.objects.select_related("manufacturer")
-            .prefetch_related("filament_type")
-            .get(id=swatch_id),
-        }
-    )
-    return prep_request(request, "partials/single_swatch_column.partial", data)
 
 
 def swatch_field_visualizer(request: WSGIRequest) -> HttpResponse:
@@ -545,6 +549,27 @@ def error_500(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         build_data_dict(request, title="Something went wrong!"),
         status=500,
     )
+
+
+# __________                __  .__       .__
+# \______   \_____ ________/  |_|__|____  |  |   ______
+#  |     ___/\__  \\_  __ \   __\  \__  \ |  |  /  ___/
+#  |    |     / __ \|  | \/|  | |  |/ __ \|  |__\___ \
+#  |____|    (____  /__|   |__| |__(____  /____/____  >
+#                 \/                    \/          \/
+
+
+def single_swatch_card(request: WSGIRequest, swatch_id: int) -> HttpResponse:
+    """For the color match page, this is used to populate the 'saved' functionality."""
+    data = build_data_dict(request)
+    data.update(
+        {
+            "swatch": Swatch.objects.select_related("manufacturer")
+            .prefetch_related("filament_type")
+            .get(id=swatch_id),
+        }
+    )
+    return prep_request(request, "partials/single_swatch_column.partial", data)
 
 
 def get_welcome_experience_image(request: WSGIRequest, image_id: int) -> HttpResponse:

@@ -58,7 +58,8 @@ def prep_request(
             data |= {
                 "base_template": "base.html",
             }
-
+    if status := data.get("status_code"):
+        kwargs.update({"status": status})
     response = render(r, html, context=data, *args, **kwargs)
     response = set_tasty_cookies(response)
 
@@ -119,7 +120,7 @@ def build_data_dict(
     :param title: str
     :return: dict
     """
-    settings = get_settings_cookies(request)
+    user_settings = get_settings_cookies(request)
     data = {
         "manufacturers": (
             Manufacturer.objects.exclude(
@@ -134,13 +135,14 @@ def build_data_dict(
             )
             .exclude(id__in=Manufacturer.objects.filter(swatch__isnull=True))
             .order_by(Lower("name"))
-            .annotate(swatch_count=Count("swatch", filter=Q(swatch__published=True)))
+            .annotate(available_swatch_count=Count("swatch", filter=Q(swatch__published=True) & Q(Q(swatch__amazon_purchase_link__isnull=False) | Q(swatch__mfr_purchase_link__isnull=False))))
+            .annotate(unavailable_swatch_count=Count("swatch", filter=Q(swatch__published=True) & Q(swatch__amazon_purchase_link__isnull=True) & Q(swatch__mfr_purchase_link__isnull=True)))
         ),
         "filament_types": GenericFilamentType.objects.order_by(Lower("name")),
         "color_family": Swatch.BASE_COLOR_OPTIONS,
         "settings_buttons": GenericFilamentType.objects.all(),
         "search_prefill": request.GET.get("q", ""),
-        "user_settings": settings,
+        "user_settings": user_settings,
         "show_search_bar": library,
         "title": title or "FilamentColors",
         "navbar_message": NAVBAR_MESSAGE,
@@ -149,11 +151,12 @@ def build_data_dict(
         "browser_console_message2": "",
         "browser_console_message3": "",
     }
-    if data.get("navbar_message_id") in settings.get("hide_alert_ids"):
+    if data.get("navbar_message_id") in user_settings.get("hide_alert_ids"):
         # they've manually dismissed it, so remove the message. If we change the message
         # (and the corresponding ID) then it will display until they click the close
         # button again.
         del data["navbar_message"]
+    data.update(**kwargs)
     return data
 
 
@@ -285,3 +288,49 @@ class ErrorStatusResponse(HttpResponse):
         super().__init__()
         self.status_code = status
         self._reason_phrase = status_codes.reasons.get(status, "Unknown Status Code")
+
+
+def is_infinite_scroll(request: WSGIRequest) -> bool:
+    return request.headers.get("X-Infinite-Scroll", None)
+
+
+def get_swatch_paginator(
+    request: WSGIRequest, items: QuerySet[Swatch]
+) -> Dict[str, Any]:
+    paginator_data = {}
+    paginator = Paginator(items, settings.PAGINATION_COUNT)
+    paginator_data.update({"paginator": paginator})
+    requested_page = request.GET.get("p", None)
+    requested_page = get_paginator_page(requested_page, 1)
+    is_infinite = is_infinite_scroll(request)
+
+    if is_infinite:
+        # don't render the rest of the page, just the cards
+        paginator_data |= {"html": "partials/multiple_swatch_cards.partial"}
+
+    if requested_page > 1 and not is_infinite:
+        # When a page is requested specifically by the browser, include
+        # previous pages. Normal routing will not need the previous pages
+        # because they'll already be there.
+        paginator_data |= {
+            "previous_pages_to_render": [
+                paginator.page(i) for i in range(1, requested_page)
+            ]
+        }
+    try:
+        page = paginator.page(requested_page)
+    except EmptyPage:
+        page = Swatch.objects.none()
+
+    paginator_data.update({"swatches": page, "requested_page": requested_page})
+    return paginator_data
+
+
+def get_paginator_page(potential_page: Any, value_if_invalid: int) -> int:
+    if not potential_page:
+        return value_if_invalid
+    else:
+        try:
+            return max(int(potential_page), 1)
+        except ValueError:
+            return value_if_invalid

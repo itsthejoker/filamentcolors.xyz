@@ -11,7 +11,7 @@
                         aria-label="Search"
                         value="{{ search_prefill }}"
                         hx-trigger="keyup changed delay:0.4s"
-                        hx-get="/library"
+                        hx-get="{{ request.path }}"
                         name="f"
                         hx-vals="{{ active_filters }}"
                 >

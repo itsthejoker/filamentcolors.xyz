@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script src="{% static 'vendored/js/htmx.min.js' %}?v=1.9.9"></script>
+<script src="{% static 'vendored/js/diomorph-ext.min.js' %}"></script>
 {% django_htmx_script %}
 <link rel="stylesheet" href="{% static 'vendored/css/baguetteBox.min.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/css/material_icons.css' %}">
@@ -34,7 +35,6 @@
 <script src="{% static 'vendored/js/baguetteBox.min.js' %}"></script>
 <script src="{% static 'vendored/js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'vendored/js/masonry.min.js' %}"></script>
-<script src="{% static 'vendored/js/infinite-scroll.pkgd.min.js' %}"></script>
 <script src="{% static 'vendored/js/long_press.js' %}" async defer></script>
 <script src="{% static 'vendored/js/jscolor.min.js' %}" async></script>
 <script src="{% static 'vendored/js/color.global.min.js' %}"></script>
@@ -58,33 +58,28 @@
 <meta name="theme-color" content="#ffffff">
 
 <script>
-    function getTextCursorPosition(el) {
-        return el.prop("selectionStart");
-    }
-
-    function setTextCursorPosition(el, pos) {
-        el.prop("selectionStart", pos);
-        el.prop("selectionEnd", pos);
-    }
-
+    let $deck, $msnry;
     htmx.onLoad(function (t) {
         tooltips();
         lazyloadimages();
+        let currentUrl = new URL(window.location.href);
 
-        let deck = $('#deck-of-many-things');
-        if (deck.length) {
+        $deck = $('#deck-of-many-things');
+        if ($deck.length) {
             // reinit masonry if we need to
-            const $deck = deck.masonry(
+            $msnry = $deck.masonry(
               {
                 "percentPosition": true,
                 "itemSelector": ".swatchbox",
-                transitionDuration: 0
-              })
-            window.msnry = $deck.data('masonry')
+            })
+            window.msnry = $msnry.data('masonry')
+        }
+
+        if (window.collectionModeEnabled) {
+          preselect_items(window.multiselectArray);
         }
 
         // set the display information for the filter modals
-        currentUrl = new URL(window.location.href)
         if (currentUrl.searchParams.has("mfr") ) {
             const filterEntry = $(`#filter-${currentUrl.searchParams.get("mfr")}`)
             filterEntry.addClass("active");
@@ -95,24 +90,6 @@
             $(".mfrFilterEntry").each(function() {
                 $(this).removeClass("active");
             })
-        }
-    })
-
-    htmx.on("htmx:beforeRequest", function (evt) {
-        // lock the filterInput during requests
-        const filterInput = $('#filterInput');
-        window.inputIsFocused = filterInput.is(":focus");
-        window.inputCursorPosition = getTextCursorPosition(filterInput);
-        filterInput.prop('disabled', true);
-    })
-
-    htmx.on("htmx:afterRequest", function(evt) {
-        // unlock the filterInput after loads
-        const filterInput = $("#filterInput");
-        filterInput.prop("disabled", false);
-        if (window.inputIsFocused) {
-            filterInput.focus();
-            setTextCursorPosition(filterInput, window.inputCursorPosition);
         }
     })
 
@@ -139,8 +116,32 @@
         }
     })
 
+    htmx.on("htmx:afterRequest", function(evt) {
+      const element = evt.detail.elt;
+      if (element.id === "filterInput") {
+        $deck.masonry('destroy');
+      }
+    })
+
+    htmx.on("htmx:afterSwap", function(evt) {
+        const element = evt.detail.elt;
+        if (!$deck) {
+            // on first load, we need to finish initializing everything
+            // before we can use this, so abort and wait for the next one
+            $deck = $('#deck-of-many-things');
+            return
+        }
+        if (element.classList.contains("swatchbox")) {
+          // infinite scroll loading
+          let newSwatches = $deck.find('.swatchbox:not([style])');
+          if (newSwatches.length) {
+            $deck.masonry('appended', newSwatches);
+          }
+        }
+    })
+
     function lazyloadimages() {
-        var lazyImages = [].slice.call(document.querySelectorAll("img.lazy-load-image"));
+        const lazyImages = [].slice.call(document.querySelectorAll("img.lazy-load-image"));
 
         if ("IntersectionObserver" in window) {
             let lazyImageObserver = new IntersectionObserver(function (entries, observer) {
@@ -173,8 +174,9 @@
     }
 
     htmx.config.historyCacheSize = 10;
-    htmx.config.refreshOnHistoryMiss = true
-    htmx.config.useTemplateFragments = true
+    htmx.config.refreshOnHistoryMiss = true;
+    htmx.config.useTemplateFragments = true;
+    htmx.config.globalViewTransitions = true;
 
     // https://stackoverflow.com/a/920322
     $.fn.exists = function () {
@@ -188,24 +190,6 @@
         jscolor.presets.default = {
             format: 'hex'
         };
-        const $deck = $('#deck-of-many-things')
-        $deck.infiniteScroll({
-            // options
-            path: function() {
-              let currentURL = new URL(window.location.href);
-              currentURL.searchParams.set('p', this.loadCount + 1);
-              return currentURL.toString();
-            },
-            append: '.swatchbox',
-            history: false,
-            outlayer: window.msnry,
-            status: '.page-load-status',
-            prefill: true,
-            percentPosition: true,
-        });
-        $deck.on( 'append.infiniteScroll', function( event, body, path, items, response ) {
-            lazyloadimages();
-        });
     })
 
 </script>

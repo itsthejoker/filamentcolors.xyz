@@ -101,6 +101,16 @@
         }).showToast();
     }
 
+    htmx.on("htmx:beforeOnLoad", function(evt) {
+        // wipe the tooltips if they're loaded so they don't screw
+        // up the new page
+        if (window.tooltipList) {
+            window.tooltipList.forEach((tooltip) => {
+                tooltip.dispose()
+            });
+        }
+    })
+
     htmx.on("htmx:responseError", function(evt) {
         if (evt.detail.xhr.status === 701) {
             showToastError("That doesn't look like a valid color. Try again?")
@@ -170,7 +180,7 @@
 
     function tooltips() {
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        window.tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     }
 
     htmx.config.historyCacheSize = 10;

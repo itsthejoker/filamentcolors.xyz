@@ -32,10 +32,11 @@
         <h4>Try adjusting your settings to change what kinds of filaments you
           see in the library.
         </h4>
+        {% include 'partials/settings_block_mirror.partial' %}
         <p></p>
-        <div class="btn bg-gradient-primary btn-lg shadow-lg mt-4"
+        <div class="btn bg-gradient-primary btn-lg shadow-lg mt-5"
              onclick="(function(){ $('#settingsModal').modal('show')})();" role="button">
-          Open Settings
+          Open Settings for more options
         </div>
       </div>
     {% else %}
@@ -45,10 +46,11 @@
         <h4>Try adjusting your settings to change what kinds of filaments you
           see in the library.
         </h4>
+        {% include 'partials/settings_block_mirror.partial' %}
         <p></p>
-        <div class="btn bg-gradient-primary btn-lg shadow-lg mt-4"
+        <div class="btn bg-gradient-primary btn-lg shadow-lg mt-5"
              onclick="(function(){ $('#settingsModal').modal('show')})();" role="button">
-          Open Settings
+          Open Settings for more options
         </div>
       </div>
     {% endif %}

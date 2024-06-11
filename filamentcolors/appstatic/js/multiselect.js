@@ -131,8 +131,6 @@ function disableOverlays() {
 
 
 function preselect_items(ids) {
-  console.log("Preselecting items");
-  console.log(ids);
   window.multiselectArray = ids;
 
   ids.forEach(item => {

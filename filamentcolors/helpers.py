@@ -7,12 +7,11 @@ from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Count, F, Q, QuerySet
 from django.db.models.functions import Lower
 from django.http import HttpResponse
-
 from django.shortcuts import render
 
 from filamentcolors import status as status_codes
 from filamentcolors import NAVBAR_MESSAGE, NAVBAR_MESSAGE_ID
-from filamentcolors.models import GenericFilamentType, Manufacturer, Swatch
+from filamentcolors.models import GenericFilamentType, Manufacturer, Swatch, DeadLink
 
 have_visited_before_cookie = "f"
 filament_type_settings_cookie = "show-types"
@@ -115,7 +114,7 @@ def build_data_dict(
       browser_console_message2    |   ...
       browser_console_message3    |   ...
 
-    :param request: Request
+    :param r: Request
     :param library: bool
     :param title: str
     :return: dict
@@ -156,7 +155,12 @@ def build_data_dict(
         # (and the corresponding ID) then it will display until they click the close
         # button again.
         del data["navbar_message"]
+
+    if r.user.is_staff:
+        data["deadlink_count"] = DeadLink.objects.count()
+        
     data.update(**kwargs)
+
     return data
 
 

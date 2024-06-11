@@ -75,6 +75,31 @@ class Manufacturer(models.Model):
         return self.name
 
 
+class DeadLink(models.Model):
+    LINK_TYPE_CHOICES = [
+        ("mfr", "Manufacturer"),
+        ("amazon", "Amazon"),
+        ("retailer", "Retailer"),
+    ]
+    # need to finish flow for retailer support
+    current_url = models.URLField(max_length=2000)
+    suggested_url = models.URLField(max_length=2000, null=True, blank=True)
+    link_type = models.CharField(max_length=10, choices=LINK_TYPE_CHOICES)
+    swatch = models.ForeignKey("Swatch", on_delete=models.CASCADE)
+    date_added = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return (
+            f"{self.swatch.manufacturer.name} {self.swatch.color_name}"
+            f" {self.swatch.filament_type.name} - {self.current_url}"
+        )
+
+    def resolve(self):
+        self.resolved = True
+        self.date_resolved = timezone.now()
+        self.save()
+
+
 class Retailer(models.Model):
     """A retailer is where filament can be purchased as an alternate to direct from
     manufacturer or Amazon."""

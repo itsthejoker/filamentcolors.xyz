@@ -6,6 +6,7 @@ from typing import Any
 import numpy
 import pandas
 from django.core.handlers.wsgi import WSGIRequest
+from django.contrib import messages
 from django.db.models import Q, QuerySet
 from django.db.models.functions import Lower
 from django.http import Http404, HttpResponse
@@ -33,7 +34,13 @@ from filamentcolors.helpers import (
     is_infinite_scroll,
     get_swatch_paginator,
 )
-from filamentcolors.models import GenericFilamentType, GenericFile, Manufacturer, Swatch
+from filamentcolors.models import (
+    GenericFilamentType,
+    GenericFile,
+    Manufacturer,
+    Swatch,
+    DeadLink,
+)
 
 
 def homepage(request: WSGIRequest) -> HttpResponseRedirect:
@@ -398,6 +405,41 @@ def inventory_page(request: WSGIRequest) -> HttpResponse:
 
 
 @csrf_exempt
+def report_bad_link(
+    request: WSGIRequest, swatch_id: int, link_type: str
+) -> HttpResponse:
+    try:
+        swatch = Swatch.objects.get(id=swatch_id, published=True)
+    except Swatch.DoesNotExist:
+        raise Http404()
+
+    current_link = request.POST.get("currentLink")
+
+    if not current_link:
+        messages.error(
+            request,
+            "Something went wrong with your request."
+            " Please send me an email at joe@filamentcolors.xyz"
+            " with the link you tried to report. Thanks!",
+        )
+        return HttpResponseRedirect(reverse("swatchdetail", args=[swatch_id]))
+
+    DeadLink.objects.create(
+        swatch=swatch,
+        link_type=link_type,
+        current_url=current_link,
+        suggested_url=request.POST.get("newLink"),
+    )
+
+    messages.success(
+        request,
+        "Thanks! We've received your report.",
+    )
+
+    return HttpResponseRedirect(reverse("swatchdetail", args=[swatch_id]))
+
+
+@csrf_exempt
 def colormatch(request: WSGIRequest) -> HttpResponse:
     data = build_data_dict(request, title="Color Match")
 
@@ -417,6 +459,8 @@ def colormatch(request: WSGIRequest) -> HttpResponse:
             matching_swatch = Swatch().get_closest_color_swatch(
                 library, hex_to_rgb(incoming_color)
             )
+            if not matching_swatch:
+                continue
             if data["user_settings"].get("show_delta_e_values"):
                 distance = matching_swatch.get_distance_to(hex_to_rgb(incoming_color))
             else:

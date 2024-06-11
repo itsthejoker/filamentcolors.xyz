@@ -8,6 +8,9 @@
     {% block submit-row %}
         {% if 'swatch' in request.path %}
         {% if show_save %}<input type="submit" value="{% trans 'Save and view' %}" class="default" name="_swatch_preview">
+        {% endif %}{% endif %}
+        {% if 'deadlink' in request.path %}
+        {% if show_save %}<input type="submit" value="{% trans 'Apply Suggested URL' %}" class="default" name="_apply_deadlink_suggestion">
         {% endif %}
         {% endif %}
         {% if 'post' in request.path %}

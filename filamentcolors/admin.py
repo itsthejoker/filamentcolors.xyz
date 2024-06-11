@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib import messages
 from django.shortcuts import HttpResponseRedirect
 
 from filamentcolors.models import (
@@ -10,6 +11,7 @@ from filamentcolors.models import (
     Retailer,
     Swatch,
     UserSubmittedTD,
+    DeadLink,
 )
 
 
@@ -82,6 +84,23 @@ class FilamentTypeAdmin(admin.ModelAdmin):
     ordering = ("name",)
 
 
+class DeadLinkAdmin(admin.ModelAdmin):
+    readonly_fields = ("swatch",)
+
+    def response_change(self, request, obj):
+        res = super().response_change(request, obj)
+        if "_apply_deadlink_suggestion" in request.POST:
+            if obj.link_type == "mfr":
+                obj.swatch.mfr_purchase_link = obj.suggested_url
+            elif obj.link_type == "amazon":
+                obj.swatch.amazon_purchase_link = obj.suggested_url
+            obj.swatch.save()
+            obj.delete()
+            return res
+        else:
+            return res
+
+
 admin.site.register(Swatch, SwatchAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(FilamentType, FilamentTypeAdmin)
@@ -90,3 +109,4 @@ admin.site.register(GenericFile)
 admin.site.register(GenericFilamentType)
 admin.site.register(Retailer)
 admin.site.register(PurchaseLocation)
+admin.site.register(DeadLink, DeadLinkAdmin)

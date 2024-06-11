@@ -114,7 +114,7 @@ def build_data_dict(
       browser_console_message2    |   ...
       browser_console_message3    |   ...
 
-    :param r: Request
+    :param request: WSGIRequest
     :param library: bool
     :param title: str
     :return: dict
@@ -156,7 +156,7 @@ def build_data_dict(
         # button again.
         del data["navbar_message"]
 
-    if r.user.is_staff:
+    if request.user.is_staff:
         data["deadlink_count"] = DeadLink.objects.count()
         
     data.update(**kwargs)

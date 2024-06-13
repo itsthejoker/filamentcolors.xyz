@@ -603,19 +603,6 @@ def error_500(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
 #                 \/                    \/          \/
 
 
-def single_swatch_card(request: WSGIRequest, swatch_id: int) -> HttpResponse:
-    """For the color match page, this is used to populate the 'saved' functionality."""
-    data = build_data_dict(request)
-    data.update(
-        {
-            "swatch": Swatch.objects.select_related("manufacturer")
-            .prefetch_related("filament_type")
-            .get(id=swatch_id),
-        }
-    )
-    return prep_request(request, "partials/single_swatch_column.partial", data)
-
-
 def get_welcome_experience_image(request: WSGIRequest, image_id: int) -> HttpResponse:
     """This is used to serve the welcome experience images."""
     data = build_data_dict(request)

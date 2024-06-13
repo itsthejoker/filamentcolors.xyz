@@ -1,6 +1,0 @@
-<div class="col-md-6 col-xl-4 singleSwatch-{{ swatch.id }} singleSelectableSwatch" data-swatch-id="{{ swatch.id }}">
-    {% include 'partials/card.partial' with obj=swatch %}
-    <div class="text-center">
-        <div class="btn bg-gradient-danger" onclick="nuke(this)">Remove</div>
-    </div>
-</div>

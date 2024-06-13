@@ -10,13 +10,7 @@
                     {% include 'partials/delta_e_badge.partial' with value=option.1 %}
                 {% endif %}
                 <div class="text-center">
-                    <a
-                            class="btn bg-gradient-info"
-                            hx-target="#saved_swatches_collection"
-                            hx-swap="beforeend"
-                            hx-push-url="false"
-                            href="/single_swatch_card/{{ option.0.id }}"
-                    >Grab Swatch</a>
+                    <div class="btn bg-gradient-info" id="grab-{{ option.0.id }}" onclick="grabSwatch(this)">Grab Swatch</div>
                 </div>
             </div>
         {% endfor %}

@@ -16,7 +16,8 @@
                 <div class="card card-frame mx-3 my-4">
                     <div class="card-body">
                         <form hx-target="#results"
-                              hx-swap="innerHTML"
+                              hx-swap="innerHTML show:none"
+                              hx-indicator="#colorMatchSpinner,.loaded-content"
                               hx-post="{% url 'colormatch' %}"
                         >
                             <div class="input-group input-group-static my-3">
@@ -117,7 +118,8 @@
                 </div>
             </div>
         </div>
-        <div id="results"></div>
+        {% include 'partials/colormatch_spinner.partial' %}
+        <div id="results" class="loaded-content"></div>
         <div id="saved_swatches" style="display: none">
             <hr class="container">
             <h4>Grab Bag</h4>
@@ -134,6 +136,28 @@
     </div>
 
     <script>
+        function grabSwatch(el) {
+            let $el = $(el);
+            let swatchcard = $($el.parent().siblings()[0]).clone();
+            let swatch_id = $el.attr("id").split("-")[1]
+          const parentDiv = document.createElement("div")
+          parentDiv.classList.add("col-md-6", "col-xl-4", `singleSwatch-${swatch_id}`, "singleSelectableSwatch")
+          parentDiv.dataset.swatchId = swatch_id
+          parentDiv.appendChild(swatchcard[0])
+          const buttonHolder = document.createElement("div")
+          buttonHolder.classList.add("text-center")
+          const buttonDiv = document.createElement("div")
+          buttonDiv.classList.add("btn", "btn-outline-danger")
+          buttonDiv.innerText = "Remove"
+          buttonDiv.onclick = function (evt) {
+            $(evt.target).parent().parent().remove()
+            updateGrabBag()
+          }
+          buttonHolder.appendChild(buttonDiv)
+          parentDiv.appendChild(buttonHolder)
+            $("#saved_swatches_collection").append(parentDiv);
+            updateGrabBag();
+        }
         function generateCollection() {
             let swatch_ids = [];
             $(".singleSelectableSwatch").each(function () {swatch_ids.push($(this).data()['swatchId'])});

@@ -32,7 +32,8 @@ from filamentcolors.helpers import (
     get_swatches,
     prep_request,
     is_infinite_scroll_request,
-    get_swatch_paginator, is_searchbar_request,
+    get_swatch_paginator,
+    is_searchbar_request,
 )
 from filamentcolors.models import (
     GenericFilamentType,

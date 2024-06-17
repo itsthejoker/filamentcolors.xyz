@@ -134,8 +134,24 @@ def build_data_dict(
             )
             .exclude(id__in=Manufacturer.objects.filter(swatch__isnull=True))
             .order_by(Lower("name"))
-            .annotate(available_swatch_count=Count("swatch", filter=Q(swatch__published=True) & Q(Q(swatch__amazon_purchase_link__isnull=False) | Q(swatch__mfr_purchase_link__isnull=False))))
-            .annotate(unavailable_swatch_count=Count("swatch", filter=Q(swatch__published=True) & Q(swatch__amazon_purchase_link__isnull=True) & Q(swatch__mfr_purchase_link__isnull=True)))
+            .annotate(
+                available_swatch_count=Count(
+                    "swatch",
+                    filter=Q(swatch__published=True)
+                    & Q(
+                        Q(swatch__amazon_purchase_link__isnull=False)
+                        | Q(swatch__mfr_purchase_link__isnull=False)
+                    ),
+                )
+            )
+            .annotate(
+                unavailable_swatch_count=Count(
+                    "swatch",
+                    filter=Q(swatch__published=True)
+                    & Q(swatch__amazon_purchase_link__isnull=True)
+                    & Q(swatch__mfr_purchase_link__isnull=True),
+                )
+            )
         ),
         "filament_types": GenericFilamentType.objects.order_by(Lower("name")),
         "color_family": Swatch.BASE_COLOR_OPTIONS,
@@ -158,7 +174,7 @@ def build_data_dict(
 
     if request.user.is_staff:
         data["deadlink_count"] = DeadLink.objects.count()
-        
+
     data.update(**kwargs)
 
     return data

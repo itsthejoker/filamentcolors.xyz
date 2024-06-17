@@ -1,0 +1,42 @@
+{{ active_filters|json_script:"filterValues" }}
+
+{% if swatches %}
+  {% if previous_pages_to_render %}
+    <script>window.infiniteScrollStartPage = {{ requested_page }}</script>
+  {% endif %}
+  <div class="row"
+       id="deck-of-many-things"
+       hx-swap="show:none"
+  >
+    {% include 'partials/multiple_swatch_cards.partial' %}
+  </div>
+  {% include 'partials/pagination_indicator.partial' %}
+{% elif not swatches and show_search_bar %}
+  <div class="container text-center mt-5">
+    <h4>No results!</h4>
+    <p></p>
+    <h4>Try adjusting your settings to change what kinds of filaments you
+      see in the library.
+    </h4>
+    {% include 'partials/settings_block_mirror.partial' %}
+    <p></p>
+    <div class="btn bg-gradient-primary btn-lg shadow-lg mt-5"
+         onclick="(function(){ $('#settingsModal').modal('show')})();" role="button">
+      Open Settings for more options
+    </div>
+  </div>
+{% else %}
+  <div class="container text-center mt-5">
+    <h4>Hmm... there doesn't appear to be anything here.</h4>
+    <p></p>
+    <h4>Try adjusting your settings to change what kinds of filaments you
+      see in the library.
+    </h4>
+    {% include 'partials/settings_block_mirror.partial' %}
+    <p></p>
+    <div class="btn bg-gradient-primary btn-lg shadow-lg mt-5"
+         onclick="(function(){ $('#settingsModal').modal('show')})();" role="button">
+      Open Settings for more options
+    </div>
+  </div>
+{% endif %}

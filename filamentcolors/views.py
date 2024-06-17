@@ -31,8 +31,8 @@ from filamentcolors.helpers import (
     get_hsv,
     get_swatches,
     prep_request,
-    is_infinite_scroll,
-    get_swatch_paginator,
+    is_infinite_scroll_request,
+    get_swatch_paginator, is_searchbar_request,
 )
 from filamentcolors.models import (
     GenericFilamentType,
@@ -153,11 +153,15 @@ def librarysort(
     # the swatches
     data |= get_swatch_paginator(request, items)
 
-    is_infinite = is_infinite_scroll(request)
+    is_infinite = is_infinite_scroll_request(request)
 
     if is_infinite:
         # don't render the rest of the page, just the cards
         html = "partials/multiple_swatch_cards.partial"
+
+    if is_searchbar_request(request):
+        data |= {"is_searchbar_request": True}
+        html = "partials/library_swatch_display.partial"
 
     # htmx needs to pass the existing filters along with the search
     # bar, so we have to provide it the filters to pass along

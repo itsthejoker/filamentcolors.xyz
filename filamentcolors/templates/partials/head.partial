@@ -62,7 +62,6 @@
     htmx.onLoad(function (t) {
         tooltips();
         lazyloadimages();
-        let currentUrl = new URL(window.location.href);
 
         $deck = $('#deck-of-many-things');
         if ($deck.length) {
@@ -77,19 +76,6 @@
 
         if (window.collectionModeEnabled) {
           preselect_items(window.multiselectArray);
-        }
-
-        // set the display information for the filter modals
-        if (currentUrl.searchParams.has("mfr") ) {
-            const filterEntry = $(`#filter-${currentUrl.searchParams.get("mfr")}`)
-            filterEntry.addClass("active");
-            $("#filterMfrNone").removeClass("active");
-            $("#mfrFilterModalButton").text(filterEntry.text());
-        } else {
-            $("#filterMfrNone").addClass("active");
-            $(".mfrFilterEntry").each(function() {
-                $(this).removeClass("active");
-            })
         }
     })
 

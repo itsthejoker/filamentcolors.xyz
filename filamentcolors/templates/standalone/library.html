@@ -1,59 +1,21 @@
 {% extends base_template %}
 
 {% block content %}
-  <div class="container mt-4" data-long-press-delay="250">
+  <div class="container mt-4" data-long-press-delay="300">
     {% include 'partials/messages.partial' %}
     {% if show_color_warning %}
       {% include 'partials/color-warning.partial' %}
     {% endif %}
 
-    {% if show_search_bar and swatches %}
+    {% if show_search_bar %}
       {% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
     {% endif %}
     {% if show_collection_edit_button %}
       {% include "partials/collection_edit_button.partial" %}
     {% endif %}
-    {% if swatches %}
-      {% if previous_pages_to_render %}
-        <script>window.infiniteScrollStartPage = {{ requested_page }}</script>
-      {% endif %}
-      <div class="row"
-           id="deck-of-many-things"
-           hx-swap="show:none"
-      >
-        {% include 'partials/multiple_swatch_cards.partial' %}
-      </div>
-      {% include 'partials/pagination_indicator.partial' %}
-    {% elif not swatches and show_search_bar %}
-      {% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
-      <div class="container text-center mt-5">
-        <h4>No results!</h4>
-        <p></p>
-        <h4>Try adjusting your settings to change what kinds of filaments you
-          see in the library.
-        </h4>
-        {% include 'partials/settings_block_mirror.partial' %}
-        <p></p>
-        <div class="btn bg-gradient-primary btn-lg shadow-lg mt-5"
-             onclick="(function(){ $('#settingsModal').modal('show')})();" role="button">
-          Open Settings for more options
-        </div>
-      </div>
-    {% else %}
-      <div class="container text-center mt-5">
-        <h4>Hmm... there doesn't appear to be anything here.</h4>
-        <p></p>
-        <h4>Try adjusting your settings to change what kinds of filaments you
-          see in the library.
-        </h4>
-        {% include 'partials/settings_block_mirror.partial' %}
-        <p></p>
-        <div class="btn bg-gradient-primary btn-lg shadow-lg mt-5"
-             onclick="(function(){ $('#settingsModal').modal('show')})();" role="button">
-          Open Settings for more options
-        </div>
-      </div>
-    {% endif %}
+    <div id="swatch-container">
+          {% include "partials/library_swatch_display.partial" %}
+    </div>
   </div>
 
   {% include 'partials/multiselect_js.partial' %}

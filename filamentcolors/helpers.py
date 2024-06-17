@@ -294,8 +294,12 @@ class ErrorStatusResponse(HttpResponse):
         self._reason_phrase = status_codes.reasons.get(status, "Unknown Status Code")
 
 
-def is_infinite_scroll(request: WSGIRequest) -> bool:
+def is_infinite_scroll_request(request: WSGIRequest) -> bool:
     return request.headers.get("X-Infinite-Scroll", None)
+
+
+def is_searchbar_request(request: WSGIRequest) -> bool:
+    return request.headers.get("X-Searchbar", None)
 
 
 def get_swatch_paginator(
@@ -306,7 +310,7 @@ def get_swatch_paginator(
     paginator_data.update({"paginator": paginator})
     requested_page = request.GET.get("p", None)
     requested_page = get_paginator_page(requested_page, 1)
-    is_infinite = is_infinite_scroll(request)
+    is_infinite = is_infinite_scroll_request(request)
 
     if is_infinite:
         # don't render the rest of the page, just the cards

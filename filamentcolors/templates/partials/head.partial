@@ -73,11 +73,18 @@
             })
             window.msnry = $msnry.data('masonry')
         }
-
         if (window.collectionModeEnabled) {
           preselect_items(window.multiselectArray);
         }
     })
+    
+    function showToast(message) {
+        Toastify({
+            text: message,
+            duration: 5000,
+            backgroundColor: "#4caf50"
+        }).showToast();
+    }
 
     function showToastError(message) {
         Toastify({
@@ -88,7 +95,7 @@
     }
 
     htmx.on("htmx:beforeOnLoad", function(evt) {
-        // wipe the tooltips if they're loaded so they don't screw
+        // wipe the tooltips if they're loaded so that they don't screw
         // up the new page
         if (window.tooltipList) {
             window.tooltipList.forEach((tooltip) => {

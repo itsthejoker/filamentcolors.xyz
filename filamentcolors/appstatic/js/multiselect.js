@@ -129,7 +129,6 @@ function disableOverlays() {
   });
 }
 
-
 function preselect_items(ids) {
   window.multiselectArray = ids;
 
@@ -169,6 +168,8 @@ $("#clear-button").on("click", function(evt) {
     }
   });
   window.collectionModeEnabled = false;
+  preselected = "";
+
   updateCounter();
   disableOverlays();
   hideCollectionCounter();

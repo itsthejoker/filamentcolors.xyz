@@ -8,8 +8,8 @@
 
 {% block content %}
     <p>
-        <strong>Note!</strong> These filters will apply <strong>everywhere</strong> until
-        you change them again or clear your cookies.
+        <strong>Note!</strong> These global filters will apply <strong>everywhere</strong>
+        until you change them again or clear your cookies.
     </p>
     <p>
       <strong>Tip:</strong> You can use the search bar to find a specific filament type or

@@ -10,7 +10,9 @@
                         type="text"
                         aria-label="Search"
                         value="{{ search_prefill }}"
-                        hx-trigger="keyup changed delay:0.4s"
+                        {# Trigger on both normal interactions with the user or if the event #}
+                        {# is triggered for the search bar itself. #}
+                        hx-trigger="keyup changed delay:0.4s, fireSearch from:body"
                         hx-get="{{ request.path }}"
                         name="f"
                         hx-vals="js:{cf: getFilters('cf'), mfr: getFilters('mfr'), ft: getFilters('ft')}"
@@ -179,8 +181,19 @@
 </div>
 
 <script>
+  function hideModal(modalId) {
+    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId))
+    modal.hide();
+  }
+  
   function getFilters(filterName) {
     try {
+      if (window.quickfiltersToClear.includes(filterName)) {
+        return "";
+      }
+      if (filterName in window.quickfilters) {
+        return window.quickfilters[filterName];
+      }
       const filterData = JSON.parse(JSON.parse(document.getElementById('filterValues').textContent));
       let resp = filterData[filterName];
       if (!resp) {
@@ -193,57 +206,60 @@
   }
 
   function clearMfrFilter(goNow=true) {
-    let newUrl = new URL(window.location.href);
     $("#mfrFilterModalButton").text("Manufacturer")
-    newUrl.searchParams.delete('mfr');
+    $("#filterMfrNone").addClass("active");
+    $(".mfrFilterEntry").removeClass("active");
+    hideModal("mfrFilterModal");
+    window.quickfiltersToClear.push('mfr');
     if (goNow) {
-      window.location.assign(newUrl)
+      document.body.dispatchEvent(new Event('fireSearch'));
     }
   }
 
   function selectMfrFilter(el) {
-    let mfrSlug = el.getAttribute('data-mfr-slug');
-    let newUrl = new URL(window.location.href);
-    // clear old value, add new value
-    newUrl.searchParams.delete('mfr');
-    newUrl.searchParams.append('mfr', mfrSlug);
-    window.location.assign(newUrl)
+    window.quickfilters['mfr'] = el.getAttribute('data-mfr-slug');
+    $(".mfrFilterEntry").removeClass("active");
+    $(el).addClass("active");
+    hideModal("mfrFilterModal");
+    document.body.dispatchEvent(new Event('fireSearch'));
   }
 
   function clearFtFilter(goNow=true) {
-    let newUrl = new URL(window.location.href);
-    $("#ftFilterModalButton").text("Filament Type")
-    newUrl.searchParams.delete('ft');
+    $("#ftFilterModalButton").text("Filament Type");
+    $("#filterFtNone").addClass("active");
+    $(".ftFilterEntry").removeClass("active");
+    hideModal("ftFilterModal");
+    window.quickfiltersToClear.push('ft');
     if (goNow) {
-      window.location.assign(newUrl)
+      document.body.dispatchEvent(new Event('fireSearch'));
     }
   }
 
   function selectFtFilter(el) {
-    let ftSlug = el.getAttribute('data-ft-slug');
-    let newUrl = new URL(window.location.href);
-    // clear old value, add new value
-    newUrl.searchParams.delete('ft');
-    newUrl.searchParams.append('ft', ftSlug);
-    window.location.assign(newUrl)
+    window.quickfilters['ft'] = el.getAttribute('data-ft-slug');
+    $(".ftFilterEntry").removeClass("active");
+    $(el).addClass("active");
+    hideModal("ftFilterModal");
+    document.body.dispatchEvent(new Event('fireSearch'));
   }
 
   function clearCfFilter(goNow=true) {
-    let newUrl = new URL(window.location.href);
     $("#cfFilterModalButton").text("Color Family")
-    newUrl.searchParams.delete('cf');
+    $("#filterCfNone").addClass("active");
+    $(".cfFilterEntry").removeClass("active");
+    hideModal("cfFilterModal");
+    window.quickfiltersToClear.push('cf');
     if (goNow) {
-      window.location.assign(newUrl)
+      document.body.dispatchEvent(new Event('fireSearch'));
     }
   }
 
   function selectCfFilter(el) {
-    let cfVal = el.getAttribute('data-cf');
-    let newUrl = new URL(window.location.href);
-    // clear old value, add new value
-    newUrl.searchParams.delete('cf');
-    newUrl.searchParams.append('cf', cfVal);
-    window.location.assign(newUrl)
+    window.quickfilters['cf'] = el.getAttribute('data-cf');
+    $(".cfFilterEntry").removeClass("active");
+    $(el).addClass("active");
+    hideModal("cfFilterModal");
+    document.body.dispatchEvent(new Event('fireSearch'));
   }
 
   $("#mfrFilterInput").on("keyup", function() {
@@ -263,6 +279,8 @@
   }
 
   function clearAllFilters() {
+    window.quickfilters = {};
+    window.quickfiltersToClear = [];
     clearFtFilter(false);
     clearCfFilter(false);
     clearMfrFilter(false);
@@ -274,6 +292,8 @@
   }
 
   htmx.onLoad(function (t) {
+    window.quickfilters = {};
+    window.quickfiltersToClear = [];
     updateClearAllButton();
     const currentUrl = new URL(window.location.href);
 

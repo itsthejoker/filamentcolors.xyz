@@ -172,8 +172,9 @@ def build_data_dict(
         # button again.
         del data["navbar_message"]
 
-    if request.user.is_staff:
-        data["deadlink_count"] = DeadLink.objects.count()
+    if hasattr(request, "user"):
+        if request.user.is_staff:
+            data["deadlink_count"] = DeadLink.objects.count()
 
     data.update(**kwargs)
 

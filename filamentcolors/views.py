@@ -209,7 +209,7 @@ def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
         request,
         library=True,
         title=f"{family_name} Swatches",
-        h1_title=f"{family_name} Swatches"
+        h1_title=f"{family_name} Swatches",
     )
     s = get_swatches(data)
 
@@ -235,7 +235,7 @@ def manufacturersort(request: WSGIRequest, mfr_id: str) -> HttpResponse:
         request,
         library=True,
         title=f"{mfr.name} Swatches",
-        h1_title=f"{mfr.name} Swatches"
+        h1_title=f"{mfr.name} Swatches",
     )
     s = get_swatches(data)
 
@@ -261,7 +261,7 @@ def typesort(request: WSGIRequest, f_type_id: int) -> HttpResponse:
         request,
         library=True,
         title=f"{f_type.name} Swatches",
-        h1_title=f"{f_type.name} Swatches"
+        h1_title=f"{f_type.name} Swatches",
     )
 
     s = get_swatches(data)
@@ -282,7 +282,7 @@ def swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
         collection_ids=",".join([str(i) for i in cleaned_ids]),
         show_collection_edit_button=True,
         title="Your Collection",
-        h1_title="Your Collection"
+        h1_title="Your Collection",
     )
 
     return librarysort(request, library=collection, prebuilt_data=data)

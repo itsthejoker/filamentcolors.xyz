@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script src="{% static 'vendored/js/htmx.min.js' %}?v=1.9.9"></script>
+<script src="{% static 'vendored/js/diomorph-ext.min.js' %}"></script>
 {% django_htmx_script %}
 <link rel="stylesheet" href="{% static 'vendored/css/baguetteBox.min.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/css/material_icons.css' %}">
@@ -57,16 +58,33 @@
 <meta name="theme-color" content="#ffffff">
 
 <script>
+    let $deck, $msnry;
     htmx.onLoad(function (t) {
         tooltips();
         lazyloadimages();
 
-        let deck = $('#deck-of-many-things');
-        if (deck.length) {
+        $deck = $('#deck-of-many-things');
+        if ($deck.length) {
             // reinit masonry if we need to
-            deck.masonry({"percentPosition": true})
+            $msnry = $deck.masonry(
+              {
+                "percentPosition": true,
+                "itemSelector": ".swatchbox",
+            })
+            window.msnry = $msnry.data('masonry')
+        }
+        if (window.collectionModeEnabled) {
+          preselect_items(window.multiselectArray);
         }
     })
+    
+    function showToast(message) {
+        Toastify({
+            text: message,
+            duration: 5000,
+            backgroundColor: "#4caf50"
+        }).showToast();
+    }
 
     function showToastError(message) {
         Toastify({
@@ -75,6 +93,16 @@
             backgroundColor: "#d9534f"
         }).showToast();
     }
+
+    htmx.on("htmx:beforeOnLoad", function(evt) {
+        // wipe the tooltips if they're loaded so that they don't screw
+        // up the new page
+        if (window.tooltipList) {
+            window.tooltipList.forEach((tooltip) => {
+                tooltip.dispose()
+            });
+        }
+    })
 
     htmx.on("htmx:responseError", function(evt) {
         if (evt.detail.xhr.status === 701) {
@@ -91,8 +119,32 @@
         }
     })
 
+    htmx.on("htmx:afterRequest", function(evt) {
+      const element = evt.detail.elt;
+      if (element.id === "filterInput") {
+        $deck.masonry('destroy');
+      }
+    })
+
+    htmx.on("htmx:afterSwap", function(evt) {
+        const element = evt.detail.elt;
+        if (!$deck) {
+            // on first load, we need to finish initializing everything
+            // before we can use this, so abort and wait for the next one
+            $deck = $('#deck-of-many-things');
+            return
+        }
+        if (element.classList.contains("swatchbox")) {
+          // infinite scroll loading
+          let newSwatches = $deck.find('.swatchbox:not([style])');
+          if (newSwatches.length) {
+            $deck.masonry('appended', newSwatches);
+          }
+        }
+    })
+
     function lazyloadimages() {
-        var lazyImages = [].slice.call(document.querySelectorAll("img.lazy-load-image"));
+        const lazyImages = [].slice.call(document.querySelectorAll("img.lazy-load-image"));
 
         if ("IntersectionObserver" in window) {
             let lazyImageObserver = new IntersectionObserver(function (entries, observer) {
@@ -121,12 +173,13 @@
 
     function tooltips() {
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        window.tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     }
 
     htmx.config.historyCacheSize = 10;
-    htmx.config.refreshOnHistoryMiss = true
-    htmx.config.useTemplateFragments = true
+    htmx.config.refreshOnHistoryMiss = true;
+    htmx.config.useTemplateFragments = true;
+    htmx.config.globalViewTransitions = true;
 
     // https://stackoverflow.com/a/920322
     $.fn.exists = function () {
@@ -141,4 +194,5 @@
             format: 'hex'
         };
     })
+
 </script>

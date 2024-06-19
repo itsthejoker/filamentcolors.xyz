@@ -4,10 +4,17 @@
 
 {% block title %}Settings{% endblock %}
 
+{% block extra_classes %}modal-dialog-scrollable{% endblock %}
+
 {% block content %}
     <p>
-        <strong>Note!</strong> These filters will apply <strong>everywhere</strong> until you change them again or clear
-        your cookies.
+        <strong>Note!</strong> These global filters will apply <strong>everywhere</strong>
+        until you change them again or clear your cookies.
+    </p>
+    <p>
+      <strong>Tip:</strong> You can use the search bar to find a specific filament type or
+      manufacturer. The below settings will <strong>only</strong> show the selected types
+      and manufacturers and will override the search bar and the quick filters.
     </p>
     <hr>
     <div class="container">
@@ -161,7 +168,6 @@
                     value = $(value).children().first()
                     fs = fs + value.attr("id") + "-" + value.is(':checked') + "_";
                 });
-            console.log(fs);
 
             $.each(
                 mfr.children(), function (count, value) {

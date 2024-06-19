@@ -411,11 +411,11 @@ hr {
     height: 100%;
     width: 100%;
     position: fixed; /* Stay in place */
-    z-index: 100; /* Sit on top */
+    z-index: 1; /* Sit on top */
     left: 0;
     top: 0;
-    background-color: rgb(0, 0, 0); /* Black fallback color */
-    background-color: rgba(0, 0, 0, 0.05); /* Black w/opacity */
+    background-color: rgb(255, 255, 255); /* Black fallback color */
+    background-color: rgba(255, 255, 255, 255); /* Black w/opacity */
     overflow-x: hidden; /* Disable horizontal scroll */
 }
 
@@ -432,6 +432,14 @@ hr {
     display: none;
 }
 
+.loaded-content.htmx-request {
+    display: none;
+}
+
+.htmx-indicator.htmx-request {
+    display: block;
+}
+
 .htmx-request .overlay {
     display: block;
 }
@@ -442,4 +450,34 @@ hr {
 
 .inventory-row:hover {
     background-color: rgba(0, 0, 0, 0.1)
+}
+
+/* Infinite Scroll Spinner */
+
+.infinity-loader-wheel {
+  font-size: 64px; /* change size here */
+  position: relative;
+  height: 1em;
+  width: 1em;
+  padding-left: 0.45em;
+  overflow: hidden;
+  margin: 0 auto;
+  animation: loader-wheel-rotate 0.5s steps(12) infinite;
+}
+
+.infinity-loader-wheel i {
+  display: block;
+  position: absolute;
+  height: 0.3em;
+  width: 0.1em;
+  border-radius: 0.05em;
+  background: #333; /* change color here */
+  opacity: 0.8;
+  transform: rotate(-30deg);
+  transform-origin: center 0.5em;
+}
+
+@keyframes loader-wheel-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

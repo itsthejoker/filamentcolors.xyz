@@ -1,42 +1,26 @@
 {% extends base_template %}
 
 {% block content %}
-    <div class="container mt-4">
-        {% include 'partials/messages.partial' %}
-        {% if show_color_warning %}
-            {% include 'partials/color-warning.partial' %}
-        {% endif %}
+  <div class="container mt-4" data-long-press-delay="300">
+    {% include 'partials/messages.partial' %}
+    {% if show_color_warning %}
+      {% include 'partials/color-warning.partial' %}
+    {% endif %}
+    {% if h1_title %}
+      <h1>{{ h1_title }}</h1>
+    {% endif %}
 
-        {% if show_search_bar and swatches %}
-            {% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
-        {% endif %}
-        {% if show_collection_edit_button %}
-            {% include "partials/collection_edit_button.partial" %}
-        {% endif %}
-        {% if swatches %}
-            <div class="row" id="deck-of-many-things" data-masonry='{"percentPosition": true }'
-                 data-long-press-delay="250">
-                {% for s in swatches %}
-                    <div class="col-md-6 col-lg-4 col-xl-4 col-xxl-3">
-                        {% include 'partials/card.partial' with obj=s %}
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="container text-center mt-5">
-                <h4>Hmm... there doesn't appear to be anything here.</h4>
-                <p></p>
-                <h4>Try adjusting your settings to change what kinds of filaments you
-                    see in the library.
-                </h4>
-                <p></p>
-                <div class="btn bg-gradient-primary btn-lg shadow-lg mt-4"
-                     onclick="(function(){ $('#settingsModal').modal('show')})();" role="button">
-                    Open Settings
-                </div>
-            </div>
-        {% endif %}
+    {% if show_search_bar and not show_collection_edit_button %}
+      {% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
+    {% endif %}
+    {% if show_collection_edit_button %}
+      {% include "partials/copy_url_to_clipboard_button.partial" %}
+      {% include "partials/collection_edit_button.partial" %}
+    {% endif %}
+    <div id="swatch-container">
+          {% include "partials/library_swatch_display.partial" %}
     </div>
+  </div>
 
-    {% include 'partials/multiselect_js.partial' %}
+  {% include 'partials/multiselect_js.partial' %}
 {% endblock content %}

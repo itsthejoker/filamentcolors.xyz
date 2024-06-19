@@ -1,0 +1,8 @@
+<div
+  class="htmx-indicator infinity-loader-wheel"
+  id="colorMatchSpinner"
+  style="font-size: 120px"
+>
+    <i><i><i><i><i><i><i><i><i><i><i><i>
+      </i></i></i></i></i></i></i></i></i></i></i></i>
+</div>

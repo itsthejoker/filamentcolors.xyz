@@ -1,0 +1,28 @@
+{% if previous_pages_to_render %}
+  {% for page in previous_pages_to_render %}
+    {% for s in page %}
+      <div class="col-md-6 col-lg-4 col-xl-4 col-xxl-3 swatchbox">
+        {% include 'partials/card.partial' with obj=s %}
+      </div>
+    {% endfor %}
+  {% endfor %}
+{% endif %}
+
+{% for s in swatches %}
+  {% if forloop.last and infinite_scroll_params %}
+    <div class="col-md-6 col-lg-4 col-xl-4 col-xxl-3 swatchbox"
+         hx-get="{{ request.path }}"
+         hx-trigger="revealed"
+         hx-swap="afterend show:none"
+         hx-headers='{ "X-Infinite-Scroll": "true" }'
+         hx-target="this"
+         hx-push-url="false"
+         hx-vals="{{ infinite_scroll_params }}"
+         hx-indicator="#infiniteLoadSpinner"
+    >
+  {% else %}
+    <div class="col-md-6 col-lg-4 col-xl-4 col-xxl-3 swatchbox">
+  {% endif %}
+{% include 'partials/card.partial' with obj=s %}
+</div>
+{% endfor %}

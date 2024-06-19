@@ -74,11 +74,6 @@ urlpatterns = [
     path("about/", views.about_page, name="about"),
     path("colormatch/", views.colormatch, name="colormatch"),
     path(
-        "single_swatch_card/<int:swatch_id>/",
-        views.single_swatch_card,
-        name="single_swatch_card",
-    ),
-    path(
         "welcome_experience_images/<int:image_id>/",
         views.get_welcome_experience_image,
         name="welcome_experience_image",

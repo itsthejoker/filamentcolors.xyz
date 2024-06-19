@@ -184,3 +184,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 PLAUSIBLE_DOMAIN = "filamentcolors.xyz"
 FORMS_URLFIELD_ASSUME_HTTPS = True
 POST_TO_SOCIAL_MEDIA = True
+PAGINATION_COUNT: int = 15

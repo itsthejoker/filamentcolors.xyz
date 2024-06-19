@@ -1,0 +1,4 @@
+<div class="htmx-indicator infinity-loader-wheel" id="infiniteLoadSpinner">
+    <i><i><i><i><i><i><i><i><i><i><i><i>
+    </i></i></i></i></i></i></i></i></i></i></i></i>
+</div>

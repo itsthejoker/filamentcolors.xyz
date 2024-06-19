@@ -6,54 +6,342 @@
                 <input
                         class="form-control"
                         id="filterInput"
-                        placeholder="Filter Library..."
+                        placeholder="Search Library..."
                         type="text"
                         aria-label="Search"
                         value="{{ search_prefill }}"
+                        {# Trigger on both normal interactions with the user or if the event #}
+                        {# is triggered for the search bar itself. #}
+                        hx-trigger="keyup changed delay:0.4s, fireSearch from:body"
+                        hx-get="{{ request.path }}"
+                        name="f"
+                        hx-vals="js:{cf: getFilters('cf'), mfr: getFilters('mfr'), ft: getFilters('ft')}"
+                        hx-target="#swatch-container"
+                        hx-swap="innerHTML"
+                        hx-headers='{ "X-Searchbar": "true" }'
                 >
             </div>
         </div>
     </div>
-</div>
-<script>
-    function filterStuff() {
-        var input, filter, elements, text, i, txtValue, filterArray;
-        input = document.getElementById("filterInput");
-        filter = input.value.toUpperCase();
-        filterArray = filter.split(" ");
-        elements = document.getElementsByClassName("cardBox");
+    {% if 'manufacturer' not in request.path %}
+    <div class="text-center mb-4">
+      <div class="mb-2">Quick filters:</div>
+      <div class="gap-1">
+        <button
+          type="button"
+          id="cfFilterModalButton"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#cfFilterModal"
+        >Color Family</button>
+        <button
+          type="button"
+          id="ftFilterModalButton"
+          class="btn btn-success"
+          data-bs-toggle="modal"
+          data-bs-target="#ftFilterModal"
+        >Filament Type</button>
+        <button
+          type="button"
+          id="mfrFilterModalButton"
+          class="btn btn-info"
+          data-bs-toggle="modal"
+          data-bs-target="#mfrFilterModal"
+        >Manufacturer</button>
+      </div>
+      <div>
+      <button 
+        id="clearAllFiltersButton" 
+        class="btn btn-outline-secondary" 
+        onclick="clearAllFilters()"
+      >Clear Active Filters</button>
 
-        for (i = 0; i < elements.length; i++) {
-            text = elements[i].getElementsByClassName("card-text")[0];
-            if (text) {
-                txtValue = text.textContent || text.innerText;
-                txtValue = txtValue.toUpperCase();
-                if (filterArray.every(function (element) {
-                    return txtValue.indexOf(element) > -1
-                })) {
-                    elements[i].style.display = "";
-                } else {
-                    elements[i].style.display = "none";
-                }
-            }
-        }
-        // regenerate the layout
-        $('#deck-of-many-things').masonry('layout');
+</div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Color Family Filter Modal -->
+<div class="modal fade" id="cfFilterModal" tabindex="-1" aria-labelledby="cfFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="cfFilterModalLabel">Filter by Color Family</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="list-group" id="cfFilterListGroup">
+          <div
+            id="filterCfNone"
+            class="list-group-item list-group-item-action active"
+            onclick="clearCfFilter()"
+          >
+            No Filter
+          </div>
+          {% for c in color_family %}
+          <div
+            id="filter-{{ c.1|lower }}"
+            data-cf="{{ c.1|lower }}"
+            class="list-group-item list-group-item-action cfFilterEntry"
+            onclick="selectCfFilter(this)"
+          >
+              {{ c.1 }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filament Type Filter Modal -->
+<div class="modal fade" id="ftFilterModal" tabindex="-1" aria-labelledby="ftFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="ftFilterModalLabel">Filter by Filament Type</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="list-group" id="ftFilterListGroup">
+          <div
+            id="filterFtNone"
+            class="list-group-item list-group-item-action active"
+            onclick="clearFtFilter()"
+          >
+            No Filter
+          </div>
+          {% for ft in settings_buttons %}
+          <div
+            id="filter-{{ ft.slug }}"
+            data-ft-slug="{{ ft.slug }}"
+            class="list-group-item list-group-item-action ftFilterEntry"
+            onclick="selectFtFilter(this)"
+          >
+              {{ ft.name }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Manufacturer Filter Modal -->
+<div class="modal fade" id="mfrFilterModal" tabindex="-1" aria-labelledby="mfrFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="mfrFilterModalLabel">Filter by Manufacturer</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group input-group-dynamic mb-4">
+              <span class="input-group-text"><span class="icon-search"></span></span>
+              <input
+                      class="form-control"
+                      id="mfrFilterInput"
+                      placeholder="Got someone in mind?"
+                      type="text"
+                      aria-label="Search"
+              >
+          </div>
+        <div class="list-group" id="mfrFilterListGroup">
+          <div
+            id="filterMfrNone"
+            class="list-group-item list-group-item-action active"
+            onclick="clearMfrFilter()"
+          >
+            No Filter
+          </div>
+          {% for mfr in manufacturers %}
+          <div
+            id="filter-{{ mfr.slug }}"
+            data-mfr-slug="{{ mfr.slug }}"
+            class="list-group-item list-group-item-action mfrFilterEntry"
+            onclick="selectMfrFilter(this)"
+          >
+              {{ mfr.get_display_name }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function hideModal(modalId) {
+    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId))
+    modal.hide();
+  }
+  
+  function getFilters(filterName) {
+    try {
+      if (window.quickfiltersToClear.includes(filterName)) {
+        return "";
+      }
+      if (filterName in window.quickfilters) {
+        return window.quickfilters[filterName];
+      }
+      const filterData = JSON.parse(JSON.parse(document.getElementById('filterValues').textContent));
+      let resp = filterData[filterName];
+      if (!resp) {
+        return "";
+      }
+      return filterData[filterName];
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function clearMfrFilter(goNow=true) {
+    $("#mfrFilterModalButton").text("Manufacturer")
+    $("#filterMfrNone").addClass("active");
+    $(".mfrFilterEntry").removeClass("active");
+    hideModal("mfrFilterModal");
+    window.quickfiltersToClear.push('mfr');
+    if (goNow) {
+      document.body.dispatchEvent(new Event('fireSearch'));
+    }
+  }
+
+  function selectMfrFilter(el) {
+    window.quickfilters['mfr'] = el.getAttribute('data-mfr-slug');
+    $(".mfrFilterEntry").removeClass("active");
+    $(el).addClass("active");
+    hideModal("mfrFilterModal");
+    document.body.dispatchEvent(new Event('fireSearch'));
+  }
+
+  function clearFtFilter(goNow=true) {
+    $("#ftFilterModalButton").text("Filament Type");
+    $("#filterFtNone").addClass("active");
+    $(".ftFilterEntry").removeClass("active");
+    hideModal("ftFilterModal");
+    window.quickfiltersToClear.push('ft');
+    if (goNow) {
+      document.body.dispatchEvent(new Event('fireSearch'));
+    }
+  }
+
+  function selectFtFilter(el) {
+    window.quickfilters['ft'] = el.getAttribute('data-ft-slug');
+    $(".ftFilterEntry").removeClass("active");
+    $(el).addClass("active");
+    hideModal("ftFilterModal");
+    document.body.dispatchEvent(new Event('fireSearch'));
+  }
+
+  function clearCfFilter(goNow=true) {
+    $("#cfFilterModalButton").text("Color Family")
+    $("#filterCfNone").addClass("active");
+    $(".cfFilterEntry").removeClass("active");
+    hideModal("cfFilterModal");
+    window.quickfiltersToClear.push('cf');
+    if (goNow) {
+      document.body.dispatchEvent(new Event('fireSearch'));
+    }
+  }
+
+  function selectCfFilter(el) {
+    window.quickfilters['cf'] = el.getAttribute('data-cf');
+    $(".cfFilterEntry").removeClass("active");
+    $(el).addClass("active");
+    hideModal("cfFilterModal");
+    document.body.dispatchEvent(new Event('fireSearch'));
+  }
+
+  $("#mfrFilterInput").on("keyup", function() {
+    let value = $(this).val().toLowerCase();
+    $("#mfrFilterListGroup .mfrFilterEntry").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+
+  function updateClearAllButton() {
+    let newUrl = new URL(window.location.href);
+    {#if (newUrl.searchParams.has("cf") || newUrl.searchParams.has("mfr") || newUrl.searchParams.has("ft")) {#}
+    if (getFilters("cf") || getFilters("mfr") || getFilters("ft") || window.quickfiltersToClear.length > 0) {
+      $("#clearAllFiltersButton").show();
+    } else {
+      $("#clearAllFiltersButton").hide();
+    }
+  }
+
+  function clearAllFilters() {
+    window.quickfilters = {};
+    window.quickfiltersToClear = [];
+    clearFtFilter(false);
+    clearCfFilter(false);
+    clearMfrFilter(false);
+    document.body.dispatchEvent(new Event('fireSearch'));
+    updateClearAllButton();
+  }
+
+  htmx.onLoad(function (t) {
+    window.quickfilters = {};
+    window.quickfiltersToClear = [];
+    updateClearAllButton();
+    const currentUrl = new URL(window.location.href);
+
+    // set the display information for the filter modals
+    if (currentUrl.searchParams.has("cf") ) {
+      const filterEntry = $(`#filter-${currentUrl.searchParams.get("cf")}`)
+      if (!filterEntry.length) {
+        $("#filterCfNone").addClass("active");
+      } else {
+        $("#filterCfNone").removeClass("active")
+        filterEntry.addClass("active");
+        $("#cfFilterModalButton").text(filterEntry.text());
+      }
+    } else {
+      $("#filterCfNone").addClass("active");
+      $(".cfFilterEntry").each(function() {
+        $(this).removeClass("active");
+      })
     }
 
-    $(document).ready(function () {
-        function delay(fn, ms) {
-            // https://stackoverflow.com/a/1909508
-            let timer = 0
-            return function (...args) {
-                clearTimeout(timer)
-                timer = setTimeout(fn.bind(this, ...args), ms || 0)
-            }
-        }
+    if (currentUrl.searchParams.has("mfr") ) {
+      const filterEntry = $(`#filter-${currentUrl.searchParams.get("mfr")}`)
+      if (!filterEntry.length) {
+        $("#filterMfrNone").addClass("active");
+      } else {
+        $("#filterMfrNone").removeClass("active")
+        filterEntry.addClass("active");
+        $("#mfrFilterModalButton").text(filterEntry.text());
+      }
+    } else {
+      $("#filterMfrNone").addClass("active");
+      $(".mfrFilterEntry").each(function() {
+        $(this).removeClass("active");
+      })
+    }
 
-        $('#filterInput').keyup(delay(function (e) {
-            filterStuff();
-        }, 200));
-    });
-    filterStuff();
+    if (currentUrl.searchParams.has("ft") ) {
+      const filterEntry = $(`#filter-${currentUrl.searchParams.get("ft")}`)
+      if (!filterEntry.length) {
+        $("#filterFtNone").addClass("active");
+      } else {
+        $("#filterFtNone").removeClass("active")
+        filterEntry.addClass("active");
+        $("#ftFilterModalButton").text(filterEntry.text());
+      }
+    } else {
+      $("#filterFtNone").addClass("active");
+      $(".ftFilterEntry").each(function() {
+        $(this).removeClass("active");
+      })
+    }
+  });
 </script>

@@ -205,7 +205,12 @@ def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
 
     family_name = [i[1] for i in Swatch.BASE_COLOR_OPTIONS if i[0] == f_id][0]
 
-    data = build_data_dict(request, library=True, title=f"{family_name} Swatches")
+    data = build_data_dict(
+        request,
+        library=True,
+        title=f"{family_name} Swatches",
+        h1_title=f"{family_name} Swatches"
+    )
     s = get_swatches(data)
 
     s = s.filter(Q(color_parent=f_id) | Q(alt_color_parent=f_id))
@@ -226,7 +231,12 @@ def manufacturersort(request: WSGIRequest, mfr_id: str) -> HttpResponse:
     if not mfr:
         raise Http404
 
-    data = build_data_dict(request, library=True, title=f"{mfr.name} Swatches")
+    data = build_data_dict(
+        request,
+        library=True,
+        title=f"{mfr.name} Swatches",
+        h1_title=f"{mfr.name} Swatches"
+    )
     s = get_swatches(data)
 
     s = s.filter(manufacturer=mfr)
@@ -247,7 +257,12 @@ def typesort(request: WSGIRequest, f_type_id: int) -> HttpResponse:
     if not f_type:
         raise Http404
 
-    data = build_data_dict(request, library=True, title=f"{f_type.name} Swatches")
+    data = build_data_dict(
+        request,
+        library=True,
+        title=f"{f_type.name} Swatches",
+        h1_title=f"{f_type.name} Swatches"
+    )
 
     s = get_swatches(data)
 
@@ -266,7 +281,8 @@ def swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
         library=True,
         collection_ids=",".join([str(i) for i in cleaned_ids]),
         show_collection_edit_button=True,
-        title="View Collection",
+        title="Your Collection",
+        h1_title="Your Collection"
     )
 
     return librarysort(request, library=collection, prebuilt_data=data)

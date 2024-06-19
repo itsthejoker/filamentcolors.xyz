@@ -271,7 +271,8 @@
 
   function updateClearAllButton() {
     let newUrl = new URL(window.location.href);
-    if (newUrl.searchParams.has("cf") || newUrl.searchParams.has("mfr") || newUrl.searchParams.has("ft")) {
+    {#if (newUrl.searchParams.has("cf") || newUrl.searchParams.has("mfr") || newUrl.searchParams.has("ft")) {#}
+    if (getFilters("cf") || getFilters("mfr") || getFilters("ft") || window.quickfiltersToClear.length > 0) {
       $("#clearAllFiltersButton").show();
     } else {
       $("#clearAllFiltersButton").hide();
@@ -284,11 +285,8 @@
     clearFtFilter(false);
     clearCfFilter(false);
     clearMfrFilter(false);
-    let newUrl = new URL(window.location.href);
-    newUrl.searchParams.delete('cf');
-    newUrl.searchParams.delete('mfr');
-    newUrl.searchParams.delete('ft');
-    window.location.assign(newUrl)
+    document.body.dispatchEvent(new Event('fireSearch'));
+    updateClearAllButton();
   }
 
   htmx.onLoad(function (t) {

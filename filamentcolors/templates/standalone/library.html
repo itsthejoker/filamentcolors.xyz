@@ -6,6 +6,9 @@
     {% if show_color_warning %}
       {% include 'partials/color-warning.partial' %}
     {% endif %}
+    {% if h1_title %}
+      <h1>{{ h1_title }}</h1>
+    {% endif %}
 
     {% if show_search_bar and not show_collection_edit_button %}
       {% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}

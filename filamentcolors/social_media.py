@@ -163,7 +163,7 @@ daily_tweet_intro = [
     "Looking for some new colors? The librarian has some recommendations!",
     "I asked the Magic 8-Ball for your favorite color and it gave me something!",
     "I've always wondered why my copy of Gray's Anatomy is tan... hmm...",
-    "🎶 Voulez-vous coloriez avec moi, ce soir? 🎵",
+    "🎶 Voulez-vous colorier avec moi, ce soir? 🎵",
     "If a print fails and no one is around to hear it, does it still spaghetti? Anyway...",
     "This post is brought to you by the number {number}!",
     "Heeeere's Swatchy!",

@@ -75,7 +75,16 @@ class SwatchSerializer(HyperlinkedModelSerializer):
     closest_pms_2 = PantonePMSSerializer(read_only=True)
     closest_pms_3 = PantonePMSSerializer(read_only=True)
 
+    td = serializers.SerializerMethodField()
+    td_range = serializers.SerializerMethodField()
+
     tags = TagListSerializerField()
+
+    def get_td(self, obj):
+        return obj.get_td()
+
+    def get_td_range(self, obj):
+        return obj.get_td_range()
 
     class Meta:
         model = Swatch
@@ -120,6 +129,8 @@ class SwatchSerializer(HyperlinkedModelSerializer):
             "tags",
             "card_img",
             "hex_color",
+            "td",
+            "td_range",
             "human_readable_date",
             "is_available",
         )

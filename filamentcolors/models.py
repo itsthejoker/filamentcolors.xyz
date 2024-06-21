@@ -551,15 +551,33 @@ class Swatch(models.Model, DistanceMixin):
             return self.date_added.strftime(format)
 
     def get_td(self) -> float | None:
-        if self.td:
-            return self.td
-
         if self.usersubmittedtd_set.all():
-            return (
-                sum([i.td for i in self.usersubmittedtd_set.all()])
-                / self.usersubmittedtd_set.count()
-            )
+            tds = self.usersubmittedtd_set.all().values_list("td", flat=True)
+            if self.td:
+                tds.append(self.td)
+            if tds.count() >= 3:
+                tds = sorted(tds)
+                tds = tds[1:-1]
+            return sum([i for i in tds]) / len(tds)
         return None
+
+    def get_td_range(self) -> tuple[float, float] | None:
+        tds: list[float] = self.usersubmittedtd_set.all().values_list("td", flat=True)
+        if self.td:
+            tds.append(self.td)
+        if len(tds) == 0:
+            return None
+        elif len(tds) == 1:
+            return tds[0], tds[0]
+        elif len(tds) == 2:
+            tds = sorted(tds)
+            return min(tds), max(tds)
+
+        tds = sorted(tds)
+        tds = tds[1:-1]
+        if len(tds) > 1:
+            return min(tds), max(tds)
+        return tds[0], tds[0]
 
     def get_rgb(self, hex: str) -> Tuple[int, ...]:
         return tuple(int(hex[i : i + 2], 16) for i in (0, 2, 4))

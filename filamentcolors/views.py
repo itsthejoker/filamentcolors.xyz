@@ -176,13 +176,17 @@ def librarysort(
         k: v for k, v in params_minus_filter.items() if v is not None
     }
 
-    if data["swatches"].has_next():
-        params_plus_next_page = {
-            **params_minus_filter,
-            "p": data["requested_page"] + 1,
-            "f": filter_str,
-        }
-        data.update({"infinite_scroll_params": json.dumps(params_plus_next_page)})
+    # If there were swatches returned, then data["swatches"] will be a
+    # Paginator object. If not, it'll be a QuerySet, so we need to check
+    # for that.
+    if hasattr(data["swatches"], "has_next"):
+        if data["swatches"].has_next():
+            params_plus_next_page = {
+                **params_minus_filter,
+                "p": data["requested_page"] + 1,
+                "f": filter_str,
+            }
+            data.update({"infinite_scroll_params": json.dumps(params_plus_next_page)})
 
     if params_minus_filter:
         params_minus_filter = json.dumps(params_minus_filter)

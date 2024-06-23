@@ -21,13 +21,14 @@
  * SOFTWARE.
  */
 
-document.addEventListener("DOMContentLoaded", function (event) {
+function emailMagic() {
     const anchorElements = Array.from(document.querySelectorAll('a'));
     const modalElements = {};
 
     anchorElements.forEach(el => {
         // don't run on a tags that aren't mail links
         if (el.href.includes("mailto") === false) return;
+        if (el.dataset.emailmagic) return;  // we've already done this one
 
         // If it's a mailto link, break it apart, then generate a modal
         // for each mailto link. Stick that modal at the bottom of the
@@ -39,14 +40,20 @@ document.addEventListener("DOMContentLoaded", function (event) {
         // bootstrap 5 only
         modalElements[id] = new bootstrap.Modal(document.getElementById(`emailmagic-${id}`));
 
+        el.dataset.emailmagic = id;
+
         el.addEventListener('click', e => {
             e.preventDefault();
             modalElements[id].show();
         });
     });
+}
+
+document.addEventListener("DOMContentLoaded", function (event) {
+    emailMagic()
 });
 
-function getModalContent({id, emailAddress, subject, cc, bcc, body}) {
+function getModalContent({id, emailAddress, subject, cc, bcc, body, fullMailTo}) {
     return `
         <div class="modal fade" id="emailmagic-${id}" tabindex="-1" role="dialog" aria-label="Select your preferred email provider!" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
@@ -72,13 +79,13 @@ function getModalContent({id, emailAddress, subject, cc, bcc, body}) {
                       class="btn bg-gradient-primary"
                       target="_blank"
                     >Yahoo! Mail</a>
-                    <a href="mailto:${emailAddress}" class="btn bg-gradient-success" target="_blank">Default</a>
+                    <a href="${fullMailTo}" class="btn bg-gradient-success" target="_blank">Default</a>
                     <hr/>
-                    <button class="btn bg-gradient-dark" onclick="copyToClipboard('${emailAddress}')">Copy to Clipboard</button>
+                    <button class="btn bg-gradient-dark" onclick="copyToClipboard('${fullMailTo}')">Copy to Clipboard</button>
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
@@ -87,12 +94,17 @@ function getModalContent({id, emailAddress, subject, cc, bcc, body}) {
 }
 
 function copyToClipboard(val) {
-    navigator.clipboard.writeText(val);
+    navigator.clipboard.writeText(val).then(function() {
+      showToast("Copied to clipboard!");
+    }).catch(function() {
+      showToastError("Failed to copy to clipboard :(");
+    })
+
 }
 
 function createID() {
     // https://stackoverflow.com/a/3242438
-    return Math.random().toString(36).substr(2, 9)
+    return Math.random().toString(36).substring(2, 9)
 }
 
 function parseMailto(href) {
@@ -104,5 +116,6 @@ function parseMailto(href) {
         cc: mailto.searchParams.get("cc") || "",
         bcc: mailto.searchParams.get("bcc") || "",
         body: mailto.searchParams.get("body") || "",
+        fullMailTo: mailto
     }
 }

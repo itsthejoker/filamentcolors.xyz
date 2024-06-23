@@ -44,7 +44,7 @@
 <script type="text/javascript" src="{% static 'vendored/js/toastify.min.js' %}" async defer></script>
 <script src="{% static 'js/cookies/cookie.js' %}?v=1"></script>
 
-<script type="text/javascript" src="{% static "js/emailmagic.js" %}?v=2" async defer></script>
+<script type="text/javascript" src="{% static "js/emailmagic.js" %}?v=3" async defer></script>
 <script src="{% static 'js/multistepmodal.js' %}" async></script>
 
 <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicons/apple-touch-icon.png' %}?v=QEJXGyWNR2">
@@ -76,6 +76,8 @@
         if (window.collectionModeEnabled) {
           preselect_items(window.multiselectArray);
         }
+        
+        emailMagic();
     })
     
     function showToast(message) {

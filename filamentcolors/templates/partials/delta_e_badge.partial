@@ -7,7 +7,7 @@
                 data-container="body"
                 data-animation="true"
                 title="ΔE (CIE) Distance from the requested color.">
-            ΔE: {{ value }}
+            ΔE: {{ value|floatformat:3 }}
         </div>
     </div>
 </div>

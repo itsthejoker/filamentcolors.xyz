@@ -1,4 +1,5 @@
 {% extends base_template %}
+{% load delta_e %}
 
 {% block content %}
     {# twitter #}
@@ -541,9 +542,17 @@
             </div>
             <div class="col-md-12 col-lg-4">
                 {% include 'partials/card.partial' with obj=swatch.closest_1 %}
+              {% if user_settings.show_delta_e_values %}
+                    {% delta_e swatch swatch.closest_1 as value %}
+                    {% include 'partials/delta_e_badge.partial' with value=value%}
+                {% endif %}
             </div>
             <div class="col-md-12 col-lg-4">
                 {% include 'partials/card.partial' with obj=swatch.closest_2 %}
+              {% if user_settings.show_delta_e_values %}
+                    {% delta_e swatch swatch.closest_2 as value %}
+                    {% include 'partials/delta_e_badge.partial' with value=value%}
+                {% endif %}
             </div>
         </div>
 

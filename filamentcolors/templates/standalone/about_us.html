@@ -1,0 +1,84 @@
+{% extends base_template %}
+{% load static %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h1>About the Librarians</h1>
+    <div class="alert alert-info text-white" role="alert">
+      <strong>Librarian (noun)</strong><br>
+      li·brar·i·an (lī-ˈbrer-ē-ən)<br>
+      <span class="ms-3">A specialist in the care or management of a library.</span>
+    </div>
+    <h2>Joe</h2>
+    <div class="clearfix">
+      <img
+        src="{% static 'joe_picture.jpg' %}"
+        alt="A picture of a man in his early thirties looking at the camera. A black cat is on his shoulder and there is a 3d printer behind them."
+        class="float-end w-100 w-md-30 ms-3 mb-2 rounded-3">
+      <p>
+        A librarian by rite of passage, Joe is a senior software developer by day
+        working in the payments industry for small-to-medium businesses. With too
+        many projects to count, Joe prefers to describe his hobbies under a single
+        umbrella: he likes to <em>make</em>. Music, projects, or messes... the
+        possibilities are endless!
+      </p>
+      <p>
+        He has launched many projects over the years, though most have not seen
+        the light of day for long. These include, but are not limited to:
+      </p>
+      <ul>
+        <li>
+          <a href="https://www.wired.com/story/online-altruists-are-making-reddit-more-accessible/">
+            TranscribersOfReddit</a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/watch?v=ea86-Zuc7Co">
+            The world's first acoustic acrylic violin</a>
+          (And <a href="https://www.youtube.com/watch?v=TiAI9vBOPVE">
+          here's it in a music video!</a>)
+        </li>
+        <li>
+          <a href="https://github.com/itsthejoker/emailmagic">emailmagic</a>,
+          a fancy way to display `mailto:` links
+        </li>
+        <li>
+          <a href="https://github.com/spotoninc/asbestos">asbestos</a>, a fancy way to test code that uses Snowflake
+        </li>
+      </ul>
+      <p>
+        Joe handles printing of all the swatches, organizing the filament, and writing
+        the software that powers this website. He also designed (and wrote the software
+        for) the Swatchrig, the photography system that takes the pictures for this
+        site. You can often find him in his "there's a library for everything" shirt
+        at various 3D-printing events around the US.
+      </p>
+    </div>
+    <h2>Ahliah</h2>
+    <div class="clearfix">
+      <img
+        src="{% static 'ahliah_picture.jpg' %}"
+        alt="A picture of a woman in her early thirties looking at the camera. Her reddish hair is neatly coiffed and she's smiling at the camera in front of bookshelves."
+        class="float-start w-100 w-md-30 me-3 mb-2 rounded-3">
+      <p>
+        The real librarian of this outfit, Ahliah (uh-LEE-uh) received her master's
+        degree in Library Science in 2017. Specializing in adult library services,
+        she thrives in the never-ending puzzle of finding the perfect book for every
+        reader.
+      </p>
+      <p>
+        In her spare time, she enjoys crochet, baking, hanging out with her cats, and
+        other stereotypical 'librarian' activities. She often posts her projects
+        <a href="https://www.instagram.com/ahliahjo/">on Instagram</a>, and can
+        frequently be found drooling over late 1800s fashion.
+      </p>
+      <p>
+        Ahliah handles indexing new plastics as they arrive, filament organization,
+        metadata, and data management for the site. She is responsible for photographing
+        the swatches as they are finished, measuring them, and uploading for all
+        to see. You can often find her in her "there's a library for everything" shirt
+        at various 3D-printing events around the US.
+      </p>
+    </div>
+
+  </div>
+{% endblock %}

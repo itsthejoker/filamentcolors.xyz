@@ -72,6 +72,7 @@ urlpatterns = [
     path("monetary_donating/", views.monetary_donation_page, name="monetary_donations"),
     path("inventory/", views.inventory_page, name="inventory"),
     path("about/", views.about_page, name="about"),
+    path("the_librarians/", views.about_me, name="about_us"),
     path("colormatch/", views.colormatch, name="colormatch"),
     path(
         "welcome_experience_images/<int:image_id>/",

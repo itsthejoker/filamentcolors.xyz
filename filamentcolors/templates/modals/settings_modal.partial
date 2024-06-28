@@ -39,7 +39,7 @@
             <div class="ms-3 mt-3" id="filamentTypeSettings">
                 <div class="form-check form-switch">
                     <input class="form-check-input" style="margin-top: 9px" type="checkbox" id="unavailableCheckbox"
-                           checked="" autocomplete="off">
+                           autocomplete="off">
                     <label class="form-check-label fs-5" for="unavailableCheckbox">Show unavailable
                         filaments</label>
                 </div>
@@ -228,7 +228,7 @@
                 })
             }
 
-            // default to showing unavailable filament
+            // default to not showing unavailable filament
             let unavailablecb = $("#unavailableCheckbox");
             if (dsetting != null) {
                 unavailablecb.prop("checked", JSON.parse(dsetting.toLowerCase()))

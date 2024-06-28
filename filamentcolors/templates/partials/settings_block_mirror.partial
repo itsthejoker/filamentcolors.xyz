@@ -18,7 +18,7 @@
   <div class="ms-3 mt-3">
     <div class="form-check form-switch text-start">
       <input class="form-check-input" style="margin-top: 9px" type="checkbox" id="mirror-unavailableCheckbox"
-             checked="" autocomplete="off">
+              autocomplete="off">
       <label class="form-check-label fs-5" for="mirror-unavailableCheckbox">Show unavailable
         filaments</label>
     </div>
@@ -49,6 +49,7 @@
     mirrors.forEach(($mirror) => {
       let settingId = $mirror.attr('id').replace('mirror-', '');
       let $settingsEl = $(`#${settingId}`);
+      console.log(`${settingId} -> ${$settingsEl.prop("checked")}`)
       $mirror.prop('checked', $settingsEl.prop("checked"))
       
       $mirror.change(function () {

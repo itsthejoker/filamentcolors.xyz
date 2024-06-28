@@ -552,7 +552,9 @@ class Swatch(models.Model, DistanceMixin):
 
     def get_td(self) -> float | None:
         if self.usersubmittedtd_set.all():
-            tds: list[float] = list(self.usersubmittedtd_set.all().values_list("td", flat=True))
+            tds: list[float] = list(
+                self.usersubmittedtd_set.all().values_list("td", flat=True)
+            )
             if self.td:
                 tds.append(self.td)
             if len(tds) >= 3:
@@ -564,7 +566,9 @@ class Swatch(models.Model, DistanceMixin):
         return None
 
     def get_td_range(self) -> tuple[float, float] | None:
-        tds: list[float] = list(self.usersubmittedtd_set.all().values_list("td", flat=True))
+        tds: list[float] = list(
+            self.usersubmittedtd_set.all().values_list("td", flat=True)
+        )
         if not tds:
             tds = []
         if self.td:

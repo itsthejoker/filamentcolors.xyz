@@ -589,7 +589,7 @@ def about_me(request: WSGIRequest) -> HttpResponse:
     return prep_request(
         request,
         "standalone/about_us.html",
-        build_data_dict(request, title="About the Filament Librarian")
+        build_data_dict(request, title="About the Filament Librarian"),
     )
 
 

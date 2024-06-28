@@ -284,7 +284,9 @@ def get_custom_library(data: Dict) -> QuerySet:
         .prefetch_related("filament_type")
         .filter(filament_type__parent_type__in=data["user_settings"]["types"])
     )
-    if data["user_settings"]["show_unavailable"] is False:
+    if data["user_settings"]["show_unavailable"] is False and not data.get(
+        "show_unavailable_anyway"
+    ):
         s = s.exclude(amazon_purchase_link__isnull=True, mfr_purchase_link__isnull=True)
 
     return s.filter(

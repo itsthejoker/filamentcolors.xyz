@@ -240,6 +240,7 @@ def manufacturersort(request: WSGIRequest, mfr_id: str) -> HttpResponse:
         library=True,
         title=f"{mfr.name} Swatches",
         h1_title=f"{mfr.name} Swatches",
+        show_unavailable_anyway=True,
     )
     s = get_swatches(data)
 

@@ -49,7 +49,6 @@
     mirrors.forEach(($mirror) => {
       let settingId = $mirror.attr('id').replace('mirror-', '');
       let $settingsEl = $(`#${settingId}`);
-      console.log(`${settingId} -> ${$settingsEl.prop("checked")}`)
       $mirror.prop('checked', $settingsEl.prop("checked"))
       
       $mirror.change(function () {

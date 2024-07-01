@@ -331,6 +331,13 @@
                                     </a>
                                 </li>
                                 <li class="nav-item list-group-item border-0 p-0">
+                                    <a href="https://instagram.com/filamentcolors"
+                                       target="_blank"
+                                       class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                        <b>Instagram</b>
+                                    </a>
+                                </li>
+                                <li class="nav-item list-group-item border-0 p-0">
                                     <a href="https://twitter.com/filamentcolors"
                                        target="_blank"
                                        class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
@@ -357,6 +364,15 @@
                                            target="_blank"
                                            class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                                             <b>Mastodon</b>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <div class="w-100 d-flex align-items-center justify-content-between">
+                                        <a href="https://instagram.com/filamentcolors"
+                                           target="_blank"
+                                           class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                                            <b>Instagram</b>
                                         </a>
                                     </div>
                                 </div>

@@ -56,9 +56,9 @@
                 if (mfrName === null || colorName === null || ftypeName === null) {
                     return
                 }
-                const searchstring = encodeURIComponent(`site:${data.website} ${colorName} ${ftypeName}`)
+                const website = `${data.website}`.replace("https://", "").replace("http://", "").replace("www.", "")
+                const searchstring = encodeURIComponent(`site:${website} ${colorName} ${ftypeName}`)
                 window.open("https://duckduckgo.com/?q=" + searchstring, '_blank').focus()
-                {#window.open(data.website, '_blank').focus()#}
             })
     }
 

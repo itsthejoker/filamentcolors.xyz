@@ -22,6 +22,7 @@ class SwatchForm(forms.ModelForm):
         self.fields["hex_color"].required = True
         self.fields["image_front"].required = True
         self.fields["image_back"].required = True
+        self.fields["manufacturer"].widget.attrs.update({"autofocus": "autofocus"})
 
     manufacturer = forms.ModelChoiceField(
         queryset=Manufacturer.objects.all().order_by(Lower("name"))
@@ -118,6 +119,11 @@ class ListSwatchInventoryForm(forms.Form):
 
 
 class ManufacturerForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["name"].widget.attrs.update({"autofocus": "autofocus"})
+
     class Meta:
         model = Manufacturer
         fields = ["name", "website"]
@@ -135,6 +141,11 @@ class PurchaseLocationForm(forms.Form):
 
 
 class FilamentTypeForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["name"].widget.attrs.update({"autofocus": "autofocus"})
+
     class Meta:
         model = FilamentType
         fields = ["name", "hot_end_temp", "bed_temp", "parent_type"]
@@ -147,6 +158,12 @@ class InventoryForm(forms.ModelForm):
     filament_type = forms.ModelChoiceField(
         queryset=FilamentType.objects.all().order_by(Lower("name"))
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["filament_type"].widget.attrs.update(
+            {"autofocus": "autofocus", "required": "required"}
+        )
 
     class Meta:
         model = Swatch

@@ -1,12 +1,10 @@
-import django.db.utils
 from django import forms
 from django.db.models.functions import Lower
-from django.forms import ClearableFileInput
+from django.forms import ClearableFileInput, NumberInput, TextInput
 
 from filamentcolors.models import (
     FilamentType,
     Manufacturer,
-    PurchaseLocation,
     Retailer,
     Swatch,
 )
@@ -53,6 +51,7 @@ class SwatchForm(forms.ModelForm):
             "image_front": CustomClearableFileInputField,
             "image_back": CustomClearableFileInputField,
             "image_other": CustomClearableFileInputField,
+            "td": TextInput(),
         }
 
 

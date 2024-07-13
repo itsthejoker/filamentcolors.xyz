@@ -20,10 +20,28 @@ from filamentcolors.api.throttles import BurstRateThrottle, SustainedRateThrottl
 from filamentcolors.models import RAL, FilamentType, Manufacturer, Pantone, Swatch
 
 
+class CustomSwatchFilterBackend(DjangoFilterBackend):
+    def get_filterset_kwargs(self, *args):
+        # For lots of valid reasons, you're not really supposed
+        # to do this. However, given that 'published' only has
+        # two states, and it's reasonable to assume that most folks
+        # will want one specific state, I'm making the executive
+        # decision to apply a default for this field so that it
+        # can be filtered against if someone really wants to.
+        #
+        # Read: me. I want to.
+        kwargs = super().get_filterset_kwargs(*args)
+        kwargs['data']._mutable = True  # -sigh-
+        if 'published' not in kwargs['data']:
+            kwargs['data']['published'] = True
+        kwargs['data']._mutable = False
+        return kwargs
+
+
 class SwatchViewSet(ReadOnlyModelViewSet):
     serializer_class = SwatchSerializer
     basename = "swatch"
-    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filter_backends = [CustomSwatchFilterBackend, OrderingFilter]
     filterset_fields = {
         "id": ["exact", "in"],
         "manufacturer": ["exact"],
@@ -35,7 +53,8 @@ class SwatchViewSet(ReadOnlyModelViewSet):
     throttle_classes = [BurstRateThrottle, SustainedRateThrottle]
 
     def get_queryset(self):
-        queryset = Swatch.objects.filter(published=True).annotate(
+        # `published` is set in the init
+        queryset = Swatch.objects.annotate(
             is_available=ExpressionWrapper(
                 Q(amazon_purchase_link__isnull=False)
                 & Q(mfr_purchase_link__isnull=False),

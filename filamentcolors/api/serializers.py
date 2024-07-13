@@ -133,4 +133,5 @@ class SwatchSerializer(HyperlinkedModelSerializer):
             "td_range",
             "human_readable_date",
             "is_available",
+            "published",
         )

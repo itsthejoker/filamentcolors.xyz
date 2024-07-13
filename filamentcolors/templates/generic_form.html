@@ -39,16 +39,18 @@
                                 return
                             }
                             let mfr_id = mfr_obj.val();
-                            const URL = `/api/swatch/?color_name__icontains=${name_obj.val()}&manufacturer__id=${mfr_id}`;
+                            const URL = `/api/swatch/?color_name__icontains=${name_obj.val()}&manufacturer__id=${mfr_id}&published=None`;
                             $.getJSON(URL, function (data) {
-                                var items = [];
+                                let items = [];
+                                let unpublished_str = "";
                                 if (data.results.length === 0) {
                                     alert_obj.css("display", "none");
                                     resetAlertContent();
                                     return
                                 }
                                 $.each(data.results, function (key, value) {
-                                    items.push(`<li>${value.manufacturer.name} - ${value.color_name} ${value.filament_type.name}</li>`);
+                                    unpublished_str = value.published ? "" : " (unpublished)"
+                                    items.push(`<li>${value.manufacturer.name} - ${value.color_name} ${value.filament_type.name}${unpublished_str}</li>`);
                                 });
                                 resetAlertContent();
                                 const alert_content = $("#similar-swatch-content");

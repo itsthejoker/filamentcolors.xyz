@@ -89,7 +89,10 @@ class SwatchViewSet(ReadOnlyModelViewSet):
 
         results = {}
         hex_colors = [x.strip() for x in hex_colors.split(",")]
-        materials = [x.strip() for x in materials.split(",")]
+        try:
+            materials = [x.strip() for x in materials.split(",")]
+        except AttributeError:
+            materials = ["any"] * len(hex_colors)
         for count, color in enumerate(hex_colors):
             if (
                 materials[count] is not None

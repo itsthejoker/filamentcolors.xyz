@@ -94,13 +94,17 @@ class SwatchViewSet(ReadOnlyModelViewSet):
         except AttributeError:
             materials = ["any"] * len(hex_colors)
         for count, color in enumerate(hex_colors):
+            try:
+                requested_material = materials[count]
+            except IndexError:
+                requested_material = None
             if (
-                materials[count] is not None
-                and materials[count] != "any"
-                and materials[count] != ""
+                requested_material is not None
+                and requested_material != "any"
+                and requested_material != ""
             ):
                 library = Swatch.objects.filter(
-                    filters, filament_type__parent_type__name__iexact=materials[count]
+                    filters, filament_type__parent_type__name__iexact=requested_material
                 )
             else:
                 library = Swatch.objects.filter(filters)

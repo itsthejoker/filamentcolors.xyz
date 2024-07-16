@@ -17,6 +17,7 @@ from filamentcolors.api.serializers import (
     SwatchSerializer,
 )
 from filamentcolors.api.throttles import BurstRateThrottle, SustainedRateThrottle
+from filamentcolors.colors import is_hex
 from filamentcolors.models import RAL, FilamentType, Manufacturer, Pantone, Swatch
 
 
@@ -93,6 +94,12 @@ class SwatchViewSet(ReadOnlyModelViewSet):
             materials = [x.strip() for x in materials.split(",")]
         except AttributeError:
             materials = ["any"] * len(hex_colors)
+        for color in hex_colors:
+            if not is_hex(color):
+                return JsonResponse(
+                    status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    data={"error": f"Color {color} is invalid."}
+                )
         for count, color in enumerate(hex_colors):
             try:
                 requested_material = materials[count]

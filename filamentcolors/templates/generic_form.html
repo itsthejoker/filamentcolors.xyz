@@ -3,233 +3,255 @@
 {% load widget_tweaks %}
 
 {% block content %}
-    <div class="container mt-4">
-        {% include 'partials/messages.partial' %}
-        <h1>{{ header }}</h1>
-        <h4>{{ subheader }}</h4>
+  <div class="container mt-4">
+    {% include 'partials/messages.partial' %}
+    <h1>{{ header }}</h1>
+    <h4>{{ subheader }}</h4>
 
-        <div class="row">
-            <div class="col"></div>
-            <div class="col-md-8 col-lg-8 col-xl-8">
-                {% if "/add/" in request.path %}
-                    <div class="alert alert-warning text-black-50" role="alert" id="mfrAffAlert" style="display: none" role="alert">
-                        <strong><span id="mfrAffName"></span></strong> has an affiliate portal! Link: <a href="#" id="mfrAffAlertLink" target="_blank" class="alert-link"></a>
-                    </div>
-                    <div id="similar-swatch-alert" style="display: none">
-                        <div class="alert alert-danger text-white" role="alert">
-                            Found similar swatches...
-                            <div id="similar-swatch-content"></div>
-                        </div>
-                    </div>
-                    <script type="text/javascript">
-                        function resetAlertContent() {
-                            $("#similar-swatch-content").empty()
-                        }
-
-                        function checkForDuplicates() {
-                            const name_obj = $('#id_color_name');
-                            const mfr_obj = $("#id_manufacturer option:selected");
-                            const alert_obj = $("#similar-swatch-alert")
-
-                            // Check to see if we have the data we need to check. If we don't,
-                            // just hide the element. Doesn't matter if it has data in it or not
-                            // because we'll wipe it before we write to it or display it again.
-                            if (mfr_obj.text() === "---------" || name_obj.val() === "") {
-                                alert_obj.css("display", "none");
-                                return
-                            }
-                            let mfr_id = mfr_obj.val();
-                            const URL = `/api/swatch/?color_name__icontains=${name_obj.val()}&manufacturer__id=${mfr_id}&published=None`;
-                            $.getJSON(URL, function (data) {
-                                let items = [];
-                                let unpublished_str = "";
-                                if (data.results.length === 0) {
-                                    alert_obj.css("display", "none");
-                                    resetAlertContent();
-                                    return
-                                }
-                                $.each(data.results, function (key, value) {
-                                    unpublished_str = value.published ? "" : " (unpublished)"
-                                    items.push(`<li>${value.manufacturer.name} - ${value.color_name} ${value.filament_type.name}${unpublished_str}</li>`);
-                                });
-                                resetAlertContent();
-                                const alert_content = $("#similar-swatch-content");
-                                const new_list = $("<ul/>", {
-                                    "class": "mb-0",
-                                    html: items.join("")
-                                });
-                                alert_content.append(new_list);
-                                alert_obj.css("display", "block")
-                            });
-                        }
-
-                        $(document).ready(function () {
-                            $('#id_color_name').change(checkForDuplicates);
-                            $('#id_manufacturer').change(checkForDuplicates);
-                        })
-                    </script>
-                {% endif %}
-
-                {% if header_js_buttons or header_link_buttons %}
-                    <div class="row">
-                        {% for item in header_js_buttons %}
-                            <div class="col-md-6 col-xl mt-2 d-grid">
-                                <button class="btn bg-gradient-info"
-                                        onclick="{{ item.onclick }}">{{ item.text }}</button>
-                            </div>
-                        {% endfor %}
-                        {% for item in header_link_buttons %}
-                            <div class="col-md-6 col-xl mt-2 d-grid">
-                                <a href="{% url item.reverse_url %}"
-                                   class="btn bg-gradient-info">{{ item.text }}</a>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-
-                <div class="container mt-3">
-                    {% if swatch %}
-                        <div class="text-center">
-                            <img style="width: 600px" src="{{ swatch.image_front.url }}"
-                                 alt="The front of the swatch in question.">
-                        </div>
-                        {% include 'partials/eyedropper.partial' %}
-                    {% endif %}
-                    {# Lifted from https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html#}
-                    {% if form.is_multipart %}
-                        {# properly handle the file uploads #}
-                        <form novalidate enctype="multipart/form-data" method="post" action="">
-                    {% else %}
-                        <form novalidate method="post" action="">
-                    {% endif %}
-                    <div class="errorMessages"></div>
-                    {% csrf_token %}
-                    {% for hidden_field in form.hidden_fields %}
-                        {{ hidden_field }}
-                    {% endfor %}
-
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger text-white" role="alert">
-                            {% for error in form.non_field_errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                    {% for field in form.visible_fields %}
-                        <div class="form-group input-group input-group-dynamic mt-4{% if field.value != "" %} is-filled{% endif %}">
-                            {% if form.is_bound %}
-                                {% if field.errors %}
-                                    {{ field|add_label_class:"form-label" }}
-                                    {{ field|add_class:"form-control is-invalid" }}
-                                    {% for error in field.errors %}
-                                        <div class="invalid-feedback">
-                                            {{ error }}
-                                        </div>
-                                    {% endfor %}
-                                {% else %}
-                                    {{ field|add_label_class:"form-label" }}
-                                    {{ field|add_class:"form-control is-valid" }}
-                                {% endif %}
-                            {% else %}
-                                {% if field.field.widget.input_type == 'file' %}
-                                    <div class="my-auto pe-3 text-muted">{{ field.label }}:</div>
-                                    {{ field|add_class:"form-control"|attr:"type=file"|add_class:"file-input" }}
-                                {% elif field.field.widget.input_type == 'select' %}
-                                    <div class="form-floating">
-                                        <label for="{{ field.auto_id }}"
-                                               style="top: -3em;left: -0.4em;font-size: 0.6875rem">
-                                            {{ field.label }}
-                                        </label>
-                                        {{ field|add_class:"form-control" }}
-                                    </div>
-                                {% else %}
-                                    {{ field|add_label_class:"form-label" }}
-                                    {{ field|add_class:"form-control" }}
-                                {% endif %}
-                            {% endif %}
-
-                            {% if field.help_text %}
-                                <small class="form-text text-muted">{{ field.help_text }}</small>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                    <button type="submit" class="btn bg-gradient-primary mt-4">Submit</button>
-                    </form>
-                </div>
+    <div class="row">
+      <div class="col"></div>
+      <div class="col-md-8 col-lg-8 col-xl-8">
+        {% if "/add/" in request.path %}
+          <div class="alert alert-warning text-black-50" role="alert" id="mfrAffAlert" style="display: none"
+               role="alert">
+            <strong><span id="mfrAffName"></span></strong> has an affiliate portal! Link: <a href="#"
+                                                                                             id="mfrAffAlertLink"
+                                                                                             target="_blank"
+                                                                                             class="alert-link"></a>
+          </div>
+          <div id="similar-swatch-alert" style="display: none">
+            <div class="alert alert-danger text-white" role="alert">
+              Found similar swatches...
+              <div id="similar-swatch-content"></div>
             </div>
-            <div class="col"></div>
-        </div>
-    </div>
+          </div>
+          <script type="text/javascript">
+            function resetAlertContent() {
+              $("#similar-swatch-content").empty();
+            }
 
-    <script>
-        $(document).ready(function () {
-            // set up new inputs
-            var inputs = document.querySelectorAll('.inputfile');
-            Array.prototype.forEach.call(inputs, function (input) {
-                var label = input.previousElementSibling
+            function enableSubmitLoadingButton() {
+              $("#submitButton").addClass("d-none");
+              $("#submitButtonLoading").removeClass("d-none");
+            }
 
-                input.addEventListener('change', function (e) {
-                    var fileName = '';
+            function disableSubmitLoadingButton() {
+              $("#submitButton").removeClass("d-none");
+              $("#submitButtonLoading").addClass("d-none");
+            }
 
-                    fileName = e.target.value.split('\\').pop();
+            function checkForDuplicates() {
+              const name_obj = $("#id_color_name");
+              const mfr_obj = $("#id_manufacturer option:selected");
+              const alert_obj = $("#similar-swatch-alert");
 
-                    if (fileName)
-                        label.innerText = fileName;
-                    else
-                        label.innerText = "browse";
+              // Check to see if we have the data we need to check. If we don't,
+              // just hide the element. Doesn't matter if it has data in it or not
+              // because we'll wipe it before we write to it or display it again.
+              if (mfr_obj.text() === "---------" || name_obj.val() === "") {
+                alert_obj.css("display", "none");
+                return;
+              }
+              let mfr_id = mfr_obj.val();
+              const URL = `/api/swatch/?color_name__icontains=${name_obj.val()}&manufacturer__id=${mfr_id}&published=None`;
+              enableSubmitLoadingButton();
+              $.getJSON(URL, function(data) {
+                let items = [];
+                let unpublished_str = "";
+                if (data.results.length === 0) {
+                  alert_obj.css("display", "none");
+                  resetAlertContent();
+                  disableSubmitLoadingButton();
+                  return;
+                }
+                $.each(data.results, function(key, value) {
+                  unpublished_str = value.published ? "" : " (unpublished)";
+                  items.push(`<li>${value.manufacturer.name} - ${value.color_name} ${value.filament_type.name}${unpublished_str}</li>`);
                 });
+                resetAlertContent();
+                const alert_content = $("#similar-swatch-content");
+                const new_list = $("<ul/>", {
+                  "class": "mb-0",
+                  html: items.join("")
+                });
+                alert_content.append(new_list);
+                alert_obj.css("display", "block");
+                disableSubmitLoadingButton();
+              });
+            }
+
+            $(document).ready(function() {
+              $("#id_color_name").change(checkForDuplicates);
+              $("#id_manufacturer").change(checkForDuplicates);
             });
+          </script>
+        {% endif %}
 
-            // from https://www.tjvantoll.com/2012/08/05/html5-form-validation-showing-all-error-messages/
-            var createAllErrors = function () {
-                var form = $(this)
-                var errorList = $(".errorMessages");
+        {% if header_js_buttons or header_link_buttons %}
+          <div class="row">
+            {% for item in header_js_buttons %}
+              <div class="col-md-6 col-xl mt-2 d-grid">
+                <button class="btn bg-gradient-info"
+                        onclick="{{ item.onclick }}">{{ item.text }}</button>
+              </div>
+            {% endfor %}
+            {% for item in header_link_buttons %}
+              <div class="col-md-6 col-xl mt-2 d-grid">
+                <a href="{% url item.reverse_url %}"
+                   class="btn bg-gradient-info">{{ item.text }}</a>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
 
-                var showAllErrorMessages = function () {
-                    errorList.innerHTML = "";
+        <div class="container mt-3">
+          {% if swatch %}
+            <div class="text-center">
+              <img style="width: 600px" src="{{ swatch.image_front.url }}"
+                   alt="The front of the swatch in question.">
+            </div>
+            {% include 'partials/eyedropper.partial' %}
+          {% endif %}
+          {# Lifted from https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html#}
+          {% if form.is_multipart %}
+            {# properly handle the file uploads #}
+            <form novalidate enctype="multipart/form-data" method="post" action="">
+          {% else %}
+            <form novalidate method="post" action="">
+          {% endif %}
+          <div class="errorMessages"></div>
+          {% csrf_token %}
+          {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+          {% endfor %}
 
-                    // Find all invalid fields within the form.
-                    var invalidFields = form.find(":invalid").each(function (index, node) {
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger text-white" role="alert">
+              {% for error in form.non_field_errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% for field in form.visible_fields %}
+            <div class="form-group input-group input-group-dynamic mt-4{% if field.value != "" %} is-filled{% endif %}">
+              {% if form.is_bound %}
+                {% if field.errors %}
+                  {{ field|add_label_class:"form-label" }}
+                  {{ field|add_class:"form-control is-invalid" }}
+                  {% for error in field.errors %}
+                    <div class="invalid-feedback">
+                      {{ error }}
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  {{ field|add_label_class:"form-label" }}
+                  {{ field|add_class:"form-control is-valid" }}
+                {% endif %}
+              {% else %}
+                {% if field.field.widget.input_type == 'file' %}
+                  <div class="my-auto pe-3 text-muted">{{ field.label }}:</div>
+                  {{ field|add_class:"form-control"|attr:"type=file"|add_class:"file-input" }}
+                {% elif field.field.widget.input_type == 'select' %}
+                  <div class="form-floating">
+                    <label for="{{ field.auto_id }}"
+                           style="top: -3em;left: -0.4em;font-size: 0.6875rem">
+                      {{ field.label }}
+                    </label>
+                    {{ field|add_class:"form-control" }}
+                  </div>
+                {% else %}
+                  {{ field|add_label_class:"form-label" }}
+                  {{ field|add_class:"form-control" }}
+                {% endif %}
+              {% endif %}
 
-                        // Find the field's corresponding label
-                        var label = $("label[for=" + node.id + "] "),
-                            // Opera incorrectly does not fill the validationMessage property.
-                            message = node.validationMessage || 'Invalid value.';
+              {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+              {% endif %}
+            </div>
+          {% endfor %}
+          <button type="submit" id="submitButton" class="btn bg-gradient-primary mt-4">Submit</button>
+          <button id="submitButtonLoading" class="btn bg-gradient-primary mt-4 d-none" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            <span class="visually-hidden" role="status">Loading...</span>
+          </button>
 
-                        // jquery won't add the same class multiple times, so we can have
-                        // addClass run for each loop.
-                        errorList.addClass("mt-3");
-                        errorList.append(
-                            '<div class="alert alert-danger text-white" role="alert">\n' + label.html() + " " + message + '\n</div>'
-                        )
-                    });
-                };
+          </form>
+        </div>
+      </div>
+      <div class="col"></div>
+    </div>
+  </div>
 
-                // Support Safari
-                form.on("submit", function (event) {
-                    if (this.checkValidity && !this.checkValidity()) {
-                        $(this).find(":invalid").first().focus();
-                        event.preventDefault();
-                    }
-                });
+  <script>
+    $(document).ready(function() {
+      // set up new inputs
+      var inputs = document.querySelectorAll(".inputfile");
+      Array.prototype.forEach.call(inputs, function(input) {
+        var label = input.previousElementSibling;
 
-                $("input[type=submit], button:not([type=button])", form)
-                    .on("click", showAllErrorMessages);
+        input.addEventListener("change", function(e) {
+          var fileName = "";
 
-                $("input", form).on("keypress", function (event) {
-                    var type = $(this).attr("type");
-                    if (/date|email|month|number|search|tel|text|time|url|week/.test(type)
-                        && event.keyCode === 13) {
-                        showAllErrorMessages();
-                    }
-                });
-            };
+          fileName = e.target.value.split("\\").pop();
 
-            $("form").each(createAllErrors);
-        })
-    </script>
+          if (fileName)
+            label.innerText = fileName;
+          else
+            label.innerText = "browse";
+        });
+      });
 
-    {# Put application-specific imports down here. #}
-    {% include "partials/swatch_add_js.partial" %}
+      // from https://www.tjvantoll.com/2012/08/05/html5-form-validation-showing-all-error-messages/
+      var createAllErrors = function() {
+        var form = $(this);
+        var errorList = $(".errorMessages");
+
+        var showAllErrorMessages = function() {
+          errorList.innerHTML = "";
+
+          // Find all invalid fields within the form.
+          var invalidFields = form.find(":invalid").each(function(index, node) {
+
+            // Find the field's corresponding label
+            var label = $("label[for=" + node.id + "] "),
+              // Opera incorrectly does not fill the validationMessage property.
+              message = node.validationMessage || "Invalid value.";
+
+            // jquery won't add the same class multiple times, so we can have
+            // addClass run for each loop.
+            errorList.addClass("mt-3");
+            errorList.append(
+              "<div class=\"alert alert-danger text-white\" role=\"alert\">\n" + label.html() + " " + message + "\n</div>"
+            );
+          });
+        };
+
+        // Support Safari
+        form.on("submit", function(event) {
+          if (this.checkValidity && !this.checkValidity()) {
+            $(this).find(":invalid").first().focus();
+            event.preventDefault();
+          }
+        });
+
+        $("input[type=submit], button:not([type=button])", form)
+          .on("click", showAllErrorMessages);
+
+        $("input", form).on("keypress", function(event) {
+          var type = $(this).attr("type");
+          if (/date|email|month|number|search|tel|text|time|url|week/.test(type)
+            && event.keyCode === 13) {
+            showAllErrorMessages();
+          }
+        });
+      };
+
+      $("form").each(createAllErrors);
+    });
+  </script>
+
+  {# Put application-specific imports down here. #}
+  {% include "partials/swatch_add_js.partial" %}
 
 {% endblock %}

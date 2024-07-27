@@ -2,162 +2,164 @@
 {% load static %}
 
 {% block content %}
-    <div class="container mt-4">
-        {% include 'partials/messages.partial' %}
-        <h4 id="problem">Problem:</h4>
-        <p>
-            One of the most annoying things in 3D printing is ordering filament,
-            waiting for it to arrive, and then finding out that it's completely the
-            wrong color for the project you wanted it for. Some manufacturers try to
-            get around this by putting Pantone colors on their spools, but certainly
-            not everyone does this. (If they did, this app probably wouldn't exist.)
-        </p>
-        <p>
-            Every filament manufacturer has pictures of their product online. It's always
-            super easy to compare and contrast different filament colors to make sure
-            they'll work for whatever you're planning... as long as you're buying
-            everything from the same manufacturer. What do you do if you want to buy
-            from two different places?
-        </p>
-
-        <h4 id="solution">Solution:</h4>
-        <p>
-            Get filaments from lots of different manufacturers, print with them, measure
-            them, and photograph the results under similar conditions. We use
-            spectrophotometry to show you the measured color of each plastic, then use
-            that data (and color theory!) to automatically recommend other colors that
-            will look good with it, regardless of manufacturer. If you know what the
-            primary color of your project is going to be, let us suggest the other colors
-            you should use!
-        </p>
-        <p>
-            Looking for the file I use? Find it here:
-            <a href="https://www.thingiverse.com/thing:664377" target="_blank" rel="noopener">https://www.thingiverse.com/thing:664377</a>
-            (The link contains two versions: large and small. I use the small one for my samples.)
-        </p>
-
-        <hr>
-        <p>
-        <h1>FAQ</h1></p>
-        <h4 id="how-does-it-work">How does it work?</h4>
-        <p>
-            All the images are taken in the same basic way using the same setup and same
-            equipment. After that, we use a spectrophotometer to measure the plastic. We take
-            that data, plug it into the site, and use color theory math to suggest other colors
-            for you to check out. We also show you the closest Pantone and RAL colors to the
-            observed readings from the plastic, so you can see if it'll work well for something
-            you need to match in the real world.
-        </p>
-        <div class="container">
-            <div class="alert alert-info text-white" role="alert">
-                <strong>Note!</strong> This is a hobby project, so there are certain guarantees
-                that we cannot give about how accurate the Pantone / RAL matching actually is.
-                You have our personal guarantee that it is as good as we can make it, but we're
-                not professionals. Use your best judgement.
-            </div>
-        </div>
-        <p>
-            If you're interested in seeing how all this comes together into a application (and
-            some of the crazy awesome math that I learned while putting this together), all
-            the source code for the app is publicly available on GitHub. Just click the link
-            in the footer on any page of the app.
-        </p>
-        <h4 id="dear-god-why">Dear God, why?</h4>
-        <p>
-            It was very frustrating to me that I couldn't tell ahead of time how different
-            filaments would look when I was getting ready to purchase something specifically
-            for a project. After all, like most of us, I'm not made of money and 3D printing
-            is not a cheap hobby. Buying a color that defies expectations is not fun, so I
-            designed this app to help out my own projects and also help others with planning
-            their upcoming projects.
-        </p>
-        <h4 id="why-is-color-hard">Why are the complement sections sometimes hilariously wrong?</h4>
-        <p>
-            Computers don't see color the same way humans do; there are many very long and
-            very involved research papers on the subject, none of which I'm qualified to
-            speak on. It may also come down to the fact that my collection is still growing
-            and I may not have the right plastic already photographed in the right color.
-            <a href="https://www.ludd.ltu.se/~vk/docs/about_colours.shtml">Some</a>
-            <a href="https://www.compuphase.com/cmetric.htm">resources</a>
-            <a href="http://hanzratech.in/2015/01/16/color-difference-between-2-colors-using-python.html">that</a>
-            <a href="https://stackoverflow.com/questions/8863810/python-find-similar-colors-best-way">might</a>
-            <a href="http://answers.opencv.org/question/127885/how-can-i-best-compare-two-bgr-colors-to-determine-how-similardifferent-they-are/">be</a>
-            <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/">interesting</a>.
-        </p>
-        <h4 id="where-do-the-samples-come-from">Where do the samples come from?</h4>
-        <p>
-            All the samples on this app are printed by me and the vast majority are from
-            subscription services like the
-            <a href="https://makerbox.alien3d.us/" target="_blank" rel="noopener">Maker Box</a>.
-            Others are from spools that I've purchased over the years and others are spools
-            or color samples that were gifted to me. I try to not recommend or disparage any
-            specific filament here (with one notable exception); other places can do a far
-            better job of reviewing filament than I ever could.
-        </p>
-        <h4 id="what-runs-this-app">What runs this app?</h4>
-        <p>
-            This app is served on Digital Ocean, the backend is written in Python's Django
-            framework, and the HTML / CSS is lovingly hand-written using Bootstrap as a guide.
-            Cost wise, it doesn't take much -- just a few dollars every now and again. To offset
-            that, I'm a member of the Amazon Affiliate program. Clicking on any of the "Buy on
-            Amazon" links scattered throughout the app will provide a small kickback that I
-            use solely for keeping the app running and occasionally buying sample packs to
-            add new materials to the app. Interested in learning more? Take a look at a livestream
-            I did on YouTube for as part of VRRF2020 weekend
-            <a href="https://youtu.be/uraube0W38Q">here!</a>
-        </p>
-        <h4 id="i-want-to-help">I want to help!</h4>
-        <p>
-            Take a look at the <a href="{% url 'donations' %}">donations page</a> and send me an
-            email at <a href="mailto:joe@filamentcolors.xyz">joe@filamentcolors.xyz</a> if you've
-            got any questions!
-        </p>
-        <h4 id="can-i-print-the-swatches">Can I print the swatches and send them in?</h4>
-        <p class="container text-center">
-          <img 
-            src="{% static 'wellyesbutactuallyno.jpg' %}" 
-            alt="A meme of a cartoon pirate saying 'Well yes, but actually no.'"
-            class="w-100 w-md-75 w-lg-50 rounded"
-          >
-        </p>
-        <p>
-          Here's the deal; due to some folks ruining the fun for everyone, I am willing to
-          take pre-printed swatches as long as you work with me first to make sure they're
-          a good quality (and please don't be offended if I ask for filament cuttings per
-          the normal donation process). If you want to give it a shot, here's the process:
-        </p>
-        <p>
-          Open the below file in the slicer of your choice and configure the following
-          settings:
-        </p>
-        <ul>
-          <li>3 walls</li>
-          <li>3 top layers</li>
-          <li>3 bottom layers</li>
-          <li>17% hexagonal infill</li>
-          <li>0.2mm layers (should be 10 layers high when sliced)</li>
-        </ul>
-      <p>
-        Print one and send me pictures of the top, bottom, and side of the print so that I
-        can doublecheck quality. If it looks good, then you'll be good to go with printing
-        the rest as long as they match or exceed the quality of the first one. Please note
-        that I will not be able to return any swatches sent in, so please don't send me
-        anything you're not willing to part with.
-      </p>
-      <div class="text-center">
-        <a href="{% static 'swatch.stl' %}" class="btn btn-info" hx-boost="false" download>Download Swatch</a>
+  <div class="container mt-4">
+    {% include 'partials/messages.partial' %}
+    <h4 id="problem">Problem:</h4>
+    <p>
+      One of the most annoying things in 3D printing is ordering filament,
+      waiting for it to arrive, and then finding out that it's completely the
+      wrong color for the project you wanted it for. Some manufacturers try to
+      get around this by putting Pantone colors on their spools, but certainly
+      not everyone does this. (If they did, this app probably wouldn't exist.)
+    </p>
+    <p>
+      Every filament manufacturer has pictures of their product online. It's always
+      super easy to compare and contrast different filament colors to make sure
+      they'll work for whatever you're planning... as long as you're buying
+      everything from the same manufacturer. What do you do if you want to buy
+      from two different places?
+    </p>
+    <h4 id="solution">Solution:</h4>
+    <p>
+      Get filaments from lots of different manufacturers, print with them, measure
+      them, and photograph the results under similar conditions. We use
+      spectrophotometry to show you the measured color of each plastic, then use
+      that data (and color theory!) to automatically recommend other colors that
+      will look good with it, regardless of manufacturer. If you know what the
+      primary color of your project is going to be, let us suggest the other colors
+      you should use!
+    </p>
+    <p>
+      Looking for the file I use? Find it here:
+      <a href="https://www.thingiverse.com/thing:664377" target="_blank" rel="noopener">https://www.thingiverse.com/thing:664377</a>
+      (The link contains two versions: large and small. I use the small one for my samples.)
+    </p>
+    <hr>
+    <p>
+    <h1>FAQ</h1></p>
+    <h4 id="how-does-it-work">How does it work?</h4>
+    <p>
+      All the images are taken in the same basic way using the same setup and same
+      equipment. After that, we use a spectrophotometer to measure the plastic. We take
+      that data, plug it into the site, and use color theory math to suggest other colors
+      for you to check out. We also show you the closest Pantone and RAL colors to the
+      observed readings from the plastic, so you can see if it'll work well for something
+      you need to match in the real world.
+    </p>
+    <div class="container">
+      <div class="alert alert-info text-white" role="alert">
+        <strong>Note!</strong> This is a hobby project, so there are certain guarantees
+        that we cannot give about how accurate the Pantone / RAL matching actually is.
+        You have our personal guarantee that it is as good as we can make it, but we're
+        not professionals. Use your best judgement.
       </div>
-
-        
-        <h4 id="licensing">Licensing Information</h4>
-        <p>
-            All the source code for this application,
-            <a href="https://github.com/itsthejoker/filamentcolors.xyz">found on GitHub</a>,
-            is licensed under the <a href="https://opensource.org/licenses/MIT">MIT license</a>.<br>
-            All images, text, and data found on the production version of this app is licensed
-            under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a>.<br>
-            Some icons on this site are courtesy of
-            <a href="https://icons8.com" target="_blank" rel="noreferrer noopener">icons8</a>.
-        </p>
     </div>
+    <p>
+      If you're interested in seeing how all this comes together into a application (and
+      some of the crazy awesome math that I learned while putting this together), all
+      the source code for the app is publicly available on GitHub. Just click the link
+      in the footer on any page of the app.
+    </p>
+    <h4 id="dear-god-why">Dear God, why?</h4>
+    <p>
+      It was very frustrating to me that I couldn't tell ahead of time how different
+      filaments would look when I was getting ready to purchase something specifically
+      for a project. After all, like most of us, I'm not made of money and 3D printing
+      is not a cheap hobby. Buying a color that defies expectations is not fun, so I
+      designed this app to help out my own projects and also help others with planning
+      their upcoming projects.
+    </p>
+    <h4 id="why-is-color-hard">Why are the complement sections sometimes hilariously wrong?</h4>
+    <p>
+      Computers don't see color the same way humans do; there are many very long and
+      very involved research papers on the subject, none of which I'm qualified to
+      speak on. It may also come down to the fact that my collection is still growing
+      and I may not have the right plastic already photographed in the right color.
+      <a href="https://www.ludd.ltu.se/~vk/docs/about_colours.shtml">Some</a>
+      <a href="https://www.compuphase.com/cmetric.htm">resources</a>
+      <a href="http://hanzratech.in/2015/01/16/color-difference-between-2-colors-using-python.html">that</a>
+      <a href="https://stackoverflow.com/questions/8863810/python-find-similar-colors-best-way">might</a>
+      <a
+        href="http://answers.opencv.org/question/127885/how-can-i-best-compare-two-bgr-colors-to-determine-how-similardifferent-they-are/">be</a>
+      <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/">interesting</a>.
+    </p>
+    <h4 id="where-do-the-samples-come-from">Where do the samples come from?</h4>
+    <p>
+      All the samples on this app are printed by me and the vast majority are from
+      subscription services like the
+      <a href="https://makerbox.alien3d.us/" target="_blank" rel="noopener">Maker Box</a>.
+      Others are from spools that I've purchased over the years and others are spools
+      or color samples that were gifted to me. I try to not recommend or disparage any
+      specific filament here (with one notable exception); other places can do a far
+      better job of reviewing filament than I ever could.
+    </p>
+    <h4 id="what-runs-this-app">What runs this app?</h4>
+    <p>
+      This app is served on Digital Ocean, the backend is written in Python's Django
+      framework, and the HTML / CSS is lovingly hand-written using Bootstrap as a guide.
+      Cost wise, it doesn't take much -- just a few dollars every now and again. To offset
+      that, I'm a member of the Amazon Affiliate program. Clicking on any of the "Buy on
+      Amazon" links scattered throughout the app will provide a small kickback that I
+      use solely for keeping the app running and occasionally buying sample packs to
+      add new materials to the app. Interested in learning more? Take a look at a livestream
+      I did on YouTube for as part of VRRF2020 weekend
+      <a href="https://youtu.be/uraube0W38Q">here!</a>
+    </p>
+    <h4 id="i-want-to-help">I want to help!</h4>
+    <p>
+      Take a look at the <a href="{% url 'donations' %}">donations page</a> and send me an
+      email at <a href="mailto:joe@filamentcolors.xyz">joe@filamentcolors.xyz</a> if you've
+      got any questions!
+    </p>
+    <h4 id="can-i-print-the-swatches">Can I print the swatches and send them in?</h4>
+    <p class="container text-center">
+      <img
+        src="{% static 'wellyesbutactuallyno.jpg' %}"
+        alt="A meme of a cartoon pirate saying 'Well yes, but actually no.'"
+        class="w-100 w-md-75 w-lg-50 rounded"
+      >
+    </p>
+    <p>
+      Here's the deal; due to some folks ruining the fun for everyone, I am willing to
+      take pre-printed swatches as long as you work with me first to make sure they're
+      a good quality (and please don't be offended if I ask for filament cuttings per
+      the normal donation process). If you want to give it a shot, here's the process:
+    </p>
+    <p>
+      Open the below file in the slicer of your choice and configure the following
+      settings:
+    </p>
+    <ul>
+      <li>3 walls</li>
+      <li>3 top layers</li>
+      <li>3 bottom layers</li>
+      <li>17% hexagonal infill</li>
+      <li>0.2mm layers (should be 10 layers high when sliced)</li>
+    </ul>
+    <p>
+      Print one and send me pictures of the top, bottom, and side of the print so that I
+      can doublecheck quality. If it looks good, then you'll be good to go with printing
+      the rest as long as they match or exceed the quality of the first one. Please note
+      that I will not be able to return any swatches sent in, so please don't send me
+      anything you're not willing to part with.
+    </p>
+    <div class="text-center">
+      <a
+        href="{% static 'swatch.stl' %}"
+        class="btn btn-info"
+        hx-boost="false"
+        download
+      >Download Swatch</a>
+    </div>
+    <h4 id="licensing">Licensing Information</h4>
+    <p>
+      All the source code for this application,
+      <a href="https://github.com/itsthejoker/filamentcolors.xyz">found on GitHub</a>,
+      is licensed under the <a href="https://opensource.org/licenses/MIT">MIT license</a>.<br>
+      All images, text, and data found on the production version of this app is licensed
+      under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a>.<br>
+      Some icons on this site are courtesy of
+      <a href="https://icons8.com" target="_blank" rel="noreferrer noopener">icons8</a>.
+    </p>
+  </div>
 {% endblock content %}

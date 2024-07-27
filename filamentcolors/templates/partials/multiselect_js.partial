@@ -1,26 +1,26 @@
 {% load static %}
 
 <div class="collection-buttons way-off-screen" id="collection-buttons">
-    <div id="multiselect-badge" class="badge badge-lg bg-gradient-success fs-2 p-1">0</div>
-    <p></p>
-    <button type="button" id="go-button" class="btn shadow-lg bg-gradient-primary">
-        {% if preselect_collection %}
-            Update Collection
-        {% endif %}
-        {% if not preselect_collection %}
-            Create Collection
-        {% endif %}
-    </button>
-    <p></p>
-    <button type="button" id="clear-button" class="btn shadow-lg bg-gradient-secondary">Unselect All</button>
+  <div id="multiselect-badge" class="badge badge-lg bg-gradient-success fs-2 p-1">0</div>
+  <p></p>
+  <button type="button" id="go-button" class="btn shadow-lg bg-gradient-primary">
+    {% if preselect_collection %}
+      Update Collection
+    {% endif %}
+    {% if not preselect_collection %}
+      Create Collection
+    {% endif %}
+  </button>
+  <p></p>
+  <button type="button" id="clear-button" class="btn shadow-lg bg-gradient-secondary">Unselect All</button>
 </div>
 
 <script>
-    {% if preselect_collection %}
-        var preselected = {{ preselect_collection }}
-    {% else %}
-        var preselected = ""
-    {% endif %}
+  {% if preselect_collection %}
+    let preselected = {{ preselect_collection }};
+  {% else %}
+    let preselected = "";
+  {% endif %}
 </script>
 
 <script src="{% static 'js/multiselect.js' %}"></script>

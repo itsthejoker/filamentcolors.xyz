@@ -5,44 +5,44 @@
 {% block title %}Welcome to FilamentColors.xyz!{% endblock %}
 
 {% block content %}
-    <p>
-        Please take a moment to read this; it will only appear on your first
-        visit (or whenever you clear your cookies). This site lets you take
-        a look at different 3D printer filaments in all sorts of colors from
-        lots of different manufacturers so you can get a better idea of how
-        the colors you buy will look together.
-    </p>
-    <p>
-        There are no tracking scripts, ads, or anything of the type on this
-        site and I don't save visitor information. (There are some light
-        analytics to make sure things are working and to see where people are
-        coming from, though.) In order to support the site, almost all the
-        individual entries on this site have a purchase link on Amazon if
-        available; these are all Amazon Affiliate links. Some manufacturers also
-        have affiliate links, and all are clearly marked as such. As an Amazon 
-        Associate I earn from qualifying purchases. This doesn't cost you a dime,
-        and this site doesn't cost much to run, but what I receive from this
-        program allows me to keep the site ad-free. If you like something that
-        you see here, please consider using one of the embedded purchase links.
-        You can also find me on Patreon -- the link is in the footer. Cheers!
-    </p>
-    <div class="d-grid">
-        <div class="btn bg-gradient-info" onclick="showWelcomeExperience()">How does this work?</div>
-    </div>
+  <p>
+    Please take a moment to read this; it will only appear on your first
+    visit (or whenever you clear your cookies). This site lets you take
+    a look at different 3D printer filaments in all sorts of colors from
+    lots of different manufacturers so you can get a better idea of how
+    the colors you buy will look together.
+  </p>
+  <p>
+    There are no tracking scripts, ads, or anything of the type on this
+    site and I don't save visitor information. (There are some light
+    analytics to make sure things are working and to see where people are
+    coming from, though.) In order to support the site, almost all the
+    individual entries on this site have a purchase link on Amazon if
+    available; these are all Amazon Affiliate links. Some manufacturers also
+    have affiliate links, and all are clearly marked as such. As an Amazon
+    Associate I earn from qualifying purchases. This doesn't cost you a dime,
+    and this site doesn't cost much to run, but what I receive from this
+    program allows me to keep the site ad-free. If you like something that
+    you see here, please consider using one of the embedded purchase links.
+    You can also find me on Patreon -- the link is in the footer. Cheers!
+  </p>
+  <div class="d-grid">
+    <div class="btn bg-gradient-info" onclick="showWelcomeExperience()">How does this work?</div>
+  </div>
 {% endblock %}
 
 {% block extra %}
-    <script type="text/javascript">
-        $(window).on('load', function () {
-            $('#welcomeModal').modal('show');
-        });
+  <script type="text/javascript">
+    $(window).on("load", function() {
+      $("#welcomeModal").modal("show");
+    });
 
-        function showWelcomeExperience() {
-            w = $('#welcomeModal');
-            w.modal("hide");
-            w.on("hidden.bs.modal", function () {
-                $('#welcomeExperience').modal("show");
-            });
-        }
-    </script>
+    function showWelcomeExperience() {
+      w = $("#welcomeModal");
+      w.modal("hide");
+      w.on("hidden.bs.modal", function() {
+        $("#welcomeExperience").modal("show");
+      });
+    }
+  </script>
 {% endblock %}

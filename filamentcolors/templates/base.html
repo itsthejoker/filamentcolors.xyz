@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% include 'partials/head.partial' %}
-    {% block title %}
-        <title>{{ title|default:"FilamentColors" }}</title>
-    {% endblock %}
+  {% include 'partials/head.partial' %}
+  {% block title %}
+    <title>{{ title|default:"FilamentColors" }}</title>
+  {% endblock %}
 </head>
 
 <body
-        hx-ext="morph" {# Allow using the morph transition. #}
-        hx-target="#main"
-        hx-boost="true"  {# Make all <a> tags htmx-compatible. #}
-        hx-swap="show:window:top"  {# Always swap the full element and the target & show the navbar. #}
-        hx-push-url="true" {# Update the URL that displays in the browser. #}
-        hx-indicator="#loading" {# The location of the loading spinner. #}
+  hx-ext="morph" {# Allow using the morph transition. #}
+  hx-target="#main"
+  hx-boost="true"  {# Make all <a> tags htmx-compatible. #}
+  hx-swap="show:window:top"  {# Always swap the full element and the target & show the navbar. #}
+  hx-push-url="true" {# Update the URL that displays in the browser. #}
+  hx-indicator="#loading" {# The location of the loading spinner. #}
 >
 {% if navbar_message %}
-    {% include 'partials/navbar_message.partial' %}
+  {% include 'partials/navbar_message.partial' %}
 {% endif %}
 {% include 'partials/navbar.partial' %}
 
 {% if launch_welcome_modal %}
-    {% include 'modals/welcome_modal.partial' %}
+  {% include 'modals/welcome_modal.partial' %}
 {% endif %}
 
 <noscript>
-    {% include 'partials/no-js-alert.partial' %}
+  {% include 'partials/no-js-alert.partial' %}
 </noscript>
 
 {% include 'partials/loading_screen.partial' %}
 
 <main id="main" hx-swap="morph:innerHTML">
-    {% block content %}
-    {% endblock content %}
+  {% block content %}
+  {% endblock content %}
 </main>
 
 {% include 'partials/browser_console_message.partial' %}

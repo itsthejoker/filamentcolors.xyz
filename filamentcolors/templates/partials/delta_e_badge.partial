@@ -1,13 +1,13 @@
 <div class="row">
-    <div class="col-3 text-center mb-3 d-grid mx-auto">
-        <div
-                class="badge badge-secondary"
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                data-container="body"
-                data-animation="true"
-                title="ΔE (CIE) Distance from the requested color.">
-            ΔE: {{ value|floatformat:3 }}
-        </div>
+  <div class="col-3 text-center mb-3 d-grid mx-auto">
+    <div
+      class="badge badge-secondary"
+      data-bs-toggle="tooltip"
+      data-bs-placement="top"
+      data-container="body"
+      data-animation="true"
+      title="ΔE (CIE) Distance from the requested color.">
+      ΔE: {{ value|floatformat:3 }}
     </div>
+  </div>
 </div>

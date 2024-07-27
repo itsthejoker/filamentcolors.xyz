@@ -1,97 +1,97 @@
 <script>
-    function getFilamentDataFromPage() {
-        const mfr = document.getElementById("id_manufacturer");
-        const mfrName = mfr.options[mfr.selectedIndex].text;
-        const colorName = document.getElementById("id_color_name").value;
-        const ftype = document.getElementById("id_filament_type");
-        const ftypeName = ftype.options[ftype.selectedIndex].text;
-        if (mfrName === "---------") {
-            Toastify({
-                text: 'No manufacturer selected!',
-                duration: 5000,
-                backgroundColor: "#d9534f"
-            }).showToast();
-            return
-        } else if (colorName === "") {
-            Toastify({
-                text: 'No color name retrieved!',
-                duration: 5000,
-                backgroundColor: "#d9534f"
-            }).showToast();
-            return
-        } else if (ftypeName === "---------") {
-            Toastify({
-                text: 'No color type specified!',
-                duration: 5000,
-                backgroundColor: "#d9534f"
-            }).showToast();
-            return
-        }
-        return [mfrName, colorName, ftypeName]
+  function getFilamentDataFromPage() {
+    const mfr = document.getElementById("id_manufacturer");
+    const mfrName = mfr.options[mfr.selectedIndex].text;
+    const colorName = document.getElementById("id_color_name").value;
+    const ftype = document.getElementById("id_filament_type");
+    const ftypeName = ftype.options[ftype.selectedIndex].text;
+    if (mfrName === "---------") {
+      Toastify({
+        text: "No manufacturer selected!",
+        duration: 5000,
+        backgroundColor: "#d9534f"
+      }).showToast();
+      return;
+    } else if (colorName === "") {
+      Toastify({
+        text: "No color name retrieved!",
+        duration: 5000,
+        backgroundColor: "#d9534f"
+      }).showToast();
+      return;
+    } else if (ftypeName === "---------") {
+      Toastify({
+        text: "No color type specified!",
+        duration: 5000,
+        backgroundColor: "#d9534f"
+      }).showToast();
+      return;
     }
+    return [mfrName, colorName, ftypeName];
+  }
 
 
-    function loadMfrSearch() {
-        mfrID = document.getElementById("id_manufacturer").value;
-        if (mfrID === "") {
-            Toastify({
-                text: 'No manufacturer selected!',
-                duration: 5000,
-                backgroundColor: "#d9534f"
-            }).showToast();
-            return;
-        }
-        fetch("/api/manufacturer/" + mfrID)
-            .then(response => response.json())
-            .then(data => {
-                if (data.website === null) {
-                    Toastify({
-                        text: "API says there's no website!",
-                        duration: 5000,
-                        backgroundColor: "#d9534f"
-                    }).showToast();
-                    return
-                }
-                const [mfrName, colorName, ftypeName] = getFilamentDataFromPage();
-                if (mfrName === null || colorName === null || ftypeName === null) {
-                    return
-                }
-                const website = `${data.website}`.replace("https://", "").replace("http://", "").replace("www.", "")
-                const searchstring = encodeURIComponent(`site:${website} ${colorName} ${ftypeName}`)
-                window.open("https://duckduckgo.com/?q=" + searchstring, '_blank').focus()
-            })
+  function loadMfrSearch() {
+    mfrID = document.getElementById("id_manufacturer").value;
+    if (mfrID === "") {
+      Toastify({
+        text: "No manufacturer selected!",
+        duration: 5000,
+        backgroundColor: "#d9534f"
+      }).showToast();
+      return;
     }
-
-    function loadAmazonSearch() {
+    fetch("/api/manufacturer/" + mfrID)
+      .then(response => response.json())
+      .then(data => {
+        if (data.website === null) {
+          Toastify({
+            text: "API says there's no website!",
+            duration: 5000,
+            backgroundColor: "#d9534f"
+          }).showToast();
+          return;
+        }
         const [mfrName, colorName, ftypeName] = getFilamentDataFromPage();
         if (mfrName === null || colorName === null || ftypeName === null) {
-            return
+          return;
         }
-        searchstring = encodeURI(mfrName + " " + colorName + " " + ftypeName)
-        window.open("https://www.amazon.com/s?k=" + searchstring, '_blank').focus()
+        const website = `${data.website}`.replace("https://", "").replace("http://", "").replace("www.", "");
+        const searchstring = encodeURIComponent(`site:${website} ${colorName} ${ftypeName}`);
+        window.open("https://duckduckgo.com/?q=" + searchstring, "_blank").focus();
+      });
+  }
+
+  function loadAmazonSearch() {
+    const [mfrName, colorName, ftypeName] = getFilamentDataFromPage();
+    if (mfrName === null || colorName === null || ftypeName === null) {
+      return;
     }
+    searchstring = encodeURI(mfrName + " " + colorName + " " + ftypeName);
+    window.open("https://www.amazon.com/s?k=" + searchstring, "_blank").focus();
+  }
 
-    function checkForAffPortal(value) {
-        const affData = JSON.parse(document.getElementById('affiliate-data').textContent);
-        if (affData[value]) {
-            $("#mfrAffName").text($("#id_manufacturer").children("option").filter(":selected").text())
-            const link = $("#mfrAffAlertLink");
-            link.attr("href", affData[value]);
-            link.text(affData[value]);
-            $("#mfrAffAlert").css("display", "block")
-        } else {
-            $("#mfrAffAlert").css("display", "none")
-        }
+  function checkForAffPortal(value) {
+    const affData = JSON.parse(document.getElementById("affiliate-data").textContent);
+    if (affData[value]) {
+      $("#mfrAffName").text($("#id_manufacturer").children("option").filter(":selected").text());
+      const link = $("#mfrAffAlertLink");
+      link.attr("href", affData[value]);
+      link.text(affData[value]);
+      $("#mfrAffAlert").css("display", "block");
+    } else {
+      $("#mfrAffAlert").css("display", "none");
     }
+  }
 
-    $('#id_manufacturer').on('change', function () {
-        checkForAffPortal(this.value.toString())
-    })
+  $("#id_manufacturer").on("change", function() {
+    checkForAffPortal(this.value.toString());
+  });
 
-    $(document).ready(function() {
-        // run once manually on page load
-        checkForAffPortal($("#id_manufacturer").val())
-    })
+  $(document).ready(function() {
+    // run once manually on page load
+    checkForAffPortal($("#id_manufacturer").val());
+  });
 </script>
 
 {{ aff_data|json_script:"affiliate-data" }}

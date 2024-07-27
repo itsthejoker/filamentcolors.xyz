@@ -2,322 +2,325 @@
 {% load static %}
 
 {% block content %}
-    <div class="container mt-4">
-        {% include 'partials/messages.partial' %}
-        <h1>Color Match</h1>
-        <p>
-            Looking for a particular plastic in the library close to a color you have in mind?
-            We have a few different ways to enter that color -- use whatever works
-            best for you and we'll try to match it to a plastic!
-        </p>
-        <div class="row mt-4 mb-3">
-            <div class="col-10 col-md-8 col-xl-6 mx-auto text-center" id="color-picker"
-                 style="border-radius:10px; border: 1px solid dimgrey">
-                <div class="card card-frame mx-3 my-4">
-                    <div class="card-body">
-                        <form hx-target="#results"
-                              hx-swap="innerHTML show:none"
-                              hx-indicator="#colorMatchSpinner,.loaded-content"
-                              hx-post="{% url 'colormatch' %}"
-                        >
-                            <div class="input-group input-group-static my-3">
-                                <label for="hex-input">Hex</label>
-                                <input type="text" id="hex-input" onchange="changeHexColorPicker()"
-                                       name="hex_color"
-                                       class="form-control text-center fs-5">
-                            </div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <div class="input-group input-group-static my-3">
-                                        <label for="red-input">Red</label>
-                                        <input type="text" id="red-input" value="69" onchange="changeRGBColorPicker()"
-                                               class="form-control text-center fs-6">
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="input-group input-group-static my-3">
-                                        <label for="green-input">Green</label>
-                                        <input type="text" id="green-input" value="255"
-                                               onchange="changeRGBColorPicker()"
-                                               class="form-control text-center fs-6">
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="input-group input-group-static my-3">
-                                        <label for="blue-input">Blue</label>
-                                        <input type="text" id="blue-input" value="193" onchange="changeRGBColorPicker()"
-                                               class="form-control text-center fs-6">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <div class="input-group input-group-static my-3">
-                                        <label for="hue-input">Hue</label>
-                                        <input type="text" id="hue-input" value="160.000"
-                                               onchange="changeHSVColorPicker()"
-                                               class="form-control text-center">
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="input-group input-group-static my-3">
-                                        <label for="saturation-input">Saturation</label>
-                                        <input type="text" id="saturation-input" value="72.941"
-                                               onchange="changeHSVColorPicker()"
-                                               class="form-control text-center">
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="input-group input-group-static my-3">
-                                        <label for="value-input">Value</label>
-                                        <input type="text" id="value-input" value="100.000"
-                                               onchange="changeHSVColorPicker()"
-                                               class="form-control text-center">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <div class="input-group input-group-static my-3">
-                                        <label for="l-input">L</label>
-                                        <input type="text" id="l-input" value="89.973" onchange="changeLABColorPicker()"
-                                               class="form-control text-center">
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="input-group input-group-static my-3">
-                                        <label for="a-input">A</label>
-                                        <input type="text" id="a-input" value="-58.494"
-                                               onchange="changeLABColorPicker()"
-                                               class="form-control text-center">
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="input-group input-group-static my-3">
-                                        <label for="b-input">B</label>
-                                        <input type="text" id="b-input" value="15.903"
-                                               onchange="changeLABColorPicker()"
-                                               class="form-control text-center">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn bg-gradient-success mt-4">Search</button>
-                            </div>
-                        </form>
-                    </div>
+  <div class="container mt-4">
+    {% include 'partials/messages.partial' %}
+    <h1>Color Match</h1>
+    <p>
+      Looking for a particular plastic in the library close to a color you have in mind?
+      We have a few different ways to enter that color -- use whatever works
+      best for you and we'll try to match it to a plastic!
+    </p>
+    <div class="row mt-4 mb-3">
+      <div class="col-10 col-md-8 col-xl-6 mx-auto text-center" id="color-picker"
+           style="border-radius:10px; border: 1px solid dimgrey">
+        <div class="card card-frame mx-3 my-4">
+          <div class="card-body">
+            <form hx-target="#results"
+                  hx-swap="innerHTML show:none"
+                  hx-indicator="#colorMatchSpinner,.loaded-content"
+                  hx-post="{% url 'colormatch' %}"
+            >
+              <div class="input-group input-group-static my-3">
+                <label for="hex-input">Hex</label>
+                <input type="text" id="hex-input" onchange="changeHexColorPicker()"
+                       name="hex_color"
+                       class="form-control text-center fs-5">
+              </div>
+              <div class="row">
+                <div class="col-4">
+                  <div class="input-group input-group-static my-3">
+                    <label for="red-input">Red</label>
+                    <input type="text" id="red-input" value="69" onchange="changeRGBColorPicker()"
+                           class="form-control text-center fs-6">
+                  </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-md-6 mx-auto">
-                    <p class="text-muted text-sm text-center mt-3">
-                        Disclaimer: the results are limited by the swatches we've been able to measure. As
-                        the library grows, the results will become more accurate. Exact matches are not
-                        guaranteed; please use your best judgement.
-                    </p>
+                <div class="col-4">
+                  <div class="input-group input-group-static my-3">
+                    <label for="green-input">Green</label>
+                    <input type="text" id="green-input" value="255"
+                           onchange="changeRGBColorPicker()"
+                           class="form-control text-center fs-6">
+                  </div>
                 </div>
-            </div>
+                <div class="col-4">
+                  <div class="input-group input-group-static my-3">
+                    <label for="blue-input">Blue</label>
+                    <input type="text" id="blue-input" value="193" onchange="changeRGBColorPicker()"
+                           class="form-control text-center fs-6">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-4">
+                  <div class="input-group input-group-static my-3">
+                    <label for="hue-input">Hue</label>
+                    <input type="text" id="hue-input" value="160.000"
+                           onchange="changeHSVColorPicker()"
+                           class="form-control text-center">
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="input-group input-group-static my-3">
+                    <label for="saturation-input">Saturation</label>
+                    <input type="text" id="saturation-input" value="72.941"
+                           onchange="changeHSVColorPicker()"
+                           class="form-control text-center">
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="input-group input-group-static my-3">
+                    <label for="value-input">Value</label>
+                    <input type="text" id="value-input" value="100.000"
+                           onchange="changeHSVColorPicker()"
+                           class="form-control text-center">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-4">
+                  <div class="input-group input-group-static my-3">
+                    <label for="l-input">L</label>
+                    <input type="text" id="l-input" value="89.973" onchange="changeLABColorPicker()"
+                           class="form-control text-center">
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="input-group input-group-static my-3">
+                    <label for="a-input">A</label>
+                    <input type="text" id="a-input" value="-58.494"
+                           onchange="changeLABColorPicker()"
+                           class="form-control text-center">
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="input-group input-group-static my-3">
+                    <label for="b-input">B</label>
+                    <input type="text" id="b-input" value="15.903"
+                           onchange="changeLABColorPicker()"
+                           class="form-control text-center">
+                  </div>
+                </div>
+              </div>
+              <div class="d-grid">
+                <button type="submit" class="btn bg-gradient-success mt-4">Search</button>
+              </div>
+            </form>
+          </div>
         </div>
-        {% include 'partials/colormatch_spinner.partial' %}
-        <div id="results" class="loaded-content"></div>
-        <div id="saved_swatches" style="display: none">
-            <hr class="container">
-            <h4>Grab Bag</h4>
-            <div id="saved_swatches_collection" class="row"></div>
-            <div class="row mt-3">
-                <div class="col text-center">
-                    <a class="btn btn-outline-info"
-                       role="button"
-                       onclick="generateCollection()"
-                    >Create Collection</a>
-                </div>
-            </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-6 mx-auto">
+          <p class="text-muted text-sm text-center mt-3">
+            Disclaimer: the results are limited by the swatches we've been able to measure. As
+            the library grows, the results will become more accurate. Exact matches are not
+            guaranteed; please use your best judgement.
+          </p>
         </div>
+      </div>
     </div>
+    {% include 'partials/colormatch_spinner.partial' %}
+    <div id="results" class="loaded-content"></div>
+    <div id="saved_swatches" style="display: none">
+      <hr class="container">
+      <h4>Grab Bag</h4>
+      <div id="saved_swatches_collection" class="row"></div>
+      <div class="row mt-3">
+        <div class="col text-center">
+          <a class="btn btn-outline-info"
+             role="button"
+             onclick="generateCollection()"
+          >Create Collection</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <script>
-        function grabSwatch(el) {
-            let $el = $(el);
-            let swatchcard = $($el.parent().siblings()[0]).clone();
-            let swatch_id = $el.attr("id").split("-")[1]
-          const parentDiv = document.createElement("div")
-          parentDiv.classList.add("col-md-6", "col-xl-4", `singleSwatch-${swatch_id}`, "singleSelectableSwatch")
-          parentDiv.dataset.swatchId = swatch_id
-          parentDiv.appendChild(swatchcard[0])
-          const buttonHolder = document.createElement("div")
-          buttonHolder.classList.add("text-center")
-          const buttonDiv = document.createElement("div")
-          buttonDiv.classList.add("btn", "btn-outline-danger")
-          buttonDiv.innerText = "Remove"
-          buttonDiv.onclick = function (evt) {
-            $(evt.target).parent().parent().remove()
-            updateGrabBag()
-          }
-          buttonHolder.appendChild(buttonDiv)
-          parentDiv.appendChild(buttonHolder)
-            $("#saved_swatches_collection").append(parentDiv);
-            updateGrabBag();
+  <script>
+    function grabSwatch(el) {
+      let $el = $(el);
+      let swatchcard = $($el.parent().siblings()[0]).clone();
+      let swatch_id = $el.attr("id").split("-")[1];
+      const parentDiv = document.createElement("div");
+      parentDiv.classList.add("col-md-6", "col-xl-4", `singleSwatch-${swatch_id}`, "singleSelectableSwatch");
+      parentDiv.dataset.swatchId = swatch_id;
+      parentDiv.appendChild(swatchcard[0]);
+      const buttonHolder = document.createElement("div");
+      buttonHolder.classList.add("text-center");
+      const buttonDiv = document.createElement("div");
+      buttonDiv.classList.add("btn", "btn-outline-danger");
+      buttonDiv.innerText = "Remove";
+      buttonDiv.onclick = function(evt) {
+        $(evt.target).parent().parent().remove();
+        updateGrabBag();
+      };
+      buttonHolder.appendChild(buttonDiv);
+      parentDiv.appendChild(buttonHolder);
+      $("#saved_swatches_collection").append(parentDiv);
+      updateGrabBag();
+    }
+
+    function generateCollection() {
+      let swatch_ids = [];
+      $(".singleSelectableSwatch").each(function() {
+        swatch_ids.push($(this).data()["swatchId"]);
+      });
+      window.location.href = `/library/collection/${swatch_ids.join(",")}`;
+    }
+
+    function invalid_color() {
+      Toastify({
+        text: "Please enter a valid color value.",
+        duration: 5000,
+        backgroundColor: "#d9534f"
+      }).showToast();
+    }
+
+    function rgbToHex(r, g, b) {
+      // https://stackoverflow.com/a/5624139
+      return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
+    }
+
+    function changeHexColorPicker() {
+      let el = $("#hex-input");
+      let value = el.val();
+
+      if (value.length === 6 && value[0] !== "#") {
+        value = `#${value}`;
+      }
+
+      try {
+        new Color(value);  // will explode if invalid
+        window.picker.fromString(`#${value}`);
+        updateRGB();
+        updateHSV();
+        updateLAB();
+      } catch (e) {
+        invalid_color();
+      }
+    }
+
+    function changeRGBColorPicker() {
+      let r = $("#red-input").val();
+      let g = $("#green-input").val();
+      let b = $("#blue-input").val();
+      try {
+        new Color("srgb", [r, g, b]);
+        window.picker.fromString(rgbToHex(r, g, b));
+        updateHex();
+        updateHSV();
+        updateLAB();
+      } catch (e) {
+        invalid_color();
+      }
+    }
+
+    function changeHSVColorPicker() {
+      let h = $("#hue-input").val();
+      let s = $("#saturation-input").val();
+      let v = $("#value-input").val();
+      try {
+        let rgb = new Color("hsv", [h, s, v]).to("srgb");
+        window.picker.fromString(rgbToHex(rgb.r * 255, rgb.g * 255, rgb.b * 255));
+        updateHex();
+        updateRGB();
+        updateLAB();
+      } catch (e) {
+        invalid_color();
+      }
+    }
+
+    function changeLABColorPicker() {
+      let l = $("#l-input").val();
+      let a = $("#a-input").val();
+      let b = $("#b-input").val();
+      try {
+        let rgb = new Color("lab", [l, a, b]).to("srgb");
+        window.picker.fromString(rgbToHex(rgb.r * 255, rgb.g * 255, rgb.b * 255));
+        updateHex();
+        updateRGB();
+        updateHSV();
+      } catch (e) {
+        invalid_color();
+      }
+    }
+
+    function updateHex() {
+      window.inputs["hex"].value = window.picker.toHEXString();
+    }
+
+    function updateRGB() {
+      let hex_base = window.picker.toHEXString();
+      let rgb = new Color(hex_base);
+      window.inputs["rgb_r"].value = rgb.r * 255;
+      window.inputs["rgb_g"].value = rgb.g * 255;
+      window.inputs["rgb_b"].value = rgb.b * 255;
+    }
+
+    function updateHSV() {
+      let hex_base = window.picker.toHEXString();
+      let rgb = new Color(hex_base);
+      let hsv = rgb.to("hsv");
+      window.inputs["hsv_h"].value = hsv.h.toFixed(3);
+      window.inputs["hsv_s"].value = hsv.s.toFixed(3);
+      window.inputs["hsv_v"].value = hsv.v.toFixed(3);
+    }
+
+    function updateLAB() {
+      let hex_base = window.picker.toHEXString();
+      let rgb = new Color(hex_base);
+      let lab = rgb.to("lab");
+      window.inputs["lab_l"].value = lab.l.toFixed(3);
+      window.inputs["lab_a"].value = lab.a.toFixed(3);
+      window.inputs["lab_b"].value = lab.b.toFixed(3);
+    }
+
+    function updateAll() {
+      updateHex();
+      updateRGB();
+      updateHSV();
+      updateLAB();
+    }
+
+    function updateGrabBag() {
+      let parent = $("#saved_swatches");
+      $("#saved_swatches_collection").children().length > 0 ? parent.css("display", "") : parent.css("display", "none");
+    }
+
+    function nuke(element) {
+      $(element).parent().parent().remove();
+      updateGrabBag();
+    }
+
+    $(document).ready(function() {
+      window.picker = new JSColor(
+        "#color-picker",
+        {
+          format: "hex",
+          previewSize: 0.1,
+          preset: "large thick",
+          value: "#45FFC1",
+          random: true
         }
-        function generateCollection() {
-            let swatch_ids = [];
-            $(".singleSelectableSwatch").each(function () {swatch_ids.push($(this).data()['swatchId'])});
-            window.location.href = `/library/collection/${swatch_ids.join(",")}`
-        }
+      );
+      window.picker.onInput = updateAll;
+      window.inputs = {};
+      window.inputs["hex"] = document.getElementById("hex-input");
+      window.inputs["rgb_r"] = document.getElementById("red-input");
+      window.inputs["rgb_g"] = document.getElementById("green-input");
+      window.inputs["rgb_b"] = document.getElementById("blue-input");
+      window.inputs["hsv_h"] = document.getElementById("hue-input");
+      window.inputs["hsv_s"] = document.getElementById("saturation-input");
+      window.inputs["hsv_v"] = document.getElementById("value-input");
+      window.inputs["lab_l"] = document.getElementById("l-input");
+      window.inputs["lab_a"] = document.getElementById("a-input");
+      window.inputs["lab_b"] = document.getElementById("b-input");
+      updateAll();
 
-        function invalid_color() {
-            Toastify({
-                text: "Please enter a valid color value.",
-                duration: 5000,
-                backgroundColor: "#d9534f"
-            }).showToast();
-        }
+      htmx.onLoad(function() {
+        updateGrabBag();
+      });
+    });
 
-        function rgbToHex(r, g, b) {
-            // https://stackoverflow.com/a/5624139
-            return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
-        }
-
-        function changeHexColorPicker() {
-            let el = $("#hex-input");
-            let value = el.val();
-
-            if (value.length === 6 && value[0] !== "#") {
-                value = `#${value}`
-            }
-
-            try {
-                new Color(value);  // will explode if invalid
-                window.picker.fromString(`#${value}`);
-                updateRGB();
-                updateHSV();
-                updateLAB();
-            } catch (e) {
-                invalid_color()
-            }
-        }
-
-        function changeRGBColorPicker() {
-            let r = $("#red-input").val();
-            let g = $("#green-input").val();
-            let b = $("#blue-input").val();
-            try {
-                new Color("srgb", [r, g, b]);
-                window.picker.fromString(rgbToHex(r, g, b));
-                updateHex();
-                updateHSV();
-                updateLAB();
-            } catch (e) {
-                invalid_color()
-            }
-        }
-
-        function changeHSVColorPicker() {
-            let h = $("#hue-input").val();
-            let s = $("#saturation-input").val();
-            let v = $("#value-input").val();
-            try {
-                let rgb = new Color("hsv", [h, s, v]).to("srgb");
-                window.picker.fromString(rgbToHex(rgb.r * 255, rgb.g * 255, rgb.b * 255));
-                updateHex();
-                updateRGB();
-                updateLAB();
-            } catch (e) {
-                invalid_color()
-            }
-        }
-
-        function changeLABColorPicker() {
-            let l = $("#l-input").val();
-            let a = $("#a-input").val();
-            let b = $("#b-input").val();
-            try {
-                let rgb = new Color("lab", [l, a, b]).to("srgb");
-                window.picker.fromString(rgbToHex(rgb.r * 255, rgb.g * 255, rgb.b * 255));
-                updateHex();
-                updateRGB();
-                updateHSV();
-            } catch (e) {
-                invalid_color()
-            }
-        }
-
-        function updateHex() {
-            window.inputs["hex"].value = window.picker.toHEXString();
-        }
-
-        function updateRGB() {
-            let hex_base = window.picker.toHEXString();
-            let rgb = new Color(hex_base);
-            window.inputs["rgb_r"].value = rgb.r * 255;
-            window.inputs["rgb_g"].value = rgb.g * 255;
-            window.inputs["rgb_b"].value = rgb.b * 255;
-        }
-
-        function updateHSV() {
-            let hex_base = window.picker.toHEXString();
-            let rgb = new Color(hex_base);
-            let hsv = rgb.to("hsv");
-            window.inputs["hsv_h"].value = hsv.h.toFixed(3);
-            window.inputs["hsv_s"].value = hsv.s.toFixed(3);
-            window.inputs["hsv_v"].value = hsv.v.toFixed(3);
-        }
-
-        function updateLAB() {
-            let hex_base = window.picker.toHEXString();
-            let rgb = new Color(hex_base);
-            let lab = rgb.to("lab");
-            window.inputs["lab_l"].value = lab.l.toFixed(3);
-            window.inputs["lab_a"].value = lab.a.toFixed(3);
-            window.inputs["lab_b"].value = lab.b.toFixed(3);
-        }
-
-        function updateAll() {
-            updateHex();
-            updateRGB();
-            updateHSV();
-            updateLAB()
-        }
-
-        function updateGrabBag() {
-            let parent = $("#saved_swatches");
-            $("#saved_swatches_collection").children().length > 0 ? parent.css("display", "") : parent.css("display", "none")
-        }
-
-        function nuke(element) {
-            $(element).parent().parent().remove()
-            updateGrabBag()
-        }
-
-        $(document).ready(function () {
-            window.picker = new JSColor(
-                '#color-picker',
-                {
-                    format: 'hex',
-                    previewSize: 0.1,
-                    preset: 'large thick',
-                    value: "#45FFC1",
-                    random: true
-                }
-            );
-            window.picker.onInput = updateAll;
-            window.inputs = {}
-            window.inputs["hex"] = document.getElementById("hex-input");
-            window.inputs["rgb_r"] = document.getElementById("red-input");
-            window.inputs["rgb_g"] = document.getElementById("green-input");
-            window.inputs["rgb_b"] = document.getElementById("blue-input");
-            window.inputs["hsv_h"] = document.getElementById("hue-input");
-            window.inputs["hsv_s"] = document.getElementById("saturation-input");
-            window.inputs["hsv_v"] = document.getElementById("value-input");
-            window.inputs["lab_l"] = document.getElementById("l-input");
-            window.inputs["lab_a"] = document.getElementById("a-input");
-            window.inputs["lab_b"] = document.getElementById("b-input");
-            updateAll();
-
-            htmx.onLoad(function () {
-                updateGrabBag()
-            })
-        })
-
-    </script>
+  </script>
 
 {% endblock content %}

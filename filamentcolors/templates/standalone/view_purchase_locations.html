@@ -1,22 +1,22 @@
 {% extends base_template %}
 
 {% block content %}
-    <div class="container mt-4">
-        {% include 'partials/messages.partial' %}
-        <h1>Purchase Locations</h1>
-        <a href="{% url 'add_purchase_location' swatch_id %}" class="btn btn-primary">Add new Location</a>
-        <a href="{% url 'swatchdetail' swatch_id %}" class="btn btn-info">View Swatch</a>
-        <div class="row">
-            {% for loc in locations %}
-                <div class="col-12 col-md-9">{{ loc.retailer.name }}<br>{{ loc.url }}</div>
-                <div class="col-12 col-md-3">
-                    <div class="d-grid">
-                        <a class="btn btn-outline-primary"
-                           href="{% url 'edit_purchase_location' loc.swatch.id loc.id %}">Edit</a>
-                    </div>
-                </div>
-            {% endfor %}
+  <div class="container mt-4">
+    {% include 'partials/messages.partial' %}
+    <h1>Purchase Locations</h1>
+    <a href="{% url 'add_purchase_location' swatch_id %}" class="btn btn-primary">Add new Location</a>
+    <a href="{% url 'swatchdetail' swatch_id %}" class="btn btn-info">View Swatch</a>
+    <div class="row">
+      {% for loc in locations %}
+        <div class="col-12 col-md-9">{{ loc.retailer.name }}<br>{{ loc.url }}</div>
+        <div class="col-12 col-md-3">
+          <div class="d-grid">
+            <a class="btn btn-outline-primary"
+               href="{% url 'edit_purchase_location' loc.swatch.id loc.id %}">Edit</a>
+          </div>
         </div>
-
+      {% endfor %}
     </div>
+
+  </div>
 {% endblock %}

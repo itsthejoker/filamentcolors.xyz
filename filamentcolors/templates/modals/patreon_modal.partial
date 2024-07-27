@@ -5,31 +5,31 @@
 {% block title %}Support the site on Patreon!{% endblock %}
 
 {% block content %}
-    <p>
-        Through donations, I can continue to add filaments to this site and
-        keep it running. It doesn't require much -- just a few dollars every
-        now and then -- so everything beyond what I need for the servers goes
-        towards finding new filaments to add, either ones that I just don't
-        have or ones that are recommended to me.
-    </p>
-    <p>
-        If you like this site and the service that I provide enough, I ask that
-        you consider a small donation or perhaps subscribing to my Patreon.
-        Everything helps, and I won't bore you with the same spiel you've likely
-        heard a million times; just know that I appreciate the fact that you're
-        even reading this.
-    </p>
-    <p>Awesome Supporters List:</p>
-    <ul>
-        <li>Prusa Research - <a href="https://www.prusa3d.com/en" target="_blank">prusa3d.com</a></li>
-        <li>Filament Stories - <a href="https://www.filamentstories.com/" target="_blank">filamentstories.com</a></li>
-        <li>Proto-Pasta - <a href="https://proto-pasta.com" target="_blank">proto-pasta.com</a></li>
-    </ul>
-    <p>
-        <div class="d-grid">
-            <a href="https://www.patreon.com/bePatron?u=19146975" target="_blank" rel="noopener"
-               class="btn btn-secondary mb-0 mt-2"
-               style="background: #f96854; border-color: #f96854; color: #ffffff">Join me on Patreon!</a>
-        </div>
-    </p>
+  <p>
+    Through donations, I can continue to add filaments to this site and
+    keep it running. It doesn't require much -- just a few dollars every
+    now and then -- so everything beyond what I need for the servers goes
+    towards finding new filaments to add, either ones that I just don't
+    have or ones that are recommended to me.
+  </p>
+  <p>
+    If you like this site and the service that I provide enough, I ask that
+    you consider a small donation or perhaps subscribing to my Patreon.
+    Everything helps, and I won't bore you with the same spiel you've likely
+    heard a million times; just know that I appreciate the fact that you're
+    even reading this.
+  </p>
+  <p>Awesome Supporters List:</p>
+  <ul>
+    <li>Prusa Research - <a href="https://www.prusa3d.com/en" target="_blank">prusa3d.com</a></li>
+    <li>Filament Stories - <a href="https://www.filamentstories.com/" target="_blank">filamentstories.com</a></li>
+    <li>Proto-Pasta - <a href="https://proto-pasta.com" target="_blank">proto-pasta.com</a></li>
+  </ul>
+  <p>
+  <div class="d-grid">
+    <a href="https://www.patreon.com/bePatron?u=19146975" target="_blank" rel="noopener"
+       class="btn btn-secondary mb-0 mt-2"
+       style="background: #f96854; border-color: #f96854; color: #ffffff">Join me on Patreon!</a>
+  </div>
+  </p>
 {% endblock %}

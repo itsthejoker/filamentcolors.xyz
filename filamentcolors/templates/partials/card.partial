@@ -1,50 +1,50 @@
 {% load static %}
 
 <div
-        id="s{{ obj.id }}"
-        class="card mb-4 shadow swatchcard cardBox anim mx-auto"
-        style="width: 18rem;"
-        data-swatch-id="{{ obj.id }}"
+  id="s{{ obj.id }}"
+  class="card mb-4 shadow swatchcard cardBox anim mx-auto"
+  style="width: 18rem;"
+  data-swatch-id="{{ obj.id }}"
 >
-    <div class="card-img-overlay p-0" onclick="handleMultiselectClick(this)"></div>
-    <a 
-        href="/swatch/{{ obj.slug }}"
-        hx-swap="morph:innerHTML show:window:top"
-        hx-target="#main"
-        hx-indicator="#loading"
-        hx-push-url="true"
-    >
-        <div class="card-img-container">
-            <img class="card-img-top img-fluid layer lazy-load-image"
-                 src="{% static 'swatch-card-test.svg' %}"
-                 data-src="{{ obj.card_img.url }}"
-                 style="height:89px"
-                 alt="Card image for {{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}">
-        </div>
+  <div class="card-img-overlay p-0" onclick="handleMultiselectClick(this)"></div>
+  <a
+    href="/swatch/{{ obj.slug }}"
+    hx-swap="morph:innerHTML show:window:top"
+    hx-target="#main"
+    hx-indicator="#loading"
+    hx-push-url="true"
+  >
+    <div class="card-img-container">
+      <img class="card-img-top img-fluid layer lazy-load-image"
+           src="{% static 'swatch-card-test.svg' %}"
+           data-src="{{ obj.card_img.url }}"
+           style="height:89px"
+           alt="Card image for {{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}">
+    </div>
 
-        <div class="card-body text-start">
-            <div class="color-cube" style="background-color:#{{ obj.hex_color }};"></div>
-            <div>
-                <h5 class="card-title position-relative">
-                    #{{ obj.hex_color|upper }}
-                </h5>
-                {% if not obj.is_available %}
-                    <div class="row">
-                        <div class="col text-center mb-3 mt-2 d-grid">
-                            <div
-                                    class="badge bg-gradient-secondary"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    data-container="body"
-                                    data-animation="true"
-                                    title="This swatch is not available for purchase from the manufacturer or Amazon.">
-                                Unavailable
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
+    <div class="card-body text-start">
+      <div class="color-cube" style="background-color:#{{ obj.hex_color }};"></div>
+      <div>
+        <h5 class="card-title position-relative">
+          #{{ obj.hex_color|upper }}
+        </h5>
+        {% if not obj.is_available %}
+          <div class="row">
+            <div class="col text-center mb-3 mt-2 d-grid">
+              <div
+                class="badge bg-gradient-secondary"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                data-container="body"
+                data-animation="true"
+                title="This swatch is not available for purchase from the manufacturer or Amazon.">
+                Unavailable
+              </div>
             </div>
-            <p class="card-text">{{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}</p>
-        </div>
-    </a>
+          </div>
+        {% endif %}
+      </div>
+      <p class="card-text">{{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}</p>
+    </div>
+  </a>
 </div>

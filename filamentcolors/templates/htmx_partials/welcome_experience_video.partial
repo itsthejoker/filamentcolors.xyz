@@ -1,5 +1,5 @@
 <video class="w-100" controls autoplay loop muted>
-    <source src="{{ mp4_url }}" type="video/mp4" />
-    <source src="{{ webm_url }}" type="video/webm" />
-    Your browser cannot play this video.
+  <source src="{{ mp4_url }}" type="video/mp4" />
+  <source src="{{ webm_url }}" type="video/webm" />
+  Your browser cannot play this video.
 </video>

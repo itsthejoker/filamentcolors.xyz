@@ -1,59 +1,59 @@
 <h5>Types of filament to display:</h5>
 
 <div class="row">
-<div class="col"></div>
-<div class="col-sm-12 col-md-8 col-lg-5 col-xl-4">
-  <div class="ms-3 mt-3">
-    {% for t in settings_buttons %}
-      <div class="form-check form-switch text-start">
-        <input class="form-check-input" style="margin-top: 9px" type="checkbox" id="mirror-{{ t.id }}"
-               checked="" autocomplete="off">
-        <label class="form-check-label fs-5" for="mirror-{{ t.id }}"
-        >{{ t.name }}</label>
-      </div>
-    {% endfor %}
-  </div>
-
-  <h5>General</h5>
-  <div class="ms-3 mt-3">
-    <div class="form-check form-switch text-start">
-      <input class="form-check-input" style="margin-top: 9px" type="checkbox" id="mirror-unavailableCheckbox"
-              autocomplete="off">
-      <label class="form-check-label fs-5" for="mirror-unavailableCheckbox">Show unavailable
-        filaments</label>
+  <div class="col"></div>
+  <div class="col-sm-12 col-md-8 col-lg-5 col-xl-4">
+    <div class="ms-3 mt-3">
+      {% for t in settings_buttons %}
+        <div class="form-check form-switch text-start">
+          <input class="form-check-input" style="margin-top: 9px" type="checkbox" id="mirror-{{ t.id }}"
+                 checked="" autocomplete="off">
+          <label class="form-check-label fs-5" for="mirror-{{ t.id }}"
+          >{{ t.name }}</label>
+        </div>
+      {% endfor %}
     </div>
+
+    <h5>General</h5>
+    <div class="ms-3 mt-3">
+      <div class="form-check form-switch text-start">
+        <input class="form-check-input" style="margin-top: 9px" type="checkbox" id="mirror-unavailableCheckbox"
+               autocomplete="off">
+        <label class="form-check-label fs-5" for="mirror-unavailableCheckbox">Show unavailable
+          filaments</label>
+      </div>
+    </div>
+    <button
+      type="button"
+      class="btn bg-gradient-secondary mb-0"
+      onclick="saveSettings()"
+    >
+      Save changes
+    </button>
   </div>
-  <button
-    type="button"
-    class="btn bg-gradient-secondary mb-0"
-    onclick="saveSettings()"
-  >
-    Save changes
-  </button>
-</div>
-<div class="col"></div>
+  <div class="col"></div>
 </div>
 
 
 <script>
-  $(document).ready(function () {
+  $(document).ready(function() {
     const mirrors = [
       {% for t in settings_buttons %}
         $('#mirror-{{ t.id }}'),
       {% endfor %}
-        $('#mirror-unavailableCheckbox')
+      $("#mirror-unavailableCheckbox")
     ];
 
     // for each of the mirrors buttons, add a change event that
     // triggers the properly named element in the settings modal
     mirrors.forEach(($mirror) => {
-      let settingId = $mirror.attr('id').replace('mirror-', '');
+      let settingId = $mirror.attr("id").replace("mirror-", "");
       let $settingsEl = $(`#${settingId}`);
-      $mirror.prop('checked', $settingsEl.prop("checked"))
-      
-      $mirror.change(function () {
-        $settingsEl.prop("checked", $mirror.prop('checked'));
+      $mirror.prop("checked", $settingsEl.prop("checked"));
+
+      $mirror.change(function() {
+        $settingsEl.prop("checked", $mirror.prop("checked"));
       });
     });
-  })
+  });
 </script>

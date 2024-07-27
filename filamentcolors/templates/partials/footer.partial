@@ -2,79 +2,79 @@
 {% load static %}
 
 <footer class="page-footer pt-4">
-    <div class="container my-3">
-        <hr>
-        <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-1 col-sm-2 text-center bump-down mx-auto">
-                <a tabindex="0"
-                        hx-target="#main"
-                        hx-trigger="click"
-                        href="{% url 'about' %}"
-                        class="btn-invisible"
-                >
-                    <img title="About this site!"
-                         class="clickable"
-                         loading="lazy"
-                         alt="about this site"
-                         src="{% static 'help_icon.png' %}">
-                </a>
-            </div>
-            <div class="col-1 col-sm-2 text-center bump-down mx-auto">
-                <a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank" rel="noopener">
-                    <img title="Source code (GitHub!)"
-                         loading="lazy"
-                         src="{% static "GitHub-Mark-32px.png" %}"
-                         alt="source code (github)"></a>
-            </div>
-            <div class="col-1 col-sm-2 text-center bump-down mx-auto">
-                <a href="https://3dp.chat/@filamentcolors" target="_blank" rel="me">
-                    <img title="Follow me on Mastodon!"
-                         loading="lazy"
-                         width="32" height="32" src="{% static "mastodon-32.png" %}"
-                         alt="@filamentcolors on Mastodon">
-                    <span class="visually-hidden">Follow me on Mastodon!</span>
-                </a>
-                <a rel="me" href="https://fosstodon.org/@itsthejoker">
-                  <span class="visually-hidden">Follow me on my personal account on Mastodon!</span>
-                </a>
-            </div>
-            <div class="col-1 col-sm-2 text-center bump-down mx-auto">
-                <a href="https://twitter.com/filamentcolors" target="_blank" rel="noopener">
-                    <img title="Follow me on Twitter!"
-                         loading="lazy"
-                         width="32" height="32" src="{% static "Twitter_Social_Icon_Circle_Color.png" %}"
-                         alt="@filamentcolors on Twitter">
-                </a>
-            </div>
-            <div class="col-sm-2"></div>
-        </div>
-        <div class="row mt-3 justify-content-center">
-            <div class="flex-fill"></div>
-            <div class="col-sm-12 col-md-4 col-lg-3 text-center d-flex justify-content-center">
-                <div class="align-self-center">
-                    <button type="button" class="btn bg-gradient-secondary mt-2" data-bs-toggle="modal"
-                            style="background: #f96854; border-color: #f96854; color: #ffffff"
-                            data-bs-target="#patreonModal">
-                        I'm on Patreon!
-                    </button>
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-3 text-center kofi-button d-flex justify-content-center">
-                <div class="align-self-center">
-                    <a href="https://ko-fi.com/joekaufeld" class="btn bg-gradient-info mt-2">Buy me a coffee!</a>
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-3 text-center mt-1 mb-2 d-flex justify-content-center">
-                <div class="align-self-center">
-                    <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
-                        <img alt="Creative Commons License"
-                             loading="lazy"
-                             style="border-width:0"
-                             src="https://i.creativecommons.org/l/by/4.0/88x31.png"/>
-                    </a>
-                </div>
-            </div>
-        </div>
+  <div class="container my-3">
+    <hr>
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-1 col-sm-2 text-center bump-down mx-auto">
+        <a tabindex="0"
+           hx-target="#main"
+           hx-trigger="click"
+           href="{% url 'about' %}"
+           class="btn-invisible"
+        >
+          <img title="About this site!"
+               class="clickable"
+               loading="lazy"
+               alt="about this site"
+               src="{% static 'help_icon.png' %}">
+        </a>
+      </div>
+      <div class="col-1 col-sm-2 text-center bump-down mx-auto">
+        <a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank" rel="noopener">
+          <img title="Source code (GitHub!)"
+               loading="lazy"
+               src="{% static "GitHub-Mark-32px.png" %}"
+               alt="source code (github)"></a>
+      </div>
+      <div class="col-1 col-sm-2 text-center bump-down mx-auto">
+        <a href="https://3dp.chat/@filamentcolors" target="_blank" rel="me">
+          <img title="Follow me on Mastodon!"
+               loading="lazy"
+               width="32" height="32" src="{% static "mastodon-32.png" %}"
+               alt="@filamentcolors on Mastodon">
+          <span class="visually-hidden">Follow me on Mastodon!</span>
+        </a>
+        <a rel="me" href="https://fosstodon.org/@itsthejoker">
+          <span class="visually-hidden">Follow me on my personal account on Mastodon!</span>
+        </a>
+      </div>
+      <div class="col-1 col-sm-2 text-center bump-down mx-auto">
+        <a href="https://twitter.com/filamentcolors" target="_blank" rel="noopener">
+          <img title="Follow me on Twitter!"
+               loading="lazy"
+               width="32" height="32" src="{% static "Twitter_Social_Icon_Circle_Color.png" %}"
+               alt="@filamentcolors on Twitter">
+        </a>
+      </div>
+      <div class="col-sm-2"></div>
     </div>
+    <div class="row mt-3 justify-content-center">
+      <div class="flex-fill"></div>
+      <div class="col-sm-12 col-md-4 col-lg-3 text-center d-flex justify-content-center">
+        <div class="align-self-center">
+          <button type="button" class="btn bg-gradient-secondary mt-2" data-bs-toggle="modal"
+                  style="background: #f96854; border-color: #f96854; color: #ffffff"
+                  data-bs-target="#patreonModal">
+            I'm on Patreon!
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-3 text-center kofi-button d-flex justify-content-center">
+        <div class="align-self-center">
+          <a href="https://ko-fi.com/joekaufeld" class="btn bg-gradient-info mt-2">Buy me a coffee!</a>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-3 text-center mt-1 mb-2 d-flex justify-content-center">
+        <div class="align-self-center">
+          <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+            <img alt="Creative Commons License"
+                 loading="lazy"
+                 style="border-width:0"
+                 src="https://i.creativecommons.org/l/by/4.0/88x31.png" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </footer>

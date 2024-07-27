@@ -1,21 +1,21 @@
 <button id="eyedropper" class="btn btn-primary">EyeDropper!</button>
 
 <script type="application/javascript">
-    document.getElementById('eyedropper').addEventListener('click', () => {
-        const resultElement = document.getElementById('id_hex_color');
+  document.getElementById("eyedropper").addEventListener("click", () => {
+    const resultElement = document.getElementById("id_hex_color");
 
-        if (!window.EyeDropper) {
-            resultElement.value = 'Your browser does not support the EyeDropper API';
-            return;
-        }
+    if (!window.EyeDropper) {
+      resultElement.value = "Your browser does not support the EyeDropper API";
+      return;
+    }
 
-        const eyeDropper = new EyeDropper();
+    const eyeDropper = new EyeDropper();
 
-        eyeDropper.open().then(result => {
-            resultElement.value = result.sRGBHex;
-            resultElement.style.backgroundColor = result.sRGBHex;
-        }).catch(e => {
-            resultElement.value = e;
-        });
+    eyeDropper.open().then(result => {
+      resultElement.value = result.sRGBHex;
+      resultElement.style.backgroundColor = result.sRGBHex;
+    }).catch(e => {
+      resultElement.value = e;
     });
+  });
 </script>

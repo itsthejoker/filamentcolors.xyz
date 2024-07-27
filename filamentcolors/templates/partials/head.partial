@@ -21,13 +21,13 @@
 
 <style>
     @font-face {
-      font-family: "Roboto";
-      src: url("{% static 'vendored/Roboto-Regular.ttf' %}") format("truetype");
+        font-family: "Roboto";
+        src: url("{% static 'vendored/Roboto-Regular.ttf' %}") format("truetype");
     }
 </style>
 
 {% if not request.user.is_authenticated %}
-    {% plausible script='script.outbound-links.js' %}
+  {% plausible script='script.outbound-links.js' %}
 {% endif %}
 
 <script src="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/js/material-kit-pro.min.js' %}"></script>
@@ -58,143 +58,143 @@
 <meta name="theme-color" content="#ffffff">
 
 <script>
-    let $deck, $msnry;
-    htmx.onLoad(function (t) {
-        tooltips();
-        lazyloadimages();
+  let $deck, $msnry;
+  htmx.onLoad(function(t) {
+    tooltips();
+    lazyloadimages();
 
-        $deck = $('#deck-of-many-things');
-        if ($deck.length) {
-            // reinit masonry if we need to
-            $msnry = $deck.masonry(
-              {
-                "percentPosition": true,
-                "itemSelector": ".swatchbox",
-            })
-            window.msnry = $msnry.data('masonry')
-        }
-        if (window.collectionModeEnabled) {
-          preselect_items(window.multiselectArray);
-        }
-        
-        emailMagic();
-    })
-    
-    function showToast(message) {
-        Toastify({
-            text: message,
-            duration: 5000,
-            backgroundColor: "#4caf50"
-        }).showToast();
+    $deck = $("#deck-of-many-things");
+    if ($deck.length) {
+      // reinit masonry if we need to
+      $msnry = $deck.masonry(
+        {
+          "percentPosition": true,
+          "itemSelector": ".swatchbox"
+        });
+      window.msnry = $msnry.data("masonry");
+    }
+    if (window.collectionModeEnabled) {
+      preselect_items(window.multiselectArray);
     }
 
-    function showToastError(message) {
-        Toastify({
-            text: message,
-            duration: 5000,
-            backgroundColor: "#d9534f"
-        }).showToast();
+    emailMagic();
+  });
+
+  function showToast(message) {
+    Toastify({
+      text: message,
+      duration: 5000,
+      backgroundColor: "#4caf50"
+    }).showToast();
+  }
+
+  function showToastError(message) {
+    Toastify({
+      text: message,
+      duration: 5000,
+      backgroundColor: "#d9534f"
+    }).showToast();
+  }
+
+  htmx.on("htmx:beforeOnLoad", function(evt) {
+    // wipe the tooltips if they're loaded so that they don't screw
+    // up the new page
+    if (window.tooltipList) {
+      window.tooltipList.forEach((tooltip) => {
+        tooltip.dispose();
+      });
     }
+  });
 
-    htmx.on("htmx:beforeOnLoad", function(evt) {
-        // wipe the tooltips if they're loaded so that they don't screw
-        // up the new page
-        if (window.tooltipList) {
-            window.tooltipList.forEach((tooltip) => {
-                tooltip.dispose()
-            });
-        }
-    })
+  htmx.on("htmx:responseError", function(evt) {
+    if (evt.detail.xhr.status === 701) {
+      showToastError("That doesn't look like a valid color. Try again?");
+    } else if (evt.detail.xhr.status === 702) {
+      showToastError("Missing color code - can't work on what I can't see!");
+    } else {
+      Toastify({
+        text: evt.detail.xhr.responseText + `<p>Status: ${evt.detail.xhr.status}</p>`,
+        className: "text-black text-center",
+        duration: 20000,
+        backgroundColor: "#fff"
+      }).showToast();
+    }
+  });
 
-    htmx.on("htmx:responseError", function(evt) {
-        if (evt.detail.xhr.status === 701) {
-            showToastError("That doesn't look like a valid color. Try again?")
-        } else if (evt.detail.xhr.status === 702) {
-            showToastError("Missing color code - can't work on what I can't see!")
-        } else {
-            Toastify({
-                text: evt.detail.xhr.responseText + `<p>Status: ${evt.detail.xhr.status}</p>`,
-                className: "text-black text-center",
-                duration: 20000,
-                backgroundColor: "#fff"
-            }).showToast();
-        }
-    })
+  htmx.on("htmx:afterRequest", function(evt) {
+    const element = evt.detail.elt;
+    if (element.id === "filterInput") {
+      $deck.masonry("destroy");
+    }
+  });
 
-    htmx.on("htmx:afterRequest", function(evt) {
-      const element = evt.detail.elt;
-      if (element.id === "filterInput") {
-        $deck.masonry('destroy');
+  htmx.on("htmx:afterSwap", function(evt) {
+    const element = evt.detail.elt;
+    if (!$deck) {
+      // on first load, we need to finish initializing everything
+      // before we can use this, so abort and wait for the next one
+      $deck = $("#deck-of-many-things");
+      return;
+    }
+    if (element.classList.contains("swatchbox")) {
+      // infinite scroll loading
+      let newSwatches = $deck.find(".swatchbox:not([style])");
+      if (newSwatches.length) {
+        $deck.masonry("appended", newSwatches);
       }
-    })
+    }
+  });
 
-    htmx.on("htmx:afterSwap", function(evt) {
-        const element = evt.detail.elt;
-        if (!$deck) {
-            // on first load, we need to finish initializing everything
-            // before we can use this, so abort and wait for the next one
-            $deck = $('#deck-of-many-things');
-            return
-        }
-        if (element.classList.contains("swatchbox")) {
-          // infinite scroll loading
-          let newSwatches = $deck.find('.swatchbox:not([style])');
-          if (newSwatches.length) {
-            $deck.masonry('appended', newSwatches);
+  function lazyloadimages() {
+    const lazyImages = [].slice.call(document.querySelectorAll("img.lazy-load-image"));
+
+    if ("IntersectionObserver" in window) {
+      let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            let lazyImage = entry.target;
+            lazyImage.src = lazyImage.dataset.src;
+            lazyImage.classList.remove("lazy");
+            lazyImageObserver.unobserve(lazyImage);
           }
-        }
-    })
+        });
+      });
 
-    function lazyloadimages() {
-        const lazyImages = [].slice.call(document.querySelectorAll("img.lazy-load-image"));
-
-        if ("IntersectionObserver" in window) {
-            let lazyImageObserver = new IntersectionObserver(function (entries, observer) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        let lazyImage = entry.target;
-                        lazyImage.src = lazyImage.dataset.src;
-                        lazyImage.classList.remove("lazy");
-                        lazyImageObserver.unobserve(lazyImage);
-                    }
-                });
-            });
-
-            lazyImages.forEach(function (lazyImage) {
-                lazyImageObserver.observe(lazyImage);
-            });
-        } else {
-            console.log("Image loading fallback to standard lazyload")
-            let images = $(".lazy-load-image");
-            images.each(function () {
-                let image = $(this);
-                image.attr("loading", "lazy").attr("src", image.data()['src'])
-            })
-        }
+      lazyImages.forEach(function(lazyImage) {
+        lazyImageObserver.observe(lazyImage);
+      });
+    } else {
+      console.log("Image loading fallback to standard lazyload");
+      let images = $(".lazy-load-image");
+      images.each(function() {
+        let image = $(this);
+        image.attr("loading", "lazy").attr("src", image.data()["src"]);
+      });
     }
+  }
 
-    function tooltips() {
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-        window.tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-    }
+  function tooltips() {
+    const tooltipTriggerList = document.querySelectorAll("[data-bs-toggle=\"tooltip\"]");
+    window.tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+  }
 
-    htmx.config.historyCacheSize = 10;
-    htmx.config.refreshOnHistoryMiss = true;
-    htmx.config.useTemplateFragments = true;
-    htmx.config.globalViewTransitions = true;
+  htmx.config.historyCacheSize = 10;
+  htmx.config.refreshOnHistoryMiss = true;
+  htmx.config.useTemplateFragments = true;
+  htmx.config.globalViewTransitions = true;
 
-    // https://stackoverflow.com/a/920322
-    $.fn.exists = function () {
-        return this.length !== 0;
-    }
+  // https://stackoverflow.com/a/920322
+  $.fn.exists = function() {
+    return this.length !== 0;
+  };
 
-    // https://stackoverflow.com/a/8027526
-    $.isHexColor = hex => typeof hex === 'string' && hex.length === 6 && !isNaN(Number('0x' + hex))
+  // https://stackoverflow.com/a/8027526
+  $.isHexColor = hex => typeof hex === "string" && hex.length === 6 && !isNaN(Number("0x" + hex));
 
-    $(document).ready(function () {
-        jscolor.presets.default = {
-            format: 'hex'
-        };
-    })
+  $(document).ready(function() {
+    jscolor.presets.default = {
+      format: "hex"
+    };
+  });
 
 </script>

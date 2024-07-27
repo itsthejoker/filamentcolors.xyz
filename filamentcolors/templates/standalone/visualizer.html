@@ -2,23 +2,23 @@
 {% load static %}
 
 {% block content %}
-    <div class="container mt-4">
-        {% include 'partials/messages.partial' %}
-        <h1>Swatch Visualizer</h1>
-        <p>
-            This plot was originally written by Kevin Rotz and graciously provided to
-            the site for use. It only works on desktop mode due to a limitation of plotly,
-            so as of right now this page must be linked to directly in order to view as I
-            take pride in the mobile responsiveness of the site.
-        </p>
-        <p>
-            The plot below is rotateable, zoomable, and pannable. You can also hover over
-            each of the dots to see information about the swatch that it represents.
-        </p>
-        <p>
-            Have fun!
-        </p>
-        <script src="{% static 'vendored/js/plotly-2.24.2.min.js' %}"></script>
-        {{ plot | safe }}
-    </div>
+  <div class="container mt-4">
+    {% include 'partials/messages.partial' %}
+    <h1>Swatch Visualizer</h1>
+    <p>
+      This plot was originally written by Kevin Rotz and graciously provided to
+      the site for use. It only works on desktop mode due to a limitation of plotly,
+      so as of right now this page must be linked to directly in order to view as I
+      take pride in the mobile responsiveness of the site.
+    </p>
+    <p>
+      The plot below is rotateable, zoomable, and pannable. You can also hover over
+      each of the dots to see information about the swatch that it represents.
+    </p>
+    <p>
+      Have fun!
+    </p>
+    <script src="{% static 'vendored/js/plotly-2.24.2.min.js' %}"></script>
+    {{ plot | safe }}
+  </div>
 {% endblock %}

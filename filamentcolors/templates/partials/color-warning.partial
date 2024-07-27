@@ -1,10 +1,11 @@
 <div class="container mt-3">
-    <div class="alert alert-info center-text text-white" role="alert">
-        <h4 class="alert-heading">Note!</h4>
-        <p>Computers don't see color the way we do, so a lot of these will look out of order.
-            If you'd like more information,
-            <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/" target="_blank" rel="noopener" class="alert-link">Alan Zucconi</a>
-            has a great article explaining why this is so hard; you can find additional resources on
-            <a href="/about/#why-is-color-hard" class="alert-link">the about page</a>.</p>
-    </div>
+  <div class="alert alert-info center-text text-white" role="alert">
+    <h4 class="alert-heading">Note!</h4>
+    <p>Computers don't see color the way we do, so a lot of these will look out of order.
+      If you'd like more information,
+      <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/" target="_blank" rel="noopener"
+         class="alert-link">Alan Zucconi</a>
+      has a great article explaining why this is so hard; you can find additional resources on
+      <a href="/about/#why-is-color-hard" class="alert-link">the about page</a>.</p>
+  </div>
 </div>

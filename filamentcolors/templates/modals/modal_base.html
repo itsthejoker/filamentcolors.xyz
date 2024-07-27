@@ -15,37 +15,37 @@ Use `footer` to bypass `footer_msg`.
 {% endcomment %}
 <div class="modal fade" id="{% block id %}{% endblock %}" tabindex="-1" aria-labelledby="{% sameas id %}Label"
      aria-hidden="true">
-    <div class="modal-dialog {% block extra_classes %}{% endblock %}">
-        <div class="modal-content">
-            {% block modal_content %}
-                <div class="modal-header">
-                    <h5 class="modal-title" id="{% sameas id %}Label">{% block title %}{% endblock %}</h5>
-                    <button type="button" class="btn-close pe-3 pb-3 position-relative" data-bs-dismiss="modal"
-                            aria-label="Close">
+  <div class="modal-dialog {% block extra_classes %}{% endblock %}">
+    <div class="modal-content">
+      {% block modal_content %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="{% sameas id %}Label">{% block title %}{% endblock %}</h5>
+          <button type="button" class="btn-close pe-3 pb-3 position-relative" data-bs-dismiss="modal"
+                  aria-label="Close">
                     <span class="position-absolute top-50 start-50 translate-middle">
                         <span class="icon-times" style="color:black; font-size:16px"></span>
                     </span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    {% block content %}{% endblock %}
-                </div>
-                <div class="modal-footer">
-                    {% block footer %}
-                        <div class="d-flex">
-                            <div>
-                                {% block footer_msg %}{% endblock %}
-                            </div>
-                            <div class="ps-3">
-                                <button type="button" class="btn bg-gradient-secondary mb-0" data-bs-dismiss="modal">
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    {% endblock %}
-                </div>
-            {% endblock %}
+          </button>
         </div>
+        <div class="modal-body">
+          {% block content %}{% endblock %}
+        </div>
+        <div class="modal-footer">
+          {% block footer %}
+            <div class="d-flex">
+              <div>
+                {% block footer_msg %}{% endblock %}
+              </div>
+              <div class="ps-3">
+                <button type="button" class="btn bg-gradient-secondary mb-0" data-bs-dismiss="modal">
+                  Close
+                </button>
+              </div>
+            </div>
+          {% endblock %}
+        </div>
+      {% endblock %}
     </div>
+  </div>
 </div>
 {% block extra %}{% endblock %}

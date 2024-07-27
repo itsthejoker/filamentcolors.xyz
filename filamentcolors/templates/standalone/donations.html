@@ -1,188 +1,189 @@
 {% extends base_template %}
 
 {% block content %}
-    <div class="container mt-4">
-        {% include 'partials/messages.partial' %}
-        <h1>Filament Donations</h1>
-        <p>
-            This site is mostly powered by filament donations, either from manufacturers
-            directly or fellow hobbyists. This isn't my job (though I do have a lot of
-            fun with it) so I can't afford to bring you all the filaments on the face of
-            the earth... but you can help with that!
-        </p>
-        <p>
-            If you have a filament that I don't, I want to make it easy for you to get
-            that filament to me so that we can get it in the library. Here's the important
-            part before we get to the details:
-        </p>
-        <div class="container mt-3">
-            <div class="alert alert-info text-white" role="alert">
-                If you need help with shipping, I have a budget of $100 a month to pay
-                shipping costs for anyone that needs or wants reimbursement -- all I need
-                is a receipt from your shipping provider of choice.
-            </div>
-        </div>
-        <p>
-            There are a lot of plastics that I have on hand but might not be on the site
-            yet -- take a look at the inventory to make sure what you have is new to the
-            library! If you have any questions, give me a shout!
-        </p>
-        <div class="row mt-4 mb-3">
-            <div class="col-sm-12 col-md-4 mx-auto d-grid">
-                <a class="btn btn-lg bg-gradient-primary" href="{% url 'inventory' %}">Inventory</a>
-            </div>
-        </div>
-        <h2>Supplies Needed</h2>
-        <ul>
-            <li>
-                Sandwich Baggies (I use something like
-                <a href="https://amzn.to/37xaDB6" target="_blank">this</a>
-                but you can get them cheaper at your local dollar store)
-            </li>
-            <li>
-                Pen / pencil
-            </li>
-            <li>
-                Knife or scissors
-            </li>
-            <li>
-                A padded envelope to ship in (more info on that later)
-            </li>
-        </ul>
-        <p>
-            You can use something else to hold the filament if you'd like; the important
-            part is that the labels you print out in the next part stay with the proper
-            coils. Little baggies are tried and tested, so that's what I recommend.
-        </p>
-        <h2>
-            Process
-        </h2>
-        <h4>Gather your filaments</h4>
-        <p>
-            Start by printing out <a
-                href="https://docs.google.com/document/d/1IOmYzft4akuNpfyuu-GmaP0aUmXXBQMo6uXBWCKYRtk/edit?usp=sharing"
-                target="_blank">
-            this page</a>.
-            Print and cut out as many of the little cards as you need; one for each
-            sample, please. Cut a 1-2 meter length from each filament, fill out one of the
-            cards, and drop it inside a sandwich bag. Don't worry about writing your name
-            on each card -- as long as at least one card has the information then it will
-            be fine. I'll use this to credit you on the site, so write whatever you'd like
-            to appear; a screen name, first name + last initial, full name; whatever you're
-            comfortable with.
-        </p>
-        <p>
-            I can take almost any kind of filament that isn't a super-high-temp exotic:
-        </p>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-0 col-md-1"></div>
-                <div class="col-sm-6 col-md-2 d-flex justify-content-center">
-                    <h4>
-                        <span class="badge bg-gradient-secondary">
-                            PLA
-                        </span>
-                    </h4>
-                </div>
-                <div class="col-sm-6 col-md-2 d-flex justify-content-center">
-                    <h4>
-                        <span class="badge bg-gradient-secondary">
-                            ABS / ASA
-                        </span>
-                    </h4>
-                </div>
-                <div class="col-sm-6 col-md-2 d-flex justify-content-center">
-                    <h4>
-                        <span class="badge bg-gradient-secondary">
-                            PETG
-                        </span>
-                    </h4>
-                </div>
-                <div class="col-sm-6 col-md-2 d-flex justify-content-center">
-                    <h4>
-                        <span class="badge bg-gradient-secondary">
-                            Nylon
-                        </span>
-                    </h4>
-                </div>
-                <div class="col-sm-6 col-md-2 d-flex justify-content-center">
-                    <h4>
-                        <span class="badge bg-gradient-secondary">
-                            TPU / TPE
-                        </span>
-                    </h4>
-                </div>
-                <div class="col-sm-0 col-md-1"></div>
-            </div>
-        </div>
-        <p class="mt-2">
-            At the moment, I can only accept <strong>1.75mm</strong> filament. If you have
-            3mm filament and a 3mm printer, please reach out
-            <a href="mailto:joe@filamentcolors.xyz?subject=3mm%20Filament">through email</a>.
-            If whatever types / sizes you have aren't among those listed, please
-            <a href="mailto:joe@filamentcolors.xyz?subject=Filament%20Type%20Question">send me an email</a>
-            to make sure that I can print it. In general, I can print pretty much anything
-            that is printable on a consumer-grade printer (including filaments with additives,
-            abrasives, filaments that require a heated chamber, etc.) and in 1.75mm.
-        </p>
-        <div class="container">
-          <div class="alert alert-danger text-white" role="alert">
-          Because they do not work well for the library, I cannot accept
-          <strong>tri-(or more)-color filament</strong> and
-          <strong>rainbow / transition filament</strong>. Pretty much everything else,
-          including coextrusions and filaments with additives (sparkles, metal, etc.),
-          is fair game!
-        </div>
-        </div>
-      
-        <h4>Prepare to ship</h4>
-        <p>
-            Most flat-rate packaging (or whatever is designed for small, mostly flat things)
-            will work for shipping filament. If you're in the US, the USPS has Priority Mail
-            Flat-Rate padded envelopes that work well. Stick your filament bags in there and
-            address it as follows:
-        </p>
-        <div class="row">
-            <div class="col-sm-12 col-md-4 mx-auto">
-                <div class="alert alert-info text-center text-white">
-                    Joe Kaufeld<br>
-                    FilamentColors.xyz<br>
-                    1701 E. Edgewood Ave #17247<br>
-                    Indianapolis, IN 46217
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 col-md-6 col-lg-5 mx-auto">
-                <div class="alert alert-danger text-white" role="alert">
-                <strong>Note!</strong> Make sure that you include the unit number <strong>(#17247)</strong> in the address.
-                If you omit it, the package will be returned to you and I will never know it was there.
-                </div>
-            </div>
-        </div>
-      
-        <p>
-            I can receive packages from any carrier and country, so feel free to use whatever
-            is most convenient for you. UPS, FedEx, DHL, etc. are all fine. If you have any
-            questions about donating, feel free to
-            <a href="mailto:joe@filamentcolors.xyz?subject=Filament%20Donation">shoot me an email</a>
-            so that we can chat!
-        </p>
-        <h4>Ship that sucker!</h4>
-        <p>
-            Drop your package in the mail, and I'll get your filaments indexed as soon as I can.
-            Because this is a hobby, the current queue is roughly a month or two... but they will
-            get added! Feel free to follow up and make sure that I've received them.
-        </p>
-        <h3>Final Thoughts</h3>
-        <p>
-            Thank you so much for considering donating to the library. The more colors we
-            add, the more useful this site is to everyone. Most of the colors I have are
-            only easily available in the U.S., so I <i>definitely</i> want to hear from you
-            if you live elsewhere!
-        </p>
-        <p>
-            Cheers and happy printing!
-        </p>
+  <div class="container mt-4">
+    {% include 'partials/messages.partial' %}
+    <h1>Filament Donations</h1>
+    <p>
+      This site is mostly powered by filament donations, either from manufacturers
+      directly or fellow hobbyists. This isn't my job (though I do have a lot of
+      fun with it) so I can't afford to bring you all the filaments on the face of
+      the earth... but you can help with that!
+    </p>
+    <p>
+      If you have a filament that I don't, I want to make it easy for you to get
+      that filament to me so that we can get it in the library. Here's the important
+      part before we get to the details:
+    </p>
+    <div class="container mt-3">
+      <div class="alert alert-info text-white" role="alert">
+        If you need help with shipping, I have a budget of $100 a month to pay
+        shipping costs for anyone that needs or wants reimbursement -- all I need
+        is a receipt from your shipping provider of choice.
+      </div>
     </div>
+    <p>
+      There are a lot of plastics that I have on hand but might not be on the site
+      yet -- take a look at the inventory to make sure what you have is new to the
+      library! If you have any questions, give me a shout!
+    </p>
+    <div class="row mt-4 mb-3">
+      <div class="col-sm-12 col-md-4 mx-auto d-grid">
+        <a class="btn btn-lg bg-gradient-primary" href="{% url 'inventory' %}">Inventory</a>
+      </div>
+    </div>
+    <h2>Supplies Needed</h2>
+    <ul>
+      <li>
+        Sandwich Baggies (I use something like
+        <a href="https://amzn.to/37xaDB6" target="_blank">this</a>
+        but you can get them cheaper at your local dollar store)
+      </li>
+      <li>
+        Pen / pencil
+      </li>
+      <li>
+        Knife or scissors
+      </li>
+      <li>
+        A padded envelope to ship in (more info on that later)
+      </li>
+    </ul>
+    <p>
+      You can use something else to hold the filament if you'd like; the important
+      part is that the labels you print out in the next part stay with the proper
+      coils. Little baggies are tried and tested, so that's what I recommend.
+    </p>
+    <h2>
+      Process
+    </h2>
+    <h4>Gather your filaments</h4>
+    <p>
+      Start by printing out <a
+      href="https://docs.google.com/document/d/1IOmYzft4akuNpfyuu-GmaP0aUmXXBQMo6uXBWCKYRtk/edit?usp=sharing"
+      target="_blank">
+      this page</a>.
+      Print and cut out as many of the little cards as you need; one for each
+      sample, please. Cut a 1-2 meter length from each filament, fill out one of the
+      cards, and drop it inside a sandwich bag. Don't worry about writing your name
+      on each card -- as long as at least one card has the information then it will
+      be fine. I'll use this to credit you on the site, so write whatever you'd like
+      to appear; a screen name, first name + last initial, full name; whatever you're
+      comfortable with.
+    </p>
+    <p>
+      I can take almost any kind of filament that isn't a super-high-temp exotic:
+    </p>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-0 col-md-1"></div>
+        <div class="col-sm-6 col-md-2 d-flex justify-content-center">
+          <h4>
+            <span class="badge bg-gradient-secondary">
+                PLA
+            </span>
+          </h4>
+        </div>
+        <div class="col-sm-6 col-md-2 d-flex justify-content-center">
+          <h4>
+            <span class="badge bg-gradient-secondary">
+                ABS / ASA
+            </span>
+          </h4>
+        </div>
+        <div class="col-sm-6 col-md-2 d-flex justify-content-center">
+          <h4>
+            <span class="badge bg-gradient-secondary">
+                PETG
+            </span>
+          </h4>
+        </div>
+        <div class="col-sm-6 col-md-2 d-flex justify-content-center">
+          <h4>
+            <span class="badge bg-gradient-secondary">
+                Nylon
+            </span>
+          </h4>
+        </div>
+        <div class="col-sm-6 col-md-2 d-flex justify-content-center">
+          <h4>
+            <span class="badge bg-gradient-secondary">
+                TPU / TPE
+            </span>
+          </h4>
+        </div>
+        <div class="col-sm-0 col-md-1"></div>
+      </div>
+    </div>
+    <p class="mt-2">
+      At the moment, I can only accept <strong>1.75mm</strong> filament. If you have
+      3mm filament and a 3mm printer, please reach out
+      <a href="mailto:joe@filamentcolors.xyz?subject=3mm%20Filament">through email</a>.
+      If whatever types / sizes you have aren't among those listed, please
+      <a href="mailto:joe@filamentcolors.xyz?subject=Filament%20Type%20Question">send me an email</a>
+      to make sure that I can print it. In general, I can print pretty much anything
+      that is printable on a consumer-grade printer (including filaments with additives,
+      abrasives, filaments that require a heated chamber, etc.) and in 1.75mm.
+    </p>
+    <div class="container">
+      <div class="alert alert-danger text-white" role="alert">
+        Because they do not work well for the library, I cannot accept
+        <strong>tri-(or more)-color filament</strong> and
+        <strong>rainbow / transition filament</strong>. Pretty much everything else,
+        including coextrusions and filaments with additives (sparkles, metal, etc.),
+        is fair game!
+      </div>
+    </div>
+
+    <h4>Prepare to ship</h4>
+    <p>
+      Most flat-rate packaging (or whatever is designed for small, mostly flat things)
+      will work for shipping filament. If you're in the US, the USPS has Priority Mail
+      Flat-Rate padded envelopes that work well. Stick your filament bags in there and
+      address it as follows:
+    </p>
+    <div class="row">
+      <div class="col-sm-12 col-md-4 mx-auto">
+        <div class="alert alert-info text-center text-white">
+          Joe Kaufeld<br>
+          FilamentColors.xyz<br>
+          1701 E. Edgewood Ave #17247<br>
+          Indianapolis, IN 46217
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 col-lg-5 mx-auto">
+        <div class="alert alert-danger text-white" role="alert">
+          <strong>Note!</strong> Make sure that you include the unit number
+          <strong>(#17247)</strong> in the address. If you omit it, the package will be
+          returned to you and I will never know it was there.
+        </div>
+      </div>
+    </div>
+
+    <p>
+      I can receive packages from any carrier and country, so feel free to use whatever
+      is most convenient for you. UPS, FedEx, DHL, etc. are all fine. If you have any
+      questions about donating, feel free to
+      <a href="mailto:joe@filamentcolors.xyz?subject=Filament%20Donation">shoot me an email</a>
+      so that we can chat!
+    </p>
+    <h4>Ship that sucker!</h4>
+    <p>
+      Drop your package in the mail, and I'll get your filaments indexed as soon as I can.
+      Because this is a hobby, the current queue is roughly a month or two... but they will
+      get added! Feel free to follow up and make sure that I've received them.
+    </p>
+    <h3>Final Thoughts</h3>
+    <p>
+      Thank you so much for considering donating to the library. The more colors we
+      add, the more useful this site is to everyone. Most of the colors I have are
+      only easily available in the U.S., so I <i>definitely</i> want to hear from you
+      if you live elsewhere!
+    </p>
+    <p>
+      Cheers and happy printing!
+    </p>
+  </div>
 {% endblock %}

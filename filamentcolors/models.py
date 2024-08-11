@@ -1043,6 +1043,14 @@ class Swatch(models.Model, DistanceMixin):
             super(Swatch, self).save(*args, **kwargs)
 
             self.update_affiliate_links()
+
+            if kwargs['force_insert']:
+                # In normal operation, this will never trigger. However,
+                # in tests, the `force_insert` flag is set to True, which
+                # will trigger the double save operation here to try and
+                # create two items with the same ID.
+                del(kwargs['force_insert'])
+
             super(Swatch, self).save(*args, **kwargs)
 
             # have to save the model before we can send the tweet, otherwise

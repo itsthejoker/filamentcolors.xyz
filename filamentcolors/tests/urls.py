@@ -29,6 +29,7 @@ urlpatterns = [
     path("library/", example_view, name="library"),
     path("mfr_list/", example_view, name="mfr_list"),
     path("about/", example_view, name="about"),
+    path("about_us/", example_view, name="about_us"),
     path("donations/", example_view, name="donations"),
     path("monetary_donations/", example_view, name="monetary_donations"),
     path("monetary_donations/", example_view, name="colormatch"),

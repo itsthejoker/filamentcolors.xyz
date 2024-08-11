@@ -55,7 +55,7 @@ class Manufacturer(models.Model):
             self.slug = slugify(
                 self.parent_company_name if self.parent_company_name else self.name
             )
-        super(Manufacturer, self).save(args, **kwargs)
+        super(Manufacturer, self).save(*args, **kwargs)
 
     def get_slug_from_id_or_slug(self, slug_or_id: str | int) -> str:
         mfr_id = False

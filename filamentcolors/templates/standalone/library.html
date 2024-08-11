@@ -4,7 +4,7 @@
   <div class="container mt-4" data-long-press-delay="300">
     {% include 'partials/messages.partial' %}
     {% if show_color_warning %}
-      {% include 'partials/color-warning.partial' %}
+      {% include 'components/alerts/color-warning.partial' %}
     {% endif %}
     {% if h1_title %}
       <h1>{{ h1_title }}</h1>
@@ -12,16 +12,16 @@
 
     {% if show_search_bar and not show_collection_edit_button %}
       {% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
-      {% include 'partials/hex_color_search_warning.partial' %}
+      {% include 'components/alerts/hex_color_search_warning.partial' %}
     {% endif %}
     {% if show_collection_edit_button %}
-      {% include "partials/collection_edit_button.partial" %}
+      {% include "components/buttons/collection_edit_button.partial" %}
     {% endif %}
-    {% include 'partials/manufacturer_library_unavailable_swatches_notice.partial' %}
+    {% include 'components/alerts/manufacturer_library_unavailable_swatches_notice.partial' %}
     <div id="swatch-container">
       {% include "partials/library_swatch_display.partial" %}
     </div>
   </div>
 
-  {% include 'partials/multiselect_js.partial' %}
+  {% include 'components/buttons/multiselect_button.partial' %}
 {% endblock content %}

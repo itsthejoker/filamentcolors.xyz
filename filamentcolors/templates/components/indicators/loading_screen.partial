@@ -1,0 +1,8 @@
+{% load static %}
+
+<div id="loading" class="overlay htmx-indicator">
+  <div class="overlay-content">
+    <img src="{% static 'swatch-loading-animation.gif' %}" style="height: auto; width: 100%; max-width: 400px"
+         alt="A spinning swatch loading animation.">
+  </div>
+</div>

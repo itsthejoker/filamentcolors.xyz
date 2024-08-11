@@ -18,6 +18,6 @@
   </div>
   {% if user_settings.show_delta_e_values %}
     {% delta_e swatch obj as value %}
-    {% include 'partials/delta_e_badge.partial' with value=value %}
+    {% include 'components/badges/delta_e_badge.partial' with value=value %}
   {% endif %}
 </div>

@@ -5,9 +5,9 @@
   <div class="row container mt-3">
     {% for option in colormatch_swatches %}
       <div class="col-md-{% if forloop.last %}12{% else %}6{% endif %} col-xl-4">
-        {% include 'partials/card.partial' with obj=option.0 %}
+        {% include 'components/swatch/card.partial' with obj=option.0 %}
         {% if user_settings.show_delta_e_values %}
-          {% include 'partials/delta_e_badge.partial' with value=option.1 %}
+          {% include 'components/badges/delta_e_badge.partial' with value=option.1 %}
         {% endif %}
         <div class="text-center">
           <div class="btn bg-gradient-info" id="grab-{{ option.0.id }}" onclick="grabSwatch(this)">Grab Swatch</div>

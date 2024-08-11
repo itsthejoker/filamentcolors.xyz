@@ -1,0 +1,13 @@
+<div class="container mt-3">
+  <div class="alert alert-danger center-text" role="alert">
+    <h4 class="alert-heading">Please enable JavaScript</h4>
+    <p>
+      Hi! It looks like we can't process JavaScript (JS) here. Parts of this site will work,
+      but you will definitely have the best experience with JS enabled. You can experience
+      everything to the fullest with <strong>just first-party JS</strong> if you're someone who
+      makes that kind of differentiation, as the only third-party script we use is for ethical metrics
+      through <a href="https://plausible.io/filamentcolors.xyz" class="alert-link">plausible.io</a>.
+      (Click the link if you want to see exactly what metrics we collect!)
+    </p>
+  </div>
+</div>

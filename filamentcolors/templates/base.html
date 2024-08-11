@@ -16,7 +16,7 @@
   hx-indicator="#loading" {# The location of the loading spinner. #}
 >
 {% if navbar_message %}
-  {% include 'partials/navbar_message.partial' %}
+  {% include 'components/alerts/navbar_message.partial' %}
 {% endif %}
 {% include 'partials/navbar.partial' %}
 
@@ -25,10 +25,10 @@
 {% endif %}
 
 <noscript>
-  {% include 'partials/no-js-alert.partial' %}
+  {% include 'components/alerts/no-js-alert.partial' %}
 </noscript>
 
-{% include 'partials/loading_screen.partial' %}
+{% include 'components/indicators/loading_screen.partial' %}
 
 <main id="main" hx-swap="morph:innerHTML">
   {% block content %}

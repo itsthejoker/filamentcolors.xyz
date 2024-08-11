@@ -2,7 +2,7 @@
   {% for page in previous_pages_to_render %}
     {% for s in page %}
       <div class="col-md-6 col-lg-4 col-xl-4 col-xxl-3 swatchbox">
-        {% include 'partials/card.partial' with obj=s %}
+        {% include 'components/swatch/card.partial' with obj=s %}
       </div>
     {% endfor %}
   {% endfor %}
@@ -23,6 +23,6 @@
   {% else %}
     <div class="col-md-6 col-lg-4 col-xl-4 col-xxl-3 swatchbox">
   {% endif %}
-{% include 'partials/card.partial' with obj=s %}
+{% include 'components/swatch/card.partial' with obj=s %}
 </div>
 {% endfor %}

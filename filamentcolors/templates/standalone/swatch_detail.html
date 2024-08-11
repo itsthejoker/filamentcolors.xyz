@@ -138,11 +138,11 @@
               </table>
               <div class="d-grid gap-2">
                 {% if swatch.manufacturer.swap_purchase_buttons %}
-                  {% include 'partials/mfr_purchase_button.partial' %}
-                  {% include 'partials/amazon_purchase_button.partial' %}
+                  {% include 'components/buttons/mfr_purchase_button.partial' %}
+                  {% include 'components/buttons/amazon_purchase_button.partial' %}
                 {% else %}
-                  {% include 'partials/amazon_purchase_button.partial' %}
-                  {% include 'partials/mfr_purchase_button.partial' %}
+                  {% include 'components/buttons/amazon_purchase_button.partial' %}
+                  {% include 'components/buttons/mfr_purchase_button.partial' %}
                 {% endif %}
                 {% if request.user.is_authenticated %}
                   <div class="dropdown d-grid">
@@ -312,10 +312,10 @@
         </p>
         <div class="row container">
           <div class="col-md-6">
-            {% include 'partials/card.partial' with obj=swatch %}
+            {% include 'components/swatch/card.partial' with obj=swatch %}
           </div>
           <div class="col-md-6">
-            {% include 'partials/card.partial' with obj=swatch.complement %}
+            {% include 'components/swatch/card.partial' with obj=swatch.complement %}
           </div>
         </div>
         <div class="row mt-3">
@@ -346,13 +346,13 @@
         </p>
         <div class="row container">
           <div class="col-md-6 col-xl-4">
-            {% include 'partials/card.partial' with obj=swatch %}
+            {% include 'components/swatch/card.partial' with obj=swatch %}
           </div>
           <div class="col-md-6 col-xl-4">
-            {% include 'partials/card.partial' with obj=swatch.analogous_1 %}
+            {% include 'components/swatch/card.partial' with obj=swatch.analogous_1 %}
           </div>
           <div class="col-md-12 col-xl-4">
-            {% include 'partials/card.partial' with obj=swatch.analogous_2 %}
+            {% include 'components/swatch/card.partial' with obj=swatch.analogous_2 %}
           </div>
         </div>
         <div class="row mt-3">
@@ -384,13 +384,13 @@
         </p>
         <div class="row container">
           <div class="col-md-6 col-xl-4">
-            {% include 'partials/card.partial' with obj=swatch %}
+            {% include 'components/swatch/card.partial' with obj=swatch %}
           </div>
           <div class="col-md-6 col-xl-4">
-            {% include 'partials/card.partial' with obj=swatch.triadic_1 %}
+            {% include 'components/swatch/card.partial' with obj=swatch.triadic_1 %}
           </div>
           <div class="col-md-12 col-xl-4">
-            {% include 'partials/card.partial' with obj=swatch.triadic_2 %}
+            {% include 'components/swatch/card.partial' with obj=swatch.triadic_2 %}
           </div>
         </div>
         <div class="row mt-3">
@@ -418,13 +418,13 @@
         </p>
         <div class="row container">
           <div class="col-md-6 col-xl-4">
-            {% include 'partials/card.partial' with obj=swatch %}
+            {% include 'components/swatch/card.partial' with obj=swatch %}
           </div>
           <div class="col-md-6 col-xl-4">
-            {% include 'partials/card.partial' with obj=swatch.split_complement_1 %}
+            {% include 'components/swatch/card.partial' with obj=swatch.split_complement_1 %}
           </div>
           <div class="col-md-12 col-xl-4">
-            {% include 'partials/card.partial' with obj=swatch.split_complement_2 %}
+            {% include 'components/swatch/card.partial' with obj=swatch.split_complement_2 %}
           </div>
         </div>
         <div class="row mt-3">
@@ -463,16 +463,16 @@
         </p>
         <div class="row container">
           <div class="col-md-6 col-lg-6 col-xxl-3">
-            {% include 'partials/card.partial' with obj=swatch %}
+            {% include 'components/swatch/card.partial' with obj=swatch %}
           </div>
           <div class="col-md-6 col-lg-6 col-xxl-3">
-            {% include 'partials/card.partial' with obj=swatch.tetradic_1 %}
+            {% include 'components/swatch/card.partial' with obj=swatch.tetradic_1 %}
           </div>
           <div class="col-md-6 col-lg-6 col-xxl-3">
-            {% include 'partials/card.partial' with obj=swatch.tetradic_2 %}
+            {% include 'components/swatch/card.partial' with obj=swatch.tetradic_2 %}
           </div>
           <div class="col-md-6 col-lg-6 col-xxl-3">
-            {% include 'partials/card.partial' with obj=swatch.tetradic_3 %}
+            {% include 'components/swatch/card.partial' with obj=swatch.tetradic_3 %}
           </div>
         </div>
         <div class="row mt-3">
@@ -503,16 +503,16 @@
         </p>
         <div class="row container">
           <div class="col-md-6 col-lg-6 col-xxl-3">
-            {% include 'partials/card.partial' with obj=swatch %}
+            {% include 'components/swatch/card.partial' with obj=swatch %}
           </div>
           <div class="col-md-6 col-lg-6 col-xxl-3">
-            {% include 'partials/card.partial' with obj=swatch.square_1 %}
+            {% include 'components/swatch/card.partial' with obj=swatch.square_1 %}
           </div>
           <div class="col-md-6 col-lg-6 col-xxl-3">
-            {% include 'partials/card.partial' with obj=swatch.square_2 %}
+            {% include 'components/swatch/card.partial' with obj=swatch.square_2 %}
           </div>
           <div class="col-md-6 col-lg-6 col-xxl-3">
-            {% include 'partials/card.partial' with obj=swatch.square_3 %}
+            {% include 'components/swatch/card.partial' with obj=swatch.square_3 %}
           </div>
         </div>
         <div class="row mt-3">
@@ -538,20 +538,20 @@
     </p>
     <div class="row">
       <div class="col-md-12 col-lg-4">
-        {% include 'partials/card.partial' with obj=swatch %}
+        {% include 'components/swatch/card.partial' with obj=swatch %}
       </div>
       <div class="col-md-12 col-lg-4">
-        {% include 'partials/card.partial' with obj=swatch.closest_1 %}
+        {% include 'components/swatch/card.partial' with obj=swatch.closest_1 %}
         {% if user_settings.show_delta_e_values %}
           {% delta_e swatch swatch.closest_1 as value %}
-          {% include 'partials/delta_e_badge.partial' with value=value %}
+          {% include 'components/badges/delta_e_badge.partial' with value=value %}
         {% endif %}
       </div>
       <div class="col-md-12 col-lg-4">
-        {% include 'partials/card.partial' with obj=swatch.closest_2 %}
+        {% include 'components/swatch/card.partial' with obj=swatch.closest_2 %}
         {% if user_settings.show_delta_e_values %}
           {% delta_e swatch swatch.closest_2 as value %}
-          {% include 'partials/delta_e_badge.partial' with value=value %}
+          {% include 'components/badges/delta_e_badge.partial' with value=value %}
         {% endif %}
       </div>
     </div>

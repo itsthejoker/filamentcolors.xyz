@@ -10,7 +10,7 @@
   >
     {% include 'partials/multiple_swatch_cards.partial' %}
   </div>
-  {% include 'partials/pagination_indicator.partial' %}
+  {% include 'components/indicators/pagination_indicator.partial' %}
 {% elif not swatches and show_search_bar %}
   <div class="container text-center mt-5">
     <h4>No results!</h4>

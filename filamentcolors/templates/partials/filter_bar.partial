@@ -19,6 +19,9 @@
           hx-target="#swatch-container"
           hx-swap="innerHTML"
           hx-headers='{ "X-Searchbar": "true" }'
+{#          onchange="showHideHexColorWarning(this)"#}
+{#          onkeyup="showHideHexColorWarning(this)"#}
+{#          onkeydown="showHideHexColorWarning(this)"#}
         >
       </div>
     </div>
@@ -291,7 +294,20 @@
     updateClearAllButton();
   }
 
+  function showHideHexColorWarning(el) {
+    const hexColorSearchAlert = document.getElementById("hexColorSearchAlert");
+    $.isHexColor(el.value) ? hexColorSearchAlert.classList.remove("d-none") : hexColorSearchAlert.classList.add("d-none");
+  }
+
+  $(document).ready(function() {
+    const el = document.getElementById("filterInput");
+    el.addEventListener("keyup", function() {
+      showHideHexColorWarning(this)
+    });
+  });
+  
   htmx.onLoad(function(t) {
+    showHideHexColorWarning(document.getElementById("filterInput"));
     window.quickfilters = {};
     window.quickfiltersToClear = [];
     updateClearAllButton();

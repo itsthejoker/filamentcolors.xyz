@@ -189,7 +189,10 @@
   };
 
   // https://stackoverflow.com/a/8027526
-  $.isHexColor = hex => typeof hex === "string" && hex.length === 6 && !isNaN(Number("0x" + hex));
+  $.isHexColor = hex => {
+    hex = hex.replace("#", "").trim();
+    return typeof hex === "string" && (hex.length === 6 || hex.length === 3) && !isNaN(Number("0x" + hex))
+  };
 
   $(document).ready(function() {
     jscolor.presets.default = {

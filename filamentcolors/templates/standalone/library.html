@@ -12,6 +12,7 @@
 
     {% if show_search_bar and not show_collection_edit_button %}
       {% include 'partials/filter_bar.partial' with search_prefill=search_prefill %}
+      {% include 'partials/hex_color_search_warning.partial' %}
     {% endif %}
     {% if show_collection_edit_button %}
       {% include "partials/collection_edit_button.partial" %}

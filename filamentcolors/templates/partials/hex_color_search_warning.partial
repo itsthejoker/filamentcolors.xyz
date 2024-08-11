@@ -1,0 +1,14 @@
+<div class="container mb-5 d-none" id="hexColorSearchAlert">
+  <div class="alert alert-secondary center-text text-white" role="alert">
+    <h4 class="alert-heading">Hrm...</h4>
+    <p>
+      It looks like you're trying to search for a color by hex code. We don't
+      have that feature yet, but we're working on it! In the meantime, you
+      can search for a color by <a href="{% url 'colormatch' %}" class="alert-link text-white">
+      trying the Color Match page.</a>
+    </p>
+    <div class="text-center">
+      <a href="{% url 'colormatch' %}" class="btn btn-lg btn-success">Take me there!</a>
+    </div>
+  </div>
+</div>

@@ -32,13 +32,13 @@ class SwatchForm(forms.ModelForm):
     class Meta:
         model = Swatch
         fields = [
-            "manufacturer",
+            "filament_type",
             "color_name",
             "hex_color",
             "td",
-            "filament_type",
             "color_parent",
             "alt_color_parent",
+            "manufacturer",
             "amazon_purchase_link",
             "mfr_purchase_link",
             "image_front",

@@ -79,11 +79,12 @@
                 disableSubmitLoadingButton();
               });
             }
-
-            $(document).ready(function() {
-              $("#id_color_name").change(checkForDuplicates);
-              $("#id_manufacturer").change(checkForDuplicates);
-            });
+            {% if 'add/inventory' in request.path or 'add/swatch/new' in request.path %}
+              $(document).ready(function() {
+                $("#id_color_name").change(checkForDuplicates);
+                $("#id_manufacturer").change(checkForDuplicates);
+              });
+            {% endif %}
           </script>
         {% endif %}
 

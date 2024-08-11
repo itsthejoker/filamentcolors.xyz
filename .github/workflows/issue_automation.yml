@@ -17,7 +17,14 @@ jobs:
 
             switch (context.payload.action) {
 
-              case 'opened':
+              case 'opened': {
+                if ('${{ github.event.pull_request.user.login }}'.match(/dependabot\[bot\]/i)) {
+                  labels.push('dependencies');
+                  labels = labels.filter(label => label !== 'triage');
+                  setLabels = true;
+                }
+                break;
+              }
               case 'edited': {
                 if (context.payload.issue.title.match(/\[request\]|feature request/i)) {
                   labels.push('request');

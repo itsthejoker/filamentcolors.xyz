@@ -40,7 +40,7 @@ def set_colors_for_unpublished_swatches(request):
         swatch.regenerate_all()
         swatch.save()
         return prep_request(
-            request, "partials/success_alert.partial", {"swatch": swatch}
+            request, "components/alerts/success_alert.partial", {"swatch": swatch}
         )
 
     swatches = (

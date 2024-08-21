@@ -46,8 +46,8 @@
             class="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive p-3 border-radius-lg mt-0 mt-lg-3"
             aria-labelledby="dropdownMenuBlocks">
             {% comment %}
-                        DESKTOP MODE
-                        {% endcomment %}
+            DESKTOP MODE
+            {% endcomment %}
             <div class="d-none d-lg-block">
               <ul class="list-group">
                 <li class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0">
@@ -149,8 +149,8 @@
               </ul>
             </div>
             {% comment %}
-                        MOBILE MODE
-                        {% endcomment %}
+            MOBILE MODE
+            {% endcomment %}
             <div class="row d-lg-none">
               <div class="col-md-12">
                 <div class="d-flex mb-2">
@@ -243,8 +243,8 @@
             id="aboutDropDown"
           >
             {% comment %}
-                        DESKTOP MODE
-                        {% endcomment %}
+            DESKTOP MODE
+            {% endcomment %}
             <div class="d-none d-lg-block">
               <ul class="list-group">
                 <li class="nav-item list-group-item border-0 p-0">
@@ -262,6 +262,13 @@
                   </a>
                 </li>
                 <li class="nav-item list-group-item border-0 p-0">
+                  <a href="https://itsthejoker.github.io/posts/"
+                     tabindex="0"
+                     class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                    <b>Writings {% include 'partials/external_link_icon.partial' %}</b>
+                  </a>
+                </li>
+                <li class="nav-item list-group-item border-0 p-0">
                   <div onclick="showWelcome()"
                        class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
                     <b>How does this site work?</b>
@@ -270,8 +277,8 @@
               </ul>
             </div>
             {% comment %}
-                        MOBILE MODE
-                        {% endcomment %}
+            MOBILE MODE
+            {% endcomment %}
             <div class="row d-lg-none dropdown-100">
               <div class="col-md-12">
                 <div class="d-flex mb-2">
@@ -296,6 +303,16 @@
                 </div>
                 <div class="d-flex mb-2">
                   <div class="w-100 d-flex align-items-center justify-content-between">
+                    <a href="https://itsthejoker.github.io/posts/"
+                       data-bs-toggle="collapse"
+                       data-bs-target="#navigation"
+                       class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
+                      <b>Writings {% include 'partials/external_link_icon.partial' %}</b>
+                    </a>
+                  </div>
+                </div>
+                <div class="d-flex mb-2">
+                  <div class="w-100 d-flex align-items-center justify-content-between">
                     <div class="d-lg-none">
                       <div onclick="showWelcome()"
                            data-bs-toggle="collapse"
@@ -312,8 +329,8 @@
         </li>
         <li class="mx-2">
           <a class="nav-link d-flex justify-content-between cursor-pointer align-items-center"
-             role="button" href="https://itsthejoker.github.io/posts/" target="_blank">
-            Posts
+             role="button" href="https://forum.filamentcolors.xyz/" target="_blank">
+            Forum
           </a>
         </li>
         <li class="nav-item dropdown dropdown-hover mx-2 ps-0">
@@ -329,8 +346,8 @@
             id="contactDropDown"
           >
             {% comment %}
-                        DESKTOP MODE
-                        {% endcomment %}
+            DESKTOP MODE
+            {% endcomment %}
             <div class="d-none d-lg-block">
               <ul class="list-group">
                 <li class="nav-item list-group-item border-0 p-0">
@@ -338,21 +355,21 @@
                      rel="me"
                      target="_blank"
                      class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                    <b>Mastodon</b>
+                    <b>Mastodon {% include 'partials/external_link_icon.partial' %}</b>
                   </a>
                 </li>
                 <li class="nav-item list-group-item border-0 p-0">
                   <a href="https://instagram.com/filamentcolors"
                      target="_blank"
                      class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                    <b>Instagram</b>
+                    <b>Instagram {% include 'partials/external_link_icon.partial' %}</b>
                   </a>
                 </li>
                 <li class="nav-item list-group-item border-0 p-0">
                   <a href="https://twitter.com/filamentcolors"
                      target="_blank"
                      class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                    <b>Twitter</b>
+                    <b>Twitter {% include 'partials/external_link_icon.partial' %}</b>
                   </a>
                 </li>
                 <li class="nav-item list-group-item border-0 p-0">
@@ -364,8 +381,8 @@
               </ul>
             </div>
             {% comment %}
-                        MOBILE MODE
-                        {% endcomment %}
+            MOBILE MODE
+            {% endcomment %}
             <div class="row d-lg-none dropdown-100">
               <div class="col-md-12">
                 <div class="d-flex mb-2">
@@ -374,7 +391,7 @@
                        rel="me"
                        target="_blank"
                        class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                      <b>Mastodon</b>
+                      <b>Mastodon {% include 'partials/external_link_icon.partial' %}</b>
                     </a>
                   </div>
                 </div>
@@ -383,7 +400,7 @@
                     <a href="https://instagram.com/filamentcolors"
                        target="_blank"
                        class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                      <b>Instagram</b>
+                      <b>Instagram {% include 'partials/external_link_icon.partial' %}</b>
                     </a>
                   </div>
                 </div>
@@ -392,7 +409,7 @@
                     <a href="https://twitter.com/filamentcolors"
                        target="_blank"
                        class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                      <b>Twitter</b>
+                      <b>Twitter {% include 'partials/external_link_icon.partial' %}</b>
                     </a>
                   </div>
                 </div>
@@ -422,8 +439,8 @@
             id="aboutDropDown"
           >
             {% comment %}
-                        DESKTOP MODE
-                        {% endcomment %}
+            DESKTOP MODE
+            {% endcomment %}
             <div class="d-none d-lg-block">
               <ul class="list-group">
                 <li class="nav-item list-group-item border-0 p-0">
@@ -443,8 +460,8 @@
               </ul>
             </div>
             {% comment %}
-                        MOBILE MODE
-                        {% endcomment %}
+            MOBILE MODE
+            {% endcomment %}
             <div class="row d-lg-none dropdown-100">
               <div class="col-md-12">
                 <div class="d-flex mb-2">
@@ -498,8 +515,8 @@
               id="contactDropDown"
             >
               {% comment %}
-                            DESKTOP MODE
-                            {% endcomment %}
+              DESKTOP MODE
+              {% endcomment %}
               <div class="d-none d-lg-block">
                 <ul class="list-group">
                   <li class="nav-item list-group-item border-0 p-0">
@@ -556,8 +573,8 @@
                 </ul>
               </div>
               {% comment %}
-                            MOBILE MODE
-                            {% endcomment %}
+              MOBILE MODE
+              {% endcomment %}
               <div class="row d-lg-none dropdown-100">
                 <div class="col-md-12">
                   <div class="d-flex mb-2">

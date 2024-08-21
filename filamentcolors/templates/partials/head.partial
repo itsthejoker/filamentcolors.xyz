@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/material-kit-pro.css' %}?v=3">
 <link rel="stylesheet" href="{% static 'css/main.css' %}?v=6">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<script src="https://kit.fontawesome.com/940400877f.js" crossorigin="anonymous"></script> 
 
 <style>
     @font-face {

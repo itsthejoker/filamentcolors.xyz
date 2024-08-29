@@ -1044,7 +1044,7 @@ class Swatch(models.Model, DistanceMixin):
 
             self.update_affiliate_links()
 
-            if kwargs['force_insert']:
+            if kwargs.get('force_insert'):
                 # In normal operation, this will never trigger. However,
                 # in tests, the `force_insert` flag is set to True, which
                 # will trigger the double save operation here to try and

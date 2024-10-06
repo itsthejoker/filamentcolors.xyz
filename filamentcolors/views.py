@@ -322,8 +322,15 @@ def swatch_detail(request: WSGIRequest, swatch_id: str) -> HttpResponse:
         swatch_id = int(swatch_id)
         args = {"id": swatch_id}
     except ValueError:
-        args = {"slug": swatch_id}
+        if swatch_id.lower().endswith("none"):
+            # see #142 for context
+            args = {"slug__startswith": swatch_id[:-4]}
+        else:
+            args = {"slug": swatch_id}
 
+    # doing a simplified DB call allows reacting much faster when a filament
+    # isn't found; this call is ~10x faster than the full call, and if the
+    # is found, it's less than 1ms of penalty
     if not Swatch.objects.filter(**args).exists():
         raise Http404
 

@@ -1002,6 +1002,13 @@ class Swatch(models.Model, DistanceMixin):
 
         raise UnknownSlugOrID
 
+    def set_slug(self):
+        # just clobber what was there before. We need to fix the broken urls
+        # that end in `-none`
+        self.slug = slugify(
+            f"{self.manufacturer.slug} {self.color_name} {self.filament_type.name} {self.id}"
+        )
+
     def save(self, *args, **kwargs):
         rebuild_matches = False
 
@@ -1026,14 +1033,13 @@ class Swatch(models.Model, DistanceMixin):
         if rebuild_matches:
             self.update_all_color_matches(Swatch.objects.filter(published=True))
 
-        if not self.slug:
-            self.slug = slugify(
-                f"{self.manufacturer.slug} {self.color_name}"
-                f" {self.filament_type.name} {self.id}"
-            )
-
         if self.card_img or not self.published:
             # we already have a card image, so just save everything and abort.
+
+            # this will create a malformed url for inventory swatches, but it
+            # will get corrected when the swatch is published. See #142 for
+            # more information.
+            self.set_slug()
             super(Swatch, self).save(*args, **kwargs)
             return
         else:
@@ -1043,6 +1049,7 @@ class Swatch(models.Model, DistanceMixin):
             super(Swatch, self).save(*args, **kwargs)
 
             self.update_affiliate_links()
+            self.set_slug()
 
             if kwargs.get('force_insert'):
                 # In normal operation, this will never trigger. However,

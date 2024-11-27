@@ -30,18 +30,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>
-            Is this link bad? Submit this form and I'll get it fixed!
-            The link you're reporting is:
-          </p>
-          <p>
-            <a href="{{ swatch.amazon_purchase_link }}" target="_blank"
-               rel="noopener">{{ swatch.amazon_purchase_link }}</a>
-          </p>
-          <p>
-            If you know the new link, please provide it below before clicking submit.
-            Otherwise, just click submit and we will look for a new link ASAP!
-          </p>
+          {% include 'components/buttons/_bad_link_modal_body_text.partial' with link=swatch.amazon_purchase_link show_amazon_warning=1 %}
           <form action="/reportbadlink/{{ swatch.id }}/amazon/" id="amazonBadLinkForm" method="POST" hx-boost="false">
             <div class="input-group input-group-lg input-group-outline my-3">
               <label class="form-label" for="newAmazonLink">New Amazon Link</label>

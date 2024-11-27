@@ -1,0 +1,21 @@
+<p>
+  These links are manually generated. If you see an error, please let us know!
+  The link you're reporting is:
+</p>
+<p>
+  <a href="{{ link }}" target="_blank"
+     rel="noopener">{{ link }}</a>
+</p>
+{% if show_amazon_warning %}
+  <p>
+    Our Amazon affiliate links are connected to US storefronts. If you are
+    using our site from outside the US and Amazon does not have an exact
+    match from the manufacturer in your country, this link may appear broken.
+    Go ahead and report it if it's broken for you, but please be aware that
+    it may not be broken for everyone and might not be changed.
+  </p>
+{% endif %}
+<p>
+  If you know the new link, please provide it below before clicking submit.
+  Otherwise, just click submit and we will look for a new link ASAP!
+</p>

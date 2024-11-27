@@ -379,6 +379,27 @@ files = [
 ]
 
 [[package]]
+name = "djade"
+version = "1.3.2"
+description = "A Django template formatter."
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "djade-1.3.2-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:55558103c43332bd16aa2c71ce97eb5d938d53fce234cb37679b0749fdbeb005"},
+    {file = "djade-1.3.2-py3-none-macosx_11_0_arm64.whl", hash = "sha256:fe6bbeaf763b4cd0099d0659aee119f4cba1eed118a041db5dd589f742c4e2a1"},
+    {file = "djade-1.3.2-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:540ad7115c56d7720d773dbd0f6da4ddb437a6e163936e649f7c94c2fe89bb4d"},
+    {file = "djade-1.3.2-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:e8ecab5133f85f46a5d1f8b1ff4a1149c70cc8058186c5bbbf8c96003fddb140"},
+    {file = "djade-1.3.2-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:1a0303e04de45a40397216fd8a9ead58f827c6958c162523a267507f14725357"},
+    {file = "djade-1.3.2-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:28cc0984fe80de67b7395ed1be9eb31b438fcbe9dabcf1c2c899ad3839365257"},
+    {file = "djade-1.3.2-py3-none-musllinux_1_1_aarch64.whl", hash = "sha256:1a26dd356ceefebea00512bb1e0a8abfc16d7cdf3d08c42569047715e3517c30"},
+    {file = "djade-1.3.2-py3-none-musllinux_1_1_x86_64.whl", hash = "sha256:68e214447967fc1dd2adebc42a833fa592f1816cdcfafcfb9054db861917f490"},
+    {file = "djade-1.3.2-py3-none-win32.whl", hash = "sha256:bcc32f3ebb3648b5cd3b9b01ec087748948e30df413eeee2d9abdc99d640c1af"},
+    {file = "djade-1.3.2-py3-none-win_amd64.whl", hash = "sha256:6ccab4994e3f655a7e32dcd9e4f2c9c71bb9262bd9a0a29da1ce7ce3fc255c3c"},
+    {file = "djade-1.3.2-py3-none-win_arm64.whl", hash = "sha256:b4afd65e306a79f62cb1891380002ee15056ae6015361bd6699f0c00b2e79b4d"},
+    {file = "djade-1.3.2.tar.gz", hash = "sha256:46eaec810cb0ff37ea56885da06f68dedac4529ea80c2b71f0a76801e3ea67e0"},
+]
+
+[[package]]
 name = "django"
 version = "5.1.3"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
@@ -1799,4 +1820,4 @@ test = ["pytest (>=6.0.0)", "setuptools (>=65)"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "01f95a497265da27852d78c41b14de734dcfadbe1292bef96407f55cb14af794"
+content-hash = "64cf9e21bdba84c6520924c9e81ec99ab82b002ca024e36617981a3019a068ca"

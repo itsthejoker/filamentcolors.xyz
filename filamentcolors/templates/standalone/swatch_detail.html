@@ -120,7 +120,7 @@
                   <td class="ps-4">Date added</td>
                   <td>{{ swatch.human_readable_date }}</td>
                 </tr>
-                {% with swatch.get_td as td %}
+                {% with td=swatch.get_td %}
                   {% if td %}
                     <tr>
                       <td class="ps-4">TD Value</td>
@@ -212,7 +212,7 @@
                   </h6>
                   <hr>
                   <p>
-                    {{ swatch.notes | safe }}
+                    {{ swatch.notes|safe }}
                   </p>
                 </div>
               </div>

@@ -104,7 +104,7 @@
       </div>
     </div>
   </div>
-{% endblock %}
+{% endblock content %}
 
 {% block footer %}
   <button type="button"
@@ -118,7 +118,7 @@
           onclick="saveSettings()">
     Save changes
   </button>
-{% endblock %}
+{% endblock footer %}
 
 {% block extra %}
   <script>
@@ -258,4 +258,4 @@
       $("#advancedSettingsContainer").toggle();
     });
   </script>
-{% endblock %}
+{% endblock extra %}

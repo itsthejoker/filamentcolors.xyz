@@ -1,6 +1,4 @@
-{% load static %}
-{% load django_htmx %}
-{% load plausible %}
+{% load django_htmx plausible static %}
 
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">

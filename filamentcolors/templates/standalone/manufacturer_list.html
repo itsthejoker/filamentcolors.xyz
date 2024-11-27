@@ -23,7 +23,7 @@
     <div class="row">
       <div class="col-12 col-md-10 col-lg-8 col-xxl-6 mx-auto">
         {% for m in manufacturers %}
-          {% with m.name.0|upper as first_letter %}
+          {% with first_letter=m.name.0|upper %}
             {% ifchanged %}
               <div class="mfr-header">
                 <h3 id="{{ first_letter }}">{{ first_letter }}</h3>
@@ -105,4 +105,4 @@
     });
   </script>
 
-{% endblock %}
+{% endblock content %}

@@ -32,4 +32,4 @@
        style="background: #f96854; border-color: #f96854; color: #ffffff">Join me on Patreon!</a>
   </div>
   </p>
-{% endblock %}
+{% endblock content %}

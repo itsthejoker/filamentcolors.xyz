@@ -1051,12 +1051,12 @@ class Swatch(models.Model, DistanceMixin):
             self.update_affiliate_links()
             self.set_slug()
 
-            if kwargs.get('force_insert'):
+            if kwargs.get("force_insert"):
                 # In normal operation, this will never trigger. However,
                 # in tests, the `force_insert` flag is set to True, which
                 # will trigger the double save operation here to try and
                 # create two items with the same ID.
-                del(kwargs['force_insert'])
+                del kwargs["force_insert"]
 
             super(Swatch, self).save(*args, **kwargs)
 

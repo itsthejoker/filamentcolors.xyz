@@ -343,4 +343,4 @@
       </div>
     </div>
   </div>
-{% endblock %}
+{% endblock modal_content %}

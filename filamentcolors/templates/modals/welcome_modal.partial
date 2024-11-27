@@ -29,7 +29,7 @@
   <div class="d-grid">
     <div class="btn bg-gradient-info" onclick="showWelcomeExperience()">How does this work?</div>
   </div>
-{% endblock %}
+{% endblock content %}
 
 {% block extra %}
   <script type="text/javascript">
@@ -45,4 +45,4 @@
       });
     }
   </script>
-{% endblock %}
+{% endblock extra %}

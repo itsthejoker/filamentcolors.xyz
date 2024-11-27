@@ -671,9 +671,9 @@
 
 {% include 'modals/welcome_experience_modal.partial' %}
 {% include 'modals/settings_modal.partial' %}
-{##}
+{#  #}
 {# JS for handling submenu dropdown #}
-{##}
+{#  #}
 <script>
   function showWelcome() {
     $("#welcomeExperience").modal("show");

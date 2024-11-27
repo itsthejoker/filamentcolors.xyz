@@ -1,6 +1,5 @@
 {% extends base_template %}
-{% load humanize %}
-{% load subtract %}
+{% load humanize subtract %}
 
 {% block content %}
   <div class="container mt-4">
@@ -25,7 +24,7 @@
     <p>
       There are currently <strong>{{ published_count|intcomma }}</strong> swatches available
       in the library with <strong>
-      {% with swatches|length as swatchcount %}
+      {% with swatchcount=swatches|length %}
         {{ swatchcount|subtract:published_count|intcomma }}
       {% endwith %}</strong> more in the backlog.
     </p>
@@ -167,4 +166,4 @@
       </div>
     </div>
   </div>
-{% endblock %}
+{% endblock content %}

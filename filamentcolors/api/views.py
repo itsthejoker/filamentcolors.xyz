@@ -32,10 +32,10 @@ class CustomSwatchFilterBackend(DjangoFilterBackend):
         #
         # Read: me. I want to.
         kwargs = super().get_filterset_kwargs(*args)
-        kwargs['data']._mutable = True  # -sigh-
-        if 'published' not in kwargs['data']:
-            kwargs['data']['published'] = True
-        kwargs['data']._mutable = False
+        kwargs["data"]._mutable = True  # -sigh-
+        if "published" not in kwargs["data"]:
+            kwargs["data"]["published"] = True
+        kwargs["data"]._mutable = False
         return kwargs
 
 
@@ -98,7 +98,7 @@ class SwatchViewSet(ReadOnlyModelViewSet):
             if not is_hex(color):
                 return JsonResponse(
                     status=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                    data={"error": f"Color {color} is invalid."}
+                    data={"error": f"Color {color} is invalid."},
                 )
         for count, color in enumerate(hex_colors):
             try:

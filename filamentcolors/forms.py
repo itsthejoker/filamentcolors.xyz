@@ -1,6 +1,6 @@
 from django import forms
 from django.db.models.functions import Lower
-from django.forms import ClearableFileInput, NumberInput, TextInput
+from django.forms import ClearableFileInput, TextInput
 
 from filamentcolors.models import (
     FilamentType,

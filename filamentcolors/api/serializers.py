@@ -6,6 +6,7 @@ from taggit.serializers import TagListSerializerField
 
 from filamentcolors.models import (
     RAL,
+    GenericFilamentType,
     FilamentType,
     Manufacturer,
     Pantone,
@@ -14,10 +15,18 @@ from filamentcolors.models import (
 )
 
 
+class GenericFilamentTypeSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = GenericFilamentType
+        fields = ("name",)
+
+
 class FilamentTypeSerializer(HyperlinkedModelSerializer):
+    parent_type = GenericFilamentTypeSerializer(read_only=True)
+
     class Meta:
         model = FilamentType
-        fields = ("id", "name", "hot_end_temp", "bed_temp")
+        fields = ("id", "name", "hot_end_temp", "bed_temp", "parent_type")
 
 
 class ManufacturerSerializer(HyperlinkedModelSerializer):

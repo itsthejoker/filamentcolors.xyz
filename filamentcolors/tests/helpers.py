@@ -46,6 +46,7 @@ BASE_SWATCH_DATA = {
     "image_front": test_image(),
     "image_back": test_image(),
     "image_other": test_image(),
+    "image_opengraph": test_image(),
 }
 BASE_FILAMENT_TYPE_DATA = {"name": "Test", "parent_type": None}
 BASE_GENERIC_FILAMENT_TYPE_DATA = {"name": "TestBase"}

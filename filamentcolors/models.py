@@ -1,3 +1,4 @@
+import copy
 import os
 from io import BytesIO
 from typing import List, Tuple, Union
@@ -307,6 +308,7 @@ class Swatch(models.Model, DistanceMixin):
     image_front = models.ImageField(null=True, blank=True)
     image_back = models.ImageField(null=True, blank=True)
     image_other = models.ImageField(null=True, blank=True)
+    image_opengraph = models.ImageField(null=True, blank=True)
 
     rebuild_long_way = models.BooleanField(
         default=False,
@@ -704,6 +706,43 @@ class Swatch(models.Model, DistanceMixin):
         self.card_img = ImageFile(open(path, "rb"))
         self.card_img.name = filename
 
+    def create_opengraph_image(self, close_django_file_too=False):
+        opengraph_size = (1370, 1028)
+
+        def do_update(img_obj):
+            img_obj.thumbnail(opengraph_size, Img.Resampling.LANCZOS)
+            filename_opengraph = self._save_image(img_obj, "opengraph")
+
+            path = os.path.join(settings.MEDIA_ROOT, filename_opengraph)
+            self.image_opengraph = ImageFile(open(path, "rb"))
+            self.image_opengraph.name = filename_opengraph
+
+        if close_django_file_too:
+            # There is an issue in Pillow where the file is not closed properly.
+            # There is no proper workaround except to close the django file handler
+            # and the pillow file handler at the same time; however, this breaks
+            # normal operation of Django. This workaround is only for large batches
+            # of images.
+            # https://github.com/python-pillow/Pillow/issues/5132#issuecomment-750918772
+            with self.image_front.file, Img.open(self.image_front) as image_opengraph:
+                do_update(image_opengraph)
+        else:
+            with Img.open(self.image_front) as image_opengraph:
+                do_update(image_opengraph)
+
+    def get_opengraph_image(self):
+        # this is only to tide us over until we create all the proper images
+        if self.image_opengraph:
+            return self.image_opengraph.url
+        # The object that we're currently working with may have been modified
+        # due to the custom library rendering, so it's not safe to save it.
+        # Reload the object from disk and then generate the opengraph image,
+        # then save that version.
+        this = Swatch.objects.get(id=self.id)
+        this.create_opengraph_image()
+        this.save()
+        return this.image_opengraph.url
+
     def get_closest_color_swatch(self, library: Union[QuerySet, List], rgb: tuple):
         """Get a swatch that fits with progressively less-strict clamps."""
         for step_option in self.STEP_OPTIONS:
@@ -1021,6 +1060,7 @@ class Swatch(models.Model, DistanceMixin):
             # never fire.
             if not self.card_img:
                 self.crop_and_save_images()
+                self.create_opengraph_image()
             self.regenerate_all()
             self.regenerate_info = False
             rebuild_matches = True
@@ -1044,6 +1084,7 @@ class Swatch(models.Model, DistanceMixin):
             return
         else:
             self.crop_and_save_images()
+            self.create_opengraph_image()
             self.regenerate_all()
 
             super(Swatch, self).save(*args, **kwargs)

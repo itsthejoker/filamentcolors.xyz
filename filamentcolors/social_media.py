@@ -1,12 +1,14 @@
 import os
 import random
 import string
+from datetime import datetime, timezone
 
 import httpx
 from django.urls import reverse
 from dotenv import load_dotenv
 
 from filamentcolors import tumblr as pytumblr
+from filamentcolors.bluesky import parse_facets, fetch_embed_url_card, get_session
 
 load_dotenv()
 
@@ -83,6 +85,83 @@ def generate_swatch_upload_message(swatch) -> str:
     )
 
 
+def post_to_mastodon(message: str, new_swatch: bool) -> None:
+    httpx.post(
+        "https://3dp.chat/api/v1/statuses",
+        data={
+            "status": message.replace(
+                REF_KEY, "newswatchtoot" if new_swatch else "autotoot"
+            )
+        },
+        headers={"Authorization": f'Bearer {os.environ.get("MASTODON_ACCESS_TOKEN")}'},
+    )
+
+
+def post_to_tumblr(message: str, swatch: "Swatch", new_swatch: bool) -> None:
+    # first fix the post message to remove the url, since it isn't clickable
+    # by default on tumblr
+    if new_swatch:
+        tumblr_message = message.split(" https://")[0]
+    else:
+        split_message = message.split("here:")
+        tumblr_message = split_message[0] + "at filamentcolors.xyz!"
+
+    tumblr.create_photo(
+        "filamentcolors.tumblr.com",
+        state="published",
+        tags=[
+            "3d printing",
+            "3d print",
+            "project",
+            "projects",
+            "colors",
+            "color inspo",
+            "maker",
+            "making",
+        ],
+        caption=tumblr_message,
+        format="markdown",
+        link="https://filamentcolors.xyz"
+        + reverse("swatchdetail", kwargs={"swatch_id": swatch.slug})
+        + f"?ref={'newswatchtumbl' if new_swatch else 'autotumbl'}",
+        data=swatch.image_front.path,
+    )
+
+
+def post_to_bluesky(message: str, swatch, new_swatch: bool) -> None:
+    # Using a trailing "Z" is preferred over the "+00:00" format, according to
+    # the docs
+    now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+    session = get_session()
+
+    bsky_message = message.replace(
+        REF_KEY, "newswatchbsky" if new_swatch else "autoskeet"
+    )
+    post = {
+        "$type": "app.bsky.feed.post",
+        "text": bsky_message,
+        "createdAt": now,
+        "facets": parse_facets(bsky_message),
+        "embed": fetch_embed_url_card(
+            session["accessJwt"],
+            "https://filamentcolors.xyz"
+            + reverse("swatchdetail", kwargs={"swatch_id": swatch.slug}),
+        ),
+    }
+
+    resp = httpx.post(
+        "https://bsky.social/xrpc/com.atproto.repo.createRecord",
+        headers={"Authorization": "Bearer " + session["accessJwt"]},
+        json={
+            "repo": session["did"],
+            "collection": "app.bsky.feed.post",
+            "record": post,
+        },
+    )
+    resp.raise_for_status()
+
+
 def send_to_social_media(message: str = None, swatch=None, new_swatch=False) -> None:
     if not message and not swatch:
         raise Exception("Cannot create posts without either a message or a swatch!")
@@ -90,52 +169,17 @@ def send_to_social_media(message: str = None, swatch=None, new_swatch=False) -> 
         message = generate_swatch_upload_message(swatch)
 
     try:
-        # Post to Mastodon
-        httpx.post(
-            "https://3dp.chat/api/v1/statuses",
-            data={
-                "status": message.replace(
-                    REF_KEY, "newswatchtoot" if new_swatch else "autotoot"
-                )
-            },
-            headers={
-                "Authorization": f'Bearer {os.environ.get("MASTODON_ACCESS_TOKEN")}'
-            },
-        )
+        post_to_mastodon(message, new_swatch)
     except Exception as e:
         print(e)
 
     try:
-        # Post to Tumblr
+        post_to_tumblr(message, swatch, new_swatch)
+    except Exception as e:
+        print(e)
 
-        # first fix the post message to remove the url, since it isn't clickable
-        # by default on tumblr
-        if new_swatch:
-            tumblr_message = message.split(" https://")[0]
-        else:
-            split_message = message.split("here:")
-            tumblr_message = split_message[0] + "at filamentcolors.xyz!"
-
-        tumblr.create_photo(
-            "filamentcolors.tumblr.com",
-            state="published",
-            tags=[
-                "3d printing",
-                "3d print",
-                "project",
-                "projects",
-                "colors",
-                "color inspo",
-                "maker",
-                "making",
-            ],
-            caption=tumblr_message,
-            format="markdown",
-            link="https://filamentcolors.xyz"
-            + reverse("swatchdetail", kwargs={"swatch_id": swatch.slug})
-            + f"?ref={'newswatchtumbl' if new_swatch else 'autotumbl'}",
-            data=swatch.image_front.path,
-        )
+    try:
+        post_to_bluesky(message, swatch, new_swatch)
     except Exception as e:
         print(e)
 
@@ -177,6 +221,17 @@ daily_tweet_intro = [
     "Fun fact: this site is powered by hamsters! Okay, it's actually DigitalOcean, but still.",
     "Fun fact: there are {swatchcount} swatches currently available for your perusal!",
     "Got an idea for one of these messages? Hit me up!",
+    "I've got a fever... and the only prescription is more swatches!",
+    "You know what they say: the more colors, the merrier!",
+    "I've got a color for that! (Probably.)",
+    "Each swatch is like a snowflake: unique and beautiful!",
+    "Recently added to the library: this swatch!",
+    "The library grows ever larger with each new addition!",
+    "Pinch me, I must be dreaming! Or maybe I'm just a website.",
+    "Prints may come and prints may go, but swatches are forever!",
+    "Land ho! A new swatch has been sighted!",
+    "Proof that the library is expanding: this swatch!",
+    "Remember: the library is always open!",
 ]
 
 

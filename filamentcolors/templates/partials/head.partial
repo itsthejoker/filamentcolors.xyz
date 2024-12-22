@@ -15,8 +15,7 @@
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/nucleo-svg.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/material-kit-pro.css' %}?v=3">
 <link rel="stylesheet" href="{% static 'css/main.css' %}?v=6">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<script src="https://kit.fontawesome.com/940400877f.js" crossorigin="anonymous"></script> 
+<link rel="stylesheet" href="{% static 'vendored/css/material_icons.css' %}">
 
 <style>
     @font-face {
@@ -38,8 +37,6 @@
 <script src="{% static 'vendored/js/jscolor.min.js' %}" async></script>
 <script src="{% static 'vendored/js/color.global.min.js' %}"></script>
 
-<script src="{% static 'vendored/js/contract.js' %}"></script>
-<script src="{% static 'vendored/js/dispatcher.js' %}"></script>
 <script type="text/javascript" src="{% static 'vendored/js/toastify.min.js' %}" async defer></script>
 <script src="{% static 'js/cookies/cookie.js' %}?v=1"></script>
 

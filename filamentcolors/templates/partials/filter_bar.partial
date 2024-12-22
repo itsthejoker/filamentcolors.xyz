@@ -296,6 +296,9 @@
 
   function showHideHexColorWarning(el) {
     const hexColorSearchAlert = document.getElementById("hexColorSearchAlert");
+    if (!hexColorSearchAlert) {
+      return;
+    }
     $.isHexColor(el.value) ? hexColorSearchAlert.classList.remove("d-none") : hexColorSearchAlert.classList.add("d-none");
   }
 

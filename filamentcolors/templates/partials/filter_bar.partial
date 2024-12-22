@@ -58,7 +58,7 @@
       <div>
         <button
           id="clearAllFiltersButton"
-          class="btn btn-outline-secondary"
+          class="btn btn-outline-secondary d-none"
           onclick="clearAllFilters()"
         >Clear Active Filters
         </button>
@@ -278,9 +278,9 @@
 
   function updateClearAllButton() {
     if (getFilters("cf") || getFilters("mfr") || getFilters("ft") || window.quickfiltersToClear.length > 0) {
-      $("#clearAllFiltersButton").show();
+      $("#clearAllFiltersButton").removeClass("d-none");
     } else {
-      $("#clearAllFiltersButton").hide();
+      $("#clearAllFiltersButton").addClass("d-none");
     }
   }
 

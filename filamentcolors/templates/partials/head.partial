@@ -58,7 +58,23 @@
 
 <script>
   let $deck, $msnry;
-  htmx.onLoad(function(t) {
+
+  function debounce_leading(func, timeout = 300){
+      {# https://www.freecodecamp.org/news/javascript-debounce-example/ #}
+      let timer;
+      return (...args) => {
+        if (!timer) {
+          func.apply(this, args);
+        }
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          timer = undefined;
+        }, timeout);
+      };
+    }
+
+
+  function onLoadMain(evt) {
     tooltips();
     lazyloadimages();
 
@@ -77,7 +93,9 @@
     }
 
     emailMagic();
-  });
+  }
+
+  htmx.onLoad(debounce_leading(onLoadMain, 50));
 
   function showToast(message) {
     Toastify({
@@ -145,31 +163,12 @@
   });
 
   function lazyloadimages() {
-    const lazyImages = [].slice.call(document.querySelectorAll("img.lazy-load-image"));
-
-    if ("IntersectionObserver" in window) {
-      let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            let lazyImage = entry.target;
-            lazyImage.src = lazyImage.dataset.src;
-            lazyImage.classList.remove("lazy");
-            lazyImageObserver.unobserve(lazyImage);
-          }
-        });
-      });
-
-      lazyImages.forEach(function(lazyImage) {
-        lazyImageObserver.observe(lazyImage);
-      });
-    } else {
-      console.log("Image loading fallback to standard lazyload");
-      let images = $(".lazy-load-image");
-      images.each(function() {
+    let images = $(".lazy-load-image");
+    images.each(function() {
         let image = $(this);
         image.attr("loading", "lazy").attr("src", image.data()["src"]);
-      });
-    }
+        image.removeClass("lazy-load-image");
+    });
   }
 
   function tooltips() {

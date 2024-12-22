@@ -17,9 +17,9 @@
 
 <script>
   {% if preselect_collection %}
-    let preselected = {{ preselect_collection }};
+    window.preselected = {{ preselect_collection }};
   {% else %}
-    let preselected = "";
+    window.preselected = "";
   {% endif %}
 </script>
 

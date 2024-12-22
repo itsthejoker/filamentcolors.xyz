@@ -10,8 +10,8 @@ function multiselect_main() {
   }
 
   // this is a global variable that is set by the template
-  if (preselected !== "") {
-    preselect_items(preselected);
+  if (window.preselected !== "") {
+    preselect_items(window.preselected);
   }
 
   let cards = $(".swatchcard");
@@ -150,6 +150,8 @@ function handleMultiselectClick(obj) {
   if (getCounter() === 0) {
     disableOverlays();
     hideCollectionCounter();
+    window.collectionModeEnabled = false;
+    window.preselected = "";
   }
 }
 
@@ -168,7 +170,7 @@ $("#clear-button").on("click", function(evt) {
     }
   });
   window.collectionModeEnabled = false;
-  preselected = "";
+  window.preselected = "";
 
   updateCounter();
   disableOverlays();

@@ -119,48 +119,18 @@
             </div>
           </div>
           {% for item in swatches %}
-            {% if item.published %}<a href="/swatch/{{ item.slug }}" style="text-decoration: none">{% endif %}
-          <div class="row mt-lg-2 mt-md-3 inventory-row">
-            <div class="col-12 col-lg-8 text-center text-lg-start">
-              {{ item.manufacturer }} {{ item.color_name }} {{ item.filament_type.name }}
-            </div>
-            <div class="col-12 col-lg-4 text-center">
-              {% if item.published %}
-                <span
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="top"
-                  data-container="body"
-                  class="badge badge-success"
-                  title="This swatch is available in the library!"
-                >Published</span>
-                {% if not item.is_available %}
-                  <span
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    data-container="body"
-                    class="badge badge-secondary"
-                    title="This swatch is not available for sale."
-                  >Unavailable</span>
-                {% endif %}
-              {% else %}
-                <span
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="top"
-                  data-container="body"
-                  class="badge badge-danger"
-                  title="This swatch is not yet available in the library."
-                >Not Published</span>
-              {% endif %}
-            </div>
-            {% if not forloop.last %}
-              <div class="d-lg-none">
-                <hr>
-              </div>
+            {% if item.published %}
+              <a href="/swatch/{{ item.slug }}" style="text-decoration: none">
+                {% include 'components/inventory_line_item.partial' %}
+              </a>
+            {% else %}
+              {% include 'components/inventory_line_item.partial' %}
             {% endif %}
-          </div>
-          {% if item.published %}</a>{% endif %}
           {% endfor %}
-          <div class="text-center" id="foundOneMessage">
+        </div>
+
+        <div id="foundOneMessage" class="col-lg-12 col-xl-10 col-xxl-8 mx-auto">
+          <div class="text-center">
             <h4>You found something I don't have!</h4>
             <p>Set that one aside, because I'd love to get a bit of it for the library!</p>
           </div>

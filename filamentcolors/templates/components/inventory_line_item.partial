@@ -1,0 +1,38 @@
+<div class="row mt-lg-2 mt-md-3 inventory-row">
+  <div class="col-12 col-lg-8 text-center text-lg-start">
+    {{ item.manufacturer }} {{ item.color_name }} {{ item.filament_type.name }}
+  </div>
+  <div class="col-12 col-lg-4 text-center">
+    {% if item.published %}
+      <span
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        data-container="body"
+        class="badge badge-success"
+        title="This swatch is available in the library!"
+      >Published</span>
+      {% if not item.is_available %}
+        <span
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          data-container="body"
+          class="badge badge-secondary"
+          title="This swatch is not available for sale."
+        >Unavailable</span>
+      {% endif %}
+    {% else %}
+      <span
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        data-container="body"
+        class="badge badge-danger"
+        title="This swatch is not yet available in the library."
+      >Not Published</span>
+    {% endif %}
+  </div>
+  {% if not forloop.last %}
+    <div class="d-lg-none">
+      <hr>
+    </div>
+  {% endif %}
+</div>

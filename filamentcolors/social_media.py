@@ -138,7 +138,7 @@ def post_to_bluesky(message: str, swatch, new_swatch: bool) -> None:
     bsky_message = message.replace(
         REF_KEY, "newswatchbsky" if new_swatch else "autoskeet"
     )
-    message += " #3dprinting #filamentcolors"
+    bsky_message += " #3dprinting #filamentcolors"
     post = {
         "$type": "app.bsky.feed.post",
         "text": bsky_message,

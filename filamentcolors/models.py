@@ -541,6 +541,8 @@ class Swatch(models.Model, DistanceMixin):
     )
 
     tags = TaggableManager(blank=True)
+    # have this been uploaded as a new swatch and been posted yet?
+    posted_to_social_media = models.BooleanField(default=False)
 
     # !!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1100,14 +1102,6 @@ class Swatch(models.Model, DistanceMixin):
                 del kwargs["force_insert"]
 
             super(Swatch, self).save(*args, **kwargs)
-
-            # have to save the model before we can send the tweet, otherwise
-            # we won't have a swatch ID.
-            if not settings.DEBUG and settings.POST_TO_SOCIAL_MEDIA:
-                try:
-                    send_to_social_media(swatch=self, new_swatch=True)
-                except Exception as e:
-                    print(e)
 
     def __str__(self):
         try:

@@ -31,33 +31,33 @@
     <h4>Legend</h4>
     <div class="row">
       <div class="col-lg-4">
-            <span
-              data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              data-container="body"
-              class="badge badge-success"
-              title="This swatch is available in the library!"
-            >Published</span>
+        <span
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          data-container="body"
+          class="badge badge-success"
+          title="This swatch is available in the library!"
+        >Published</span>
         This swatch can be viewed in the library.
       </div>
       <div class="col-lg-4">
-            <span
-              data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              data-container="body"
-              class="badge badge-danger mt-2 mt-lg-0"
-              title="This swatch is not yet available in the library."
-            >Not Published</span>
+        <span
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          data-container="body"
+          class="badge badge-danger mt-2 mt-lg-0"
+          title="This swatch is not yet available in the library."
+        >Not Published</span>
         We have this filament in the queue, but it has not yet been indexed and published.
       </div>
       <div class="col-lg-4">
-            <span
-              data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              data-container="body"
-              class="badge badge-secondary mt-2 mt-lg-0"
-              title="This swatch is not available for sale."
-            >Unavailable</span>
+        <span
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          data-container="body"
+          class="badge badge-secondary mt-2 mt-lg-0"
+          title="This swatch is not available for sale."
+        >Unavailable</span>
         This filament has been published, but is not available for sale for various reasons.
       </div>
     </div>
@@ -89,10 +89,10 @@
         filterArray = filter.split(" ");
         elements = $(".inventory-row");
 
-        elements.each(function() {
+        elements.each(function () {
           el = $(this);
           text = el.text().toUpperCase();
-          if (filterArray.every(function(element) {
+          if (filterArray.every(function (element) {
             return text.indexOf(element) > -1;
           })) {
             el.css("display", "");
@@ -104,7 +104,7 @@
         $(".inventory-row:visible").length === 0 ? message.css("display", "") : message.css("display", "none");
       }
 
-      $(document).ready(function() {
+      $(document).ready(function () {
         filterStuff();
       });
     </script>
@@ -119,44 +119,46 @@
             </div>
           </div>
           {% for item in swatches %}
-            <div class="row mt-lg-2 mt-md-3 inventory-row">
-              <div class="col-12 col-lg-8 text-center text-lg-start">
-                {{ item.manufacturer }} {{ item.color_name }} {{ item.filament_type.name }}
-              </div>
-              <div class="col-12 col-lg-4 text-center">
-                {% if item.published %}
+            {% if item.published %}<a href="/swatch/{{ item.slug }}" style="text-decoration: none">{% endif %}
+          <div class="row mt-lg-2 mt-md-3 inventory-row">
+            <div class="col-12 col-lg-8 text-center text-lg-start">
+              {{ item.manufacturer }} {{ item.color_name }} {{ item.filament_type.name }}
+            </div>
+            <div class="col-12 col-lg-4 text-center">
+              {% if item.published %}
+                <span
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  data-container="body"
+                  class="badge badge-success"
+                  title="This swatch is available in the library!"
+                >Published</span>
+                {% if not item.is_available %}
                   <span
                     data-bs-toggle="tooltip"
                     data-bs-placement="top"
                     data-container="body"
-                    class="badge badge-success"
-                    title="This swatch is available in the library!"
-                  >Published</span>
-                  {% if not item.is_available %}
-                    <span
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      data-container="body"
-                      class="badge badge-secondary"
-                      title="This swatch is not available for sale."
-                    >Unavailable</span>
-                  {% endif %}
-                {% else %}
-                  <span
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    data-container="body"
-                    class="badge badge-danger"
-                    title="This swatch is not yet available in the library."
-                  >Not Published</span>
+                    class="badge badge-secondary"
+                    title="This swatch is not available for sale."
+                  >Unavailable</span>
                 {% endif %}
-              </div>
-              {% if not forloop.last %}
-                <div class="d-lg-none">
-                  <hr>
-                </div>
+              {% else %}
+                <span
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  data-container="body"
+                  class="badge badge-danger"
+                  title="This swatch is not yet available in the library."
+                >Not Published</span>
               {% endif %}
             </div>
+            {% if not forloop.last %}
+              <div class="d-lg-none">
+                <hr>
+              </div>
+            {% endif %}
+          </div>
+          {% if item.published %}</a>{% endif %}
           {% endfor %}
           <div class="text-center" id="foundOneMessage">
             <h4>You found something I don't have!</h4>

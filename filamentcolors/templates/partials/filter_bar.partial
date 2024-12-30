@@ -15,7 +15,7 @@
           hx-trigger="keyup changed delay:0.4s, fireSearch from:body"
           hx-get="{{ request.path }}"
           name="f"
-          hx-vals="js:{cf: getFilters('cf'), mfr: getFilters('mfr'), ft: getFilters('ft')}"
+          hx-vals="js:{...populateFilters()}"
           hx-target="#swatch-container"
           hx-swap="innerHTML"
           hx-headers='{ "X-Searchbar": "true" }'
@@ -192,6 +192,21 @@
     const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId));
     modal.hide();
   }
+
+  function populateFilters() {
+    const filters = {};
+    const filterTypes = ["cf", "mfr", "ft"];
+
+    filterTypes.forEach(type => {
+      const filterValue = getFilters(type);
+      if (filterValue) {
+        filters[type] = filterValue;
+      }
+    });
+
+    return filters;
+  }
+
 
   function getFilters(filterName) {
     try {

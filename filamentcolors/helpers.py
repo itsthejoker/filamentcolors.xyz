@@ -2,7 +2,6 @@ import colorsys
 from typing import Any, Dict, List
 
 from django.conf import settings
-from django.core.handlers.wsgi import WSGIRequest
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Count, F, Q, QuerySet
 from django.db.models.functions import Lower

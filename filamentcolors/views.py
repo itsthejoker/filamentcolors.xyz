@@ -33,7 +33,7 @@ from filamentcolors.helpers import (
     prep_request,
     is_infinite_scroll_request,
     get_swatch_paginator,
-    is_searchbar_request,
+    is_searchbar_request, get_new_seed,
 )
 from filamentcolors.models import (
     GenericFilamentType,
@@ -138,7 +138,18 @@ def librarysort(
         data["title"] = "Library, sorted by Manufacturer"
 
     elif method == "random":
+        if is_infinite_scroll_request(request):
+            # we're getting a paginated entry, not requesting the page for the first time.
+            seed = request.session.get("random_seed", get_new_seed())
+        else:
+            # we're getting the page for the first time. Forcibly create a new seed.
+            seed = get_new_seed()
+            request.session["random_seed"] = seed
+        # ensure that subsequent scrolls don't mess up what swatches appear
+        random.seed(seed)
+
         items = list(items)
+
         random.shuffle(items)
         data["title"] = "Library, sorted by Random"
 

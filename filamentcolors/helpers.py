@@ -1,4 +1,5 @@
 import colorsys
+import secrets
 from typing import Any, Dict, List
 
 from django.conf import settings
@@ -360,3 +361,10 @@ def get_paginator_page(potential_page: Any, value_if_invalid: int) -> int:
             return max(int(potential_page), 1)
         except ValueError:
             return value_if_invalid
+
+
+def get_new_seed() -> int:
+    # since we're screwing with the seed for the python `random` module,
+    # we need a cryptographically secure way to generate a new seed.
+    # This uses the underlying OS to generate a random number.
+    return secrets.SystemRandom().getrandbits(64)

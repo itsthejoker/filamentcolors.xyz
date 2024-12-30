@@ -6,7 +6,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Count, F, Q, QuerySet
 from django.db.models.functions import Lower
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
 
 from filamentcolors import status as status_codes
@@ -20,12 +20,12 @@ mfr_blacklist_cookie = "mfr-blacklist"
 show_delta_e_values_cookie = "show-delta-e-values"
 
 
-def first_time_visitor(r: WSGIRequest) -> bool:
+def first_time_visitor(r: HttpRequest) -> bool:
     return False if r.COOKIES.get(have_visited_before_cookie) else True
 
 
 def prep_request(
-    r: WSGIRequest, html: str, data: Dict = None, *args: Any, **kwargs: Any
+    r: HttpRequest, html: str, data: Dict = None, *args: Any, **kwargs: Any
 ) -> HttpResponse:
     """
     Prepare the actual request for serving.
@@ -88,7 +88,7 @@ def set_tasty_cookies(response) -> HttpResponse:
 
 
 def build_data_dict(
-    request: WSGIRequest, library: bool = False, title: str = None, **kwargs
+    request: HttpRequest, library: bool = False, title: str = None, **kwargs
 ) -> Dict:
     """
     This request requires rendering the base template, so perform all
@@ -192,7 +192,7 @@ def clean_collection_ids(ids: str) -> List:
     return cleaned_ids
 
 
-def debug_check_for_cookies(r: WSGIRequest):
+def debug_check_for_cookies(r: HttpRequest):
     type_settings = r.COOKIES.get(filament_type_settings_cookie)
     show_dc = r.COOKIES.get(show_unavailable_cookie)
     mfr_blacklist = r.COOKIES.get(mfr_blacklist_cookie)
@@ -212,7 +212,7 @@ def debug_check_for_cookies(r: WSGIRequest):
     return message
 
 
-def get_settings_cookies(r: WSGIRequest) -> Dict:
+def get_settings_cookies(r: HttpRequest) -> Dict:
     # both of these cookies are set by the javascript in the frontend.
     navbar_alert_key = "hideNavbarAlert-"
     type_settings = r.COOKIES.get(filament_type_settings_cookie)
@@ -313,16 +313,16 @@ class ErrorStatusResponse(HttpResponse):
         self._reason_phrase = status_codes.reasons.get(status, "Unknown Status Code")
 
 
-def is_infinite_scroll_request(request: WSGIRequest) -> bool:
-    return request.headers.get("X-Infinite-Scroll", None)
+def is_infinite_scroll_request(request: HttpRequest) -> bool:
+    return bool(request.headers.get("X-Infinite-Scroll", False))
 
 
-def is_searchbar_request(request: WSGIRequest) -> bool:
-    return request.headers.get("X-Searchbar", None)
+def is_searchbar_request(request: HttpRequest) -> bool:
+    return bool(request.headers.get("X-Searchbar", False))
 
 
 def get_swatch_paginator(
-    request: WSGIRequest, items: QuerySet[Swatch]
+    request: HttpRequest, items: QuerySet[Swatch]
 ) -> Dict[str, Any]:
     paginator_data = {}
     paginator = Paginator(items, settings.PAGINATION_COUNT)

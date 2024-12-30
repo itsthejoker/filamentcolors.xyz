@@ -5,7 +5,7 @@ from typing import Any
 
 import numpy
 import pandas
-from django.core.handlers.wsgi import WSGIRequest
+from django.http import HttpRequest
 from django.contrib import messages
 from django.db.models import Q, QuerySet
 from django.db.models.functions import Lower
@@ -44,7 +44,7 @@ from filamentcolors.models import (
 )
 
 
-def homepage(request: WSGIRequest) -> HttpResponseRedirect:
+def homepage(request: HttpRequest) -> HttpResponseRedirect:
     return HttpResponseRedirect(reverse("library"))
 
 
@@ -57,7 +57,7 @@ def homepage(request: WSGIRequest) -> HttpResponseRedirect:
 
 
 def librarysort(
-    request: WSGIRequest,
+    request: HttpRequest,
     method: str = None,
     library: QuerySet[Swatch] = None,
     prebuilt_data: dict = None,
@@ -201,7 +201,7 @@ def librarysort(
     return prep_request(request, html, data)
 
 
-def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
+def colorfamilysort(request: HttpRequest, family_id: str) -> HttpResponse:
     try:
         f_id = Swatch().get_color_id_from_slug_or_id(family_id)
     except UnknownSlugOrID:
@@ -222,7 +222,7 @@ def colorfamilysort(request: WSGIRequest, family_id: str) -> HttpResponse:
     return librarysort(request, library=s, prebuilt_data=data)
 
 
-def manufacturersort(request: WSGIRequest, mfr_id: str) -> HttpResponse:
+def manufacturersort(request: HttpRequest, mfr_id: str) -> HttpResponse:
     try:
         # it can either be the ID of the swatch itself or the slug
         mfr_id = int(mfr_id)
@@ -249,7 +249,7 @@ def manufacturersort(request: WSGIRequest, mfr_id: str) -> HttpResponse:
     return librarysort(request, library=s, prebuilt_data=data)
 
 
-def typesort(request: WSGIRequest, f_type_id: int) -> HttpResponse:
+def typesort(request: HttpRequest, f_type_id: int) -> HttpResponse:
     try:
         # it can either be the ID or the slug
         f_type_id = int(f_type_id)
@@ -276,7 +276,7 @@ def typesort(request: WSGIRequest, f_type_id: int) -> HttpResponse:
     return librarysort(request, library=s, prebuilt_data=data)
 
 
-def swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
+def swatch_collection(request: HttpRequest, ids: str) -> HttpResponse:
     cleaned_ids = clean_collection_ids(ids)
 
     collection = Swatch.objects.filter(id__in=cleaned_ids, published=True)
@@ -293,7 +293,7 @@ def swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
     return librarysort(request, library=collection, prebuilt_data=data)
 
 
-def edit_swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
+def edit_swatch_collection(request: HttpRequest, ids: str) -> HttpResponse:
     cleaned_ids = clean_collection_ids(ids)
     data = build_data_dict(
         request,
@@ -314,7 +314,7 @@ def edit_swatch_collection(request: WSGIRequest, ids: str) -> HttpResponse:
 #         \/           \/     \/      \/     \/                 \/     \/
 
 
-def swatch_detail(request: WSGIRequest, swatch_id: str) -> HttpResponse:
+def swatch_detail(request: HttpRequest, swatch_id: str) -> HttpResponse:
     html = "standalone/swatch_detail.html"
     data = build_data_dict(request)
     try:
@@ -425,7 +425,7 @@ def swatch_detail(request: WSGIRequest, swatch_id: str) -> HttpResponse:
         return prep_request(request, html, data)
 
 
-def inventory_page(request: WSGIRequest) -> HttpResponse:
+def inventory_page(request: HttpRequest) -> HttpResponse:
     data = build_data_dict(request)
     data |= {
         "swatches": Swatch.objects.select_related("manufacturer")
@@ -439,7 +439,7 @@ def inventory_page(request: WSGIRequest) -> HttpResponse:
 
 @csrf_exempt
 def report_bad_link(
-    request: WSGIRequest, swatch_id: int, link_type: str
+    request: HttpRequest, swatch_id: int, link_type: str
 ) -> HttpResponse:
     try:
         swatch = Swatch.objects.get(id=swatch_id, published=True)
@@ -473,7 +473,7 @@ def report_bad_link(
 
 
 @csrf_exempt
-def colormatch(request: WSGIRequest) -> HttpResponse:
+def colormatch(request: HttpRequest) -> HttpResponse:
     data = build_data_dict(request, title="Color Match")
 
     if request.method == "POST":
@@ -508,7 +508,7 @@ def colormatch(request: WSGIRequest) -> HttpResponse:
     return prep_request(request, "standalone/colormatch.html", data)
 
 
-def swatch_field_visualizer(request: WSGIRequest) -> HttpResponse:
+def swatch_field_visualizer(request: HttpRequest) -> HttpResponse:
     """Build the swatch visualizer plot originally written by Kevin Rotz."""
     data = build_data_dict(request, title="Swatch Field Visualizer")
     s = get_swatches(data)
@@ -571,7 +571,7 @@ def swatch_field_visualizer(request: WSGIRequest) -> HttpResponse:
     return prep_request(request, "standalone/visualizer.html", data)
 
 
-def manufacturer_list(request: WSGIRequest) -> HttpResponse:
+def manufacturer_list(request: HttpRequest) -> HttpResponse:
     return prep_request(
         request,
         "standalone/manufacturer_list.html",
@@ -579,13 +579,13 @@ def manufacturer_list(request: WSGIRequest) -> HttpResponse:
     )
 
 
-def about_page(request: WSGIRequest) -> HttpResponse:
+def about_page(request: HttpRequest) -> HttpResponse:
     return prep_request(
         request, "standalone/about.html", build_data_dict(request, title="About")
     )
 
 
-def monetary_donation_page(request: WSGIRequest) -> HttpResponse:
+def monetary_donation_page(request: HttpRequest) -> HttpResponse:
     return prep_request(
         request,
         "standalone/monetary_donations.html",
@@ -593,7 +593,7 @@ def monetary_donation_page(request: WSGIRequest) -> HttpResponse:
     )
 
 
-def about_me(request: WSGIRequest) -> HttpResponse:
+def about_me(request: HttpRequest) -> HttpResponse:
     return prep_request(
         request,
         "standalone/about_us.html",
@@ -601,7 +601,7 @@ def about_me(request: WSGIRequest) -> HttpResponse:
     )
 
 
-def donation_page(request: WSGIRequest) -> HttpResponse:
+def donation_page(request: HttpRequest) -> HttpResponse:
     return prep_request(
         request,
         "standalone/donations.html",
@@ -609,7 +609,7 @@ def donation_page(request: WSGIRequest) -> HttpResponse:
     )
 
 
-def error_400(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+def error_400(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
     return prep_request(
         request,
         "400.html",
@@ -618,7 +618,7 @@ def error_400(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
     )
 
 
-def error_404(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+def error_404(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
     return prep_request(
         request,
         "404.html",
@@ -627,7 +627,7 @@ def error_404(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
     )
 
 
-def error_500(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+def error_500(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
     return prep_request(
         request,
         "500.html",
@@ -644,7 +644,7 @@ def error_500(request: WSGIRequest, *args: Any, **kwargs: Any) -> HttpResponse:
 #                 \/                    \/          \/
 
 
-def get_welcome_experience_image(request: WSGIRequest, image_id: int) -> HttpResponse:
+def get_welcome_experience_image(request: HttpRequest, image_id: int) -> HttpResponse:
     """This is used to serve the welcome experience images."""
     data = build_data_dict(request)
 
@@ -661,7 +661,7 @@ def get_welcome_experience_image(request: WSGIRequest, image_id: int) -> HttpRes
     )
 
 
-def get_welcome_experience_video(request: WSGIRequest) -> HttpResponse:
+def get_welcome_experience_video(request: HttpRequest) -> HttpResponse:
     """This is used to serve the welcome experience movies."""
     data = build_data_dict(request)
 

@@ -1,6 +1,5 @@
 import os
 import re
-from datetime import datetime, timezone
 from typing import List, Dict
 import mimetypes
 
@@ -54,8 +53,24 @@ def parse_urls(text: str) -> List[Dict]:
     return spans
 
 
+def parse_hashtags(text: str) -> List[Dict]:
+    spans = []
+    hashtag_regex = rb"[$|\W](#[a-zA-Z0-9_]{1,139})"
+    text_bytes = text.encode("UTF-8")
+    for m in re.finditer(hashtag_regex, text_bytes):
+        spans.append(
+            {
+                "start": m.start(1),
+                "end": m.end(1),
+                "tag": m.group(1).decode("UTF-8"),
+            }
+        )
+    return spans
+
+
 # Parse facets from text and resolve the handles to DIDs
 def parse_facets(text: str) -> List[Dict]:
+    # I cannot put into words how much I hate this API
     facets = []
     for m in parse_mentions(text):
         resp = httpx.get(
@@ -88,6 +103,21 @@ def parse_facets(text: str) -> List[Dict]:
                         "$type": "app.bsky.richtext.facet#link",
                         # NOTE: URI ("I") not URL ("L")
                         "uri": u["url"],
+                    }
+                ],
+            }
+        )
+    for t in parse_hashtags(text):
+        facets.append(
+            {
+                "index": {
+                    "byteStart": t["start"],
+                    "byteEnd": t["end"],
+                },
+                "features": [
+                    {
+                        "$type": "app.bsky.richtext.facet#hashtag",
+                        "tag": t["tag"],
                     }
                 ],
             }

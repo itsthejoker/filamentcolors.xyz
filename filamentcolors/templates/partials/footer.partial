@@ -40,11 +40,11 @@
         </a>
       </div>
       <div class="col-1 col-sm-2 text-center bump-down mx-auto">
-        <a href="https://twitter.com/filamentcolors" target="_blank" rel="noopener">
-          <img title="Follow me on Twitter!"
+        <a href="https://bsky.app/profile/filamentcolors.xyz" target="_blank" rel="noopener">
+          <img title="Follow me on Bluesky!"
                loading="lazy"
-               width="32" height="32" src="{% static "Twitter_Social_Icon_Circle_Color.png" %}"
-               alt="@filamentcolors on Twitter">
+               width="32" height="32" src="{% static "bsky.svg" %}"
+               alt="@filamentcolors.xyz on Bluesky">
         </a>
       </div>
       <div class="col-sm-2"></div>

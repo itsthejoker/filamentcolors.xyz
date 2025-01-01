@@ -366,10 +366,10 @@
                   </a>
                 </li>
                 <li class="nav-item list-group-item border-0 p-0">
-                  <a href="https://twitter.com/filamentcolors"
+                  <a href="https://bsky.app/profile/filamentcolors.xyz"
                      target="_blank"
                      class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                    <b>Twitter {% include 'partials/external_link_icon.partial' %}</b>
+                    <b>Bluesky {% include 'partials/external_link_icon.partial' %}</b>
                   </a>
                 </li>
                 <li class="nav-item list-group-item border-0 p-0">
@@ -406,10 +406,10 @@
                 </div>
                 <div class="d-flex mb-2">
                   <div class="w-100 d-flex align-items-center justify-content-between">
-                    <a href="https://twitter.com/filamentcolors"
+                    <a href="https://bsky.app/profile/filamentcolors.xyz"
                        target="_blank"
                        class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                      <b>Twitter {% include 'partials/external_link_icon.partial' %}</b>
+                      <b>Bluesky {% include 'partials/external_link_icon.partial' %}</b>
                     </a>
                   </div>
                 </div>

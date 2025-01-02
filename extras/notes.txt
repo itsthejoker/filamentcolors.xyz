@@ -1,0 +1,17 @@
+For dev mode, the colorable SVG can be used for swatch cards. Example usage:
+
+<script src="{% static 'vendored/js/svg-inject.min.js' %}"></script>
+
+<div class="card-img-container" style="color: #{{ obj.hex_color }}">
+    <img class="card-img-top img-fluid layer lazy-load-image"
+       src="{% static 'swatch-illustration.svg' %}"
+       data-src="{{ obj.card_img.url }}"
+       onload="SVGInject(this)"
+       style="height:89px"
+       alt="Card image for {{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}">
+</div>
+
+
+This breaks the lazy loader because `SVGInject` replaces the entire <img> element with the full SVG file. This is the
+only way to style the SVG file, so that's... a reasonable outcome, but I think the proper way to go about this is to
+try and lazy load the image on top of the SVG and maybe provide SVGs in the color families?

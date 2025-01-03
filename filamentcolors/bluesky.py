@@ -116,7 +116,7 @@ def parse_facets(text: str) -> List[Dict]:
                 },
                 "features": [
                     {
-                        "$type": "app.bsky.richtext.facet#hashtag",
+                        "$type": "app.bsky.richtext.facet#tag",
                         "tag": t["tag"],
                     }
                 ],

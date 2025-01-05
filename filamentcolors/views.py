@@ -33,7 +33,8 @@ from filamentcolors.helpers import (
     prep_request,
     is_infinite_scroll_request,
     get_swatch_paginator,
-    is_searchbar_request, get_new_seed,
+    is_searchbar_request,
+    get_new_seed,
 )
 from filamentcolors.models import (
     GenericFilamentType,

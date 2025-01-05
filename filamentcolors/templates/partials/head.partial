@@ -163,7 +163,8 @@
     let images = $(".lazy-load-image");
     images.each(function() {
         let image = $(this);
-        image.attr("loading", "lazy").attr("src", image.data()["src"]);
+        image.attr("loading", "lazy");
+        image.attr("src", image.attr('data-src'));
         image.removeClass("lazy-load-image");
     });
   }

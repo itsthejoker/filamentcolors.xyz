@@ -62,7 +62,7 @@ def parse_hashtags(text: str) -> List[Dict]:
             {
                 "start": m.start(1),
                 "end": m.end(1),
-                "tag": m.group(1).decode("UTF-8"),
+                "tag": m.group(1)[1:].decode("UTF-8"),
             }
         )
     return spans

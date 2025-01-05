@@ -1,10 +1,9 @@
 <p>
-  These links are manually generated. If you see an error, please let us know!
+  These links are manually curated. If you see an error, please let us know!
   The link you're reporting is:
 </p>
 <p>
-  <a href="{{ link }}" target="_blank"
-     rel="noopener">{{ link }}</a>
+  <a href="{{ link }}" target="_blank" rel="noopener">{{ link }}</a>
 </p>
 {% if show_amazon_warning %}
   <p>
@@ -15,6 +14,10 @@
     it may not be broken for everyone and might not be changed.
   </p>
 {% endif %}
+<p>
+  Please note that if a filament is out of stock, this does not mean the
+  link is broken. We will not change the link for an out-of-stock item.
+</p>
 <p>
   If you know the new link, please provide it below before clicking submit.
   Otherwise, just click submit and we will look for a new link ASAP!

@@ -16,7 +16,7 @@
   >
     <div class="card-img-container">
       <img class="card-img-top img-fluid layer lazy-load-image"
-           src="{% static 'swatch-card-test.svg' %}"
+           src='data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 287.1 89"><defs><style>.c1 {fill: %23fff} .c1, .c2, .c3, .c4, .c5 {stroke: %23231f20;stroke-miterlimit: 10} .c2 {fill: %23{{ obj.hex_color }}} .c3 {opacity: 0.35;fill: %23000} .c4 {opacity: 0.25;fill: %23000} .c5 {opacity: 0.45;fill: %23000}</style></defs><g id="L6" data-name="L6"><path class="c2" d="M264.57,78.41H30.91c-7.93,0-14.37-6.43-14.37-14.37V21.99c0-7.93,6.43-14.37,14.37-14.37h233.66c7.93,0,14.37,6.43,14.37,14.37v42.06c0,7.93-6.43,14.37-14.37,14.37"/><circle class="c1" cx="34.2" cy="41.97" r="11.89"/></g><g id="L2" data-name="L2"><rect class="c4" x="115.67" y="16.26" width="51.03" height="53.5"/></g><g id="L3" data-name="L3"><rect class="c3" x="166.7" y="16.26" width="51.36" height="53.5"/></g><g id="L4" data-name="L4"><path class="c5" d="M269.6,58.45c0,6.25-5.06,11.31-11.31,11.31h-40.24V16.26h40.24c6.25,0,11.31,5.06,11.31,11.31"/><line class="c5" x1="269.6" y1="27.57" x2="269.6" y2="58.45"/></g></svg>'
            data-src="{{ obj.card_img.url }}"
            style="height:89px"
            alt="Card image for {{ obj.manufacturer.name }} - {{ obj.color_name }} {{ obj.filament_type.name }}">

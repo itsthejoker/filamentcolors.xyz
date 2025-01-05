@@ -90,7 +90,14 @@
           <div class="text-center">
             <h1 class="mt-lg-5 mt-md-0 fs-2">{{ swatch.manufacturer.name }}
               - {{ swatch.color_name }} {{ swatch.filament_type.name }}</h1>
-            <div class="big-color-cube" style="background-color:#{{ swatch.hex_color }};"></div>
+
+            <div 
+              class="big-color-cube" 
+              style="background-color:#{{ swatch.hex_color }};"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="This value is measured directly from the printed plastic with a spectrophotometer."
+            ></div>
             <p>#{{ swatch.hex_color|upper }}</p>
           </div>
           <div class="row mt-lg-5 mt-md-0">
@@ -200,7 +207,7 @@
               interpreted as the material being difficult. All swatch gcodes are pre-generated
               per filament type and are not tuned to specific filaments. Picture is
               representative and may not match the hex value shown. The hex value shown is the
-              measured color of the swatch.
+              result of physically measuring the printed swatch with a spectrophotometer.
             </small>
           </div>
           {% if swatch.notes %}

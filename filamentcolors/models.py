@@ -448,6 +448,12 @@ class Swatch(models.Model, DistanceMixin):
         on_delete=models.SET_NULL,
         related_name="closest_two_swatch",
     )
+    hex_color = models.CharField(
+        max_length=6, blank=True, verbose_name="Measured hex value"
+    )
+    lab_l = models.FloatField(null=True, blank=True)
+    lab_a = models.FloatField(null=True, blank=True)
+    lab_b = models.FloatField(null=True, blank=True)
 
     # !!!!!!!!!!!!!!!!!!!!!!!!
     # DO NOT PUT ANYTHING IN THESE FIELDS!
@@ -461,12 +467,11 @@ class Swatch(models.Model, DistanceMixin):
     card_img = models.ImageField(
         blank=True, verbose_name="DO NOT ADD! Computed Card Image"
     )
-    hex_color = models.CharField(
-        max_length=6, blank=True, verbose_name="Measured hex value"
-    )
+
     rgb_r = models.IntegerField(null=True, blank=True)
     rgb_g = models.IntegerField(null=True, blank=True)
     rgb_b = models.IntegerField(null=True, blank=True)
+
     closest_pantone_1 = models.ForeignKey(
         Pantone,
         null=True,

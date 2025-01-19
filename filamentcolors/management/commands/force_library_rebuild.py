@@ -8,7 +8,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS("Beginning library rebuild..."))
-        for s in Swatch.objects.filter(published=True):
-            s.update_all_color_matches(Swatch.objects.filter(published=True))
-            s.save()
+        for swatch in Swatch.objects.filter(published=True):
+            swatch.update_all_color_matches(
+                Swatch.objects.filter(published=True), include_third_party=True
+            )
+            swatch.save()
         self.stdout.write(self.style.SUCCESS("Rebuild complete!"))

@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="{% static 'vendored/css/material_icons.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/css/toastify.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/icomoon/style.css' %}">
+{#<link rel="stylesheet" href="{% static 'vendored/css/bootstrap.min.css' %}">#}
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/nucleo-icons.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/nucleo-svg.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/material-kit-pro-html-v3.0.3/assets/css/material-kit-pro.css' %}?v=3">

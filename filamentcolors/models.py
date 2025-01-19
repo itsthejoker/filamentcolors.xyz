@@ -1,6 +1,7 @@
-import copy
 import os
+import random
 from io import BytesIO
+from pathlib import Path
 from typing import List, Tuple, Union
 from urllib.parse import urlsplit, urlunparse
 
@@ -8,7 +9,6 @@ import pytz
 from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cie2000
 from colormath.color_objects import LabColor, sRGBColor
-from colorthief import ColorThief
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
@@ -23,7 +23,7 @@ from taggit.managers import TaggableManager
 
 from filamentcolors.colors import Color
 from filamentcolors.exceptions import UnknownSlugOrID
-from filamentcolors.social_media import send_to_social_media
+from filamentcolors.constants import OBSERVER_ANGLE, ILLUMINANT
 
 
 class DistanceMixin:
@@ -604,6 +604,14 @@ class Swatch(models.Model, DistanceMixin):
             R="%0.2X" % int(rgb[0]), G="%0.2X" % int(rgb[1]), B="%0.2X" % int(rgb[2])
         )
 
+    def get_lab_from_self(self):
+        # intermediate step while we transition to full measured LAB color
+        if not self.lab_a:
+            return convert_color(
+                sRGBColor(*self.get_rgb(self.hex_color), is_upscaled=True), LabColor
+            )
+        return LabColor(self.lab_l, self.lab_a, self.lab_b, OBSERVER_ANGLE, ILLUMINANT)
+
     def rgb_hilo(self, a: int, b: int, c: int) -> int:
         # courtesy of https://stackoverflow.com/a/40234924
         if c < b:
@@ -616,16 +624,11 @@ class Swatch(models.Model, DistanceMixin):
 
     def _save_image(self, i, image_type: str) -> str:
         # https://stackoverflow.com/a/24380132
-
-        # do we even need to do it this way? Need to learn more about byte streams
-        # and verify that this is actually a valid way to handle this.
         output = BytesIO()
         i.save(output, format="JPEG", quality=75)
         output.seek(0)
-        # remove the file type so that we can modify the filename
-        filename_str = self.image_front.name[: self.image_front.name.rindex(".")]
         filename = default_storage.save(
-            f"{filename_str}-{image_type}.jpg", ContentFile(output.read())
+            f"{self.slug}-{image_type}.jpg", ContentFile(output.read())
         )
         return filename
 
@@ -705,13 +708,46 @@ class Swatch(models.Model, DistanceMixin):
         self.image_back.name = filename_back
 
         image = Img.open(self.card_img_jpeg)
-        image.thumbnail((200, 200), Img.Resampling.LANCZOS)
+        image.thumbnail((288, 288), Img.Resampling.LANCZOS)
 
         filename = self._save_image(image, "thumb")
 
         path = os.path.join(settings.MEDIA_ROOT, filename)
         self.card_img = ImageFile(open(path, "rb"))
         self.card_img.name = filename
+
+    def create_local_dev_images(self):
+        front_masks = [
+            "swatch_front_mask.png",
+            "swatch_front_mask_2.png",
+            "swatch_front_mask_3.png",
+        ]
+        back_masks = [
+            "swatch_back_mask.png",
+            "swatch_back_mask_2.png",
+            "swatch_back_mask_3.png",
+        ]
+        mask_path = settings.BASE_DIR / Path("..") / Path("extras")
+
+        front_mask = Img.open(os.path.join(mask_path, random.choice(front_masks)))
+        front_img = Img.new("RGBA", front_mask.size, f"#{self.hex_color}")
+        front_img.paste(front_mask, (0, 0), front_mask)
+        front_img = front_img.convert("RGB")
+        front_img_filename = self._save_image(front_img, "front")
+        path = os.path.join(settings.MEDIA_ROOT, front_img_filename)
+        self.image_front = ImageFile(open(path, "rb"))
+        self.image_front.name = front_img_filename
+
+        back_mask = Img.open(os.path.join(mask_path, random.choice(back_masks)))
+        back_img = Img.new("RGBA", back_mask.size, f"#{self.hex_color}")
+        back_img.paste(back_mask, (0, 0), back_mask)
+        back_img = back_img.convert("RGB")
+        back_img_filename = self._save_image(back_img, "back")
+        path = os.path.join(settings.MEDIA_ROOT, back_img_filename)
+        self.image_back = ImageFile(open(path, "rb"))
+        self.image_back.name = back_img_filename
+
+        self.crop_and_save_images()
 
     def create_opengraph_image(self, close_django_file_too=False):
         opengraph_size = (1370, 1028)
@@ -945,7 +981,9 @@ class Swatch(models.Model, DistanceMixin):
             self.last_cache_update = timezone.now()
             self.save()
 
-    def update_all_color_matches(self, library: QuerySet) -> None:
+    def update_all_color_matches(
+        self, library: QuerySet, include_third_party=False
+    ) -> None:
         # NOTE: This does not save to the database!!! This is deliberate -
         # we only want to save it if we're updating the defaults. Otherwise,
         # this allows us to modify the defaults out of any given library, built
@@ -957,6 +995,10 @@ class Swatch(models.Model, DistanceMixin):
         self.update_tetradic_swatches(library)
         self.update_square_swatches(library)
         self.update_closest_swatches(library)
+        if include_third_party:
+            self.generate_closest_ral()
+            self.generate_closest_pantone()
+            self.generate_closest_pms()
 
     def is_available(self):
         return any([self.amazon_purchase_link, self.mfr_purchase_link])

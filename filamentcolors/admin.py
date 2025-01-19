@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.contrib import messages
 from django.shortcuts import HttpResponseRedirect
 
 from filamentcolors.models import (

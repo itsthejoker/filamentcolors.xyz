@@ -24,8 +24,8 @@ def test_cropped_images_automatically_added() -> None:
     swatch = get_swatch()
 
     assert swatch.card_img is not None
-    assert swatch.card_img.height == 62
-    assert swatch.card_img.width == 200
+    assert swatch.card_img.height == 89
+    assert swatch.card_img.width == 288
 
     assert swatch.image_front is not None
     assert swatch.image_front.height == 2056

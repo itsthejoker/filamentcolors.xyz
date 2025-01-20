@@ -103,6 +103,7 @@ class SwatchSerializer(HyperlinkedModelSerializer):
             "color_name",
             "filament_type",
             "color_parent",
+            "alt_color_parent",
             "image_front",
             "image_back",
             "image_other",

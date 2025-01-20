@@ -50,6 +50,8 @@ class SwatchViewSet(ReadOnlyModelViewSet):
         "manufacturer__id": ["exact"],
         "color_name": ["exact", "icontains"],
         "published": ["exact"],
+        "color_parent": ["exact", "icontains"],
+        "alt_color_parent": ["exact", "icontains"],
         "filament_type__parent_type__name": ["exact", "icontains"],
     }
     throttle_classes = [BurstRateThrottle, SustainedRateThrottle]

@@ -9,13 +9,13 @@ from filamentcolors.forms import (
     FilamentTypeForm,
     InventoryForm,
     ListSwatchInventoryForm,
-    ManualHexValueForm,
     ManufacturerForm,
     PurchaseLocationForm,
     RetailerForm,
     SwatchForm,
     SwatchFormNoImages,
     SwatchUpdateImagesForm,
+    ManualLabValueForm,
 )
 from filamentcolors.helpers import build_data_dict, prep_request
 from filamentcolors.models import PurchaseLocation, Swatch, Manufacturer
@@ -34,9 +34,10 @@ def get_path_redirect(request, viewname: str, *args, **kwargs):
 def set_colors_for_unpublished_swatches(request):
     if request.htmx and request.method == "POST":
         swatch = Swatch.objects.get(id=request.POST["swatch_id"])
-        swatch.hex_color = request.POST["hex"]
-        if swatch.hex_color.startswith("#"):
-            swatch.hex_color = swatch.hex_color[1:]
+        swatch.lab_l = request.POST["lab_l"]
+        swatch.lab_a = request.POST["lab_a"]
+        swatch.lab_b = request.POST["lab_b"]
+        swatch.computed_lab = False
         swatch.regenerate_all()
         swatch.save()
         return prep_request(
@@ -98,6 +99,7 @@ def add_swatch(request, swatch_id: int = None):
             return prep_request(request, "generic_form.html", data)
 
         new_swatch.published = True
+        new_swatch.computed_lab = False
         new_swatch.date_published = timezone.now()
         new_swatch.save()
         return HttpResponseRedirect(
@@ -386,23 +388,23 @@ def recalculate_color(request, swatch_id: int):
 
 
 @staff_member_required
-def force_hex_color(request, swatch_id: int):
-    """Allow manual setting of hex color if everything else fails."""
+def force_swatch_color(request, swatch_id: int):
+    """Allow manual setting of LAB color if everything else fails."""
     swatch = get_object_or_404(Swatch, id=swatch_id)
     if request.method == "POST":
-        form = ManualHexValueForm(request.POST)
+        form = ManualLabValueForm(request.POST)
         if form.is_valid():
-            value = form.cleaned_data["hex_color"]
-            if value.startswith("#"):
-                value = value[1:]
-            swatch.hex_color = value
+            swatch.lab_l = form.cleaned_data["lab_l"]
+            swatch.lab_a = form.cleaned_data["lab_a"]
+            swatch.lab_b = form.cleaned_data["lab_b"]
+            swatch.computed_lab = False
             swatch.regenerate_all()
             swatch.update_all_color_matches(Swatch.objects.filter(published=True))
             swatch.save()
             return HttpResponseRedirect(
                 reverse("swatchdetail", kwargs={"swatch_id": swatch.id})
             )
-    form = ManualHexValueForm()
+    form = ManualLabValueForm()
     return prep_request(request, "generic_form.html", {"form": form, "swatch": swatch})
 
 

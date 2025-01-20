@@ -90,6 +90,10 @@ def get_swatch(**kwargs) -> Swatch:
     if not info.get("filament_type"):
         info["filament_type"] = get_filament_type()
     obj, _ = Swatch.objects.get_or_create(**info)
+    if not obj.lab_l:
+        obj._set_rgb_from_hex()
+        obj._set_lab_from_rgb()
+        obj.save()
     return obj
 
 

@@ -458,6 +458,12 @@ class Swatch(models.Model, DistanceMixin):
     # !!!!!!!!!!!!!!!!!!!!!!!!
     # DO NOT PUT ANYTHING IN THESE FIELDS!
     # They are computed and added automatically!
+
+    # This is treated as a flag to mark whether this is a converted
+    # value from RGB or if this is something we've measured ourselves.
+    # TODO: once we've measured everything, we can remove this field.
+    computed_lab = models.BooleanField(default=False)
+
     card_img_jpeg = models.ImageField(
         upload_to="card_img",
         blank=True,
@@ -573,6 +579,14 @@ class Swatch(models.Model, DistanceMixin):
         if self.td:
             return self.td
         return None
+
+    def get_lab_str(self):
+        if self.lab_l and self.lab_a and self.lab_b and not self.computed_lab:
+            return (
+                f"L*: {round(self.lab_l, 2)},"
+                f" a*: {round(self.lab_a, 2)},"
+                f" b*: {round(self.lab_b, 2)}"
+            )
 
     def get_td_range(self) -> tuple[float, float] | None:
         tds: list[float] = list(
@@ -871,12 +885,6 @@ class Swatch(models.Model, DistanceMixin):
             qs = qs.exclude(id=result.id)
             setattr(self, fields[index], result)
 
-    def generate_rgb(self):
-        rgb = self.get_rgb(self.hex_color)
-        self.rgb_r = rgb[0]
-        self.rgb_g = rgb[1]
-        self.rgb_b = rgb[2]
-
     def update_complement_swatch(self, l):
         complement = Color(self.hex_color).complementary()[1]
         complement = sRGBColor.new_from_rgb_hex(str(complement))
@@ -1015,7 +1023,7 @@ class Swatch(models.Model, DistanceMixin):
             # this should only run when we pass a queryset in, otherwise
             # just handle the things that we can directly access easily
             self.update_all_color_matches(library)
-        self.generate_rgb()
+        self.set_rgb_from_lab()
         self.generate_closest_ral()
         self.generate_closest_pantone()
         self.generate_closest_pms()
@@ -1096,6 +1104,45 @@ class Swatch(models.Model, DistanceMixin):
         self.slug = slugify(
             f"{self.manufacturer.slug} {self.color_name} {self.filament_type.name} {self.id}"
         )
+
+    def _set_rgb_from_hex(self):
+        # for testing only
+        rgb = self.get_rgb(self.hex_color)
+        self.rgb_r = rgb[0]
+        self.rgb_g = rgb[1]
+        self.rgb_b = rgb[2]
+
+    def _set_lab_from_rgb(self):
+        # for testing only
+        color = convert_color(
+            sRGBColor(self.rgb_r, self.rgb_g, self.rgb_b, is_upscaled=True), LabColor
+        )
+        color.set_illuminant(ILLUMINANT)
+        color.set_observer(OBSERVER_ANGLE)
+        self.lab_l = color.lab_l
+        self.lab_a = color.lab_a
+        self.lab_b = color.lab_b
+
+    def set_rgb_from_lab(self):
+        # Not everything has lab yet, but if lab exists, use it.
+        if not self.lab_l or not self.lab_a or not self.lab_b:
+            # old-style swatches start with a hex color, so we can safely
+            # assume that it exists
+            rgb = self.get_rgb(self.hex_color)
+            self.rgb_r = rgb[0]
+            self.rgb_g = rgb[1]
+            self.rgb_b = rgb[2]
+        else:
+            color = convert_color(
+                LabColor(
+                    self.lab_l, self.lab_a, self.lab_b, OBSERVER_ANGLE, ILLUMINANT
+                ),
+                sRGBColor,
+            )
+            self.hex_color = self.get_hex(color.get_upscaled_value_tuple())
+            self.rgb_r = color.rgb_r
+            self.rgb_g = color.rgb_g
+            self.rgb_b = color.rgb_b
 
     def save(self, *args, **kwargs):
         rebuild_matches = False

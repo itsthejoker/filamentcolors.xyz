@@ -25,24 +25,39 @@
     <div id="swatches">
       {% for s in swatches %}
         <div class="row mt-3" id="row-{{ s.id }}">
-          <div class="col-lg-8 swatchInfo">
+          <div class="col-lg-6 swatchInfo mt-0 mt-lg-3">
             {% if s.hex_color %}
               <div class="color-cube" style="background-color:#{{ s.hex_color }};"></div>
             {% endif %}
             {{ s.manufacturer.name }} {{ s.color_name }} {{ s.filament_type.name }}
           </div>
-          <div class="col-lg-4">
+          <div class="col-lg-6">
             <form>
               <div class="row">
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label for="input-{{ s.id }}" class="form-control-label">Color</label>
-                    <input class="form-control" name="hex" type="color" value="#5e72e4"
-                           id="input-{{ s.id }}">
+                <div class="col-lg-9">
+                  <div class="row">
+                    <div class="col-12 col-md-4">
+                      <div class="input-group input-group-outline my-3">
+                        <label class="form-label">L*</label>
+                        <input type="number" name="lab_l" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <div class="input-group input-group-outline my-3">
+                        <label class="form-label">A*</label>
+                        <input type="number" name="lab_a" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <div class="input-group input-group-outline my-3">
+                        <label class="form-label">B*</label>
+                        <input type="number" name="lab_b" class="form-control">
+                      </div>
+                    </div>
                   </div>
                   <input type="text" style="display: none" value="{{ s.id }}" name="swatch_id">
                 </div>
-                <div class="col-lg-6 d-grid">
+                <div class="col-lg-3 d-grid mt-0 mt-lg-3">
                   <a
                     class="btn bg-gradient-secondary"
                     hx-post="{% url 'set_colors' %}"

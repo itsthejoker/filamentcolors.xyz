@@ -111,9 +111,9 @@ urlpatterns = [
         name="recalculate_color",
     ),
     path(
-        "force_hex/<int:swatch_id>/",
-        staff_views.force_hex_color,
-        name="force_hex_color",
+        "force_swatch_color/<int:swatch_id>/",
+        staff_views.force_swatch_color,
+        name="force_swatch_color",
     ),
     path(
         "set_colors/",

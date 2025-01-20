@@ -123,6 +123,19 @@
                   <td class="ps-4">Filament type</td>
                   <td>{{ swatch.filament_type.name }}</td>
                 </tr>
+                {% with lab=swatch.get_lab_str %}
+                  {% if lab %}
+                    <tr>
+                      <td
+                        class="ps-4"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        title="The CIELAB color space, also referred to as L*a*b*, is a color space defined by the International Commission on Illumination (abbreviated CIE) in 1976."
+                      >CIELAB</td>
+                      <td>{{ lab }}</td>
+                    </tr>
+                  {% endif %}
+                {% endwith %}
                 <tr>
                   <td class="ps-4">Date added</td>
                   <td>{{ swatch.human_readable_date }}</td>
@@ -176,7 +189,7 @@
                       <li>
                         <a class="dropdown-item"
                            tabindex="0"
-                           href="{% url 'force_hex_color' swatch.id %}">
+                           href="{% url 'force_swatch_color' swatch.id %}">
                           Force Specific Color
                         </a>
                       </li>

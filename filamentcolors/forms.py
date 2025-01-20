@@ -1,7 +1,9 @@
 from django import forms
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models.functions import Lower
 from django.forms import ClearableFileInput, TextInput
 
+from filamentcolors.constants import LAB
 from filamentcolors.models import (
     FilamentType,
     Manufacturer,
@@ -17,7 +19,9 @@ class CustomClearableFileInputField(ClearableFileInput):
 class SwatchForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["hex_color"].required = True
+        self.fields["lab_l"].required = True
+        self.fields["lab_a"].required = True
+        self.fields["lab_b"].required = True
         self.fields["image_front"].required = True
         self.fields["image_back"].required = True
         self.fields["manufacturer"].widget.attrs.update({"autofocus": "autofocus"})
@@ -34,7 +38,9 @@ class SwatchForm(forms.ModelForm):
         fields = [
             "filament_type",
             "color_name",
-            "hex_color",
+            "lab_l",
+            "lab_a",
+            "lab_b",
             "td",
             "color_parent",
             "alt_color_parent",
@@ -58,7 +64,9 @@ class SwatchForm(forms.ModelForm):
 class SwatchFormNoImages(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["hex_color"].required = True
+        self.fields["lab_l"].required = True
+        self.fields["lab_a"].required = True
+        self.fields["lab_b"].required = True
         self.fields["color_name"].required = True
         self.fields["manufacturer"].required = True
         self.fields["filament_type"].required = True
@@ -77,7 +85,10 @@ class SwatchFormNoImages(forms.ModelForm):
         fields = [
             "manufacturer",
             "color_name",
-            "hex_color",
+            "lab_l",
+            "lab_a",
+            "lab_b",
+            "computed_lab",
             "td",
             "filament_type",
             "color_parent",
@@ -176,8 +187,28 @@ class InventoryForm(forms.ModelForm):
         ]
 
 
-class ManualHexValueForm(forms.Form):
-    hex_color = forms.CharField(
-        max_length=7,
-        help_text="Use the color picker out of the dev tools in FF or use the eyedropper.",
+class ManualLabValueForm(forms.Form):
+    lab_l = forms.FloatField(
+        min_value=LAB["L"]["min"],
+        max_value=LAB["L"]["max"],
+        validators=[
+            MinValueValidator(LAB["L"]["min"]),
+            MaxValueValidator(LAB["L"]["max"]),
+        ],
+    )
+    lab_a = forms.FloatField(
+        min_value=LAB["A"]["min"],
+        max_value=LAB["A"]["max"],
+        validators=[
+            MinValueValidator(LAB["A"]["min"]),
+            MaxValueValidator(LAB["A"]["max"]),
+        ],
+    )
+    lab_b = forms.FloatField(
+        min_value=LAB["B"]["min"],
+        max_value=LAB["B"]["max"],
+        validators=[
+            MinValueValidator(LAB["B"]["min"]),
+            MaxValueValidator(LAB["B"]["max"]),
+        ],
     )

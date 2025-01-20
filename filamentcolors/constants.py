@@ -1,6 +1,19 @@
 OBSERVER_ANGLE = "10"
 ILLUMINANT = "d65"
-
+LAB = {
+    "L": {
+        "min": 0,
+        "max": 100,
+    },
+    "A": {
+        "min": -128,
+        "max": 127,
+    },
+    "B": {
+        "min": -128,
+        "max": 127,
+    },
+}
 
 WHITE = "WHT"
 BLACK = "BLK"

@@ -1139,10 +1139,11 @@ class Swatch(models.Model, DistanceMixin):
                 ),
                 sRGBColor,
             )
-            self.hex_color = self.get_hex(color.get_upscaled_value_tuple())
-            self.rgb_r = color.rgb_r
-            self.rgb_g = color.rgb_g
-            self.rgb_b = color.rgb_b
+            rgb: tuple = color.get_upscaled_value_tuple()
+            self.hex_color = self.get_hex(rgb)
+            self.rgb_r = rgb[0]
+            self.rgb_g = rgb[1]
+            self.rgb_b = rgb[2]
 
     def save(self, *args, **kwargs):
         rebuild_matches = False

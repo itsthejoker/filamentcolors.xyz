@@ -552,7 +552,7 @@
                     <a href="{% url 'set_colors' %}"
                        tabindex="0"
                        class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                      <b>Set Hex Colors</b>
+                      <b>Set Colors</b>
                     </a>
                   </li>
                   <li class="nav-item list-group-item border-0 p-0">
@@ -622,7 +622,7 @@
                          data-bs-toggle="collapse"
                          data-bs-target="#navigation"
                          class="dropdown-item border-radius-md text-dark ps-3 d-flex align-items-center mb-1">
-                        <b>Set Hex Color</b>
+                        <b>Set Colors</b>
                       </a>
                     </div>
                   </div>

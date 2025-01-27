@@ -1,7 +1,7 @@
 {% if not user_settings.show_unavailable and 'manufacturer' in request.path %}
   <div class="row">
     <div class="col-lg-4 mx-auto">
-      <div class="alert alert-info text-white text-center" role="alert">
+      <div class="alert alert-primary text-center" role="alert">
         Manufacturer pages always show both available and unavailable filaments.
       </div>
     </div>

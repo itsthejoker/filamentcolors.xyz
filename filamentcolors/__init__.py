@@ -10,7 +10,7 @@ from hashlib import md5
 
 # a string that will be displayed in full at the top of the site. Can contain html.
 NAVBAR_MESSAGE: str | None = (
-    "Hey there - please take a moment to read <a href='https://forum.filamentcolors.xyz/d/10-looking-forward-whats-next-funding' class='alert-link text-white'>our message about the future of the site here.</a>"
+    "Hey there - please take a moment to read <a href='https://forum.filamentcolors.xyz/d/10-looking-forward-whats-next-funding' class='alert-link'>our message about the future of the site here.</a>"
 )
 # an ID for the 'don't show' cookie. Unique per message.
 NAVBAR_MESSAGE_ID: str | None = (

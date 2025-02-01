@@ -8,7 +8,7 @@
     <p>
       Looking for a particular plastic in the library close to a color you have in mind?
       We have a few different ways to enter that color -- use whatever works
-      best for you and we'll try to match it to a plastic!
+      best for you and we'll try to match it to a plastic! Results appear below!
     </p>
     <div class="row mt-4 mb-3">
       <div class="col-10 col-md-8 col-xl-6 mx-auto text-center" id="color-picker"
@@ -111,15 +111,23 @@
       <div class="row">
         <div class="col-12 col-md-6 mx-auto">
           <p class="text-muted text-sm text-center mt-3">
-            Disclaimer: the results are limited by the swatches we've been able to measure. As
-            the library grows, the results will become more accurate. Exact matches are not
-            guaranteed; please use your best judgement.
+            Disclaimer: the results are limited by the swatches we've been able
+            to measure. As the library grows, the results will become more
+            accurate. Exact matches are not guaranteed; please use your best
+            judgement.
           </p>
         </div>
       </div>
     </div>
     {% include 'components/indicators/colormatch_spinner.partial' %}
-    <div id="results" class="loaded-content"></div>
+    <div id="results" class="loaded-content">
+      <h4>Results appear here!</h4>
+      <p>
+        Click the "Search" button above to see the results of your color match!
+        If you find a color you like, you can click the "Grab" button that will
+        be under the swatch to save it for later.
+      </p>
+    </div>
     <div id="saved_swatches" style="display: none">
       <hr class="container">
       <h4>Grab Bag</h4>

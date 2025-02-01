@@ -33,7 +33,7 @@
         <button
           type="button"
           id="cfFilterModalButton"
-          class="btn btn-primary"
+          class="btn btn-outline-danger bg-gradient"
           data-bs-toggle="modal"
           data-bs-target="#cfFilterModal"
         >Color Family
@@ -41,7 +41,7 @@
         <button
           type="button"
           id="ftFilterModalButton"
-          class="btn btn-success"
+          class="btn btn-outline-success bg-gradient"
           data-bs-toggle="modal"
           data-bs-target="#ftFilterModal"
         >Filament Type
@@ -49,7 +49,7 @@
         <button
           type="button"
           id="mfrFilterModalButton"
-          class="btn btn-info"
+          class="btn btn-outline-primary bg-gradient"
           data-bs-toggle="modal"
           data-bs-target="#mfrFilterModal"
         >Manufacturer
@@ -58,7 +58,7 @@
       <div>
         <button
           id="clearAllFiltersButton"
-          class="btn btn-outline-secondary d-none"
+          class="btn btn-outline-secondary d-none mt-2"
           onclick="clearAllFilters()"
         >Clear Active Filters
         </button>
@@ -228,7 +228,10 @@
   }
 
   function clearMfrFilter(goNow = true) {
-    $("#mfrFilterModalButton").text("Manufacturer");
+    $("#mfrFilterModalButton")
+      .text("Manufacturer")
+      .removeClass("btn-primary")
+      .addClass("btn-outline-primary");
     $("#filterMfrNone").addClass("active");
     $(".mfrFilterEntry").removeClass("active");
     hideModal("mfrFilterModal");
@@ -247,7 +250,10 @@
   }
 
   function clearFtFilter(goNow = true) {
-    $("#ftFilterModalButton").text("Filament Type");
+    $("#ftFilterModalButton")
+      .text("Filament Type")
+      .removeClass("btn-success")
+      .addClass("btn-outline-success");
     $("#filterFtNone").addClass("active");
     $(".ftFilterEntry").removeClass("active");
     hideModal("ftFilterModal");
@@ -266,7 +272,10 @@
   }
 
   function clearCfFilter(goNow = true) {
-    $("#cfFilterModalButton").text("Color Family");
+    $("#cfFilterModalButton")
+      .text("Color Family")
+      .removeClass("btn-danger")
+      .addClass("btn-outline-danger");
     $("#filterCfNone").addClass("active");
     $(".cfFilterEntry").removeClass("active");
     hideModal("cfFilterModal");
@@ -339,7 +348,10 @@
       } else {
         $("#filterCfNone").removeClass("active");
         filterEntry.addClass("active");
-        $("#cfFilterModalButton").text(filterEntry.text());
+        $("#cfFilterModalButton")
+          .text(filterEntry.text())
+          .removeClass("btn-outline-danger")
+          .addClass("btn-danger");
       }
     } else {
       $("#filterCfNone").addClass("active");
@@ -355,7 +367,10 @@
       } else {
         $("#filterMfrNone").removeClass("active");
         filterEntry.addClass("active");
-        $("#mfrFilterModalButton").text(filterEntry.text());
+        $("#mfrFilterModalButton")
+          .text(filterEntry.text())
+          .removeClass("btn-outline-primary")
+          .addClass("btn-primary");
       }
     } else {
       $("#filterMfrNone").addClass("active");
@@ -371,7 +386,10 @@
       } else {
         $("#filterFtNone").removeClass("active");
         filterEntry.addClass("active");
-        $("#ftFilterModalButton").text(filterEntry.text());
+        $("#ftFilterModalButton")
+          .text(filterEntry.text())
+          .removeClass("btn-outline-success")
+          .addClass("btn-success");
       }
     } else {
       $("#filterFtNone").addClass("active");

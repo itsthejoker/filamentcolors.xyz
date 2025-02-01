@@ -15,17 +15,14 @@
     <div class="step-1">
       <div class="modal-header">
         <h5 class="modal-title" id="how-does-this-work">How does this work?</h5>
-        <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
-                aria-label="Close">
-            <span class="icon-times" style="color:black; font-size:16px"></span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="alert alert-info">
-                <span class="text-white">The goal of this site is to allow you to quickly find colors that work well
+        <div class="alert alert-primary">
+                <span>The goal of this site is to allow you to quickly find colors that work well
                 together. The Process:</span>
           <p></p>
-          <ul class="mb-0 text-white">
+          <ul class="mb-0">
             <li>Distill filaments into their "dominant" color</li>
             <li>Use the dominant color to find color groups</li>
             <li>
@@ -51,19 +48,14 @@
         </ul>
       </div>
       <div class="modal-footer">
-        <button class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-        <button class="btn bg-gradient-primary" onclick="goToStep(2)">Continue</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" onclick="goToStep(2)">Continue</button>
       </div>
     </div>
     <div class="step-2">
       <div class="modal-header">
         <h5 class="modal-title">Step 1: Pick a Type</h5>
-        <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
-                aria-label="Close">
-                    <span class="position-absolute top-0 start-0">
-                        <span class="icon-times" style="color:black; font-size:16px"></span>
-                    </span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         Of course you don't have to pick a filament type, but most folks prefer
@@ -95,20 +87,15 @@
         the screen.
       </div>
       <div class="modal-footer">
-        <button class="btn bg-gradient-primary" onclick="goToStep(1)">Previous</button>
-        <button class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-        <button class="btn bg-gradient-primary" onclick="goToStep(3)">Continue</button>
+        <button class="btn btn-primary" onclick="goToStep(1)">Previous</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" onclick="goToStep(3)">Continue</button>
       </div>
     </div>
     <div class="step-3">
       <div class="modal-header">
         <h5 class="modal-title step-2" data-step="2">Step 2: Pick a Color</h5>
-        <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
-                aria-label="Close">
-                    <span class="position-absolute top-0 start-0">
-                        <span class="icon-times" style="color:black; font-size:16px"></span>
-                    </span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         See something you like? Something you already have? Something that might
@@ -153,20 +140,15 @@
         </ul>
       </div>
       <div class="modal-footer">
-        <button class="btn bg-gradient-primary" onclick="goToStep(2)">Previous</button>
-        <button class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-        <button class="btn bg-gradient-primary" onclick="goToStep(4)">Continue</button>
+        <button class="btn btn-primary" onclick="goToStep(2)">Previous</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" onclick="goToStep(4)">Continue</button>
       </div>
     </div>
     <div class="step-4">
       <div class="modal-header">
         <h5 class="modal-title">Step 3: Color Matching</h5>
-        <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
-                aria-label="Close">
-                    <span class="position-absolute top-0 start-0">
-                        <span class="icon-times" style="color:black; font-size:16px"></span>
-                    </span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         Most projects only need two colors, so we spin the
@@ -199,20 +181,15 @@
         the above screenshot is just an example.)
       </div>
       <div class="modal-footer">
-        <button class="btn bg-gradient-primary" onclick="goToStep(3)">Previous</button>
-        <button class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-        <button class="btn bg-gradient-primary" onclick="goToStep(5)">Continue</button>
+        <button class="btn btn-primary" onclick="goToStep(3)">Previous</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" onclick="goToStep(5)">Continue</button>
       </div>
     </div>
     <div class="step-5">
       <div class="modal-header">
         <h5 class="modal-title">Step 4: Collections</h5>
-        <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
-                aria-label="Close">
-                    <span class="position-absolute top-0 start-0">
-                        <span class="icon-times" style="color:black; font-size:16px"></span>
-                    </span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         What happens when you find colors that you like? We believe that old
@@ -244,20 +221,15 @@
         Share collections you like anywhere; the same link will work for everyone!
       </div>
       <div class="modal-footer">
-        <button class="btn bg-gradient-primary" onclick="goToStep(4)">Previous</button>
-        <button class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-        <button class="btn bg-gradient-primary" onclick="goToStep(6)">Continue</button>
+        <button class="btn btn-primary" onclick="goToStep(4)">Previous</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" onclick="goToStep(6)">Continue</button>
       </div>
     </div>
     <div class="step-6">
       <div class="modal-header">
         <h5 class="modal-title">Step 5: Creating Your Own Collections</h5>
-        <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
-                aria-label="Close">
-                    <span class="position-absolute top-0 start-0">
-                        <span class="icon-times" style="color:black; font-size:16px"></span>
-                    </span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p>
@@ -289,20 +261,15 @@
         </p>
       </div>
       <div class="modal-footer">
-        <button class="btn bg-gradient-primary" onclick="goToStep(5)">Previous</button>
-        <button class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-        <button class="btn bg-gradient-primary" onclick="goToStep(7)">Continue</button>
+        <button class="btn btn-primary" onclick="goToStep(5)">Previous</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" onclick="goToStep(7)">Continue</button>
       </div>
     </div>
     <div class="step-7">
       <div class="modal-header">
         <h5 class="modal-title">Step 6: Colors, Computers, and Beyond</h5>
-        <button type="button" class="btn-close pe-4 pb-3 position-relative" data-bs-dismiss="modal"
-                aria-label="Close">
-                    <span class="position-absolute top-0 start-0">
-                        <span class="icon-times" style="color:black; font-size:16px"></span>
-                    </span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         Computers don't understand color the same way humans do. Color is a
@@ -334,8 +301,8 @@
         Cheers!
       </div>
       <div class="modal-footer">
-        <button class="btn bg-gradient-primary" onclick="goToStep(6)">Previous</button>
-        <button class="btn bg-gradient-secondary"
+        <button class="btn btn-primary" onclick="goToStep(6)">Previous</button>
+        <button class="btn btn-secondary"
                 onclick="finishbutton()">Finish
         </button>
       </div>

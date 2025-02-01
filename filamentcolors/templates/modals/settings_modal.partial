@@ -18,12 +18,33 @@
   </p>
   <hr>
   <div class="container">
+    <h5>Dark Mode</h5>
+    <p>
+      Dark mode is experimental and may not work perfectly. If you encounter any issues,
+      please let us know.
+    </p>
+    <div class="container">
+      <div class="ms-3 mt-3 form-check form-switch">
+        <input 
+          style="margin-top: 7px" 
+          class="form-check-input" 
+          type="checkbox" 
+          id="darkModeSwitch" 
+          checked 
+          aria-label="Switch between light and dark mode"
+        >
+        <label class="form-check-label fs-5" for="darkModeSwitch">Dark Mode</label>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="container">
     <h5>Types of filament to display:</h5>
     <div class="container">
       <div class="ms-3 mt-3" id="filamentTypeSettings">
         {% for t in settings_buttons %}
           <div class="form-check form-switch">
-            <input class="form-check-input" style="margin-top: 9px" type="checkbox" id="{{ t.id }}"
+            <input class="form-check-input" style="margin-top: 7px" type="checkbox" id="{{ t.id }}"
                    checked="" autocomplete="off">
             <label class="form-check-label fs-5" for="{{ t.id }}"
             >{{ t.name }}</label>
@@ -38,7 +59,7 @@
     <div class="container">
       <div class="ms-3 mt-3" id="filamentTypeSettings">
         <div class="form-check form-switch">
-          <input class="form-check-input" style="margin-top: 9px" type="checkbox" id="unavailableCheckbox"
+          <input class="form-check-input" style="margin-top: 7px" type="checkbox" id="unavailableCheckbox"
                  autocomplete="off">
           <label class="form-check-label fs-5" for="unavailableCheckbox">Show unavailable
             filaments</label>
@@ -70,7 +91,7 @@
       <div class="container">
         <div class="ms-3 mt-3" id="filamentTypeSettings">
           <div class="form-check form-switch">
-            <input class="form-check-input" style="margin-top: 9px" type="checkbox"
+            <input class="form-check-input" style="margin-top: 7px" type="checkbox"
                    id="showDeltaEValues" autocomplete="off">
             <label class="form-check-label fs-5" for="showDeltaEValues"
             >Show ΔE Distances</label>
@@ -94,7 +115,7 @@
         <div class="ms-3 mt-3" id="mfrSettings">
           {% for m in manufacturers %}
             <div class="form-check form-switch">
-              <input class="form-check-input" style="margin-top: 9px" type="checkbox" id="m{{ m.id }}"
+              <input class="form-check-input" style="margin-top: 7px" type="checkbox" id="m{{ m.id }}"
                      checked="" autocomplete="off">
               <label class="form-check-label fs-5" for="m{{ m.id }}"
               >{{ m.name }}</label>
@@ -251,6 +272,22 @@
         el.prop("checked", JSON.parse(showdeltaesetting.toLowerCase()));
       }
     }
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const htmlElement = document.documentElement;
+      const switchElement = document.getElementById('darkModeSwitch');
+      const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const currentTheme = localStorage.getItem('bsTheme') || (prefersDarkScheme ? 'dark' : 'light');
+
+      htmlElement.setAttribute('data-bs-theme', currentTheme);
+      switchElement.checked = currentTheme === 'dark';
+
+      switchElement.addEventListener('change', function () {
+          const newTheme = this.checked ? 'dark' : 'light';
+          htmlElement.setAttribute('data-bs-theme', newTheme);
+          localStorage.setItem('bsTheme', newTheme);
+      });
+    });
 
     $(document).ready(function() {
       loadSettings();

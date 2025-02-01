@@ -2,14 +2,14 @@
 
   <div class="btn-group" role="group" aria-label="Amazon purchase button with nested dropdown">
 
-    <a class="btn btn-info" href="{{ swatch.amazon_purchase_link }}"
+    <a class="btn btn-primary bg-gradient" href="{{ swatch.amazon_purchase_link }}"
        target="_blank"
        role="button"
        rel="noopener"
     >Buy on Amazon<br><span style="font-size: smaller">(affiliate link)</span></a>
 
     <div class="btn-group" role="group">
-      <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      <button type="button" class="btn btn-primary bg-gradient dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         Options
       </button>
       <ul class="dropdown-menu">

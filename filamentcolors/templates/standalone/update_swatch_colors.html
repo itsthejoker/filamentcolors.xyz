@@ -24,42 +24,69 @@
     </div>
     <div id="swatches">
       {% for s in swatches %}
-        <div class="row mt-3" id="row-{{ s.id }}">
-          <div class="col-lg-6 swatchInfo mt-0 mt-lg-3">
-            {% if s.hex_color %}
-              <div class="color-cube" style="background-color:#{{ s.hex_color }};"></div>
-            {% endif %}
+        <div class="row" id="row-{{ s.id }}">
+          <div class="col-lg-4 col-xl-5 mt-0 mt-lg-2 swatchInfo">
             {{ s.manufacturer.name }} {{ s.color_name }} {{ s.filament_type.name }}
           </div>
-          <div class="col-lg-6">
+          <div class="col-lg-8 col-xl-7 mt-2 mt-lg-0">
             <form>
               <div class="row">
                 <div class="col-lg-9">
                   <div class="row">
                     <div class="col-12 col-md-4">
-                      <div class="input-group input-group-outline my-3">
-                        <label class="form-label">L*</label>
-                        <input type="number" name="lab_l" class="form-control">
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" id="labl{{ s.id }}">L*</span>
+                        <input
+                          type="number"
+                          data-id="{{ s.id }}"
+                          data-min="0"
+                          data-max="100"
+                          oninput="validateNum(this)"
+                          class="form-control"
+                          name="lab_l"
+                          aria-label="LAB L*"
+                          aria-describedby="labl{{ s.id }}">
                       </div>
                     </div>
                     <div class="col-12 col-md-4">
-                      <div class="input-group input-group-outline my-3">
-                        <label class="form-label">A*</label>
-                        <input type="number" name="lab_a" class="form-control">
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" id="laba{{ s.id }}">A*</span>
+                        <input
+                          type="number"
+                          data-id="{{ s.id }}"
+                          data-min="-128"
+                          data-max="128"
+                          oninput="validateNum(this)"
+                          class="form-control"
+                          name="lab_a"
+                          aria-label="LAB A*"
+                          aria-describedby="laba{{ s.id }}"
+                        >
                       </div>
                     </div>
                     <div class="col-12 col-md-4">
-                      <div class="input-group input-group-outline my-3">
-                        <label class="form-label">B*</label>
-                        <input type="number" name="lab_b" class="form-control">
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" id="labb{{ s.id }}">B*</span>
+                        <input
+                          type="number"
+                          data-id="{{ s.id }}"
+                          data-min="-128"
+                          data-max="128"
+                          oninput="validateNum(this)"
+                          class="form-control"
+                          name="lab_b"
+                          aria-label="LAB B*"
+                          aria-describedby="labb{{ s.id }}"
+                        >
                       </div>
                     </div>
                   </div>
                   <input type="text" style="display: none" value="{{ s.id }}" name="swatch_id">
                 </div>
-                <div class="col-lg-3 d-grid mt-0 mt-lg-3">
+                <div class="col-lg-3 text-center d-grid d-lg-block px-5 px-lg-0">
                   <a
-                    class="btn bg-gradient-secondary"
+                    data-id="{{ s.id }}"
+                    class="btn btn-secondary submitButton"
                     hx-post="{% url 'set_colors' %}"
                     hx-target="#row-{{ s.id }}"
                     hx-swap="innerHTML"
@@ -69,6 +96,11 @@
               </div>
             </form>
           </div>
+          {% if not forloop.last %}
+          <div class="container">
+            <hr class="mt-lg-0">
+            </div>
+          {% endif %}
         </div>
       {% endfor %}
     </div>
@@ -95,8 +127,27 @@
       }
     }
 
+    function validateNum(el) {
+      const min = parseInt(el.dataset.min, 10);
+      const max = parseInt(el.dataset.max, 10);
+      const val = parseFloat(el.value);
+
+      if (isNaN(val)) {
+        el.classList.remove("is-valid", "is-invalid");
+        el.classList.add("is-invalid");
+        $(`a[data-id=${el.dataset.id}]`).toggleClass('disabled', true)
+        return;
+      }
+      el.classList.toggle("is-valid", val >= min && val <= max);
+      el.classList.toggle("is-invalid", val < min || val > max);
+
+      const isValid = $(`input[data-id=${el.dataset.id}].is-valid`).length === 3;
+      $(`a[data-id=${el.dataset.id}]`).toggleClass('disabled', !isValid);
+    }
+
     $(document).ready(function() {
       filterStuff();
+      $(".submitButton").addClass('disabled')
     });
   </script>
 

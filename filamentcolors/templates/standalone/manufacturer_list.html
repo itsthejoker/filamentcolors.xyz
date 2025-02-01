@@ -40,21 +40,21 @@
             <span>{{ m }}</span>
             {% if m.unavailable_swatch_count and m.available_swatch_count %}
               <span
-                class="badge badge-primary"
+                class="badge text-bg-primary"
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
                 title="{{ m.available_swatch_count }} available for purchase, {{ m.unavailable_swatch_count }} unavailable."
               >{{ m.available_swatch_count }} / {{ m.unavailable_swatch_count }}</span>
             {% elif m.unavailable_swatch_count and not m.available_swatch_count %}
               <span
-                class="badge badge-secondary"
+                class="badge text-bg-secondary"
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
                 title="No filaments from this manufacturer are available for purchase."
               >{{ m.unavailable_swatch_count }}</span>
             {% else %}
               <span
-                class="badge badge-primary"
+                class="badge text-bg-primary"
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
                 title="All of the filaments from this manufacturer are available for purchase."

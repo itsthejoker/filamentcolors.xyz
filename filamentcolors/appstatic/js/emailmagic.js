@@ -68,22 +68,22 @@ function getModalContent({id, emailAddress, subject, cc, bcc, body, fullMailTo})
                 <div class="d-grid gap-2">
                     <a
                       href="https://mail.google.com/mail/?view=cm&fs=1&to=${emailAddress}&su=${subject}&cc=${cc}&bcc=${bcc}&body=${body}"
-                      class="btn bg-gradient-warning"
+                      class="btn btn-warning"
                       target="_blank"
                     >Gmail</a>
                     <a
                       href="https://outlook.office.com/owa/?path=/mail/action/compose&to=${emailAddress}&subject=${subject}&body=${body}"
-                      class="btn bg-gradient-info"
+                      class="btn btn-primary"
                       target="_blank"
                     >Outlook</a>
                     <a
                       href="https://compose.mail.yahoo.com/?to=${emailAddress}&subject=${subject}&cc=${cc}&bcc=${bcc}&body=${body}"
-                      class="btn bg-gradient-primary"
+                      class="btn btn-danger"
                       target="_blank"
                     >Yahoo! Mail</a>
-                    <a href="${fullMailTo}" class="btn bg-gradient-success" target="_blank">Default</a>
+                    <a href="${fullMailTo}" class="btn btn-success" target="_blank">Default</a>
                     <hr/>
-                    <button class="btn bg-gradient-dark" onclick="copyToClipboard('${fullMailTo}')">Copy to Clipboard</button>
+                    <button class="btn btn-dark" onclick="copyToClipboard('${fullMailTo}')">Copy to Clipboard</button>
                 </div>
               </div>
               <div class="modal-footer">

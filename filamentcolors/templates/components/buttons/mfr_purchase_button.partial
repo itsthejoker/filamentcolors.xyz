@@ -1,6 +1,6 @@
 {% if swatch.mfr_purchase_link %}
   <div class="btn-group" role="group" aria-label="Manufacturer purchase button with nested dropdown">
-    <a class="btn btn-success" href="{{ swatch.mfr_purchase_link }}"
+    <a class="btn btn-success bg-gradient" href="{{ swatch.mfr_purchase_link }}"
        target="_blank"
        role="button"
        rel="noopener">Buy from {{ swatch.manufacturer.parent_company_name|default:swatch.manufacturer.name }}
@@ -9,7 +9,7 @@
       {% endif %}
     </a>
     <div class="btn-group" role="group">
-      <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      <button type="button" class="btn btn-success bg-gradient dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         Options
       </button>
       <ul class="dropdown-menu">

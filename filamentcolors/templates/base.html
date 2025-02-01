@@ -7,6 +7,8 @@
   {% endblock title %}
 </head>
 
+{% include 'components/indicators/loading_screen.partial' %}
+
 <body
   hx-ext="morph" {# Allow using the morph transition. #}
   hx-target="#main"
@@ -27,8 +29,6 @@
 <noscript>
   {% include 'components/alerts/no-js-alert.partial' %}
 </noscript>
-
-{% include 'components/indicators/loading_screen.partial' %}
 
 <main id="main" hx-swap="morph:innerHTML">
   {% block content %}

@@ -102,56 +102,55 @@
           </div>
           <div class="row mt-lg-5 mt-md-0">
             <div class="col-md-1"></div>
-            <div class="col-md-10 gray-background">
-              <table class="table">
+            <div class="col-md-10 swatch-info-table bg-body-secondary">
+              <table class="table table-borderless">
                 <thead>
                 <tr>
-                  <th scope="col" colspan="2">General Info</th>
-                  <th scope="col"></th>
+                  <th scope="col" colspan="2" class="bg-body-secondary">General Info</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                  <td class="ps-4">Hot end temp</td>
-                  <td>{{ swatch.filament_type.hot_end_temp }}</td>
+                  <td class="ps-4 bg-body-secondary">Hot end temp</td>
+                  <td class="bg-body-secondary">{{ swatch.filament_type.hot_end_temp }}</td>
                 </tr>
                 <tr>
-                  <td class="ps-4">Bed temp</td>
-                  <td>{{ swatch.filament_type.bed_temp }}</td>
+                  <td class="ps-4 bg-body-secondary">Bed temp</td>
+                  <td class="bg-body-secondary">{{ swatch.filament_type.bed_temp }}</td>
                 </tr>
                 <tr>
-                  <td class="ps-4">Filament type</td>
-                  <td>{{ swatch.filament_type.name }}</td>
+                  <td class="ps-4 bg-body-secondary">Filament type</td>
+                  <td class="bg-body-secondary">{{ swatch.filament_type.name }}</td>
                 </tr>
                 {% with lab=swatch.get_lab_str %}
                   {% if lab %}
                     <tr>
                       <td
-                        class="ps-4"
+                        class="ps-4 bg-body-secondary"
                         data-bs-toggle="tooltip"
                         data-bs-placement="top"
                         title="The CIELAB color space, also referred to as L*a*b*, is a color space defined by the International Commission on Illumination (abbreviated CIE) in 1976."
                       >CIELAB</td>
-                      <td>{{ lab }}</td>
+                      <td class="bg-body-secondary">{{ lab }}</td>
                     </tr>
                   {% endif %}
                 {% endwith %}
                 <tr>
-                  <td class="ps-4">Date added</td>
-                  <td>{{ swatch.human_readable_date }}</td>
+                  <td class="ps-4 bg-body-secondary">Date added</td>
+                  <td class="bg-body-secondary">{{ swatch.human_readable_date }}</td>
                 </tr>
                 {% with td=swatch.get_td %}
                   {% if td %}
                     <tr>
-                      <td class="ps-4">TD Value</td>
-                      <td>{{ td }}</td>
+                      <td class="ps-4 bg-body-secondary">TD Value</td>
+                      <td class="bg-body-secondary">{{ td }}</td>
                     </tr>
                   {% endif %}
                 {% endwith %}
                 {% if swatch.donated_by %}
                   <tr>
-                    <td class="ps-4">Donated by</td>
-                    <td>{{ swatch.donated_by }}</td>
+                    <td class="ps-4 bg-body-secondary">Donated by</td>
+                    <td class="bg-body-secondary">{{ swatch.donated_by }}</td>
                   </tr>
                 {% endif %}
                 </tbody>
@@ -167,7 +166,7 @@
                 {% if request.user.is_authenticated %}
                   <div class="dropdown d-grid">
                     <a href="#"
-                       class="btn bg-gradient-primary dropdown-toggle-white dropdown-toggle"
+                       class="btn btn-danger bg-gradient dropdown-toggle-white dropdown-toggle"
                        data-bs-toggle="dropdown" id="AdminSwatchControlPanel">
                       Admin
                     </a>
@@ -225,7 +224,7 @@
           </div>
           {% if swatch.notes %}
             <div class="mt-3">
-              <div class="card card-frame shadow-lg gray-background">
+              <div class="card card-frame shadow-sm bg-body-secondary rounded-4 border-0">
                 <div class="card-body">
                   <h6 class="font-weight-normal text-center text-uppercase">
                     Notes
@@ -339,8 +338,8 @@
           </div>
         </div>
         <div class="row mt-3">
-          <div class="col text-center bump-down">
-            <a class="btn btn-outline-info bump-down"
+          <div class="col text-center">
+            <a class="btn btn-outline-primary"
                href="/library/collection/{{ swatch.id }},{{ swatch.complement.id }}" target="_blank"
                role="button"
                rel="noopener"
@@ -376,8 +375,8 @@
           </div>
         </div>
         <div class="row mt-3">
-          <div class="col text-center bump-down">
-            <a class="btn btn-outline-info bump-down"
+          <div class="col text-center">
+            <a class="btn btn-outline-primary"
                href="/library/collection/{{ swatch.id }},{{ swatch.analogous_1.id }},{{ swatch.analogous_2.id }}"
                target="_blank"
                role="button"
@@ -414,8 +413,8 @@
           </div>
         </div>
         <div class="row mt-3">
-          <div class="col text-center bump-down">
-            <a class="btn btn-outline-info bump-down"
+          <div class="col text-center">
+            <a class="btn btn-outline-primary"
                href="/library/collection/{{ swatch.id }},{{ swatch.triadic_1.id }},{{ swatch.triadic_2.id }}"
                target="_blank"
                role="button"
@@ -448,8 +447,8 @@
           </div>
         </div>
         <div class="row mt-3">
-          <div class="col text-center bump-down">
-            <a class="btn btn-outline-info bump-down"
+          <div class="col text-center">
+            <a class="btn btn-outline-primary"
                href="/library/collection/{{ swatch.id }},{{ swatch.split_complement_1.id }},{{ swatch.split_complement_2.id }}"
                target="_blank"
                role="button"
@@ -496,8 +495,8 @@
           </div>
         </div>
         <div class="row mt-3">
-          <div class="col text-center bump-down">
-            <a class="btn btn-outline-info bump-down"
+          <div class="col text-center">
+            <a class="btn btn-outline-primary"
                href="/library/collection/{{ swatch.id }},{{ swatch.tetradic_1.id }},{{ swatch.tetradic_2.id }},{{ swatch.tetradic_3.id }}"
                target="_blank"
                role="button"
@@ -536,8 +535,8 @@
           </div>
         </div>
         <div class="row mt-3">
-          <div class="col text-center bump-down">
-            <a class="btn btn-outline-info bump-down"
+          <div class="col text-center">
+            <a class="btn btn-outline-primary"
                href="/library/collection/{{ swatch.id }},{{ swatch.square_1.id }},{{ swatch.square_2.id }},{{ swatch.square_3.id }}"
                target="_blank"
                role="button"

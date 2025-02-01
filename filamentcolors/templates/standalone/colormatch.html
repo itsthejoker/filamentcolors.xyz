@@ -8,7 +8,7 @@
     <p>
       Looking for a particular plastic in the library close to a color you have in mind?
       We have a few different ways to enter that color -- use whatever works
-      best for you and we'll try to match it to a plastic!
+      best for you and we'll try to match it to a plastic! Results appear below!
     </p>
     <div class="row mt-4 mb-3">
       <div class="col-10 col-md-8 col-xl-6 mx-auto text-center" id="color-picker"
@@ -20,7 +20,7 @@
                   hx-indicator="#colorMatchSpinner,.loaded-content"
                   hx-post="{% url 'colormatch' %}"
             >
-              <div class="input-group input-group-static my-3">
+              <div class="my-3">
                 <label for="hex-input">Hex</label>
                 <input type="text" id="hex-input" onchange="changeHexColorPicker()"
                        name="hex_color"
@@ -28,14 +28,14 @@
               </div>
               <div class="row">
                 <div class="col-4">
-                  <div class="input-group input-group-static my-3">
+                  <div class="my-3">
                     <label for="red-input">Red</label>
                     <input type="text" id="red-input" value="69" onchange="changeRGBColorPicker()"
                            class="form-control text-center fs-6">
                   </div>
                 </div>
                 <div class="col-4">
-                  <div class="input-group input-group-static my-3">
+                  <div class="my-3">
                     <label for="green-input">Green</label>
                     <input type="text" id="green-input" value="255"
                            onchange="changeRGBColorPicker()"
@@ -43,7 +43,7 @@
                   </div>
                 </div>
                 <div class="col-4">
-                  <div class="input-group input-group-static my-3">
+                  <div class="my-3">
                     <label for="blue-input">Blue</label>
                     <input type="text" id="blue-input" value="193" onchange="changeRGBColorPicker()"
                            class="form-control text-center fs-6">
@@ -52,7 +52,7 @@
               </div>
               <div class="row">
                 <div class="col-4">
-                  <div class="input-group input-group-static my-3">
+                  <div class="my-3">
                     <label for="hue-input">Hue</label>
                     <input type="text" id="hue-input" value="160.000"
                            onchange="changeHSVColorPicker()"
@@ -60,7 +60,7 @@
                   </div>
                 </div>
                 <div class="col-4">
-                  <div class="input-group input-group-static my-3">
+                  <div class="my-3">
                     <label for="saturation-input">Saturation</label>
                     <input type="text" id="saturation-input" value="72.941"
                            onchange="changeHSVColorPicker()"
@@ -68,7 +68,7 @@
                   </div>
                 </div>
                 <div class="col-4">
-                  <div class="input-group input-group-static my-3">
+                  <div class="my-3">
                     <label for="value-input">Value</label>
                     <input type="text" id="value-input" value="100.000"
                            onchange="changeHSVColorPicker()"
@@ -78,14 +78,14 @@
               </div>
               <div class="row">
                 <div class="col-4">
-                  <div class="input-group input-group-static my-3">
+                  <div class="my-3">
                     <label for="l-input">L</label>
                     <input type="text" id="l-input" value="89.973" onchange="changeLABColorPicker()"
                            class="form-control text-center">
                   </div>
                 </div>
                 <div class="col-4">
-                  <div class="input-group input-group-static my-3">
+                  <div class="my-3">
                     <label for="a-input">A</label>
                     <input type="text" id="a-input" value="-58.494"
                            onchange="changeLABColorPicker()"
@@ -93,7 +93,7 @@
                   </div>
                 </div>
                 <div class="col-4">
-                  <div class="input-group input-group-static my-3">
+                  <div class="my-3">
                     <label for="b-input">B</label>
                     <input type="text" id="b-input" value="15.903"
                            onchange="changeLABColorPicker()"
@@ -102,7 +102,7 @@
                 </div>
               </div>
               <div class="d-grid">
-                <button type="submit" class="btn bg-gradient-success mt-4">Search</button>
+                <button type="submit" class="btn btn-success mt-4">Search</button>
               </div>
             </form>
           </div>
@@ -111,15 +111,23 @@
       <div class="row">
         <div class="col-12 col-md-6 mx-auto">
           <p class="text-muted text-sm text-center mt-3">
-            Disclaimer: the results are limited by the swatches we've been able to measure. As
-            the library grows, the results will become more accurate. Exact matches are not
-            guaranteed; please use your best judgement.
+            Disclaimer: the results are limited by the swatches we've been able
+            to measure. As the library grows, the results will become more
+            accurate. Exact matches are not guaranteed; please use your best
+            judgement.
           </p>
         </div>
       </div>
     </div>
     {% include 'components/indicators/colormatch_spinner.partial' %}
-    <div id="results" class="loaded-content"></div>
+    <div id="results" class="loaded-content">
+      <h4>Results appear here!</h4>
+      <p>
+        Click the "Search" button above to see the results of your color match!
+        If you find a color you like, you can click the "Grab" button that will
+        be under the swatch to save it for later.
+      </p>
+    </div>
     <div id="saved_swatches" style="display: none">
       <hr class="container">
       <h4>Grab Bag</h4>

@@ -1,5 +1,6 @@
 html {
     scroll-behavior: smooth;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -9,7 +10,6 @@ html {
 }
 
 body {
-    color: black;
     font-family: Roboto, Arial, Helvetica, sans-serif;
     /*background: #eaeaea;*/
 }
@@ -19,9 +19,23 @@ a {
     text-decoration: underline;
 }
 
+html[data-bs-theme='dark'] a {
+    color: white;
+    text-decoration: underline;
+}
+
 a:hover {
     color: black;
     text-decoration: underline;
+}
+
+html[data-bs-theme='dark'] a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+html[data-bs-theme='dark'] a.btn {
+    text-decoration: none;
 }
 
 hr {
@@ -41,6 +55,11 @@ hr {
     color: black;
 }
 
+html[data-bs-theme='dark'] .complement-box, .complement-box:hover {
+    text-decoration: None;
+    color: white;
+}
+
 .complement-box:hover {
     box-shadow: 0 0 5px black;
     transition-duration: 100ms;
@@ -52,6 +71,11 @@ hr {
 
 .card-text {
     color: black;
+    text-decoration: None;
+}
+
+html[data-bs-theme='dark'] .card-text {
+    color: white;
     text-decoration: None;
 }
 
@@ -152,18 +176,6 @@ hr {
     margin-top: -3px;
 }
 
-.btn-info {
-    color: #fff !important;
-}
-
-.btn-primary {
-    color: #fff !important;
-}
-
-.btn-success {
-    color: #fff !important;
-}
-
 .complement-box {
     padding: 8px;
     border-width: 2px;
@@ -181,7 +193,10 @@ hr {
 }
 
 .gray-background {
-    background: #efefef;
+    background: #efefef !important;
+}
+
+.swatch-info-table {
     background-size: 1.4em;
     border-radius: 10px;
 }
@@ -198,8 +213,13 @@ hr {
     border-top: None;
 }
 
-.card {
-    position: relative
+html[data-bs-theme='light'] .card {
+    position: relative;
+    border: none
+}
+
+html[data-bs-theme='dark'] .card {
+    position: relative;
 }
 
 .multiselector {
@@ -438,6 +458,10 @@ hr {
     display: block;
 }
 
+html[data-bs-theme='dark'] .htmx-indicator.htmx-request {
+    background: #212529;
+}
+
 .htmx-request .overlay {
     display: block;
 }
@@ -482,4 +506,72 @@ hr {
 
 svg {
     fill: currentColor;
+}
+
+/* Mostly ripped from https://stackoverflow.com/a/62245627/ */
+/* Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) {
+  .w-sm-100 {width: 100% !important;}
+  .w-sm-75 {width: 75% !important;}
+  .w-sm-50 {width: 50% !important;}
+  .w-sm-25 {width: 25% !important;}
+  .h-sm-100 {height: 100% !important;}
+  .h-sm-75 {height: 75% !important;}
+  .h-sm-50 {height: 50% !important;}
+  .h-sm-25 {height: 25% !important;}
+}
+
+/* Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) {
+  .w-md-100 {width: 100% !important;}
+  .w-md-75 {width: 75% !important;}
+  .w-md-50 {width: 50% !important;}
+  .w-md-25 {width: 25% !important;}
+  .h-md-100 {height: 100% !important;}
+  .h-md-75 {height: 75% !important;}
+  .h-md-50 {height: 50% !important;}
+  .h-md-25 {height: 25% !important;}
+}
+
+/* Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) {
+  .w-lg-100 {width: 100% !important;}
+  .w-lg-75 {width: 75% !important;}
+  .w-lg-50 {width: 50% !important;}
+  .w-lg-25 {width: 25% !important;}
+  .h-lg-100 {height: 100% !important;}
+  .h-lg-75 {height: 75% !important;}
+  .h-lg-50 {height: 50% !important;}
+  .h-lg-25 {height: 25% !important;}
+}
+
+/* Extra large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px) {
+  .w-xl-100 {width: 100% !important;}
+  .w-xl-75 {width: 75% !important;}
+  .w-xl-50 {width: 50% !important;}
+  .w-xl-25 {width: 25% !important;}
+  .h-xl-100 {height: 100% !important;}
+  .h-xl-75 {height: 75% !important;}
+  .h-xl-50 {height: 50% !important;}
+  .h-xl-25 {height: 25% !important;}
+}
+
+/* XXL devices (large desktops, 1400px and up) */
+@media (min-width: 1400px) {
+  .w-xxl-100 {width: 100% !important;}
+  .w-xxl-75 {width: 75% !important;}
+  .w-xxl-50 {width: 50% !important;}
+  .w-xxl-25 {width: 25% !important;}
+  .h-xxl-100 {height: 100% !important;}
+  .h-xxl-75 {height: 75% !important;}
+  .h-xxl-50 {height: 50% !important;}
+  .h-xxl-25 {height: 25% !important;}
+}
+
+.icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  overflow: hidden;
 }

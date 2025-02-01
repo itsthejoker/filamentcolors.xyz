@@ -21,7 +21,7 @@
     }
 </style>
 
-{% if not request.user.is_authenticated %}
+{% if not request.user.is_staff %}
   {% plausible script='script.outbound-links.js' %}
 {% endif %}
 
@@ -191,5 +191,4 @@
       format: "hex"
     };
   });
-
 </script>

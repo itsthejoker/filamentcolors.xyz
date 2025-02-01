@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-3 text-center mb-3 d-grid mx-auto">
     <div
-      class="badge badge-secondary"
+      class="badge text-bg-secondary"
       data-bs-toggle="tooltip"
       data-bs-placement="top"
       data-container="body"

@@ -8,7 +8,7 @@
       trying the Color Match page.</a>
     </p>
     <div class="text-center">
-      <a href="{% url 'colormatch' %}" class="btn btn-lg btn-success">Take me there!</a>
+      <a href="{% url 'colormatch' %}" class="btn btn-lg bg-gradient btn-success">Take me there!</a>
     </div>
   </div>
 </div>

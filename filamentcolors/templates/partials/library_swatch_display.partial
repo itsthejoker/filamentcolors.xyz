@@ -20,7 +20,7 @@
     </h4>
     {% include 'partials/settings_block_mirror.partial' %}
     <p></p>
-    <div class="btn bg-gradient-primary btn-lg shadow-lg mt-5"
+    <div class="btn btn-danger btn-lg shadow-lg mt-5"
          onclick="(function(){ $('#settingsModal').modal('show')})();" role="button">
       Open Settings for more options
     </div>
@@ -34,7 +34,7 @@
     </h4>
     {% include 'partials/settings_block_mirror.partial' %}
     <p></p>
-    <div class="btn bg-gradient-primary btn-lg shadow-lg mt-5"
+    <div class="btn btn-danger btn-lg shadow-lg mt-5"
          onclick="(function(){ $('#settingsModal').modal('show')})();" role="button">
       Open Settings for more options
     </div>

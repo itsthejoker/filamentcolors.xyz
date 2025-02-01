@@ -11,15 +11,22 @@
       <div class="col"></div>
       <div class="col-md-8 col-lg-8 col-xl-8">
         {% if "/add/" in request.path %}
-          <div class="alert alert-warning text-black-50" role="alert" id="mfrAffAlert" style="display: none"
-               role="alert">
-            <strong><span id="mfrAffName"></span></strong> has an affiliate portal! Link: <a href="#"
-                                                                                             id="mfrAffAlertLink"
-                                                                                             target="_blank"
-                                                                                             class="alert-link"></a>
+          <div
+            class="alert alert-warning"
+            id="mfrAffAlert"
+            style="display: none"
+            role="alert"
+          >
+            <strong><span id="mfrAffName"></span></strong> has an affiliate portal!
+            Link: <a
+              href="#"
+              id="mfrAffAlertLink"
+              target="_blank"
+              class="alert-link"
+          ></a>
           </div>
           <div id="similar-swatch-alert" style="display: none">
-            <div class="alert alert-danger text-white" role="alert">
+            <div class="alert alert-danger" role="alert">
               Found similar swatches...
               <div id="similar-swatch-content"></div>
             </div>
@@ -91,14 +98,14 @@
           <div class="row">
             {% for item in header_js_buttons %}
               <div class="col-md-6 col-xl mt-2 d-grid">
-                <button class="btn bg-gradient-info"
+                <button class="btn btn-primary"
                         onclick="{{ item.onclick }}">{{ item.text }}</button>
               </div>
             {% endfor %}
             {% for item in header_link_buttons %}
               <div class="col-md-6 col-xl mt-2 d-grid">
                 <a href="{% url item.reverse_url %}"
-                   class="btn bg-gradient-info">{{ item.text }}</a>
+                   class="btn btn-primary">{{ item.text }}</a>
               </div>
             {% endfor %}
           </div>
@@ -125,14 +132,14 @@
           {% endfor %}
 
           {% if form.non_field_errors %}
-            <div class="alert alert-danger text-white" role="alert">
+            <div class="alert alert-danger" role="alert">
               {% for error in form.non_field_errors %}
                 {{ error }}
               {% endfor %}
             </div>
           {% endif %}
           {% for field in form.visible_fields %}
-            <div class="form-group input-group input-group-dynamic mt-4{% if field.value != "" %} is-filled{% endif %}">
+            <div class="mt-3">
               {% if form.is_bound %}
                 {% if field.errors %}
                   {{ field|add_label_class:"form-label" }}
@@ -151,9 +158,8 @@
                   <div class="my-auto pe-3 text-muted">{{ field.label }}:</div>
                   {{ field|add_class:"form-control"|attr:"type=file"|add_class:"file-input" }}
                 {% elif field.field.widget.input_type == 'select' %}
-                  <div class="form-floating">
-                    <label for="{{ field.auto_id }}"
-                           style="top: -3em;left: -0.4em;font-size: 0.6875rem">
+                  <div>
+                    <label for="{{ field.auto_id }}">
                       {{ field.label }}
                     </label>
                     {{ field|add_class:"form-control" }}
@@ -169,8 +175,8 @@
               {% endif %}
             </div>
           {% endfor %}
-          <button type="submit" id="submitButton" class="btn bg-gradient-primary mt-4">Submit</button>
-          <button id="submitButtonLoading" class="btn bg-gradient-primary mt-4 d-none" type="button" disabled>
+          <button type="submit" id="submitButton" class="btn btn-primary mt-4">Submit</button>
+          <button id="submitButtonLoading" class="btn btn-primary mt-4 d-none" type="button" disabled>
             <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
             <span class="visually-hidden" role="status">Loading...</span>
           </button>
@@ -221,7 +227,7 @@
             // addClass run for each loop.
             errorList.addClass("mt-3");
             errorList.append(
-              "<div class=\"alert alert-danger text-white\" role=\"alert\">\n" + label.html() + " " + message + "\n</div>"
+              "<div class=\"alert alert-danger\" role=\"alert\">\n" + label.html() + " " + message + "\n</div>"
             );
           });
         };

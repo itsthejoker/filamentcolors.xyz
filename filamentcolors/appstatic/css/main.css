@@ -1,5 +1,6 @@
 html {
     scroll-behavior: smooth;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -9,7 +10,6 @@ html {
 }
 
 body {
-    color: black;
     font-family: Roboto, Arial, Helvetica, sans-serif;
     /*background: #eaeaea;*/
 }
@@ -19,9 +19,23 @@ a {
     text-decoration: underline;
 }
 
+html[data-bs-theme='dark'] a {
+    color: white;
+    text-decoration: underline;
+}
+
 a:hover {
     color: black;
     text-decoration: underline;
+}
+
+html[data-bs-theme='dark'] a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+html[data-bs-theme='dark'] a.btn {
+    text-decoration: none;
 }
 
 hr {
@@ -41,6 +55,11 @@ hr {
     color: black;
 }
 
+html[data-bs-theme='dark'] .complement-box, .complement-box:hover {
+    text-decoration: None;
+    color: white;
+}
+
 .complement-box:hover {
     box-shadow: 0 0 5px black;
     transition-duration: 100ms;
@@ -52,6 +71,11 @@ hr {
 
 .card-text {
     color: black;
+    text-decoration: None;
+}
+
+html[data-bs-theme='dark'] .card-text {
+    color: white;
     text-decoration: None;
 }
 
@@ -152,18 +176,6 @@ hr {
     margin-top: -3px;
 }
 
-.btn-info {
-    color: #fff !important;
-}
-
-.btn-primary {
-    color: #fff !important;
-}
-
-.btn-success {
-    color: #fff !important;
-}
-
 .complement-box {
     padding: 8px;
     border-width: 2px;
@@ -181,7 +193,10 @@ hr {
 }
 
 .gray-background {
-    background: #efefef;
+    background: #efefef !important;
+}
+
+.swatch-info-table {
     background-size: 1.4em;
     border-radius: 10px;
 }
@@ -198,8 +213,13 @@ hr {
     border-top: None;
 }
 
-.card {
-    position: relative
+html[data-bs-theme='light'] .card {
+    position: relative;
+    border: none
+}
+
+html[data-bs-theme='dark'] .card {
+    position: relative;
 }
 
 .multiselector {
@@ -438,6 +458,10 @@ hr {
     display: block;
 }
 
+html[data-bs-theme='dark'] .htmx-indicator.htmx-request {
+    background: #212529;
+}
+
 .htmx-request .overlay {
     display: block;
 }
@@ -543,4 +567,11 @@ svg {
   .h-xxl-75 {height: 75% !important;}
   .h-xxl-50 {height: 50% !important;}
   .h-xxl-25 {height: 25% !important;}
+}
+
+.icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  overflow: hidden;
 }

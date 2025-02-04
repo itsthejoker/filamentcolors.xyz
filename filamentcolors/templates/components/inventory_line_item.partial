@@ -8,7 +8,7 @@
         data-bs-toggle="tooltip"
         data-bs-placement="top"
         data-container="body"
-        class="badge badge-success"
+        class="badge text-bg-success text-uppercase"
         title="This swatch is available in the library!"
       >Published</span>
       {% if not item.is_available %}
@@ -16,7 +16,7 @@
           data-bs-toggle="tooltip"
           data-bs-placement="top"
           data-container="body"
-          class="badge badge-secondary"
+          class="badge text-bg-secondary text-uppercase"
           title="This swatch is not available for sale."
         >Unavailable</span>
       {% endif %}
@@ -25,7 +25,7 @@
         data-bs-toggle="tooltip"
         data-bs-placement="top"
         data-container="body"
-        class="badge badge-danger"
+        class="badge text-bg-danger text-uppercase"
         title="This swatch is not yet available in the library."
       >Not Published</span>
     {% endif %}

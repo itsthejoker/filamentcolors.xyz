@@ -1,4 +1,3 @@
 <script>
   showToast("<strong>Success!</strong> Color updated for {{ swatch.manufacturer.name }} {{ swatch.color_name }} {{ swatch.filament_type.name }}!")
 </script>
-

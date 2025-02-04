@@ -1,9 +1,9 @@
 {% load static %}
 
 <div class="collection-buttons way-off-screen" id="collection-buttons">
-  <div id="multiselect-badge" class="badge badge-lg bg-gradient-success fs-2 p-1">0</div>
+  <div id="multiselect-badge" class="badge badge-lg text-bg-success fs-2 p-1">0</div>
   <p></p>
-  <button type="button" id="go-button" class="btn shadow-lg bg-gradient-primary">
+  <button type="button" id="go-button" class="btn shadow-lg btn-primary">
     {% if preselect_collection %}
       Update Collection
     {% endif %}
@@ -12,7 +12,7 @@
     {% endif %}
   </button>
   <p></p>
-  <button type="button" id="clear-button" class="btn shadow-lg bg-gradient-secondary">Unselect All</button>
+  <button type="button" id="clear-button" class="btn btn-secondary shadow-lg">Unselect All</button>
 </div>
 
 <script>

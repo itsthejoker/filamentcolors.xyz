@@ -350,11 +350,6 @@ html[data-bs-theme='dark'] .card {
 
 #clear-button {
     width: 100%;
-    background-color: white;
-}
-
-#clear-button:hover {
-    background-color: #007bff;
 }
 
 .way-off-screen {

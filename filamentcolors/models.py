@@ -21,7 +21,7 @@ from django.utils import timezone
 from PIL import Image as Img
 from taggit.managers import TaggableManager
 
-from filamentcolors.colors import Color
+from filamentcolors.colors import clamp, Color
 from filamentcolors.exceptions import UnknownSlugOrID
 from filamentcolors.constants import OBSERVER_ANGLE, ILLUMINANT
 
@@ -1140,10 +1140,19 @@ class Swatch(models.Model, DistanceMixin):
                 sRGBColor,
             )
             rgb: tuple = color.get_upscaled_value_tuple()
-            self.hex_color = self.get_hex(rgb)
-            self.rgb_r = rgb[0]
-            self.rgb_g = rgb[1]
-            self.rgb_b = rgb[2]
+            # When converting measured LAB into sRGB, it can rarely result in
+            # invalid RGB colors that are too intense to display properly.
+            # In this case, we should clamp each of the values to ensure that
+            # we will always end up with a valid hex color.
+            clamped_rgb: tuple[int] = (
+                int(clamp(rgb[0], 0, 255)),
+                int(clamp(rgb[1], 0, 255)),
+                int(clamp(rgb[2], 0, 255))
+            )
+            self.hex_color = self.get_hex(clamped_rgb)
+            self.rgb_r = clamped_rgb[0]
+            self.rgb_g = clamped_rgb[1]
+            self.rgb_b = clamped_rgb[2]
 
     def save(self, *args, **kwargs):
         rebuild_matches = False

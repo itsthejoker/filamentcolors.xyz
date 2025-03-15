@@ -583,9 +583,9 @@ class Swatch(models.Model, DistanceMixin):
     def get_lab_str(self):
         if self.lab_l and self.lab_a and self.lab_b and not self.computed_lab:
             return (
-                f"L*: {round(self.lab_l, 2)},"
-                f" a*: {round(self.lab_a, 2)},"
-                f" b*: {round(self.lab_b, 2)}"
+                f"L* {round(self.lab_l, 2)},"
+                f" a* {round(self.lab_a, 2)},"
+                f" b* {round(self.lab_b, 2)}"
             )
 
     def get_td_range(self) -> tuple[float, float] | None:

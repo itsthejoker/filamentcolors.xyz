@@ -112,6 +112,7 @@
               <li><a class="dropdown-item" href="{% url 'add_filament_type' %}">Add Filament Type</a></li>
               <li><a class="dropdown-item" href="{% url 'add_retailer' %}">Add Retailer</a></li>
               <li><a class="dropdown-item" href="{% url 'set_colors' %}">Set Colors</a></li>
+              <li><a class="dropdown-item" href="{% url 'update_lab_colors' %}">Set RGB ➜ LAB</a></li>
               <li><a class="dropdown-item" hx-boost="false" href="{% url 'admin:index' %}">Django Admin</a></li>
               <li>
                 <hr class="dropdown-divider">

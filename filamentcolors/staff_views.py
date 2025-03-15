@@ -5,6 +5,7 @@ from django.shortcuts import HttpResponseRedirect, get_object_or_404, redirect, 
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
+from filamentcolors import status
 from filamentcolors.forms import (
     FilamentTypeForm,
     InventoryForm,
@@ -17,7 +18,7 @@ from filamentcolors.forms import (
     SwatchUpdateImagesForm,
     ManualLabValueForm,
 )
-from filamentcolors.helpers import build_data_dict, prep_request
+from filamentcolors.helpers import build_data_dict, prep_request, ErrorStatusResponse
 from filamentcolors.models import PurchaseLocation, Swatch, Manufacturer
 
 
@@ -52,6 +53,42 @@ def set_colors_for_unpublished_swatches(request):
     data = build_data_dict(request)
     data.update({"swatches": swatches})
     return prep_request(request, "standalone/update_swatch_colors.html", data)
+
+
+@csrf_exempt
+@staff_member_required
+def set_colors_for_published_rgb_swatches(request):
+    if request.htmx and request.method == "POST":
+        swatch = Swatch.objects.get(id=request.POST["swatch_id"])
+        reading = request.POST["reading"]
+        reading = reading.strip()
+        reading = reading.split("\t")
+        lab_l, lab_a, lab_b = reading[-3], reading[-2], reading[-1]
+        try:
+            lab_l, lab_a, lab_b = float(lab_l), float(lab_a), float(lab_b)
+        except ValueError:
+            return ErrorStatusResponse(status=status.HTTP_703_UNPROCESSABLE_LAB_STR)
+
+        swatch.lab_l, swatch.lab_a, swatch.lab_b = lab_l, lab_a, lab_b
+
+
+        swatch.lab_l, swatch.lab_a, swatch.lab_b = reading[-3], reading[-2], reading[-1]
+        swatch.computed_lab = False
+        swatch.regenerate_all()
+        swatch.save()
+        return prep_request(
+            request, "components/alerts/success_alert.partial", {"swatch": swatch}
+        )
+
+    swatches = (
+        Swatch.objects.select_related("manufacturer")
+        .prefetch_related("filament_type")
+        .filter(computed_lab=True)
+        .order_by("manufacturer__name", "color_name")
+    )
+    data = build_data_dict(request)
+    data.update({"swatches": swatches})
+    return prep_request(request, "standalone/update_rgb_swatch_colors.html", data)
 
 
 @staff_member_required

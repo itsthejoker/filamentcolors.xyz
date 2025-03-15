@@ -1,0 +1,120 @@
+{% extends base_template %}
+
+{% block content %}
+  <div class="container mt-4">
+    {% include 'partials/messages.partial' %}
+    <h1>Update RGB -> LAB swatches!</h1>
+    <div class="container mt-4">
+    <p>
+      This page is dependent on the copy-and-pasted values from the Color QC2 software.
+      Make sure you are copying the entire string (starting with "Name") and pasting it
+      into the text area.
+    </p>
+      <div class="row justify-space-between py-2">
+        <div class="col-lg-4 mx-auto">
+          <div class="input-group input-group-dynamic mb-4">
+            <span class="input-group-text"><span class="icon-search"></span></span>
+            <input
+              class="form-control"
+              id="filterInput"
+              oninput="filterStuff()"
+              placeholder="Filter..."
+              type="text"
+              aria-label="Search"
+              value="{{ search_prefill }}"
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="swatches">
+      {% for s in swatches %}
+        <div class="row" id="row-{{ s.id }}">
+          <div class="col-lg-4 col-xl-5 mt-0 mt-lg-2 swatchInfo">
+            {{ s.manufacturer.name }} {{ s.color_name }} {{ s.filament_type.name }}
+          </div>
+          <div class="col-lg-8 col-xl-7 mt-2 mt-lg-0">
+            <form>
+              <div class="row">
+                <div class="col-lg-9">
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" id="lab_{{ s.id }}">LAB:</span>
+                    <textarea
+                      data-id="{{ s.id }}"
+                      oninput="validateLAB(this)"
+                      class="form-control"
+                      name="reading"
+                      aria-label="LAB Reading"
+                      aria-describedby="lab_{{ s.id }}"></textarea>
+                  </div>
+                  <input type="text" style="display: none" value="{{ s.id }}" name="swatch_id">
+                </div>
+                <div class="col-lg-3 text-center d-grid d-lg-block px-5 px-lg-0">
+                  <a
+                    data-id="{{ s.id }}"
+                    class="btn btn-secondary submitButton"
+                    hx-post="{% url 'update_lab_colors' %}"
+                    hx-target="#row-{{ s.id }}"
+                    hx-swap="innerHTML"
+                  >Submit
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+          {% if not forloop.last %}
+          <div class="container">
+            <hr class="mt-lg-0">
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    function filterStuff() {
+      var input, filter, elements, i, txtValue, filterArray;
+      input = document.getElementById("filterInput");
+      filter = input.value.toUpperCase();
+      filterArray = filter.split(" ");
+      elements = document.getElementsByClassName("swatchInfo");
+
+      for (i = 0; i < elements.length; i++) {
+        txtValue = elements[i].innerText || elements[i].textContent;
+        txtValue = txtValue.toUpperCase();
+        if (filterArray.every(function(element) {
+          return txtValue.indexOf(element) > -1;
+        })) {
+          elements[i].parentElement.style.display = "";
+        } else {
+          elements[i].parentElement.style.display = "none";
+        }
+      }
+    }
+
+    function validateLAB(el) {
+      const val = el.value;
+      const submitButton = $(`a[data-id=${el.dataset.id}]`);
+
+      if (val === "" || !val.startsWith("Name")) {
+        el.classList.remove("is-valid", "is-invalid");
+        el.classList.add("is-invalid");
+        submitButton.toggleClass('disabled', true)
+        return;
+      }
+
+      el.classList.toggle("is-valid", val.split("\t").length === 13);
+      el.classList.toggle("is-invalid", val.split("\t").length !== 13);
+
+      const isValid = $(`textarea[data-id=${el.dataset.id}].is-valid`).length === 1;
+      submitButton.toggleClass('disabled', !isValid);
+    }
+
+    $(document).ready(function() {
+      filterStuff();
+      $(".submitButton").addClass('disabled')
+    });
+  </script>
+
+{% endblock content %}

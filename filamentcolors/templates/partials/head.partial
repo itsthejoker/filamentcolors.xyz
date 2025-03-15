@@ -121,6 +121,8 @@
       showToastError("That doesn't look like a valid color. Try again?");
     } else if (evt.detail.xhr.status === 702) {
       showToastError("Missing color code - can't work on what I can't see!");
+    } else if (evt.detail.xhr.status === 703) {
+      showToastError("Unprocessable LAB string; please check your input.");
     } else {
       Toastify({
         text: evt.detail.xhr.responseText + `<p>Status: ${evt.detail.xhr.status}</p>`,

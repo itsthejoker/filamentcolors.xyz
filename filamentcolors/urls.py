@@ -121,6 +121,11 @@ urlpatterns = [
         name="set_colors",
     ),
     path(
+        "update_lab_colors/",
+        staff_views.set_colors_for_published_rgb_swatches,
+        name="update_lab_colors",
+    ),
+    path(
         "update_images/<int:swatch_id>/",
         staff_views.update_swatch_images,
         name="update_images",

@@ -104,7 +104,7 @@
         {% if request.user.is_staff %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Admin
+              Admin {% if deadlink_count %}(+{{ deadlink_count }}){% endif %}
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="{% url 'add_swatch_landing' %}">Upload New</a></li>

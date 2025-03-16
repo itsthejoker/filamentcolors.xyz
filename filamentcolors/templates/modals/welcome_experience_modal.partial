@@ -18,32 +18,39 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="alert alert-primary">
-                <span>The goal of this site is to allow you to quickly find colors that work well
-                together. The Process:</span>
-          <p></p>
-          <ul class="mb-0">
-            <li>Distill filaments into their "dominant" color</li>
-            <li>Use the dominant color to find color groups</li>
-            <li>
-              Reverse the above to find filaments that come as close as
-              possible to the dominant colors
-            </li>
-          </ul>
-        </div>
-        <hr>
-        Getting started is easy; there are two primary ways to use the site.
-        <p></p>
+        <p>Getting started is easy! Try one of these three ways to use the site.</p>
         <ul>
           <li>
-            <b>Search!</b> Use the search bar at the top of the library
-            to find filaments that you already have and want to match or just
-            look for filaments that sound interesting!
+            <strong>Search!</strong> Use the search bar at the top of the
+            library to find filaments you already have and want to find colors
+            that will look good with it OR find similar filaments.
           </li>
           <li>
-            <b>Browse!</b> Scroll through the library and see if there's
-            a filament that looks interesting; maybe there's a color that grabs
-            your attention or a name that seems familiar. Start there!
+            <strong>Browse!</strong> Scroll through the library and see if
+            there's a filament that looks interesting; select a color family
+            you want to explore; or browse by manufacturer or filament type.
+            Maybe you'll find your new favorite color!
+          </li>
+          <li>
+            <strong>Color Match!</strong> Do you have a project that uses a
+            specific color? You can click Color Match and search by hex, RGB,
+            HSV, or LAB to find the closest match we have in our library!
+          </li>
+        </ul>
+        <p>
+          How do we find the colors?
+        </p>
+        <ul>
+          <li>
+            We use a spectrophotometer to find the LAB color of physical
+            printed swatches. The hex code is generated from this
+            spectrophotometer-measured value. LAB values are listed along with
+            the hex codes.
+          </li>
+          <li>
+            We use this color and color math to find complementary, analogous,
+            triadic, and tetradic color matches, as well as other filaments
+            that are closely related.
           </li>
         </ul>
       </div>

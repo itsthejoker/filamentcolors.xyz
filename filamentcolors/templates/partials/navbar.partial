@@ -54,7 +54,7 @@
             About
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'about' %}">The Project</a></li>
+            <li><a class="dropdown-item" href="{% url 'about' %}">The Project (FAQ)</a></li>
             <li><a class="dropdown-item" href="{% url 'about_us' %}">The Librarians</a></li>
             <li>
               <a href="https://itsthejoker.github.io/posts/" class="dropdown-item">

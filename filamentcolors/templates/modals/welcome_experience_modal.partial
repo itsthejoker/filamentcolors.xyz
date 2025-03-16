@@ -42,9 +42,9 @@
         </p>
         <ul>
           <li>
-            We use a spectrophotometer to find the LAB color of physical
+            We use a colorimeter to find the LAB color of physical
             printed swatches. The hex code is generated from this
-            spectrophotometer-measured value. LAB values are listed along with
+            colorimeter-measured value. LAB values are listed along with
             the hex codes.
           </li>
           <li>

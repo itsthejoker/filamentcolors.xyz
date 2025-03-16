@@ -23,7 +23,7 @@
     <p>
       Get filaments from lots of different manufacturers, print with them, measure
       them, and photograph the results under similar conditions. We use
-      spectrophotometry to show you the measured color of each plastic, then use
+      colorimetry to show you the measured color of each plastic, then use
       that data (and color theory!) to automatically recommend other colors that
       will look good with it, regardless of manufacturer. If you know what the
       primary color of your project is going to be, let us suggest the other colors
@@ -35,16 +35,28 @@
       (The link contains two versions: large and small. I use the small one for my samples.)
     </p>
     <hr>
-    <p>
-    <h1>FAQ</h1></p>
+    <p><h1>FAQ</h1></p>
+    <ul>
+      <li><a href="#how-does-it-work">How does it work?</a></li>
+      <li><a href="#what-equipment-do-you-use">What equipment do you use?</a></li>
+      <li><a href="#why-do-you-call-it-a-library">Why do you call it a library?</a></li>
+      <li><a href="#dear-god-why">Dear God, why?</a></li>
+      <li><a href="#where-do-the-samples-come-from">Where do the samples come from?</a></li>
+      <li><a href="#can-i-send-you-data">Can I send you color data?</a></li>
+      <li><a href="#why-is-color-hard">Why are the complement sections sometimes hilariously wrong?</a></li>
+      <li><a href="#i-want-to-help">I want to help!</a></li>
+      <li><a href="#what-runs-this-app">What runs this app?</a></li>
+      <li><a href="#can-i-print-the-swatches">Can I print the swatches and send them in?</a></li>
+      <li><a href="#licensing">Licensing Information</a></li>
+    </ul>
     <h4 id="how-does-it-work">How does it work?</h4>
     <p>
-      All the images are taken in the same basic way using the same setup and same
-      equipment. After that, we use a spectrophotometer to measure the plastic. We take
-      that data, plug it into the site, and use color theory math to suggest other colors
-      for you to check out. We also show you the closest Pantone and RAL colors to the
-      observed readings from the plastic, so you can see if it'll work well for something
-      you need to match in the real world.
+      All the images are taken using the same setup and same equipment. After that, we
+      use a colorimeter to measure the filament color. We take that data, plug it
+      into the site, and use color theory math to suggest other colors for you to check
+      out. We also show you the closest Pantone and RAL colors to the observed readings
+      from the plastic, so you can see if it'll work well for something you need to
+      match in the real world.
     </p>
     <div class="container">
       <div class="alert alert-primary" role="alert">
@@ -61,6 +73,44 @@
       in the footer on any page of the app. (Or 
       <a href="https://github.com/itsthejoker/filamentcolors.xyz" target="_blank">click here!</a>)
     </p>
+    <h4 id="what-equipment-do-you-use">What equipment do you use?</h4>
+    <ul>
+      <li>
+        Colorimeter: <a href="https://en.chnspec.com/Product/info.aspx?itemid=852&lcid=246&id=228" target="_blank">
+        CHNSpec DS-220 colorimeter</a>
+      </li>
+      <li>
+        Swatchrig: Raspberry Pi HQ Camera w/ 16mm telephoto lens & Raspberry Pi 4, lit
+        with 192 95 CRI LEDs
+      </li>
+      <li>
+        Printers:
+        <ul>
+          <li>
+            2x custom Voron 0.2 printers w/ Duet 3 mainboards and E3D Voron Revo hotends
+          </li>
+          <li>
+            1x Prusa MK4S w/ MMU3
+          </li>
+          <li>
+            1x Railcore II 300ZL w/ full aluminum chassis & upgrades for 400C printing
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <h4 id="why-do-you-call-it-a-library">Why do you call it a library?</h4>
+    <p>
+      The filament library, at its core, is a form of reference library. The materials
+      we archive are used for reference and research purposes, and are not for sale or
+      distribution. We meticulously catalog each sample, record data from them, and
+      ensure that the sample is stored in a way that we can reference it in the future.
+    </p>
+    <p>
+      We take archiving very seriously, which is one of the reasons we don't take
+      user-submitted data we cannot independently verify. We want to make sure that
+      the data we have is as accurate as possible so that you are getting the best
+      information we can provide.
+    </p>
     <h4 id="dear-god-why">Dear God, why?</h4>
     <p>
       It was very frustrating to me that I couldn't tell ahead of time how different
@@ -69,20 +119,6 @@
       is not a cheap hobby. Buying a color that defies expectations is not fun, so I
       designed this app to help out my own projects and also help others with planning
       their upcoming projects.
-    </p>
-    <h4 id="why-is-color-hard">Why are the complement sections sometimes hilariously wrong?</h4>
-    <p>
-      Computers don't see color the same way humans do; there are many very long and
-      very involved research papers on the subject, none of which I'm qualified to
-      speak on. It may also come down to the fact that my collection is still growing
-      and I may not have the right plastic already photographed in the right color.
-      <a href="https://www.ludd.ltu.se/~vk/docs/about_colours.shtml">Some</a>
-      <a href="https://www.compuphase.com/cmetric.htm">resources</a>
-      <a href="http://hanzratech.in/2015/01/16/color-difference-between-2-colors-using-python.html">that</a>
-      <a href="https://stackoverflow.com/questions/8863810/python-find-similar-colors-best-way">might</a>
-      <a
-        href="http://answers.opencv.org/question/127885/how-can-i-best-compare-two-bgr-colors-to-determine-how-similardifferent-they-are/">be</a>
-      <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/">interesting</a>.
     </p>
     <h4 id="where-do-the-samples-come-from">Where do the samples come from?</h4>
     <p>
@@ -94,6 +130,35 @@
       of folks in 3D printing around the world. If you're interested in donating filament to
       the library, please take a look at the <a href="{% url 'donations' %}">donations page</a>!
     </p>
+    <h4 id="can-i-send-you-data">Can I send you color data?</h4>
+    <p>
+      Unfortunately, no. We need to have the plastic on hand for measurements and for
+      archival afterwards; we can't take data from other sources. If you're interested
+      in donating filament to the library, please take a look at the
+      <a href="{% url 'donations' %}">donations page</a>!
+    </p>
+    <h4 id="why-is-color-hard">Why are the complement sections sometimes hilariously wrong?</h4>
+    <p>
+      Computers don't see color the same way humans do; there are many very long
+      and very involved research papers on the subject, none of which I'm qualified
+      to speak on. Color matches are as close as we can get with the color library
+      we currently have and the color math used. Complements do not work super well
+      on white and black filament, since the complements try to match the brightness
+      of the swatch in addition to the hue.
+      <a href="https://www.ludd.ltu.se/~vk/docs/about_colours.shtml">Some</a>
+      <a href="https://www.compuphase.com/cmetric.htm">resources</a>
+      <a href="http://hanzratech.in/2015/01/16/color-difference-between-2-colors-using-python.html">that</a>
+      <a href="https://stackoverflow.com/questions/8863810/python-find-similar-colors-best-way">might</a>
+      <a
+        href="http://answers.opencv.org/question/127885/how-can-i-best-compare-two-bgr-colors-to-determine-how-similardifferent-they-are/">be</a>
+      <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/">interesting</a>.
+    </p>
+    <h4 id="i-want-to-help">I want to help!</h4>
+    <p>
+      Take a look at the <a href="{% url 'donations' %}">donations page</a> and send me an
+      email at <a href="mailto:joe@filamentcolors.xyz">joe@filamentcolors.xyz</a> if you've
+      got any questions!
+    </p>
     <h4 id="what-runs-this-app">What runs this app?</h4>
     <p>
       This app is served on Digital Ocean, the backend is written in Python's Django
@@ -102,16 +167,9 @@
       that, I'm a member of the Amazon Affiliate program. Clicking on any of the "Buy on
       Amazon" links scattered throughout the app will provide a small kickback that I
       use solely for keeping the app running and occasionally buying sample packs to
-      add new materials to the app. Interested in learning more? Take a look at a livestream
-      I did on YouTube for as part of VRRF2020 weekend
-      <a href="https://youtu.be/uraube0W38Q">here!</a>
+      add new materials to the app.
     </p>
-    <h4 id="i-want-to-help">I want to help!</h4>
-    <p>
-      Take a look at the <a href="{% url 'donations' %}">donations page</a> and send me an
-      email at <a href="mailto:joe@filamentcolors.xyz">joe@filamentcolors.xyz</a> if you've
-      got any questions!
-    </p>
+
     <h4 id="can-i-print-the-swatches">Can I print the swatches and send them in?</h4>
     <p class="container text-center">
       <img
@@ -124,39 +182,9 @@
       Here's the deal: due to some folks ruining the fun for everyone, I am willing to
       take pre-printed swatches as long as you work with me first to make sure they're
       a good quality (and please don't be offended if I ask for filament cuttings per
-      the normal donation process). If you want to give it a shot, here's the process:
+      the normal donation process). If you want to give it a shot,
+      <a href="{% url 'donations' %}">please find the process here</a>.
     </p>
-    <p>
-      Open the below file in the slicer of your choice and configure the following
-      settings:
-    </p>
-    <ul>
-      <li>3 walls</li>
-      <li>3 top layers</li>
-      <li>3 bottom layers</li>
-      <li>17% hexagonal (sometimes called 'honeycomb') infill</li>
-      <li>0.2mm layers (should be 10 layers high when sliced)</li>
-    </ul>
-    <p>
-      <strong>Print one and send me pictures of the top, bottom, and side of the print</strong>
-      so that I can doublecheck quality. If it looks good, then you'll be good to go
-      with printing the rest as long as they match or exceed the quality of the first
-      one. I also need a cutting of the filament you used to print the swatches so that
-      I can measure it for its TD value; just <strong>10cm / 4in</strong> is all that's
-      needed. Please make sure it's with the swatch when you send it in!
-    </p>
-    <p>
-      Please note that I will not be able to return any swatches sent in, so please
-      don't send me anything you're not willing to part with.
-    </p>
-    <div class="text-center">
-      <a
-        href="{% static 'swatch.stl' %}"
-        class="btn btn-primary"
-        hx-boost="false"
-        download
-      >Download Swatch</a>
-    </div>
     <h4 id="licensing">Licensing Information</h4>
     <p>
       All the source code for this application,

@@ -24,3 +24,22 @@ Please don't hammer the API if you're just checking for a specific piece of info
 Send a GET request to https://filamentcolors.xyz/api/version/; you'll get the following response: `{"db_version": 1, "db_last_modified": 1586021667}`. The `db_version` will be incremented if the _schema_ changes (which for right now, assume that it is stable), and the `db_last_modified` key is an ISO timestamp of the last time there was a swatch uploaded.
 
 If you have any questions, please feel free to reach out to me via email at [joe@filamentcolors.xyz](mailto:joe@filamentcolors.xyz)!
+
+## Development
+
+If you'd like to poke around the site and help me out, I'd love to have you! You will need to have `poetry` installed. Here's how you can get started:
+
+1. Clone the repository
+2. Create a file called `local_settings.py` in the root of the project (the same folder as `manage.py`) with the following contents:
+
+```python
+from filamentcolors.settings.base import *
+
+DEBUG = True
+ALLOWED_HOSTS = ["*"]
+INTERNAL_IPS = ["127.0.0.1", "localhost"]
+POST_TO_SOCIAL_MEDIA = False
+```
+3. Install the requirements: `poetry install`
+4. Seed the data: `poetry run python manage.py seed_swatches` (this may take a bit)
+5. Run the server: `poetry run python manage.py runserver`

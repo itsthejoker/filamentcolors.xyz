@@ -160,9 +160,9 @@ REST_FRAMEWORK = {
     # There are no default throttles because there are some endpoints that need to remain
     # unthrottled and this is easier.
     "DEFAULT_THROTTLE_RATES": {
-        # 600 requests per minute in bursts, or 5 requests a second over an hour.
-        "burst": "600/min",
-        "sustained": "18000/hour",
+        # 100 requests per minute in bursts, or 1 request a second over an hour.
+        "burst": "100/min",
+        "sustained": "3600/hour",
     },
 }
 

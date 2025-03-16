@@ -46,7 +46,7 @@ MFR_NAMES: list[str] = [
     "eBooks Are Reading Too",
     "FilamentColors.xyz",
     "OldCameraFilm Studios",
-    "Eww Gross What Is That",
+    "EwwGrossWhatIsThat",
     "SingularHeadphone",
     "Pet Rock",
     "MaybePurple Filament",
@@ -203,5 +203,7 @@ class Command(BaseCommand):
             swatch.create_local_dev_images()
             swatch.published = True
             swatch.save()
+
         self.stdout.write(self.style.SUCCESS("Done!"))
+        call_command("import_pantone_ral")
         call_command("force_library_rebuild")

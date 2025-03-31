@@ -19,9 +19,6 @@
           hx-target="#swatch-container"
           hx-swap="innerHTML"
           hx-headers='{ "X-Searchbar": "true" }'
-{# onchange="showHideHexColorWarning(this)" #}
-{# onkeyup="showHideHexColorWarning(this)" #}
-{# onkeydown="showHideHexColorWarning(this)" #}
         >
       </div>
     </div>

@@ -36,7 +36,7 @@
 <script type="text/javascript" src="{% static 'vendored/js/toastify.min.js' %}" async defer></script>
 <script src="{% static 'js/cookies/cookie.js' %}?v=1"></script>
 
-<script type="text/javascript" src="{% static "js/emailmagic.js" %}?v=3" async defer></script>
+<script type="text/javascript" src="{% static 'js/emailmagic.js' %}?v=3" async defer></script>
 <script src="{% static 'js/multistepmodal.js' %}" async></script>
 
 <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicons/apple-touch-icon.png' %}?v=QEJXGyWNR2">
@@ -52,8 +52,8 @@
 <script>
   let $deck, $msnry;
 
-  function debounce_leading(func, timeout = 300){
-      {# https://www.freecodecamp.org/news/javascript-debounce-example/ #}
+  function debounce_leading(func, timeout = 300) {
+      // https://www.freecodecamp.org/news/javascript-debounce-example/
       let timer;
       return (...args) => {
         if (!timer) {
@@ -192,5 +192,12 @@
     jscolor.presets.default = {
       format: "hex"
     };
+    // do this to make bootstrap modals auto-focus.
+    // delegate to body so that we only have to set it up once.
+    // adapted from https://stackoverflow.com/a/48432381
+    document.body.addEventListener('shown.bs.modal', (e) => {
+      var ele = $(e.target).find('input[type=text],textarea,select').filter(':visible:first'); // find the first input on the bs modal
+      if (ele) {ele.focus();} // if we found one then set focus.
+    })
   });
 </script>

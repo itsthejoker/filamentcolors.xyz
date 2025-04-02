@@ -51,6 +51,14 @@
           data-bs-target="#mfrFilterModal"
         >Manufacturer
         </button>
+        <button
+          type="button"
+          id="tdFilterModalButton"
+          class="btn btn-outline-primary bg-gradient"
+          data-bs-toggle="modal"
+          data-bs-target="#tdFilterModal"
+        >TD
+        </button>
       </div>
       <div>
         <button
@@ -184,7 +192,251 @@
   </div>
 </div>
 
+<!-- TD Filter Modal -->
+<div class="modal fade" id="tdFilterModal" tabindex="-1" aria-labelledby="tdFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="tdFilterModalLabel">Filter by TD</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <strong>Transmission Distance</strong> (TD) values are a measure of how much light passes
+          through the filament. This is mostly used with
+          <a href="https://shop.thehueforge.com/" target="_blank">software like HueForge</a>, but
+          also gives you a good idea of how translucent your prints will be. The numbers range
+          from 0 to 100, where 0 blocks all light and 100 is completely clear.
+        </p>
+        <p>
+          Note: we're working on getting this value for more filaments, but right now there is only
+          a small portion of the library with this data.
+        </p>
+        <ul class="nav nav-pills mb-3 nav-justified" id="tdValuesTabs" role="tablist">
+          <li class="nav-item ps-0" role="presentation">
+            <button 
+              class="nav-link active" 
+              id="tdSliderTab" 
+              data-bs-toggle="pill" 
+              data-bs-target="#pillSlider" 
+              type="button" 
+              role="tab" 
+              aria-controls="pillSlider" 
+              aria-selected="true">Sliders</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button 
+              class="nav-link" 
+              id="tdTextTab" 
+              data-bs-toggle="pill" 
+              data-bs-target="#pillText" 
+              type="button" 
+              role="tab" 
+              aria-controls="pillText" 
+              aria-selected="false"
+            >Text</button>
+          </li>
+        </ul>
+        <div class="tab-content mb-3" id="tdValuesTabsContent">
+          <div 
+            class="tab-pane fade show active" 
+            id="pillSlider" 
+            role="tabpanel" 
+            aria-labelledby="tdSliderTab" 
+            tabindex="0"
+          >
+            <label for="tdMinRange" class="form-label">
+              TD Min: <span class="badge text-bg-secondary" id="tdMinValueLabel">0</span>
+            </label>
+            <input 
+              type="range" 
+              class="form-range" 
+              value="0" 
+              min="0" 
+              max="100" 
+              step="0.1" 
+              id="tdMinRange"
+              oninput="updateTdMinRange(this)"
+            >
+            <label for="tdMaxRange" class="form-label">
+              TD Max: <span class="badge text-bg-secondary" id="tdMaxValueLabel">100</span>
+            </label>
+            <input 
+              type="range" 
+              class="form-range" 
+              value="100" 
+              min="0" 
+              max="100" 
+              step="0.1" 
+              id="tdMaxRange"
+              oninput="updateTdMaxRange(this)"
+            >
+          </div>
+          <div 
+            class="tab-pane fade" 
+            id="pillText" 
+            role="tabpanel" 
+            aria-labelledby="tdTextTab" 
+            tabindex="0"
+          >
+          <div class="input-group mb-3 has-validation">
+            <span class="input-group-text" id="tdMinTextAddon">TD Min</span>
+            <input 
+              type="text" 
+              id="tdMinTextInput"
+              class="form-control" 
+              placeholder="0" 
+              aria-label="tdMinTextLabel" 
+              aria-describedby="tdMinTextAddon"
+              onkeyup="updateTdMinText(this)"
+            >
+            <div class="invalid-feedback" id="tdMinTextInputFeedback">
+              Please enter a number between 0 and 100.
+            </div>      
+          </div>
+          <div class="input-group mb-3 has-validation">
+            <span class="input-group-text" id="tdMaxTextAddon">TD Max</span>
+            <input 
+              type="text" 
+              id="tdMaxTextInput"
+              class="form-control" 
+              placeholder="100" 
+              aria-label="tdMaxTextLabel" 
+              aria-describedby="tdMaxTextAddon"
+              onkeyup="updateTdMaxText(this)"
+            >
+            <div class="invalid-feedback" id="tdMaxTextInputFeedback">
+              Please enter a number between 0 and 100.
+            </div> 
+          </div>                    
+        </div>
+        </div>
+        <div class="text-center">
+          <div
+            id="filterTDNone"
+            class="btn btn-primary"
+            onclick="clearTDFilter()"
+          >
+            Reset Filter
+          </div>
+          <div
+          id="applyTdFilter",
+          class="btn btn-success"
+          onclick="applyTdFilter()"
+          >Apply Filter</div>
+
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+  function validateTdTextBox(el, force = false, forcedValue = false) {
+    const $el = $(el);
+    const value = $el.val();
+    const isValid = $.isNumeric(value) && value >= 0 && value <= 100;
+    const finalValidity = force ? forcedValue : isValid;
+
+    $el.toggleClass("is-valid", finalValidity);
+    $el.toggleClass("is-invalid", !finalValidity);
+
+    return isValid;
+  }
+
+  function updateTdMinText(el, propogate=true) {
+    const errorMessage = document.getElementById("tdMinTextInputFeedback");
+    if (!(validateTdTextBox(el))) {
+      errorMessage.textContent = "Please enter a number between 0 and 100."
+      return
+    }
+    const maxText = document.getElementById("tdMaxTextInput");
+    if (parseFloat(el.value) > parseFloat(maxText.value)) {
+      errorMessage.textContent = "Number must be smaller than TD Max."
+      validateTdTextBox(el, force=true, forcedValue=false)
+    }
+    
+    if (propogate) {
+      // normally we want to update the range, but if the range forced
+      // the update, we don't want to push the update back and pingpong
+      // around
+      const minRange = document.getElementById("tdMinRange");
+      minRange.value = el.value;
+      updateTdMinRange(minRange);
+    }
+  }
+
+  function updateTdMaxText(el, propogate=true) {
+    const errorMessage = document.getElementById("tdMaxTextInputFeedback");
+    if (!(validateTdTextBox(el))) {
+      errorMessage.textContent = "Please enter a number between 0 and 100."
+      return
+    }
+    const minText = document.getElementById("tdMinTextInput");
+    if (parseFloat(el.value) < parseFloat(minText.value)) {
+      errorMessage.textContent = "Number must be larger than TD Min."
+      validateTdTextBox(el, force=true, forcedValue=false)
+    }
+
+    if (propogate) {
+      const maxRange = document.getElementById("tdMaxRange");
+      maxRange.value = el.value;
+      updateTdMaxRange(maxRange);
+    }
+  }
+
+  function roundToOneDecimal(value) {
+    // this is so stupid. this language is stupid. Why can I not round floats???
+    return Math.round(value * 10) / 10;
+  }
+
+  function updateTdMinRange(el) {
+    const minRange = el;
+    const minText = document.getElementById("tdMinTextInput");
+    const maxRange = document.getElementById("tdMaxRange");
+    let minRangeFloat = roundToOneDecimal(parseFloat(minRange.value));
+    let maxRangeFloat = roundToOneDecimal(parseFloat(maxRange.value));
+    
+    if (minRangeFloat === 100.0) {
+      minRangeFloat = 99.9;
+      minRange.value = minRangeFloat;
+    }
+
+    document.getElementById("tdMinValueLabel").textContent = minRangeFloat.toString();
+    minText.value = minRangeFloat.toString();
+    updateTdMinText(minText, propogate=false);
+    
+    if (minRangeFloat > maxRangeFloat) {
+      maxRange.value = roundToOneDecimal(minRangeFloat + 0.1);
+      updateTdMaxRange(maxRange, propogate=false);
+    }
+  }
+
+  function updateTdMaxRange(el) {
+    const maxRange = el;
+    const maxText = document.getElementById("tdMaxTextInput");
+    const minRange = document.getElementById("tdMinRange");
+    let minRangeFloat = roundToOneDecimal(parseFloat(minRange.value));
+    let maxRangeFloat = roundToOneDecimal(parseFloat(maxRange.value));
+    
+    if (maxRangeFloat === 0.0) {
+      maxRangeFloat = 0.1;
+      maxRange.value = maxRangeFloat;
+    }
+
+    document.getElementById("tdMaxValueLabel").textContent = maxRangeFloat.toString();
+    maxText.value = maxRangeFloat.toString();
+    updateTdMaxText(maxText, propogate=false);
+    if (maxRangeFloat < minRangeFloat) {
+      minRange.value = roundToOneDecimal(maxRangeFloat - 0.1);
+      updateTdMinRange(minRange, propogate=false);
+    }
+  }
+
   function hideModal(modalId) {
     const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId));
     modal.hide();

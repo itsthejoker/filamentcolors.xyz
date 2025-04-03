@@ -245,32 +245,8 @@
             aria-labelledby="tdSliderTab" 
             tabindex="0"
           >
-            <label for="tdMinRange" class="form-label">
-              TD Min: <span class="badge text-bg-secondary" id="tdMinValueLabel">0</span>
-            </label>
-            <input 
-              type="range" 
-              class="form-range" 
-              value="0" 
-              min="0" 
-              max="100" 
-              step="0.1" 
-              id="tdMinRange"
-              oninput="updateTdMinRange(this)"
-            >
-            <label for="tdMaxRange" class="form-label">
-              TD Max: <span class="badge text-bg-secondary" id="tdMaxValueLabel">100</span>
-            </label>
-            <input 
-              type="range" 
-              class="form-range" 
-              value="100" 
-              min="0" 
-              max="100" 
-              step="0.1" 
-              id="tdMaxRange"
-              oninput="updateTdMaxRange(this)"
-            >
+            <td-min-range></td-min-range>
+            <td-max-range></td-max-range>
           </div>
           <div 
             class="tab-pane fade" 
@@ -279,21 +255,7 @@
             aria-labelledby="tdTextTab" 
             tabindex="0"
           >
-          <div class="input-group mb-3 has-validation">
-            <span class="input-group-text" id="tdMinTextAddon">TD Min</span>
-            <input 
-              type="text" 
-              id="tdMinTextInput"
-              class="form-control" 
-              placeholder="0" 
-              aria-label="tdMinTextLabel" 
-              aria-describedby="tdMinTextAddon"
-              onkeyup="updateTdMinText(this)"
-            >
-            <div class="invalid-feedback" id="tdMinTextInputFeedback">
-              Please enter a number between 0 and 100.
-            </div>      
-          </div>
+          <td-min-text></td-min-text>
           <div class="input-group mb-3 has-validation">
             <span class="input-group-text" id="tdMaxTextAddon">TD Max</span>
             <input 
@@ -336,16 +298,177 @@
 </div>
 
 <script>
-  function validateTdTextBox(el, force = false, forcedValue = false) {
-    const $el = $(el);
-    const value = $el.val();
-    const isValid = $.isNumeric(value) && value >= 0 && value <= 100;
-    const finalValidity = force ? forcedValue : isValid;
+  class TdTextComponent extends HTMLElement {
+    constructor() {
+      super();
+      this.textInput = null;
+      this.errorMessage = null;
+    }
 
-    $el.toggleClass("is-valid", finalValidity);
-    $el.toggleClass("is-invalid", !finalValidity);
+    setErrorVisibility(visible) {
+      // visible is a boolean
+      const $el = $(this);
+      $el.toggleClass("is-valid", visible);
+      $el.toggleClass("is-invalid", !visible);
+    }
 
-    return isValid;
+    validateTdTextBox() {
+      const $el = $(this);
+      const value = $el.val();
+      return $.isNumeric(value) && value >= 0 && value <= 100;
+    }
+  }
+
+  class TdRangeComponent extends HTMLElement {
+    constructor() {
+      super();
+      this.rangeInput = null;
+      this.valueLabel = null;
+    }
+
+    roundToOneDecimal(value) {
+      return Math.round(value * 10) / 10;
+    }
+
+    getValue() {
+      if (!this.rangeInput) {
+        throw new Error('Range input is not initialized.');
+      }
+      return this.roundToOneDecimal(parseFloat(this.rangeInput.value));
+    }
+
+    setValue(value) {
+      if (!this.rangeInput || !this.valueLabel) {
+        throw new Error('Range input or value label is not initialized.');
+      }
+      const parsedValue = parseFloat(value);
+      if (isNaN(parsedValue)) {
+        throw new Error('Invalid value. Please provide a valid float.');
+      }
+      const roundedValue = this.roundToOneDecimal(parsedValue);
+      this.rangeInput.value = roundedValue;
+      this.valueLabel.textContent = roundedValue.toString();
+      this.rangeInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  }
+
+  class TdMinRange extends TdRangeComponent {
+    constructor() {
+      super();
+      this.innerHTML = `
+        <label for="tdMinRange" class="form-label">
+          TD Min: <span class="badge text-bg-secondary" id="tdMinValueLabel">0</span>
+        </label>
+        <input
+          type="range"
+          class="form-range"
+          value="0"
+          min="0"
+          max="100"
+          step="0.1"
+          id="tdMinRange"
+        >
+      `;
+
+      this.rangeInput = document.getElementById('tdMinRange');
+      this.valueLabel = document.getElementById('tdMinValueLabel');
+      this.rangeInput.addEventListener('input', this.updateTdMinRange.bind(this));
+    }
+
+    updateTdMinRange(event) {
+      if (this.getValue() === 100.0) {
+        this.setValue(99.9)
+      }
+
+      let localVal = this.getValue();
+
+      this.valueLabel.textContent = localVal.toString();
+
+      let maxRange = document.querySelector('td-max-range')
+      if (localVal > maxRange.getValue()) {
+        maxRange.setValue(roundToOneDecimal(localVal + 0.1));
+      }
+    }
+  }
+
+  class TdMaxRange extends TdRangeComponent {
+    constructor() {
+      super();
+      this.innerHTML = `
+        <label for="tdMaxRange" class="form-label">
+          TD Max: <span class="badge text-bg-secondary" id="tdMaxValueLabel">100</span>
+        </label>
+        <input
+          type="range"
+          class="form-range"
+          value="100"
+          min="0"
+          max="100"
+          step="0.1"
+          id="tdMaxRange"
+        >
+      `;
+
+      this.rangeInput = document.getElementById('tdMaxRange');
+      this.valueLabel = document.getElementById('tdMaxValueLabel');
+      this.rangeInput.addEventListener('input', this.updateTdMaxRange.bind(this));
+    }
+
+    updateTdMaxRange(event) {
+      if (this.getValue() === 0.0) {
+        this.setValue(0.1)
+      }
+
+      let localVal = this.getValue();
+
+      this.valueLabel.textContent = localVal.toString();
+
+      let minRange = document.querySelector('td-min-range')
+      if (localVal < minRange.getValue()) {
+        minRange.setValue(roundToOneDecimal(localVal - 0.1));
+      }
+    }
+  }
+
+  class TdMinText extends TdTextComponent {
+    constructor() {
+      super();
+      this.innerHTML = `
+        <div class="input-group mb-3 has-validation">
+          <span class="input-group-text" id="tdMinTextAddon">TD Min</span>
+          <input
+            type="text"
+            id="tdMinTextInput"
+            class="form-control"
+            placeholder="0"
+            aria-label="tdMinTextLabel"
+            aria-describedby="tdMinTextAddon"
+          >
+          <div class="invalid-feedback" id="tdMinTextInputFeedback">
+            Please enter a number between 0 and 100.
+          </div>
+        </div>
+      `;
+
+      this.textInput = document.getElementById('tdMinTextInput');
+      this.errorMessage = document.getElementById('tdMinTextInputFeedback');
+      this.rangeInput.addEventListener('onkeyup', this.updateTdMinText.bind(this));
+    }
+
+    updateTdMinText(event) {
+      if (this.getValue() === 100.0) {
+        this.setValue(99.9)
+      }
+
+      let localVal = this.getValue();
+
+      this.valueLabel.textContent = localVal.toString();
+
+      let maxRange = document.querySelector('td-max-range')
+      if (localVal > maxRange.getValue()) {
+        maxRange.setValue(roundToOneDecimal(localVal + 0.1));
+      }
+    }
   }
 
   function updateTdMinText(el, propogate=true) {
@@ -400,7 +523,7 @@
     const maxRange = document.getElementById("tdMaxRange");
     let minRangeFloat = roundToOneDecimal(parseFloat(minRange.value));
     let maxRangeFloat = roundToOneDecimal(parseFloat(maxRange.value));
-    
+
     if (minRangeFloat === 100.0) {
       minRangeFloat = 99.9;
       minRange.value = minRangeFloat;
@@ -409,7 +532,7 @@
     document.getElementById("tdMinValueLabel").textContent = minRangeFloat.toString();
     minText.value = minRangeFloat.toString();
     updateTdMinText(minText, propogate=false);
-    
+
     if (minRangeFloat > maxRangeFloat) {
       maxRange.value = roundToOneDecimal(minRangeFloat + 0.1);
       updateTdMaxRange(maxRange, propogate=false);
@@ -647,4 +770,7 @@
       });
     }
   });
+
+  customElements.define('td-min-range', TdMinRange);
+  customElements.define('td-max-range', TdMaxRange);
 </script>

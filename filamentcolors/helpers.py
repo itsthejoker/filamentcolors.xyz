@@ -326,7 +326,7 @@ def get_custom_library(data: Dict) -> QuerySet:
     )
 
 
-def get_swatches(data: Dict, force_all: bool=False) -> QuerySet:
+def get_swatches(data: Dict, force_all: bool = False) -> QuerySet:
     # force_all is for when we want a swatch to be findable even if the user's
     # settings would normally exclude it. An example is for the swatch detail
     # page, where we want to load the swatch as long as it's published. What if

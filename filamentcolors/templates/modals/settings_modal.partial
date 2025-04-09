@@ -106,7 +106,7 @@
       <div class="container d-grid">
         <button type="button"
                 id="showHideMfrsButton"
-                class="btn bg-gradient-secondary showall"
+                class="btn btn-secondary showall"
                 onclick="toggleShowHideMfrs()"
         >Unselect All
         </button>
@@ -129,13 +129,13 @@
 
 {% block footer %}
   <button type="button"
-          class="btn bg-gradient-default mb-0"
+          class="btn btn-secondary mb-0"
           id="advancedSettingsButton"
           onclick="showHideAdvanced()">
     Show Advanced
   </button>
   <button type="button"
-          class="btn bg-gradient-secondary mb-0"
+          class="btn btn-primary mb-0"
           onclick="saveSettings()">
     Save changes
   </button>

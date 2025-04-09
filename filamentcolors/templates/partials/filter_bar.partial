@@ -54,7 +54,7 @@
         <button
           type="button"
           id="tdFilterModalButton"
-          class="btn btn-outline-primary bg-gradient"
+          class="btn btn-outline-info bg-gradient"
           data-bs-toggle="modal"
           data-bs-target="#tdFilterModal"
         >TD
@@ -256,35 +256,21 @@
             tabindex="0"
           >
           <td-min-text></td-min-text>
-          <div class="input-group mb-3 has-validation">
-            <span class="input-group-text" id="tdMaxTextAddon">TD Max</span>
-            <input 
-              type="text" 
-              id="tdMaxTextInput"
-              class="form-control" 
-              placeholder="100" 
-              aria-label="tdMaxTextLabel" 
-              aria-describedby="tdMaxTextAddon"
-              onkeyup="updateTdMaxText(this)"
-            >
-            <div class="invalid-feedback" id="tdMaxTextInputFeedback">
-              Please enter a number between 0 and 100.
-            </div> 
-          </div>                    
+          <td-max-text></td-max-text>
         </div>
         </div>
         <div class="text-center">
           <div
             id="filterTDNone"
             class="btn btn-primary"
-            onclick="clearTDFilter()"
+            onclick="clearTdFilter()"
           >
             Reset Filter
           </div>
           <div
-          id="applyTdFilter",
+          id="selectTdFilter"
           class="btn btn-success"
-          onclick="applyTdFilter()"
+          onclick="selectTdFilter()"
           >Apply Filter</div>
 
         </div>
@@ -305,16 +291,65 @@
       this.errorMessage = null;
     }
 
-    setErrorVisibility(visible) {
-      // visible is a boolean
-      const $el = $(this);
+    /**
+     * Toggles the error state of the text input.
+     * @param {boolean} visible - whether to show the error state
+     */
+    setErrorState(visible) {
+      console.log(visible)
+      const $el = $(this.textInput);
       $el.toggleClass("is-valid", visible);
       $el.toggleClass("is-invalid", !visible);
     }
 
+    syncValue() {
+      this.syncTarget.setValue(this.getValue())
+    }
+
+    roundToOneDecimal(value) {
+      return Math.round(value * 10) / 10;
+    }
+
+    setErrorMessage(message) {
+      if (!this.errorMessage) {
+        throw new Error('Error message element is not initialized.');
+      }
+      this.errorMessage.textContent = message;
+    }
+
+    /**
+     * Sets the value of the text input.
+     * @param {string} value - the value to set
+     * @returns {boolean}
+     */
+    setValue(value) {
+      if (!this.textInput) {
+        throw new Error('Text input is not initialized.');
+      }
+      const parsedValue = parseFloat(value);
+      if (isNaN(parsedValue)) {
+        throw new Error('Invalid value. Please provide a valid float.');
+      }
+      this.textInput.value = parsedValue.toString();
+      this.setErrorState(this.validateTdTextBox());
+    }
+
+    /**
+     * Gets the value of the text input.
+     * @returns {number}
+     */
+    getValue() {
+      if (!this.textInput) {
+        throw new Error('Text input is not initialized.');
+      }
+      return parseFloat(this.textInput.value);
+    }
+
     validateTdTextBox() {
-      const $el = $(this);
-      const value = $el.val();
+      let value = this.textInput.value;
+      if (value.endsWith('.')) {
+        return false;
+      }
       return $.isNumeric(value) && value >= 0 && value <= 100;
     }
   }
@@ -328,6 +363,10 @@
 
     roundToOneDecimal(value) {
       return Math.round(value * 10) / 10;
+    }
+
+    syncValue() {
+      this.syncTarget.setValue(this.getValue())
     }
 
     getValue() {
@@ -348,7 +387,6 @@
       const roundedValue = this.roundToOneDecimal(parsedValue);
       this.rangeInput.value = roundedValue;
       this.valueLabel.textContent = roundedValue.toString();
-      this.rangeInput.dispatchEvent(new Event('input', { bubbles: true }));
     }
   }
 
@@ -372,6 +410,7 @@
 
       this.rangeInput = document.getElementById('tdMinRange');
       this.valueLabel = document.getElementById('tdMinValueLabel');
+      this.syncTarget = document.querySelector('td-min-text');
       this.rangeInput.addEventListener('input', this.updateTdMinRange.bind(this));
     }
 
@@ -387,7 +426,9 @@
       let maxRange = document.querySelector('td-max-range')
       if (localVal > maxRange.getValue()) {
         maxRange.setValue(roundToOneDecimal(localVal + 0.1));
+        maxRange.syncValue();
       }
+      this.syncValue();
     }
   }
 
@@ -411,6 +452,7 @@
 
       this.rangeInput = document.getElementById('tdMaxRange');
       this.valueLabel = document.getElementById('tdMaxValueLabel');
+      this.syncTarget = document.querySelector('td-max-text');
       this.rangeInput.addEventListener('input', this.updateTdMaxRange.bind(this));
     }
 
@@ -426,7 +468,9 @@
       let minRange = document.querySelector('td-min-range')
       if (localVal < minRange.getValue()) {
         minRange.setValue(roundToOneDecimal(localVal - 0.1));
+        minRange.syncValue();
       }
+      this.syncValue();
     }
   }
 
@@ -444,119 +488,76 @@
             aria-label="tdMinTextLabel"
             aria-describedby="tdMinTextAddon"
           >
-          <div class="invalid-feedback" id="tdMinTextInputFeedback">
+          <div class="invalid-feedback" id="tdMinTextInputFeedback"></div>
+        </div>
+      `;
+
+      this.textInput = document.getElementById('tdMinTextInput');
+      this.maxTd = document.querySelector('td-max-text');
+      this.errorMessage = document.getElementById('tdMinTextInputFeedback');
+      this.syncTarget = document.querySelector('td-min-range');
+      this.textInput.addEventListener('input', this.updateTdMinText.bind(this));
+    }
+
+    updateTdMinText(event) {
+      if (this.getValue() >= this.maxTd.getValue()) {
+        this.setErrorMessage("Number must be smaller than TD Max.")
+        this.setErrorState(false);
+        return
+      }
+
+      const isValid = this.validateTdTextBox();
+      if (!isValid) {
+        this.setErrorMessage("Please enter a number between 0 and 100.")
+      } else {
+        this.syncValue()
+      }
+
+      this.setErrorState(isValid);
+    }
+  }
+
+  class TdMaxText extends TdTextComponent {
+    constructor() {
+      super();
+      this.innerHTML = `
+        <div class="input-group mb-3 has-validation">
+          <span class="input-group-text" id="tdMaxTextAddon">TD Max</span>
+          <input
+            type="text"
+            id="tdMaxTextInput"
+            class="form-control"
+            placeholder="100"
+            aria-label="tdMaxTextLabel"
+            aria-describedby="tdMaxTextAddon"
+          >
+          <div class="invalid-feedback" id="tdMaxTextInputFeedback">
             Please enter a number between 0 and 100.
           </div>
         </div>
       `;
 
-      this.textInput = document.getElementById('tdMinTextInput');
-      this.errorMessage = document.getElementById('tdMinTextInputFeedback');
-      this.rangeInput.addEventListener('onkeyup', this.updateTdMinText.bind(this));
+      this.textInput = document.getElementById('tdMaxTextInput');
+      this.minTd = document.querySelector('td-min-text');
+      this.errorMessage = document.getElementById('tdMaxTextInputFeedback');
+      this.syncTarget = document.querySelector('td-max-range');
+      this.textInput.addEventListener('input', this.updateTdMaxText.bind(this));
     }
 
-    updateTdMinText(event) {
-      if (this.getValue() === 100.0) {
-        this.setValue(99.9)
+    updateTdMaxText(event) {
+      if (this.getValue() <= this.minTd.getValue()) {
+        this.setErrorMessage("Number must be larger than TD Min.")
+        this.setErrorState(false);
+        return
       }
-
-      let localVal = this.getValue();
-
-      this.valueLabel.textContent = localVal.toString();
-
-      let maxRange = document.querySelector('td-max-range')
-      if (localVal > maxRange.getValue()) {
-        maxRange.setValue(roundToOneDecimal(localVal + 0.1));
+      const isValid = this.validateTdTextBox();
+      if (!isValid) {
+        this.setErrorMessage("Please enter a number between 0 and 100.")
+        this.setErrorState(isValid);
+      } else {
+        this.syncValue()
       }
-    }
-  }
-
-  function updateTdMinText(el, propogate=true) {
-    const errorMessage = document.getElementById("tdMinTextInputFeedback");
-    if (!(validateTdTextBox(el))) {
-      errorMessage.textContent = "Please enter a number between 0 and 100."
-      return
-    }
-    const maxText = document.getElementById("tdMaxTextInput");
-    if (parseFloat(el.value) > parseFloat(maxText.value)) {
-      errorMessage.textContent = "Number must be smaller than TD Max."
-      validateTdTextBox(el, force=true, forcedValue=false)
-    }
-    
-    if (propogate) {
-      // normally we want to update the range, but if the range forced
-      // the update, we don't want to push the update back and pingpong
-      // around
-      const minRange = document.getElementById("tdMinRange");
-      minRange.value = el.value;
-      updateTdMinRange(minRange);
-    }
-  }
-
-  function updateTdMaxText(el, propogate=true) {
-    const errorMessage = document.getElementById("tdMaxTextInputFeedback");
-    if (!(validateTdTextBox(el))) {
-      errorMessage.textContent = "Please enter a number between 0 and 100."
-      return
-    }
-    const minText = document.getElementById("tdMinTextInput");
-    if (parseFloat(el.value) < parseFloat(minText.value)) {
-      errorMessage.textContent = "Number must be larger than TD Min."
-      validateTdTextBox(el, force=true, forcedValue=false)
-    }
-
-    if (propogate) {
-      const maxRange = document.getElementById("tdMaxRange");
-      maxRange.value = el.value;
-      updateTdMaxRange(maxRange);
-    }
-  }
-
-  function roundToOneDecimal(value) {
-    // this is so stupid. this language is stupid. Why can I not round floats???
-    return Math.round(value * 10) / 10;
-  }
-
-  function updateTdMinRange(el) {
-    const minRange = el;
-    const minText = document.getElementById("tdMinTextInput");
-    const maxRange = document.getElementById("tdMaxRange");
-    let minRangeFloat = roundToOneDecimal(parseFloat(minRange.value));
-    let maxRangeFloat = roundToOneDecimal(parseFloat(maxRange.value));
-
-    if (minRangeFloat === 100.0) {
-      minRangeFloat = 99.9;
-      minRange.value = minRangeFloat;
-    }
-
-    document.getElementById("tdMinValueLabel").textContent = minRangeFloat.toString();
-    minText.value = minRangeFloat.toString();
-    updateTdMinText(minText, propogate=false);
-
-    if (minRangeFloat > maxRangeFloat) {
-      maxRange.value = roundToOneDecimal(minRangeFloat + 0.1);
-      updateTdMaxRange(maxRange, propogate=false);
-    }
-  }
-
-  function updateTdMaxRange(el) {
-    const maxRange = el;
-    const maxText = document.getElementById("tdMaxTextInput");
-    const minRange = document.getElementById("tdMinRange");
-    let minRangeFloat = roundToOneDecimal(parseFloat(minRange.value));
-    let maxRangeFloat = roundToOneDecimal(parseFloat(maxRange.value));
-    
-    if (maxRangeFloat === 0.0) {
-      maxRangeFloat = 0.1;
-      maxRange.value = maxRangeFloat;
-    }
-
-    document.getElementById("tdMaxValueLabel").textContent = maxRangeFloat.toString();
-    maxText.value = maxRangeFloat.toString();
-    updateTdMaxText(maxText, propogate=false);
-    if (maxRangeFloat < minRangeFloat) {
-      minRange.value = roundToOneDecimal(maxRangeFloat - 0.1);
-      updateTdMinRange(minRange, propogate=false);
+      this.setErrorState(isValid);
     }
   }
 
@@ -567,7 +568,8 @@
 
   function populateFilters() {
     const filters = {};
-    const filterTypes = ["cf", "mfr", "ft"];
+    // color family, manufacturer, filament type, transmission distance
+    const filterTypes = ["cf", "mfr", "ft", "td"];
 
     filterTypes.forEach(type => {
       const filterValue = getFilters(type);
@@ -665,6 +667,28 @@
     document.body.dispatchEvent(new Event("fireSearch"));
   }
 
+  function clearTdFilter(goNow = true) {
+    document.querySelector('td-min-range').setValue(0);
+    document.querySelector('td-max-range').setValue(100);
+    $("#tdFilterModalButton")
+      .text("TD")
+      .removeClass("btn-info")
+      .addClass("btn-outline-info");
+    hideModal("tdFilterModal");
+    window.quickfiltersToClear.push("td");
+    if (goNow) {
+      document.body.dispatchEvent(new Event("fireSearch"));
+    }
+  }
+
+  function selectTdFilter() {
+    const minTd = document.querySelector('td-min-text').getValue();
+    const maxTd = document.querySelector('td-max-text').getValue();
+    window.quickfilters["td"] = `${minTd}-${maxTd}`;
+    hideModal("tdFilterModal");
+    document.body.dispatchEvent(new Event("fireSearch"));
+  }
+
   $("#mfrFilterInput").on("keyup", function() {
     let value = $(this).val().toLowerCase();
     $("#mfrFilterListGroup .mfrFilterEntry").filter(function() {
@@ -673,7 +697,7 @@
   });
 
   function updateClearAllButton() {
-    if (getFilters("cf") || getFilters("mfr") || getFilters("ft") || window.quickfiltersToClear.length > 0) {
+    if (getFilters("cf") || getFilters("mfr") || getFilters("ft") || getFilters("td") || window.quickfiltersToClear.length > 0) {
       $("#clearAllFiltersButton").removeClass("d-none");
     } else {
       $("#clearAllFiltersButton").addClass("d-none");
@@ -686,6 +710,7 @@
     clearFtFilter(false);
     clearCfFilter(false);
     clearMfrFilter(false);
+    clearTdFilter(false);
     document.body.dispatchEvent(new Event("fireSearch"));
     updateClearAllButton();
   }
@@ -769,8 +794,34 @@
         $(this).removeClass("active");
       });
     }
+
+    if (currentUrl.searchParams.has("td")) {
+      const tdFilter = currentUrl.searchParams.get("td").split("-");
+      const minTd = parseFloat(tdFilter[0]);
+      const maxTd = parseFloat(tdFilter[1]);
+      const minRange = document.querySelector('td-min-range');
+      const maxRange = document.querySelector('td-max-range');
+      minRange.setValue(minTd);
+      minRange.syncValue();
+      maxRange.setValue(maxTd);
+      maxRange.syncValue();
+      $("#tdFilterModalButton")
+        .text(`TD: ${minTd} - ${maxTd}`)
+        .removeClass("btn-outline-info")
+        .addClass("btn-info");
+    } else {
+      const minRange = document.querySelector('td-min-range');
+      const maxRange = document.querySelector('td-max-range');
+      minRange.setValue(0);
+      minRange.syncValue();
+      maxRange.setValue(100);
+      maxRange.syncValue();
+    }
   });
 
   customElements.define('td-min-range', TdMinRange);
   customElements.define('td-max-range', TdMaxRange);
+  customElements.define('td-min-text', TdMinText);
+  customElements.define('td-max-text', TdMaxText);
+
 </script>

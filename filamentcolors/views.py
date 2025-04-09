@@ -90,6 +90,7 @@ def librarysort(
     color_family_str = request.GET.get("cf", None)
     mfr_str = request.GET.get("mfr", None)
     f_type_str = request.GET.get("ft", None)
+    td_range = request.GET.get("td", None)
 
     if filter_str == "null":
         filter_str = None
@@ -129,6 +130,15 @@ def librarysort(
             items = items.filter(filament_type__parent_type__id=f_type_str)
         except ValueError:
             items = items.filter(filament_type__parent_type__slug=f_type_str)
+
+    if td_range:
+        # It should be in the format of 0-100 (min dash max)
+        try:
+            min_td, max_td = list(map(float, td_range.split("-")))
+        except ValueError:
+            min_td, max_td = 0, 100
+
+        items = items.filter(calculated_td__gte=min_td, calculated_td__lte=max_td)
 
     if method == "type":
         items = items.order_by("filament_type")
@@ -183,6 +193,7 @@ def librarysort(
         "cf": color_family_str,
         "mfr": mfr_str,
         "ft": f_type_str,
+        "td": td_range,
     }
     params_minus_filter = {
         k: v for k, v in params_minus_filter.items() if v is not None
@@ -343,11 +354,12 @@ def swatch_detail(request: HttpRequest, swatch_id: str) -> HttpResponse:
     # doing a simplified DB call allows reacting much faster when a filament
     # isn't found; this call is ~10x faster than the full call, and if the
     # is found, it's less than 1ms of penalty
-    if not Swatch.objects.filter(**args).exists():
+    library = get_swatches(data, force_all=True)
+    if not library.filter(**args).exists():
         raise Http404
 
     swatch = (
-        Swatch.objects.filter(**args)
+        library.filter(**args)
         .select_related(
             "complement",
             "complement__manufacturer",

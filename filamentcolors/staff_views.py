@@ -71,7 +71,6 @@ def set_colors_for_published_rgb_swatches(request):
 
         swatch.lab_l, swatch.lab_a, swatch.lab_b = lab_l, lab_a, lab_b
 
-
         swatch.lab_l, swatch.lab_a, swatch.lab_b = reading[-3], reading[-2], reading[-1]
         swatch.computed_lab = False
         swatch.regenerate_all()

@@ -816,6 +816,17 @@
       maxRange.setValue(100);
       maxRange.syncValue();
     }
+
+    document.querySelector('#tdMaxTextInput').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        selectTdFilter();
+      }
+    });
+    document.querySelector('#tdMinTextInput').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        selectTdFilter();
+      }
+    });
   });
 
   customElements.define('td-min-range', TdMinRange);

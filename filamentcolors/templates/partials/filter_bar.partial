@@ -296,7 +296,6 @@
      * @param {boolean} visible - whether to show the error state
      */
     setErrorState(visible) {
-      console.log(visible)
       const $el = $(this.textInput);
       $el.toggleClass("is-valid", visible);
       $el.toggleClass("is-invalid", !visible);
@@ -425,7 +424,7 @@
 
       let maxRange = document.querySelector('td-max-range')
       if (localVal > maxRange.getValue()) {
-        maxRange.setValue(roundToOneDecimal(localVal + 0.1));
+        maxRange.setValue(this.roundToOneDecimal(localVal + 0.1));
         maxRange.syncValue();
       }
       this.syncValue();
@@ -467,7 +466,7 @@
 
       let minRange = document.querySelector('td-min-range')
       if (localVal < minRange.getValue()) {
-        minRange.setValue(roundToOneDecimal(localVal - 0.1));
+        minRange.setValue(this.roundToOneDecimal(localVal - 0.1));
         minRange.syncValue();
       }
       this.syncValue();

@@ -1147,7 +1147,7 @@ class Swatch(models.Model, DistanceMixin):
             clamped_rgb: tuple[int] = (
                 int(clamp(rgb[0], 0, 255)),
                 int(clamp(rgb[1], 0, 255)),
-                int(clamp(rgb[2], 0, 255))
+                int(clamp(rgb[2], 0, 255)),
             )
             self.hex_color = self.get_hex(clamped_rgb)
             self.rgb_r = clamped_rgb[0]

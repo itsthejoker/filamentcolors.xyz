@@ -4,14 +4,20 @@ from typing import Any, Dict, List
 
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage
-from django.db.models import Count, F, Q, QuerySet
-from django.db.models.functions import Lower
+from django.db.models import Count, F, Q, QuerySet, OuterRef, Sum, Subquery, FloatField
+from django.db.models.functions import Lower, Coalesce
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
 
 from filamentcolors import status as status_codes
 from filamentcolors import NAVBAR_MESSAGE, NAVBAR_MESSAGE_ID
-from filamentcolors.models import GenericFilamentType, Manufacturer, Swatch, DeadLink
+from filamentcolors.models import (
+    GenericFilamentType,
+    Manufacturer,
+    Swatch,
+    DeadLink,
+    UserSubmittedTD,
+)
 
 have_visited_before_cookie = "f"
 filament_type_settings_cookie = "show-types"
@@ -258,6 +264,32 @@ def get_settings_cookies(r: HttpRequest) -> Dict:
     }
 
 
+def annotate_with_calculated_td(qs: QuerySet) -> QuerySet:
+    """Handles the subquery math required to take an unknown number of
+    user-submitted TDs and properly calculate the TD values.
+    """
+    user_tds_sum = (
+        UserSubmittedTD.objects.filter(swatch=OuterRef("pk"))
+        .values("swatch")
+        .annotate(sum_td=Sum("td"))
+        .values("sum_td")
+    )
+    user_tds_count = (
+        UserSubmittedTD.objects.filter(swatch=OuterRef("pk"))
+        .values("swatch")
+        .annotate(count_td=Count("td"))
+        .values("count_td")
+    )
+    return qs.annotate(
+        calculated_td=Coalesce(
+            (F("td") + Subquery(user_tds_sum, output_field=FloatField()))
+            / (1 + Subquery(user_tds_count, output_field=FloatField())),
+            F("td"),
+            output_field=FloatField(),
+        )
+    )
+
+
 def generate_custom_library(data: Dict) -> bool:
     """
     Return a boolean based on whether we actually need to generate
@@ -294,8 +326,13 @@ def get_custom_library(data: Dict) -> QuerySet:
     )
 
 
-def get_swatches(data: Dict) -> QuerySet:
-    if generate_custom_library(data):
+def get_swatches(data: Dict, force_all: bool = False) -> QuerySet:
+    # force_all is for when we want a swatch to be findable even if the user's
+    # settings would normally exclude it. An example is for the swatch detail
+    # page, where we want to load the swatch as long as it's published. What if
+    # they get sent a link to a filament they've disabled the type for? The page
+    # should still load, yanno.
+    if generate_custom_library(data) and not force_all:
         queryset = get_custom_library(data)
     else:
         queryset = (
@@ -303,6 +340,7 @@ def get_swatches(data: Dict) -> QuerySet:
             .prefetch_related("filament_type")
             .filter(published=True)
         )
+    queryset = annotate_with_calculated_td(queryset)
     return queryset
 
 

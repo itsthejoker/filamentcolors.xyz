@@ -25,8 +25,16 @@
     <div class="card-body text-start">
       <div class="color-cube" style="background-color:#{{ obj.hex_color }};"></div>
       <div>
-        <h5 class="card-title position-relative">
+        <h5 class="card-title d-flex justify-content-between">
           #{{ obj.hex_color|upper }}
+
+          {% if obj.calculated_td %}
+            <span
+              class="badge text-bg-secondary align-self-end"
+              style="font-size:0.6em;margin-bottom:2px"
+            >TD: {{ obj.calculated_td }}</span>
+          {% endif %}
+
         </h5>
         {% if not obj.is_available %}
           <div class="row">

@@ -19,9 +19,6 @@
           hx-target="#swatch-container"
           hx-swap="innerHTML"
           hx-headers='{ "X-Searchbar": "true" }'
-{# onchange="showHideHexColorWarning(this)" #}
-{# onkeyup="showHideHexColorWarning(this)" #}
-{# onkeydown="showHideHexColorWarning(this)" #}
         >
       </div>
     </div>
@@ -53,6 +50,14 @@
           data-bs-toggle="modal"
           data-bs-target="#mfrFilterModal"
         >Manufacturer
+        </button>
+        <button
+          type="button"
+          id="tdFilterModalButton"
+          class="btn btn-outline-info bg-gradient"
+          data-bs-toggle="modal"
+          data-bs-target="#tdFilterModal"
+        >TD
         </button>
       </div>
       <div>
@@ -187,7 +192,374 @@
   </div>
 </div>
 
+<!-- TD Filter Modal -->
+<div class="modal fade" id="tdFilterModal" tabindex="-1" aria-labelledby="tdFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="tdFilterModalLabel">Filter by TD</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <strong>Transmission Distance</strong> (TD) values are a measure of how much light passes
+          through the filament. This is mostly used with
+          <a href="https://shop.thehueforge.com/" target="_blank">software like HueForge</a>, but
+          also gives you a good idea of how translucent your prints will be. The numbers range
+          from 0 to 100, where 0 blocks all light and 100 is completely clear.
+        </p>
+        <p>
+          Note: we're working on getting this value for more filaments, but right now there is only
+          a small portion of the library with this data.
+        </p>
+        <ul class="nav nav-pills mb-3 nav-justified" id="tdValuesTabs" role="tablist">
+          <li class="nav-item ps-0" role="presentation">
+            <button 
+              class="nav-link active" 
+              id="tdSliderTab" 
+              data-bs-toggle="pill" 
+              data-bs-target="#pillSlider" 
+              type="button" 
+              role="tab" 
+              aria-controls="pillSlider" 
+              aria-selected="true">Sliders</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button 
+              class="nav-link" 
+              id="tdTextTab" 
+              data-bs-toggle="pill" 
+              data-bs-target="#pillText" 
+              type="button" 
+              role="tab" 
+              aria-controls="pillText" 
+              aria-selected="false"
+            >Text</button>
+          </li>
+        </ul>
+        <div class="tab-content mb-3" id="tdValuesTabsContent">
+          <div 
+            class="tab-pane fade show active" 
+            id="pillSlider" 
+            role="tabpanel" 
+            aria-labelledby="tdSliderTab" 
+            tabindex="0"
+          >
+            <td-min-range></td-min-range>
+            <td-max-range></td-max-range>
+          </div>
+          <div 
+            class="tab-pane fade" 
+            id="pillText" 
+            role="tabpanel" 
+            aria-labelledby="tdTextTab" 
+            tabindex="0"
+          >
+          <td-min-text></td-min-text>
+          <td-max-text></td-max-text>
+        </div>
+        </div>
+        <div class="text-center">
+          <div
+            id="filterTDNone"
+            class="btn btn-primary"
+            onclick="clearTdFilter()"
+          >
+            Reset Filter
+          </div>
+          <div
+          id="selectTdFilter"
+          class="btn btn-success"
+          onclick="selectTdFilter()"
+          >Apply Filter</div>
+
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+  class TdTextComponent extends HTMLElement {
+    constructor() {
+      super();
+      this.textInput = null;
+      this.errorMessage = null;
+    }
+
+    /**
+     * Toggles the error state of the text input.
+     * @param {boolean} visible - whether to show the error state
+     */
+    setErrorState(visible) {
+      const $el = $(this.textInput);
+      $el.toggleClass("is-valid", visible);
+      $el.toggleClass("is-invalid", !visible);
+    }
+
+    syncValue() {
+      this.syncTarget.setValue(this.getValue())
+    }
+
+    roundToOneDecimal(value) {
+      return Math.round(value * 10) / 10;
+    }
+
+    setErrorMessage(message) {
+      if (!this.errorMessage) {
+        throw new Error('Error message element is not initialized.');
+      }
+      this.errorMessage.textContent = message;
+    }
+
+    /**
+     * Sets the value of the text input.
+     * @param {string} value - the value to set
+     * @returns {boolean}
+     */
+    setValue(value) {
+      if (!this.textInput) {
+        throw new Error('Text input is not initialized.');
+      }
+      const parsedValue = parseFloat(value);
+      if (isNaN(parsedValue)) {
+        throw new Error('Invalid value. Please provide a valid float.');
+      }
+      this.textInput.value = parsedValue.toString();
+      this.setErrorState(this.validateTdTextBox());
+    }
+
+    /**
+     * Gets the value of the text input.
+     * @returns {number}
+     */
+    getValue() {
+      if (!this.textInput) {
+        throw new Error('Text input is not initialized.');
+      }
+      return parseFloat(this.textInput.value);
+    }
+
+    validateTdTextBox() {
+      let value = this.textInput.value;
+      if (value.endsWith('.')) {
+        return false;
+      }
+      return $.isNumeric(value) && value >= 0 && value <= 100;
+    }
+  }
+
+  class TdRangeComponent extends HTMLElement {
+    constructor() {
+      super();
+      this.rangeInput = null;
+      this.valueLabel = null;
+    }
+
+    roundToOneDecimal(value) {
+      return Math.round(value * 10) / 10;
+    }
+
+    syncValue() {
+      this.syncTarget.setValue(this.getValue())
+    }
+
+    getValue() {
+      if (!this.rangeInput) {
+        throw new Error('Range input is not initialized.');
+      }
+      return this.roundToOneDecimal(parseFloat(this.rangeInput.value));
+    }
+
+    setValue(value) {
+      if (!this.rangeInput || !this.valueLabel) {
+        throw new Error('Range input or value label is not initialized.');
+      }
+      const parsedValue = parseFloat(value);
+      if (isNaN(parsedValue)) {
+        throw new Error('Invalid value. Please provide a valid float.');
+      }
+      const roundedValue = this.roundToOneDecimal(parsedValue);
+      this.rangeInput.value = roundedValue;
+      this.valueLabel.textContent = roundedValue.toString();
+    }
+  }
+
+  class TdMinRange extends TdRangeComponent {
+    constructor() {
+      super();
+      this.innerHTML = `
+        <label for="tdMinRange" class="form-label">
+          TD Min: <span class="badge text-bg-secondary" id="tdMinValueLabel">0</span>
+        </label>
+        <input
+          type="range"
+          class="form-range"
+          value="0"
+          min="0"
+          max="100"
+          step="0.1"
+          id="tdMinRange"
+        >
+      `;
+
+      this.rangeInput = document.getElementById('tdMinRange');
+      this.valueLabel = document.getElementById('tdMinValueLabel');
+      this.syncTarget = document.querySelector('td-min-text');
+      this.rangeInput.addEventListener('input', this.updateTdMinRange.bind(this));
+    }
+
+    updateTdMinRange(event) {
+      if (this.getValue() === 100.0) {
+        this.setValue(99.9)
+      }
+
+      let localVal = this.getValue();
+
+      this.valueLabel.textContent = localVal.toString();
+
+      let maxRange = document.querySelector('td-max-range')
+      if (localVal > maxRange.getValue()) {
+        maxRange.setValue(this.roundToOneDecimal(localVal + 0.1));
+        maxRange.syncValue();
+      }
+      this.syncValue();
+    }
+  }
+
+  class TdMaxRange extends TdRangeComponent {
+    constructor() {
+      super();
+      this.innerHTML = `
+        <label for="tdMaxRange" class="form-label">
+          TD Max: <span class="badge text-bg-secondary" id="tdMaxValueLabel">100</span>
+        </label>
+        <input
+          type="range"
+          class="form-range"
+          value="100"
+          min="0"
+          max="100"
+          step="0.1"
+          id="tdMaxRange"
+        >
+      `;
+
+      this.rangeInput = document.getElementById('tdMaxRange');
+      this.valueLabel = document.getElementById('tdMaxValueLabel');
+      this.syncTarget = document.querySelector('td-max-text');
+      this.rangeInput.addEventListener('input', this.updateTdMaxRange.bind(this));
+    }
+
+    updateTdMaxRange(event) {
+      if (this.getValue() === 0.0) {
+        this.setValue(0.1)
+      }
+
+      let localVal = this.getValue();
+
+      this.valueLabel.textContent = localVal.toString();
+
+      let minRange = document.querySelector('td-min-range')
+      if (localVal < minRange.getValue()) {
+        minRange.setValue(this.roundToOneDecimal(localVal - 0.1));
+        minRange.syncValue();
+      }
+      this.syncValue();
+    }
+  }
+
+  class TdMinText extends TdTextComponent {
+    constructor() {
+      super();
+      this.innerHTML = `
+        <div class="input-group mb-3 has-validation">
+          <span class="input-group-text" id="tdMinTextAddon">TD Min</span>
+          <input
+            type="text"
+            id="tdMinTextInput"
+            class="form-control"
+            placeholder="0"
+            aria-label="tdMinTextLabel"
+            aria-describedby="tdMinTextAddon"
+          >
+          <div class="invalid-feedback" id="tdMinTextInputFeedback"></div>
+        </div>
+      `;
+
+      this.textInput = document.getElementById('tdMinTextInput');
+      this.maxTd = document.querySelector('td-max-text');
+      this.errorMessage = document.getElementById('tdMinTextInputFeedback');
+      this.syncTarget = document.querySelector('td-min-range');
+      this.textInput.addEventListener('input', this.updateTdMinText.bind(this));
+    }
+
+    updateTdMinText(event) {
+      if (this.getValue() >= this.maxTd.getValue()) {
+        this.setErrorMessage("Number must be smaller than TD Max.")
+        this.setErrorState(false);
+        return
+      }
+
+      const isValid = this.validateTdTextBox();
+      if (!isValid) {
+        this.setErrorMessage("Please enter a number between 0 and 100.")
+      } else {
+        this.syncValue()
+      }
+
+      this.setErrorState(isValid);
+    }
+  }
+
+  class TdMaxText extends TdTextComponent {
+    constructor() {
+      super();
+      this.innerHTML = `
+        <div class="input-group mb-3 has-validation">
+          <span class="input-group-text" id="tdMaxTextAddon">TD Max</span>
+          <input
+            type="text"
+            id="tdMaxTextInput"
+            class="form-control"
+            placeholder="100"
+            aria-label="tdMaxTextLabel"
+            aria-describedby="tdMaxTextAddon"
+          >
+          <div class="invalid-feedback" id="tdMaxTextInputFeedback">
+            Please enter a number between 0 and 100.
+          </div>
+        </div>
+      `;
+
+      this.textInput = document.getElementById('tdMaxTextInput');
+      this.minTd = document.querySelector('td-min-text');
+      this.errorMessage = document.getElementById('tdMaxTextInputFeedback');
+      this.syncTarget = document.querySelector('td-max-range');
+      this.textInput.addEventListener('input', this.updateTdMaxText.bind(this));
+    }
+
+    updateTdMaxText(event) {
+      if (this.getValue() <= this.minTd.getValue()) {
+        this.setErrorMessage("Number must be larger than TD Min.")
+        this.setErrorState(false);
+        return
+      }
+      const isValid = this.validateTdTextBox();
+      if (!isValid) {
+        this.setErrorMessage("Please enter a number between 0 and 100.")
+        this.setErrorState(isValid);
+      } else {
+        this.syncValue()
+      }
+      this.setErrorState(isValid);
+    }
+  }
+
   function hideModal(modalId) {
     const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId));
     modal.hide();
@@ -195,7 +567,8 @@
 
   function populateFilters() {
     const filters = {};
-    const filterTypes = ["cf", "mfr", "ft"];
+    // color family, manufacturer, filament type, transmission distance
+    const filterTypes = ["cf", "mfr", "ft", "td"];
 
     filterTypes.forEach(type => {
       const filterValue = getFilters(type);
@@ -293,6 +666,28 @@
     document.body.dispatchEvent(new Event("fireSearch"));
   }
 
+  function clearTdFilter(goNow = true) {
+    document.querySelector('td-min-range').setValue(0);
+    document.querySelector('td-max-range').setValue(100);
+    $("#tdFilterModalButton")
+      .text("TD")
+      .removeClass("btn-info")
+      .addClass("btn-outline-info");
+    hideModal("tdFilterModal");
+    window.quickfiltersToClear.push("td");
+    if (goNow) {
+      document.body.dispatchEvent(new Event("fireSearch"));
+    }
+  }
+
+  function selectTdFilter() {
+    const minTd = document.querySelector('td-min-text').getValue();
+    const maxTd = document.querySelector('td-max-text').getValue();
+    window.quickfilters["td"] = `${minTd}-${maxTd}`;
+    hideModal("tdFilterModal");
+    document.body.dispatchEvent(new Event("fireSearch"));
+  }
+
   $("#mfrFilterInput").on("keyup", function() {
     let value = $(this).val().toLowerCase();
     $("#mfrFilterListGroup .mfrFilterEntry").filter(function() {
@@ -301,7 +696,7 @@
   });
 
   function updateClearAllButton() {
-    if (getFilters("cf") || getFilters("mfr") || getFilters("ft") || window.quickfiltersToClear.length > 0) {
+    if (getFilters("cf") || getFilters("mfr") || getFilters("ft") || getFilters("td") || window.quickfiltersToClear.length > 0) {
       $("#clearAllFiltersButton").removeClass("d-none");
     } else {
       $("#clearAllFiltersButton").addClass("d-none");
@@ -314,6 +709,7 @@
     clearFtFilter(false);
     clearCfFilter(false);
     clearMfrFilter(false);
+    clearTdFilter(false);
     document.body.dispatchEvent(new Event("fireSearch"));
     updateClearAllButton();
   }
@@ -397,5 +793,34 @@
         $(this).removeClass("active");
       });
     }
+
+    if (currentUrl.searchParams.has("td")) {
+      const tdFilter = currentUrl.searchParams.get("td").split("-");
+      const minTd = parseFloat(tdFilter[0]);
+      const maxTd = parseFloat(tdFilter[1]);
+      const minRange = document.querySelector('td-min-range');
+      const maxRange = document.querySelector('td-max-range');
+      minRange.setValue(minTd);
+      minRange.syncValue();
+      maxRange.setValue(maxTd);
+      maxRange.syncValue();
+      $("#tdFilterModalButton")
+        .text(`TD: ${minTd} - ${maxTd}`)
+        .removeClass("btn-outline-info")
+        .addClass("btn-info");
+    } else {
+      const minRange = document.querySelector('td-min-range');
+      const maxRange = document.querySelector('td-max-range');
+      minRange.setValue(0);
+      minRange.syncValue();
+      maxRange.setValue(100);
+      maxRange.syncValue();
+    }
   });
+
+  customElements.define('td-min-range', TdMinRange);
+  customElements.define('td-max-range', TdMaxRange);
+  customElements.define('td-min-text', TdMinText);
+  customElements.define('td-max-text', TdMaxText);
+
 </script>

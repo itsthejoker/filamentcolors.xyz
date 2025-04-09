@@ -1,5 +1,5 @@
 echo "Running black..."
-black .
+poetry run black .
 echo "Running djade..."
-git ls-files -z -- '*.html' | xargs -0 djade --target-version 5.1
-git ls-files -z -- '*.partial' | xargs -0 djade --target-version 5.1
+git ls-files -z -- '*.html' | xargs -0 poetry run djade --target-version 5.1
+git ls-files -z -- '*.partial' | xargs -0 poetry run djade --target-version 5.1

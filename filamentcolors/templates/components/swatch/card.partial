@@ -28,7 +28,7 @@
         <h5 class="card-title d-flex justify-content-between">
           #{{ obj.hex_color|upper }}
 
-          {% if obj.calculated_td %}
+          {% if obj.calculated_td >= 0 %}
             <span
               class="badge text-bg-secondary align-self-end"
               style="font-size:0.6em;margin-bottom:2px"

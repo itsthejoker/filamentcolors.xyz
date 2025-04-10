@@ -4,7 +4,19 @@ from typing import Any, Dict, List
 
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage
-from django.db.models import Count, F, Q, QuerySet, OuterRef, Sum, Subquery, FloatField
+from django.db.models import (
+    Count,
+    F,
+    Q,
+    QuerySet,
+    OuterRef,
+    Sum,
+    Subquery,
+    FloatField,
+    Case,
+    When,
+    Value,
+)
 from django.db.models.functions import Lower, Coalesce
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
@@ -280,11 +292,18 @@ def annotate_with_calculated_td(qs: QuerySet) -> QuerySet:
         .annotate(count_td=Count("td"))
         .values("count_td")
     )
+
     return qs.annotate(
-        calculated_td=Coalesce(
-            (F("td") + Subquery(user_tds_sum, output_field=FloatField()))
-            / (1 + Subquery(user_tds_count, output_field=FloatField())),
-            F("td"),
+        user_tds_sum=Coalesce(
+            Subquery(user_tds_sum, output_field=FloatField()), Value(0), output_field=FloatField()
+        ),
+        user_tds_count=Coalesce(
+            Subquery(user_tds_count, output_field=FloatField()), Value(0), output_field=FloatField()
+        ),
+    ).annotate(
+        calculated_td=Case(
+            When(user_tds_count=0, then=F("td")),
+            default=(F("td") + F("user_tds_sum")) / (1 + F("user_tds_count")),
             output_field=FloatField(),
         )
     )

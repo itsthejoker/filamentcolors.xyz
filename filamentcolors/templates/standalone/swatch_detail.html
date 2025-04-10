@@ -139,8 +139,8 @@
                   <td class="ps-4 bg-body-secondary">Date added</td>
                   <td class="bg-body-secondary">{{ swatch.human_readable_date }}</td>
                 </tr>
-                {% with td=swatch.get_td %}
-                  {% if td %}
+                {% with td=swatch.calculated_td %}
+                  {% if td >= 0 %}
                     <tr>
                       <td class="ps-4 bg-body-secondary">TD Value</td>
                       <td class="bg-body-secondary">{{ swatch.calculated_td }}</td>

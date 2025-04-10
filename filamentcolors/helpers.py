@@ -295,10 +295,14 @@ def annotate_with_calculated_td(qs: QuerySet) -> QuerySet:
 
     return qs.annotate(
         user_tds_sum=Coalesce(
-            Subquery(user_tds_sum, output_field=FloatField()), Value(0), output_field=FloatField()
+            Subquery(user_tds_sum, output_field=FloatField()),
+            Value(0),
+            output_field=FloatField(),
         ),
         user_tds_count=Coalesce(
-            Subquery(user_tds_count, output_field=FloatField()), Value(0), output_field=FloatField()
+            Subquery(user_tds_count, output_field=FloatField()),
+            Value(0),
+            output_field=FloatField(),
         ),
     ).annotate(
         calculated_td=Case(

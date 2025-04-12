@@ -358,6 +358,11 @@
       super();
       this.rangeInput = null;
       this.valueLabel = null;
+      this.minpos = 0;
+      this.maxpos = 100;
+      this.minlval = Math.log(0.1);
+      this.maxlval = Math.log(99.9);
+      this.scale = (this.maxlval - this.minlval) / (this.maxpos - this.minpos)
     }
 
     roundToOneDecimal(value) {
@@ -372,10 +377,69 @@
       if (!this.rangeInput) {
         throw new Error('Range input is not initialized.');
       }
-      return this.roundToOneDecimal(parseFloat(this.rangeInput.value));
+      return this.roundToOneDecimal(parseFloat(this.getLogValueFromPosition()));
+    }
+
+    forceMinValue() {
+      this.rangeInput.value = this.minpos;
+      this.valueLabel.textContent = this.getMinValue().toString();
+    }
+
+    forceMaxValue() {
+      this.rangeInput.value = this.maxpos;
+      this.valueLabel.textContent = this.getMaxValue().toString();
+    }
+
+    getMinValue() {
+      if (!this.rangeInput) {
+        throw new Error('Range input is not initialized.');
+      }
+      return this.roundToOneDecimal(parseFloat(this.rangeInput.min));
+    }
+
+    getMaxValue() {
+      if (!this.rangeInput) {
+        throw new Error('Range input is not initialized.');
+      }
+      return this.roundToOneDecimal(parseFloat(this.rangeInput.max));
+    }
+
+    getLogValueFromPosition() {
+      let position = parseFloat(this.rangeInput.value);
+      if (position === this.minpos) {
+        return this.getMinValue();
+      }
+      if (position === this.maxpos) {
+        return this.getMaxValue();
+      }
+      let min = (position - this.minpos);
+      if (min <= 0) {
+        min = 0.1;
+      }
+      let logVal = Math.exp(min * this.scale + this.minlval);
+      if (logVal > 100) {
+        logVal = 100;
+      }
+      return logVal
+    }
+
+    getPositionFromLogValue(value) {
+      return this.roundToOneDecimal(
+        this.minpos + (Math.log(value) - this.minlval) / this.scale
+        );
     }
 
     setValue(value) {
+      if (value === this.minpos) {
+        // hell is javascript float math
+        // The reason that I'm doing this is that about 1/4 of the time,
+        // the min slider freaks out and sets the value to an invalid state
+        // when being asked to handle a display value of 0. Not every time,
+        // though. That would be too easy. Instead, just detect when a
+        // min value is being requested and ram it through.
+        this.forceMinValue()
+        return
+      }
       if (!this.rangeInput || !this.valueLabel) {
         throw new Error('Range input or value label is not initialized.');
       }
@@ -384,8 +448,10 @@
         throw new Error('Invalid value. Please provide a valid float.');
       }
       const roundedValue = this.roundToOneDecimal(parsedValue);
-      this.rangeInput.value = roundedValue;
-      this.valueLabel.textContent = roundedValue.toString();
+      this.rangeInput.value = this.getPositionFromLogValue(roundedValue);
+      this.valueLabel.textContent = this.roundToOneDecimal(
+        this.getLogValueFromPosition()
+      ).toString()
     }
   }
 
@@ -399,25 +465,29 @@
         <input
           type="range"
           class="form-range"
-          value="0"
+          value="0.1"
           min="0"
           max="100"
           step="0.1"
           id="tdMinRange"
         >
       `;
-
+      this.maxlval = Math.log(99.9);
       this.rangeInput = document.getElementById('tdMinRange');
       this.valueLabel = document.getElementById('tdMinValueLabel');
       this.syncTarget = document.querySelector('td-min-text');
       this.rangeInput.addEventListener('input', this.updateTdMinRange.bind(this));
     }
 
-    updateTdMinRange(event) {
-      if (this.getValue() === 100.0) {
-        this.setValue(99.9)
-      }
+    getMinValue() {
+      return 0;
+    }
 
+    getMaxValue() {
+      return 99.9;
+    }
+
+    updateTdMinRange(event) {
       let localVal = this.getValue();
 
       this.valueLabel.textContent = localVal.toString();
@@ -448,18 +518,18 @@
           id="tdMaxRange"
         >
       `;
-
+      this.maxlval = Math.log(100);
       this.rangeInput = document.getElementById('tdMaxRange');
       this.valueLabel = document.getElementById('tdMaxValueLabel');
       this.syncTarget = document.querySelector('td-max-text');
       this.rangeInput.addEventListener('input', this.updateTdMaxRange.bind(this));
     }
 
-    updateTdMaxRange(event) {
-      if (this.getValue() === 0.0) {
-        this.setValue(0.1)
-      }
+    getMinValue() {
+      return 0.1;
+    }
 
+    updateTdMaxRange(event) {
       let localVal = this.getValue();
 
       this.valueLabel.textContent = localVal.toString();
@@ -499,7 +569,7 @@
     }
 
     updateTdMinText(event) {
-      if (this.getValue() >= this.maxTd.getValue()) {
+      if (this.getValue() > this.maxTd.getValue()) {
         this.setErrorMessage("Number must be smaller than TD Max.")
         this.setErrorState(false);
         return
@@ -544,7 +614,7 @@
     }
 
     updateTdMaxText(event) {
-      if (this.getValue() <= this.minTd.getValue()) {
+      if (this.getValue() < this.minTd.getValue()) {
         this.setErrorMessage("Number must be larger than TD Min.")
         this.setErrorState(false);
         return
@@ -811,7 +881,12 @@
     } else {
       const minRange = document.querySelector('td-min-range');
       const maxRange = document.querySelector('td-max-range');
-      minRange.setValue(0);
+      if (!minRange) {
+        // we're on a page where this parsing is running, but the filter
+        // bar is not present. Abort here.
+        return
+      }
+      minRange.setValue(0.1);
       minRange.syncValue();
       maxRange.setValue(100);
       maxRange.syncValue();

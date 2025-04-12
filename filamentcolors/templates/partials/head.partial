@@ -111,7 +111,11 @@
     // up the new page
     if (window.tooltipList) {
       window.tooltipList.forEach((tooltip) => {
-        tooltip.dispose();
+        try {
+          tooltip.dispose();
+        } catch (error) {
+          // ignore errors if the tooltip is already disposed
+        }
       });
     }
   });

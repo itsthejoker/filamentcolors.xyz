@@ -32,6 +32,7 @@
         <div class="modal-body">
           {% include 'components/buttons/_bad_link_modal_body_text.partial' with link=swatch.amazon_purchase_link show_amazon_warning=1 %}
           <form action="/reportbadlink/{{ swatch.id }}/amazon/" id="amazonBadLinkForm" method="POST" hx-boost="false">
+            {% csrf_token %}
             <div class="input-group input-group-lg input-group-outline my-3">
               <label class="form-label" for="newAmazonLink">New Amazon Link</label>
               <input name="newLink" type="text" id="newAmazonLink" class="form-control form-control-lg">

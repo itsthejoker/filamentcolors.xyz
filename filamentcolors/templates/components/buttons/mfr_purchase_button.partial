@@ -40,6 +40,7 @@
         <div class="modal-body">
           {% include 'components/buttons/_bad_link_modal_body_text.partial' with link=swatch.mfr_purchase_link %}
           <form action="/reportbadlink/{{ swatch.id }}/mfr/" id="mfrBadLinkForm" method="POST" hx-boost="false">
+            {% csrf_token %}
             <div class="input-group input-group-lg input-group-outline my-3">
               <label class="form-label" for="newAmazonLink">New Manufacturer Link</label>
               <input name="newLink" type="text" id="newAmazonLink" class="form-control form-control-lg">

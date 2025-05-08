@@ -461,7 +461,6 @@ def inventory_page(request: HttpRequest) -> HttpResponse:
     return prep_request(request, "standalone/inventory.html", data)
 
 
-@csrf_exempt
 def report_bad_link(
     request: HttpRequest, swatch_id: int, link_type: str
 ) -> HttpResponse:

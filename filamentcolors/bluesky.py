@@ -1,7 +1,7 @@
+import mimetypes
 import os
 import re
-from typing import List, Dict
-import mimetypes
+from typing import Dict, List
 
 import httpx
 from bs4 import BeautifulSoup

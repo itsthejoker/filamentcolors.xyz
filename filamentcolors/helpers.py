@@ -3,31 +3,31 @@ import secrets
 from typing import Any, Dict, List
 
 from django.conf import settings
-from django.core.paginator import Paginator, EmptyPage
+from django.core.paginator import EmptyPage, Paginator
 from django.db.models import (
+    Case,
     Count,
     F,
+    FloatField,
+    OuterRef,
     Q,
     QuerySet,
-    OuterRef,
-    Sum,
     Subquery,
-    FloatField,
-    Case,
-    When,
+    Sum,
     Value,
+    When,
 )
-from django.db.models.functions import Lower, Coalesce
-from django.http import HttpResponse, HttpRequest
+from django.db.models.functions import Coalesce, Lower
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
-from filamentcolors import status as status_codes
 from filamentcolors import NAVBAR_MESSAGE, NAVBAR_MESSAGE_ID
+from filamentcolors import status as status_codes
 from filamentcolors.models import (
+    DeadLink,
     GenericFilamentType,
     Manufacturer,
     Swatch,
-    DeadLink,
     UserSubmittedTD,
 )
 

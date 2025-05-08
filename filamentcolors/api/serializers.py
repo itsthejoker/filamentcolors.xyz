@@ -6,12 +6,12 @@ from taggit.serializers import TagListSerializerField
 
 from filamentcolors.models import (
     RAL,
-    GenericFilamentType,
     FilamentType,
+    GenericFilamentType,
     Manufacturer,
     Pantone,
-    Swatch,
     PantonePMS,
+    Swatch,
 )
 
 

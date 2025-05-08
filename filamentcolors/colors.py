@@ -34,9 +34,9 @@ import math
 import re
 from typing import List, Tuple, Union
 
-from filamentcolors.constants import NAMED_COLORS
-
 import numpy
+
+from filamentcolors.constants import NAMED_COLORS
 
 
 def clamp(n, a, b):

@@ -10,16 +10,16 @@ from filamentcolors.forms import (
     FilamentTypeForm,
     InventoryForm,
     ListSwatchInventoryForm,
+    ManualLabValueForm,
     ManufacturerForm,
     PurchaseLocationForm,
     RetailerForm,
     SwatchForm,
     SwatchFormNoImages,
     SwatchUpdateImagesForm,
-    ManualLabValueForm,
 )
-from filamentcolors.helpers import build_data_dict, prep_request, ErrorStatusResponse
-from filamentcolors.models import PurchaseLocation, Swatch, Manufacturer
+from filamentcolors.helpers import ErrorStatusResponse, build_data_dict, prep_request
+from filamentcolors.models import Manufacturer, PurchaseLocation, Swatch
 
 
 def get_path_redirect(request, viewname: str, *args, **kwargs):

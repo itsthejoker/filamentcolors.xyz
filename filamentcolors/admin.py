@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.shortcuts import HttpResponseRedirect
 
 from filamentcolors.models import (
+    DeadLink,
     FilamentType,
     GenericFilamentType,
     GenericFile,
@@ -10,7 +11,6 @@ from filamentcolors.models import (
     Retailer,
     Swatch,
     UserSubmittedTD,
-    DeadLink,
 )
 
 

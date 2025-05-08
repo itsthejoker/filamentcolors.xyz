@@ -1,19 +1,18 @@
 import json
-
-from altcha import create_challenge, ChallengeOptions, verify_solution
-import bugsnag
 from datetime import timedelta
-from django.utils import timezone
-from django.core.handlers.wsgi import WSGIRequest
+
+import bugsnag
+from altcha import ChallengeOptions, create_challenge, verify_solution
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import HttpRequest, JsonResponse
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from filamentcolors import status
 from filamentcolors.helpers import ErrorStatusResponse
 
 
-def get_challenge(request: WSGIRequest):
+def get_challenge(request: HttpRequest):
     try:
         challenge = create_challenge(
             ChallengeOptions(
@@ -31,7 +30,7 @@ def get_challenge(request: WSGIRequest):
 
 
 @csrf_exempt
-def verify_challenge(request: WSGIRequest):
+def verify_challenge(request: HttpRequest):
     payload = json.loads(request.body).get("payload")
 
     if not payload:

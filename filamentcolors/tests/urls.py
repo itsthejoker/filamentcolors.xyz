@@ -1,6 +1,6 @@
 from django.core.exceptions import SuspiciousOperation
 from django.http import Http404
-from django.urls import path, include
+from django.urls import include, path
 
 handler400 = "filamentcolors.views.error_400"
 handler404 = "filamentcolors.views.error_404"

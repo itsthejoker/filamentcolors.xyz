@@ -1,7 +1,7 @@
 import random
 
-from django.core.management.base import BaseCommand
 from django.conf import settings
+from django.core.management.base import BaseCommand
 
 from filamentcolors.models import Swatch
 from filamentcolors.social_media import send_to_social_media

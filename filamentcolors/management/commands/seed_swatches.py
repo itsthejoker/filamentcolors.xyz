@@ -1,19 +1,19 @@
-from datetime import datetime, timezone
 import random
+from datetime import datetime, timezone
 
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
+from filamentcolors.constants import (
+    COLOR_FAMILY_ASSOCIATIONS,
+    HUMAN_READABLE_NAMES,
+    NAMED_COLORS,
+)
 from filamentcolors.models import (
-    Swatch,
-    Manufacturer,
     FilamentType,
     GenericFilamentType,
-)
-from filamentcolors.constants import (
-    NAMED_COLORS,
-    HUMAN_READABLE_NAMES,
-    COLOR_FAMILY_ASSOCIATIONS,
+    Manufacturer,
+    Swatch,
 )
 
 JITTER_VALUE = 5

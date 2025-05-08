@@ -1,10 +1,9 @@
 import csv
 import time
 
+import httpx
 from django.core.management.base import BaseCommand
 from django.db.models import Q
-
-import httpx
 
 from filamentcolors.models import Swatch
 

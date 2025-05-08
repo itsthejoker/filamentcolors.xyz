@@ -8,7 +8,7 @@ from django.urls import reverse
 from dotenv import load_dotenv
 
 from filamentcolors import tumblr as pytumblr
-from filamentcolors.bluesky import parse_facets, fetch_embed_url_card, get_session
+from filamentcolors.bluesky import fetch_embed_url_card, get_session, parse_facets
 
 load_dotenv()
 

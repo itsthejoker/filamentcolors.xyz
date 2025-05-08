@@ -4,12 +4,7 @@ from django.db.models.functions import Lower
 from django.forms import ClearableFileInput, TextInput
 
 from filamentcolors.constants import LAB
-from filamentcolors.models import (
-    FilamentType,
-    Manufacturer,
-    Retailer,
-    Swatch,
-)
+from filamentcolors.models import FilamentType, Manufacturer, Retailer, Swatch
 
 
 class CustomClearableFileInputField(ClearableFileInput):

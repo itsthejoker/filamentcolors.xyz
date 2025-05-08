@@ -1,4 +1,4 @@
-from filamentcolors.bluesky import parse_urls, parse_hashtags, parse_mentions
+from filamentcolors.bluesky import parse_hashtags, parse_mentions, parse_urls
 
 
 def test_parse_single_url():

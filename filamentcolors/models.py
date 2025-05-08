@@ -21,9 +21,9 @@ from django.utils import timezone
 from PIL import Image as Img
 from taggit.managers import TaggableManager
 
-from filamentcolors.colors import clamp, Color
+from filamentcolors.colors import Color, clamp
+from filamentcolors.constants import ILLUMINANT, OBSERVER_ANGLE
 from filamentcolors.exceptions import UnknownSlugOrID
-from filamentcolors.constants import OBSERVER_ANGLE, ILLUMINANT
 
 
 class DistanceMixin:

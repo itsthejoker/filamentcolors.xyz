@@ -38,6 +38,7 @@ oauthlib = "^3.2.2"
 python-dateutil = "^2.9.0.post0"
 bugsnag = "^4.7.1"
 bs4 = "^0.0.2"
+altcha = "^0.1.9"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.2"

@@ -6,12 +6,11 @@ from typing import Any
 import numpy
 import pandas
 from altcha import verify_solution
-from django.http import HttpRequest
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q, QuerySet
 from django.db.models.functions import Lower
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import HttpResponseRedirect, reverse
 from django.views.decorators.csrf import csrf_exempt
 from plotly import graph_objects
@@ -31,19 +30,19 @@ from filamentcolors.helpers import (
     generate_custom_library,
     get_custom_library,
     get_hsv,
-    get_swatches,
-    prep_request,
-    is_infinite_scroll_request,
-    get_swatch_paginator,
-    is_searchbar_request,
     get_new_seed,
+    get_swatch_paginator,
+    get_swatches,
+    is_infinite_scroll_request,
+    is_searchbar_request,
+    prep_request,
 )
 from filamentcolors.models import (
+    DeadLink,
     GenericFilamentType,
     GenericFile,
     Manufacturer,
     Swatch,
-    DeadLink,
 )
 
 
@@ -471,23 +470,34 @@ def report_bad_link(
     except Swatch.DoesNotExist:
         raise Http404()
 
+    no_validation_error_text = "There was a problem with your request."
     validation_error_text = (
-        "The validation failed; please try again."
+        "Validation failed; please try again."
         " If the problem persists, please send me an email at"
         " joe@filamentcolors.xyz. Thanks!"
     )
-
     generic_error_text = (
         "Something went wrong with your request."
         " Please send me an email at joe@filamentcolors.xyz"
         " with the link you tried to report. Thanks!"
     )
 
+    swatch_redirect = HttpResponseRedirect(reverse("swatchdetail", args=[swatch_id]))
+
     altcha_payload = request.POST.get("altcha")
-    verified, err = verify_solution(altcha_payload, settings.ALTCHA_HMAC_KEY, True)
+    if not altcha_payload:
+        messages.error(request, no_validation_error_text)
+        return swatch_redirect
+
+    try:
+        verified, err = verify_solution(altcha_payload, settings.ALTCHA_HMAC_KEY, True)
+    except (TypeError, AttributeError):
+        # Verification can explode if the payload is broken
+        messages.error(request, validation_error_text)
+        return swatch_redirect
     if not verified:
         messages.error(request, validation_error_text)
-        return HttpResponseRedirect(reverse("swatchdetail", args=[swatch_id]))
+        return swatch_redirect
 
     match link_type:
         case "mfr":
@@ -496,7 +506,7 @@ def report_bad_link(
             current_link = swatch.amazon_purchase_link
         case _:
             messages.error(request, generic_error_text)
-            return HttpResponseRedirect(reverse("swatchdetail", args=[swatch_id]))
+            return swatch_redirect
 
     DeadLink.objects.create(
         swatch=swatch,
@@ -507,7 +517,7 @@ def report_bad_link(
 
     messages.success(request, "Thanks! We've received your report.")
 
-    return HttpResponseRedirect(reverse("swatchdetail", args=[swatch_id]))
+    return swatch_redirect
 
 
 @csrf_exempt

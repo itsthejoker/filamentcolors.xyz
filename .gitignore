@@ -124,4 +124,5 @@ dump.json
 material-kit-pro-html-v3.0.3
 fontawesome/
 fontawesome-5/
-
+*.zip
+test.py

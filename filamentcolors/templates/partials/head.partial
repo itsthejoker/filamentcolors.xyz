@@ -32,6 +32,7 @@
 <script src="{% static 'vendored/js/long_press.js' %}" async defer></script>
 <script src="{% static 'vendored/js/jscolor.min.js' %}" async></script>
 <script src="{% static 'vendored/js/color.global.min.js' %}"></script>
+<script src="{% static 'vendored/js/altcha.min.js' %}" async defer type="module"></script>
 
 <script type="text/javascript" src="{% static 'vendored/js/toastify.min.js' %}" async defer></script>
 <script src="{% static 'js/cookies/cookie.js' %}?v=1"></script>

@@ -1,0 +1,9 @@
+<div class="mb-3" {% if center %}style="margin-left:50%;transform: translateX(-50%)"{% endif %}>
+  <altcha-widget
+    class="w-100"
+    challengeurl="{% url 'altcha_get_challenge' %}"
+    verifyurl="{% url 'altcha_verify_challenge' %}"
+    auto="onfocus"
+    style="--altcha-border-radius:0.375rem;--altcha-color-border:var(--bs-border-color);--altcha-max-width: 100%;"
+  ></altcha-widget>
+</div>

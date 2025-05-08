@@ -5,7 +5,9 @@ from typing import Any
 
 import numpy
 import pandas
+from altcha import verify_solution
 from django.http import HttpRequest
+from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q, QuerySet
 from django.db.models.functions import Lower
@@ -469,11 +471,23 @@ def report_bad_link(
     except Swatch.DoesNotExist:
         raise Http404()
 
-    error_text = (
+    validation_error_text = (
+        "The validation failed; please try again."
+        " If the problem persists, please send me an email at"
+        " joe@filamentcolors.xyz. Thanks!"
+    )
+
+    generic_error_text = (
         "Something went wrong with your request."
         " Please send me an email at joe@filamentcolors.xyz"
         " with the link you tried to report. Thanks!"
     )
+
+    altcha_payload = request.POST.get("altcha")
+    verified, err = verify_solution(altcha_payload, settings.ALTCHA_HMAC_KEY, True)
+    if not verified:
+        messages.error(request, validation_error_text)
+        return HttpResponseRedirect(reverse("swatchdetail", args=[swatch_id]))
 
     match link_type:
         case "mfr":
@@ -481,7 +495,7 @@ def report_bad_link(
         case "amazon":
             current_link = swatch.amazon_purchase_link
         case _:
-            messages.error(request, error_text)
+            messages.error(request, generic_error_text)
             return HttpResponseRedirect(reverse("swatchdetail", args=[swatch_id]))
 
     DeadLink.objects.create(

@@ -21,7 +21,7 @@ from django.contrib.sitemaps import GenericSitemap
 from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 
-from filamentcolors import staff_views, views
+from filamentcolors import altcha_views, staff_views, views
 from filamentcolors.api.urls import urlpatterns as api_urls
 from filamentcolors.models import Swatch
 from filamentcolors.sitemaps import StaticViewSitemap
@@ -91,6 +91,14 @@ urlpatterns = [
     ),
     path("visualizer/", views.swatch_field_visualizer, name="visualizer"),
     path("", include("plausible_proxy.urls")),
+    path(
+        "altcha/get_challenge/", altcha_views.get_challenge, name="altcha_get_challenge"
+    ),
+    path(
+        "altcha/verify_challenge/",
+        altcha_views.verify_challenge,
+        name="altcha_verify_challenge",
+    ),
     # Admin urls
     path("admin/", admin.site.urls),
     path("logout/", staff_views.logout_view, name="logout"),

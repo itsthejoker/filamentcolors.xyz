@@ -9,7 +9,8 @@
     >Buy on Amazon<br><span style="font-size: smaller">(affiliate link)</span></a>
 
     <div class="btn-group" role="group">
-      <button type="button" class="btn btn-primary bg-gradient dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      <button type="button" class="btn btn-primary bg-gradient dropdown-toggle" data-bs-toggle="dropdown"
+              aria-expanded="false">
         Options
       </button>
       <ul class="dropdown-menu">
@@ -37,6 +38,7 @@
               <label for="newAmzLink" class="form-label">New Amazon Link (Optional)</label>
               <input type="text" class="form-control" id="newAmzLink" name="newLink">
             </div>
+            {% include 'components/altcha.partial' with center=True %}
           </form>
           <p>
             Thanks for your help!

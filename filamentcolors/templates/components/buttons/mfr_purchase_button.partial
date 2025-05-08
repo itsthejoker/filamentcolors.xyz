@@ -45,6 +45,7 @@
               <label for="newMfrLink" class="form-label">New Manufacturer Link (Optional)</label>
               <input type="text" class="form-control" id="newMfrLink" name="newLink">
             </div>
+            {% include 'components/altcha.partial' with center=True submitButtonId="mfrBadLinkForm" %}
           </form>
           <p>
             Thanks for your help!
@@ -52,7 +53,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" form="mfrBadLinkForm" class="btn btn-primary">Submit</button>
+          <button type="submit" id="mfrBadLinkForm" form="mfrBadLinkForm" class="btn btn-primary">Submit</button>
         </div>
       </div>
     </div>

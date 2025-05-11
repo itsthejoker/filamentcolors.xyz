@@ -1057,18 +1057,22 @@ class Swatch(models.Model, DistanceMixin):
         if param := self.manufacturer.affiliate_url_param:
             if mfr_url := self.mfr_purchase_link:
                 param = param.strip("&")
-                param = param.split("=")
-                if param[0] not in mfr_url and param[1] not in mfr_url:
-                    scheme, netloc, path, query, fragment = urlsplit(mfr_url)
-                    if query:
-                        query = query.split("&")
-                        query.append(f"{param[0]}={param[1]}")
-                        query = "&".join(query)
-                    else:
-                        query = f"{param[0]}={param[1]}"
-                    self.mfr_purchase_link = urlunparse(
-                        (scheme, netloc, path, "", query, fragment)
-                    )
+                pieces_to_add = []
+                for param_part in param.strip("&?").split("&"):
+                    param_part = param_part.split("=")
+                    if param_part[0] not in mfr_url and param_part[1] not in mfr_url:
+                        pieces_to_add.append(f"{param_part[0]}={param_part[1]}")
+                scheme, netloc, path, query, fragment = urlsplit(mfr_url)
+                if query:
+                    query = query.split("&")
+                    query.extend(pieces_to_add)
+                    query = "&".join(query)
+                else:
+                    query = "&".join(pieces_to_add)
+                self.mfr_purchase_link = urlunparse(
+                    (scheme, netloc, path, "", query, fragment)
+                )
+
         for location in self.purchaselocation_set.all():
             if location.url is None or location.url == "":
                 continue

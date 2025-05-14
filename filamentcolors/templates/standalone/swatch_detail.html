@@ -619,7 +619,6 @@
         copyIcon.addEventListener('click', function () {
           const text = hexColor.textContent;
           navigator.clipboard.writeText(text).then(function () {
-            // Show toast notification that copy was successful
             showToast("Color code copied to clipboard!");
           }).catch(function (err) {
             showToastError('Could not copy text: ', err);

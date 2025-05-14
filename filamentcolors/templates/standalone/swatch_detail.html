@@ -24,6 +24,35 @@
         content="Color info on {{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}: {{ swatch.hex_color }}!"
   >
 
+  <style>
+    .copy-icon {
+      position: absolute;
+      right: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    /* Always show copy icon on mobile */
+    @media (max-width: 991.98px) {
+      .copy-icon {
+        opacity: 1 !important;
+      }
+    }
+
+    /* On larger screens, use hover behavior */
+    @media (min-width: 992px) {
+      .copy-icon {
+        opacity: 0;
+      }
+
+      .position-relative:hover .copy-icon {
+        opacity: 1;
+      }
+    }
+  </style>
+
   <div class="container mt-3">
     {% include 'partials/messages.partial' %}
     {% if error %}
@@ -91,16 +120,21 @@
             <h1 class="mt-lg-5 mt-md-0 fs-2">{{ swatch.manufacturer.name }}
               - {{ swatch.color_name }} {{ swatch.filament_type.name }}</h1>
 
-            <div 
-              class="big-color-cube" 
+            <div
+              class="big-color-cube"
               style="background-color:#{{ swatch.hex_color }};"
               data-bs-toggle="tooltip"
               data-bs-placement="top"
               title="This value is measured directly from the printed plastic with a colorimeter."
             ></div>
-            <p>#{{ swatch.hex_color|upper }}</p>
+            <div class="position-relative d-inline-block mt-2">
+              <p id="swatchHexColor" class="mb-0">#{{ swatch.hex_color|upper }}</p>
+              <span id="copyIcon" class="copy-icon" title="Copy hex color to clipboard">
+                <span style="font-size: 24px" class="icon-copy"></span>
+              </span>
+            </div>
           </div>
-          <div class="row mt-lg-5 mt-md-0">
+          <div class="row mt-lg-5 mt-md-2 mt-2">
             <div class="col-md-1"></div>
             <div class="col-md-10 swatch-info-table bg-body-secondary">
               <table class="table table-borderless">
@@ -130,7 +164,8 @@
                         data-bs-toggle="tooltip"
                         data-bs-placement="top"
                         title="The CIELAB color space, also referred to as L*a*b*, is a color space defined by the International Commission on Illumination (abbreviated CIE) in 1976."
-                      >CIELAB</td>
+                      >CIELAB
+                      </td>
                       <td class="bg-body-secondary">{{ lab }}</td>
                     </tr>
                   {% endif %}
@@ -576,7 +611,22 @@
     </div>
 
     <script>
-      baguetteBox.run(".grid-gallery", { animation: "slideIn" });
+      baguetteBox.run(".grid-gallery", {animation: "slideIn"});
+      document.addEventListener('DOMContentLoaded', function () {
+        const copyIcon = document.getElementById('copyIcon');
+        const hexColor = document.getElementById('swatchHexColor');
+
+        copyIcon.addEventListener('click', function () {
+          const text = hexColor.textContent;
+          navigator.clipboard.writeText(text).then(function () {
+            // Show toast notification that copy was successful
+            showToast("Color code copied to clipboard!");
+          }).catch(function (err) {
+            showToastError('Could not copy text: ', err);
+          });
+        });
+      });
+      s
     </script>
 
   </div>

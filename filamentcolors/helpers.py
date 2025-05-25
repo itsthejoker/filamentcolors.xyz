@@ -23,6 +23,7 @@ from django.shortcuts import render
 
 from filamentcolors import NAVBAR_MESSAGE, NAVBAR_MESSAGE_ID
 from filamentcolors import status as status_codes
+from filamentcolors.colors import clamp
 from filamentcolors.models import (
     DeadLink,
     GenericFilamentType,
@@ -36,6 +37,7 @@ filament_type_settings_cookie = "show-types"
 show_unavailable_cookie = "show-un"
 mfr_blacklist_cookie = "mfr-blacklist"
 show_delta_e_values_cookie = "show-delta-e-values"
+number_of_colormatch_results_cookie = "number-of-colormatch-results"
 
 
 def first_time_visitor(r: HttpRequest) -> bool:
@@ -237,6 +239,7 @@ def get_settings_cookies(r: HttpRequest) -> Dict:
     show_dc = r.COOKIES.get(show_unavailable_cookie)
     mfr_blacklist = r.COOKIES.get(mfr_blacklist_cookie)
     show_delta_e_values = r.COOKIES.get(show_delta_e_values_cookie)
+    number_of_colormatch_results = r.COOKIES.get(number_of_colormatch_results_cookie)
     hide_alert_ids = [
         i[len(navbar_alert_key) :]
         for i in r.COOKIES.keys()
@@ -267,12 +270,24 @@ def get_settings_cookies(r: HttpRequest) -> Dict:
     else:
         mfr_blacklist_objects = Manufacturer.objects.all()
 
+    if number_of_colormatch_results:
+        try:
+            number_of_colormatch_results = int(number_of_colormatch_results)
+            number_of_colormatch_results = clamp(
+                number_of_colormatch_results, 3, 12
+            )
+        except ValueError:
+            number_of_colormatch_results = 3
+    else:
+        number_of_colormatch_results = 3
+
     return {
         "types": types,
         "show_unavailable": True if show_dc == "true" else False,
         "mfr_whitelist": mfr_blacklist_objects,
         "show_delta_e_values": True if show_delta_e_values == "true" else False,
         "hide_alert_ids": hide_alert_ids,
+        "number_of_colormatch_results": number_of_colormatch_results,
     }
 
 

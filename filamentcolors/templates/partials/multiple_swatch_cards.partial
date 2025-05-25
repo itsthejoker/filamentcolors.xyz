@@ -21,8 +21,16 @@
          hx-indicator="#infiniteLoadSpinner"
     >
   {% else %}
-    <div class="col-md-6 col-lg-4 col-xl-4 col-xxl-3 swatchbox">
+    <div class="col-md-6 col-lg-4 col-xl-4 col-xxl-3 swatchbox {% if show_colormatch_extras %}mb-3{% endif %}">
   {% endif %}
-{% include 'components/swatch/card.partial' with obj=s %}
+  {% include 'components/swatch/card.partial' with obj=s %}
+  {% if show_colormatch_extras %}
+    {% if user_settings.show_delta_e_values %}
+      {% include 'components/badges/delta_e_badge.partial' with value=s.distance %}
+    {% endif %}
+    <div class="text-center">
+      <div class="btn btn-primary" id="grab-{{ s.id }}" onclick="grabSwatch(this)">Grab Swatch</div>
+    </div>
+  {% endif %}
 </div>
 {% endfor %}

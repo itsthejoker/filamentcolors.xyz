@@ -25,12 +25,12 @@
     </p>
     <div class="container">
       <div class="ms-3 mt-3 form-check form-switch">
-        <input 
-          style="margin-top: 7px" 
-          class="form-check-input" 
-          type="checkbox" 
-          id="darkModeSwitch" 
-          checked 
+        <input
+          style="margin-top: 7px"
+          class="form-check-input"
+          type="checkbox"
+          id="darkModeSwitch"
+          checked
           aria-label="Switch between light and dark mode"
         >
         <label class="form-check-label fs-5" for="darkModeSwitch">Dark Mode</label>
@@ -63,6 +63,36 @@
                  autocomplete="off">
           <label class="form-check-label fs-5" for="unavailableCheckbox">Show unavailable
             filaments</label>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="ms-1 mt-4 position-relative" id="colorMatchSettings">
+        <div class="d-flex">
+          <h4 class="mt-3">
+            <div class="badge text-bg-secondary"
+                 style="width:42.2333px"
+                 id="colorMatchResultCountLabel"
+            >3</div>
+          </h4>
+
+          <div class="d-block">
+            <!-- ms-2 is 0.5rem, but ms-3 is 1.0, so force 0.7 -->
+            <label for="colorMatchResultCount"
+                   class="form-label fs-5"
+                   style="margin-left: 0.7rem"
+            >Number of Color Match results to display</label>
+            <input type="range"
+                   class="form-range ms-2"
+                   min="3"
+                   max="12"
+                   step="1"
+                   value="3"
+                   id="colorMatchResultCount"
+                   oninput="updateColorMatchResultCount(this.value)"
+            >
+          </div>
+
         </div>
       </div>
     </div>
@@ -184,6 +214,8 @@
       let mfr = $("#mfrSettings");
       let mfr_list = "";
 
+      let colorMatchResultCount = $("#colorMatchResultCount").val();
+
       $.each(
         el.children(), function(count, value) {
           value = $(value).children().first();
@@ -226,6 +258,7 @@
       );
       createCookie("show-delta-e-values", showDelta, 365);
       createCookie("mfr-blacklist", mfr_list, 365);
+      createCookie("number-of-colormatch-results", colorMatchResultCount, 365);
 
       // settings have been saved, time to actually load them
       window.location.reload();
@@ -236,6 +269,7 @@
       const dsetting = readCookie("show-un");
       const msettings = readCookie("mfr-blacklist");
       const showdeltaesetting = readCookie("show-delta-e-values");
+      const colorMatchResultCount = readCookie("number-of-colormatch-results");
 
       {# Using a double equals for all of these kills me here, but it #}
       {# CANNOT be a !== because javascript sucks and it breaks. #}
@@ -271,23 +305,33 @@
         const el = $("#showDeltaEValues");
         el.prop("checked", JSON.parse(showdeltaesetting.toLowerCase()));
       }
+      if (colorMatchResultCount != null) {
+        const el = $("#colorMatchResultCount");
+        el.val(colorMatchResultCount);
+        updateColorMatchResultCount(colorMatchResultCount);
+      }
     }
 
-    document.addEventListener('DOMContentLoaded', (event) => {
+    document.addEventListener("DOMContentLoaded", (event) => {
       const htmlElement = document.documentElement;
-      const switchElement = document.getElementById('darkModeSwitch');
+      const switchElement = document.getElementById("darkModeSwitch");
       const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const currentTheme = localStorage.getItem('bsTheme') || (prefersDarkScheme ? 'dark' : 'light');
+      const currentTheme = localStorage.getItem("bsTheme") || (prefersDarkScheme ? "dark" : "light");
 
-      htmlElement.setAttribute('data-bs-theme', currentTheme);
-      switchElement.checked = currentTheme === 'dark';
+      htmlElement.setAttribute("data-bs-theme", currentTheme);
+      switchElement.checked = currentTheme === "dark";
 
-      switchElement.addEventListener('change', function () {
-          const newTheme = this.checked ? 'dark' : 'light';
-          htmlElement.setAttribute('data-bs-theme', newTheme);
-          localStorage.setItem('bsTheme', newTheme);
+      switchElement.addEventListener("change", function() {
+        const newTheme = this.checked ? "dark" : "light";
+        htmlElement.setAttribute("data-bs-theme", newTheme);
+        localStorage.setItem("bsTheme", newTheme);
       });
     });
+
+    function updateColorMatchResultCount(val) {
+      const el = document.getElementById("colorMatchResultCountLabel");
+      el.innerText = val;
+    }
 
     $(document).ready(function() {
       loadSettings();

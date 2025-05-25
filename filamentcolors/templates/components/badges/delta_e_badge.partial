@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-3 text-center mb-3 d-grid mx-auto">
+  <div class="text-center {% if show_colormatch_extras %}mb-2{% else %}mb-3{% endif %} mx-auto">
     <div
       class="badge text-bg-secondary"
       data-bs-toggle="tooltip"

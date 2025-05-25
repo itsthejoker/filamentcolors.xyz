@@ -25,6 +25,8 @@
     var icons;
     if (!supportsProperty('fontFeatureSettings')) {
         icons = {
+            'warning': '&#xea07;',
+            'sign': '&#xea07;',
             'copy': '&#xe92c;',
             'duplicate': '&#xe92c;',
             'floppy-disk': '&#xe962;',

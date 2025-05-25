@@ -522,7 +522,12 @@ def report_bad_link(
 
 @csrf_exempt
 def colormatch(request: HttpRequest) -> HttpResponse:
-    data = build_data_dict(request, title="Color Match")
+    data = build_data_dict(
+        request,
+        title="Color Match",
+        show_colormatch_extras=True,
+        show_delta_e_distance_warning=True
+    )
 
     if request.method == "POST":
         incoming_color = request.POST.get("hex_color")
@@ -536,21 +541,18 @@ def colormatch(request: HttpRequest) -> HttpResponse:
         library = get_swatches(data)
         matches = []
 
-        for _ in range(3):
+        for _ in range(data["user_settings"].get("number_of_colormatch_results", 3)):
             matching_swatch = Swatch().get_closest_color_swatch(
                 library, hex_to_rgb(incoming_color)
             )
             if not matching_swatch:
                 continue
-            if data["user_settings"].get("show_delta_e_values"):
-                distance = matching_swatch.get_distance_to(hex_to_rgb(incoming_color))
-            else:
-                distance = None
-
-            matches.append([matching_swatch, distance])
+            distance = matching_swatch.get_distance_to(hex_to_rgb(incoming_color))
+            matching_swatch.distance = distance
+            matches.append(matching_swatch)
             library = library.exclude(id=matching_swatch.id)
 
-        data["colormatch_swatches"] = matches
+        data["swatches"] = matches
         return prep_request(request, "partials/colormatch_results.partial", data)
 
     return prep_request(request, "standalone/colormatch.html", data)

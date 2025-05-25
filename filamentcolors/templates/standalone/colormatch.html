@@ -125,14 +125,15 @@
       <p>
         Click the "Search" button above to see the results of your color match!
         If you find a color you like, you can click the "Grab" button that will
-        be under the swatch to save it for later.
+        be under the swatch to save it for later. Want more results? Check the
+        settings page!
       </p>
     </div>
     <div id="saved_swatches" style="display: none">
       <hr class="container">
       <h4>Grab Bag</h4>
       <div id="saved_swatches_collection" class="row"></div>
-      <div class="row mt-3">
+      <div class="row container mt-3">
         <div class="col text-center">
           <a class="btn btn-outline-info"
              role="button"
@@ -144,22 +145,45 @@
   </div>
 
   <script>
+    function flipButtonToRemove(el) {
+      let $el = $(el);
+      $el.removeClass("btn-primary").addClass("btn-danger");
+      $el.text("Remove");
+      $el.attr("onclick", "nukeFromGrabBag(this)");
+    }
+
+    function flipButtonToGrab(el) {
+      let $el = $(el);
+      $el.removeClass("btn-danger").addClass("btn-primary");
+      $el.text("Grab Swatch");
+      $el.attr("onclick", "grabSwatch(this)");
+    }
+
     function grabSwatch(el) {
       let $el = $(el);
+      flipButtonToRemove(el);
+
       let swatchcard = $($el.parent().siblings()[0]).clone();
       let swatch_id = $el.attr("id").split("-")[1];
       const parentDiv = document.createElement("div");
-      parentDiv.classList.add("col-md-6", "col-xl-4", `singleSwatch-${swatch_id}`, "singleSelectableSwatch");
+      parentDiv.id = `saved-swatch-${swatch_id}`;
+      parentDiv.classList.add(
+        "col-md-6",
+        "col-lg-4",
+        "col-xl-4",
+        "col-xxl-3",
+        `singleSwatch-${swatch_id}`,
+        "singleSelectableSwatch"
+      );
       parentDiv.dataset.swatchId = swatch_id;
       parentDiv.appendChild(swatchcard[0]);
       const buttonHolder = document.createElement("div");
       buttonHolder.classList.add("text-center");
       const buttonDiv = document.createElement("div");
-      buttonDiv.classList.add("btn", "btn-outline-danger");
+      buttonDiv.classList.add("btn", "btn-outline-danger", "mb-3");
       buttonDiv.innerText = "Remove";
       buttonDiv.onclick = function(evt) {
-        $(evt.target).parent().parent().remove();
-        updateGrabBag();
+        nuke($(evt.target));
       };
       buttonHolder.appendChild(buttonDiv);
       parentDiv.appendChild(buttonHolder);
@@ -294,7 +318,24 @@
       $("#saved_swatches_collection").children().length > 0 ? parent.css("display", "") : parent.css("display", "none");
     }
 
+    function nukeFromGrabBag(element) {
+      let $el = $(element);
+      let swatchId = $($el.parent().parent().children()[0]).data()['swatchId']
+      let $swatch = $(`#saved-swatch-${swatchId}`);
+      $swatch.remove();
+      let $swatchButton = $(`#grab-${swatchId}`);
+      $swatchButton.removeClass("btn-danger").addClass("btn-primary");
+      $swatchButton.text("Grab Swatch");
+      $swatchButton.attr("onclick", "grabSwatch(this)");
+      updateGrabBag();
+    }
+
     function nuke(element) {
+      // this function is called if the user clicks on the remove button
+      // in the grab bag. We need to see if the swatch is still present
+      // in the results so that we can fix the button there.
+      let swatchId = $(element).parent().parent().data()['swatchId'];
+      flipButtonToGrab($(`#grab-${swatchId}`));
       $(element).parent().parent().remove();
       updateGrabBag();
     }

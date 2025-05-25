@@ -2,11 +2,32 @@
 
 <div
   id="s{{ obj.id }}"
-  class="card mb-4 shadow-sm swatchcard cardBox rounded-4 anim mx-auto"
+  class="card {% if show_colormatch_extras %}mb-2{% else %}mb-4{% endif %} shadow-sm swatchcard cardBox rounded-4 anim mx-auto position-relative"
   style="width: 18rem;"
   data-swatch-id="{{ obj.id }}"
 >
   <div class="card-img-overlay p-0" onclick="handleMultiselectClick(this)"></div>
+  {% if show_delta_e_distance_warning %}
+    {% if obj.distance > 5 and obj.distance < 10 %}
+      <span
+        data-bs-toggle="tooltip"
+        data-bs-title="This color will be noticeably different from your target color"
+        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-black"
+      >
+        <span class="icon-warning me-1"></span>ΔE > 5
+        <span class="visually-hidden">Delta E distance is too large!</span>
+      </span>
+    {% elif obj.distance >= 10 %}
+      <span
+        data-bs-toggle="tooltip"
+        data-bs-title="This color will be VERY different from your target color"
+        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+      >
+        <span class="icon-warning me-1"></span>ΔE > 10
+        <span class="visually-hidden">Delta E distance is too large!</span>
+      </span>
+    {% endif %}
+  {% endif %}
   <a
     href="/swatch/{{ obj.slug }}"
     hx-swap="morph:innerHTML show:window:top"

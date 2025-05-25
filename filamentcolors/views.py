@@ -522,7 +522,12 @@ def report_bad_link(
 
 @csrf_exempt
 def colormatch(request: HttpRequest) -> HttpResponse:
-    data = build_data_dict(request, title="Color Match", show_colormatch_extras=True)
+    data = build_data_dict(
+        request,
+        title="Color Match",
+        show_colormatch_extras=True,
+        show_delta_e_distance_warning=True
+    )
 
     if request.method == "POST":
         incoming_color = request.POST.get("hex_color")

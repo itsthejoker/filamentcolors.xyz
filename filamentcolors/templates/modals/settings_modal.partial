@@ -66,10 +66,20 @@
         </div>
       </div>
     </div>
+  </div>
+  <hr>
+  <div class="container">
+  <h5>Colormatch</h5>
+    <p>
+      Sometimes you just need to see more colors! This changes the number of
+      results returned by the colormatch page. Be aware that the higher you
+      set this number, the longer it will take to return results.
+    </p>
     <div class="container">
       <div class="ms-1 mt-4 position-relative" id="colorMatchSettings">
         <div class="d-flex">
           <h4 class="mt-3">
+            <!-- this value is updated on page load -->
             <div class="badge text-bg-secondary"
                  style="width:42.2333px"
                  id="colorMatchResultCountLabel"
@@ -92,7 +102,6 @@
                    oninput="updateColorMatchResultCount(this.value)"
             >
           </div>
-
         </div>
       </div>
     </div>

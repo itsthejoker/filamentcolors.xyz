@@ -83,7 +83,7 @@
             <div class="badge text-bg-secondary"
                  style="width:42.2333px"
                  id="colorMatchResultCountLabel"
-            >3</div>
+            >4</div>
           </h4>
 
           <div class="d-block">
@@ -97,7 +97,7 @@
                    min="3"
                    max="12"
                    step="1"
-                   value="3"
+                   value="4"
                    id="colorMatchResultCount"
                    oninput="updateColorMatchResultCount(this.value)"
             >

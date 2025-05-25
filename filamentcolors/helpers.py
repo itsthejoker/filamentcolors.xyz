@@ -234,12 +234,15 @@ def debug_check_for_cookies(r: HttpRequest):
 
 def get_settings_cookies(r: HttpRequest) -> Dict:
     # both of these cookies are set by the javascript in the frontend.
+    default_colormatch_count = 4
     navbar_alert_key = "hideNavbarAlert-"
     type_settings = r.COOKIES.get(filament_type_settings_cookie)
     show_dc = r.COOKIES.get(show_unavailable_cookie)
     mfr_blacklist = r.COOKIES.get(mfr_blacklist_cookie)
     show_delta_e_values = r.COOKIES.get(show_delta_e_values_cookie)
-    number_of_colormatch_results = r.COOKIES.get(number_of_colormatch_results_cookie)
+    number_of_colormatch_results = r.COOKIES.get(
+        number_of_colormatch_results_cookie, default_colormatch_count
+    )
     hide_alert_ids = [
         i[len(navbar_alert_key) :]
         for i in r.COOKIES.keys()
@@ -277,9 +280,9 @@ def get_settings_cookies(r: HttpRequest) -> Dict:
                 number_of_colormatch_results, 3, 12
             )
         except ValueError:
-            number_of_colormatch_results = 3
+            number_of_colormatch_results = default_colormatch_count
     else:
-        number_of_colormatch_results = 3
+        number_of_colormatch_results = default_colormatch_count
 
     return {
         "types": types,

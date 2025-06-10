@@ -452,14 +452,14 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-cleanup"
-version = "8.1.0"
+version = "9.0.0"
 description = "Deletes old files."
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "django-cleanup-8.1.0.tar.gz", hash = "sha256:70df905076a44e7a111b31198199af633dee08876e199e6dce36ca8dd6b8b10f"},
-    {file = "django_cleanup-8.1.0-py2.py3-none-any.whl", hash = "sha256:7903873ea73b3f7e61e055340d27dba49b70634f60c87a573ad748e172836458"},
+    {file = "django_cleanup-9.0.0-py3-none-any.whl", hash = "sha256:19f8b0e830233f9f0f683b17181f414672a0f48afe3ea3cc80ba47ae40ad880c"},
+    {file = "django_cleanup-9.0.0.tar.gz", hash = "sha256:bb9fb560aaf62959c81e31fa40885c36bbd5854d5aa21b90df2c7e4ba633531e"},
 ]
 
 [[package]]
@@ -2007,4 +2007,4 @@ test = ["pytest (>=6.0.0)", "setuptools (>=65)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.13"
-content-hash = "ca0dd7593c9b2d54c50c107061b7aa7fc1c629e2a7bd0901afe864544374d119"
+content-hash = "edf8ac65a8bbf2bd525daf89734e1a52f3e875d03cecbc7c473f585b372dda43"

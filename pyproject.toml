@@ -41,7 +41,7 @@ bs4 = "^0.0.2"
 altcha = "^0.1.9"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.3.2"
+pytest = "^8.4.0"
 pytest-django = "^4.8.0"
 better-exceptions = "^0.3.3"
 ipdb = "^0.13.13"

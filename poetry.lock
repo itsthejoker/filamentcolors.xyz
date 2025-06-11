@@ -2,14 +2,14 @@
 
 [[package]]
 name = "altcha"
-version = "0.1.9"
+version = "0.2.0"
 description = "A library for creating and verifying challenges for ALTCHA."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "altcha-0.1.9-py3-none-any.whl", hash = "sha256:b93480349859dd5207bb32da7ba43d42257e5f55577bda904b6aab1c86fe1d27"},
-    {file = "altcha-0.1.9.tar.gz", hash = "sha256:24833796af620c0f056a59435a1d3015ee3ebf5c52de7be12c74ea95d697a20d"},
+    {file = "altcha-0.2.0-py3-none-any.whl", hash = "sha256:5c538084d3cfd8acf8db3de952aa033b57d8b64e35452493ef040adb842615cc"},
+    {file = "altcha-0.2.0.tar.gz", hash = "sha256:be3f7ad6055bd49e0c2eae39485d569b5aa3089419fd2964d6391034bc5867e9"},
 ]
 
 [[package]]
@@ -804,8 +804,8 @@ files = [
 ]
 
 [package.dependencies]
-decorator = {version = "*", markers = "python_version > \"3.6\" and python_version < \"3.11\""}
-ipython = {version = ">=7.31.1", markers = "python_version > \"3.6\" and python_version < \"3.11\""}
+decorator = {version = "*", markers = "python_version > \"3.6\""}
+ipython = {version = ">=7.31.1", markers = "python_version > \"3.6\""}
 tomli = {version = "*", markers = "python_version > \"3.6\" and python_version < \"3.11\""}
 
 [[package]]
@@ -2022,4 +2022,4 @@ test = ["pytest (>=6.0.0)", "setuptools (>=65)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.13"
-content-hash = "046bb7dc595c277fa16d26b0bc7447e31cc7a66c08adb6b6a53e644703c0ab39"
+content-hash = "b0005ada3f5adf5a7e855f1bc2643867506ba1a4d6162bca480ff4e72f4411ee"

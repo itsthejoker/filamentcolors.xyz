@@ -511,14 +511,14 @@ Django = ">=4.2"
 
 [[package]]
 name = "django-htmx"
-version = "1.23.1"
+version = "1.23.2"
 description = "Extensions for using Django with htmx."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "django_htmx-1.23.1-py3-none-any.whl", hash = "sha256:45febb80d2e85ee1da01dca61429d6f835ef176949cda4ecc5ae2e729d2ff53d"},
-    {file = "django_htmx-1.23.1.tar.gz", hash = "sha256:6a23ee1e74f54a28eca4ccb48191a585529fbad5cbd5b5c3d8ec1a16b8557090"},
+    {file = "django_htmx-1.23.2-py3-none-any.whl", hash = "sha256:c288fe92bdcfa7c2ed9665d6d23cc55c6693a7cc8d22cf0a01e1e38318874030"},
+    {file = "django_htmx-1.23.2.tar.gz", hash = "sha256:65a8c8825fcae983b94aedce26af96a70717ab185d55cdb8a7a4bb68863ab079"},
 ]
 
 [package.dependencies]
@@ -2028,4 +2028,4 @@ test = ["pytest (>=6.0.0)", "setuptools (>=65)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.13"
-content-hash = "cea45e8507a7fa58ecb5a110bd7ad87dadb13ecc5b017a3e485c0718becab7b6"
+content-hash = "79adef9fad312e7cf3038936e388c631d322648e26924209ca8eb5b1e5d67f7f"

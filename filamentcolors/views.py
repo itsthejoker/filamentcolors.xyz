@@ -103,11 +103,17 @@ def librarysort(
         split_filter_str = filter_str.strip().lower().split()
         data.update({"search_prefill": filter_str})
         for section in split_filter_str:
-            items = items.filter(
+            filters = (
                 Q(color_name__icontains=section)
                 | Q(manufacturer__name__icontains=section)
                 | Q(filament_type__name__icontains=section)
             )
+
+            if section in ["grey", "gray"]:
+                filters = filters | Q(
+                    color_name__icontains="grey" if section == "gray" else "gray"
+                )
+            items = items.filter(filters)
 
     if color_family_str:
         try:

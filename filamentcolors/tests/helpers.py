@@ -47,6 +47,7 @@ BASE_SWATCH_DATA = {
     "image_back": test_image(),
     "image_other": test_image(),
     "image_opengraph": test_image(),
+    "mfr_purchase_link": "https://example.com/",
 }
 BASE_FILAMENT_TYPE_DATA = {"name": "Test", "parent_type": None}
 BASE_GENERIC_FILAMENT_TYPE_DATA = {"name": "TestBase"}

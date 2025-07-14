@@ -16,3 +16,5 @@ NAVBAR_MESSAGE: str | None = (
 NAVBAR_MESSAGE_ID: str | None = (
     md5(NAVBAR_MESSAGE.encode("utf-8")).hexdigest() if NAVBAR_MESSAGE else None
 )
+
+NAVBAR_ALLOW_DISMISSAL: bool | None = False

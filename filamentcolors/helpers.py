@@ -21,7 +21,7 @@ from django.db.models.functions import Coalesce, Lower
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
-from filamentcolors import NAVBAR_MESSAGE, NAVBAR_MESSAGE_ID
+from filamentcolors import NAVBAR_MESSAGE, NAVBAR_MESSAGE_ID, NAVBAR_ALLOW_DISMISSAL
 from filamentcolors import status as status_codes
 from filamentcolors.colors import clamp
 from filamentcolors.models import (
@@ -129,6 +129,7 @@ def build_data_dict(
       navbar_message_id           |   the ID of that particular message. Each
                                   |     message can be dismissed separately, so
                                   |     each one having its own ID is important.
+      navbar_allow_dismissal      |   whether the banner message can be dismissed.
       browser_console_message     |   for debugging. Pass a string in here to have
                                   |     it written as a JS console log in the browser.
       browser_console_message2    |   ...
@@ -182,6 +183,7 @@ def build_data_dict(
         "title": title or "FilamentColors",
         "navbar_message": NAVBAR_MESSAGE,
         "navbar_message_id": NAVBAR_MESSAGE_ID,
+        "navbar_allow_dismissal": NAVBAR_ALLOW_DISMISSAL,
         "browser_console_message": "",
         "browser_console_message2": "",
         "browser_console_message3": "",

@@ -23,7 +23,7 @@ from taggit.managers import TaggableManager
 
 from filamentcolors.colors import Color, clamp
 from filamentcolors.constants import ILLUMINANT, OBSERVER_ANGLE
-from filamentcolors.exceptions import UnknownSlugOrID
+from filamentcolors.exceptions import UnknownSlugOrID, ForeignKeyLoop
 
 
 class DistanceMixin:
@@ -240,7 +240,7 @@ class UserSubmittedTD(models.Model):
 class Swatch(models.Model, DistanceMixin):
     """
     The swatch model is used to keep track of two states of swatch;
-    if the swatch is unpublished, then it's treated as a swatch that's
+    if the swatch is unpublished, then it's treated as a swatch
     in inventory, probably not printed yet, but ready to add.
 
     If it's published, then it's ready to go and visible on the homepage.
@@ -454,6 +454,15 @@ class Swatch(models.Model, DistanceMixin):
     lab_l = models.FloatField(null=True, blank=True)
     lab_a = models.FloatField(null=True, blank=True)
     lab_b = models.FloatField(null=True, blank=True)
+
+    # used to handle duplicate swatches
+    replaced_by = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="replaced"
+    )
 
     # !!!!!!!!!!!!!!!!!!!!!!!!
     # DO NOT PUT ANYTHING IN THESE FIELDS!
@@ -1158,8 +1167,34 @@ class Swatch(models.Model, DistanceMixin):
             self.rgb_g = clamped_rgb[1]
             self.rgb_b = clamped_rgb[2]
 
+    def check_for_loop(self):
+        # https://en.wikipedia.org/wiki/Cycle_detection#Floyd's_tortoise_and_hare
+        tortoise = hare = self
+
+        while True:
+            tortoise = tortoise.replaced_by
+
+            if not hare.replaced_by:
+                return False
+
+            hare = hare.replaced_by.replaced_by
+
+            if not tortoise or not hare:
+                return False
+
+            if tortoise == hare:
+                return True
+
     def save(self, *args, **kwargs):
         rebuild_matches = False
+
+        if self.replaced_by:
+            if self.replaced_by.id == self.id:
+                raise ValueError("Cannot reference self.")
+            if not self.replaced_by.published:
+                raise ValueError("Cannot reference a non-published swatch.")
+            if self.check_for_loop():
+                raise ForeignKeyLoop("Reference loop detected, aborting save.")
 
         if self.regenerate_info:
             # the joys of using flags on the models themselves. Because
@@ -1221,7 +1256,7 @@ class Swatch(models.Model, DistanceMixin):
             ft = self.filament_type.name
         except:
             ft = "NOT ADDED"
-        return f"{mfr} - {self.color_name} {ft}"
+        return f"{mfr} - {self.color_name} {ft} ({self.id})"
 
     def get_absolute_url(self):
         return reverse("swatchdetail", args=(self.slug,))

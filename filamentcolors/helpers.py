@@ -158,7 +158,7 @@ def build_data_dict(
             .annotate(
                 available_swatch_count=Count(
                     "swatch",
-                    filter=Q(swatch__published=True)
+                    filter=Q(swatch__published=True, swatch__replaced_by__isnull=True)
                     & Q(
                         Q(swatch__amazon_purchase_link__isnull=False)
                         | Q(swatch__mfr_purchase_link__isnull=False)
@@ -168,7 +168,7 @@ def build_data_dict(
             .annotate(
                 unavailable_swatch_count=Count(
                     "swatch",
-                    filter=Q(swatch__published=True)
+                    filter=Q(swatch__published=True, swatch__replaced_by__isnull=True)
                     & Q(swatch__amazon_purchase_link__isnull=True)
                     & Q(swatch__mfr_purchase_link__isnull=True),
                 )
@@ -355,9 +355,12 @@ def generate_custom_library(data: Dict) -> bool:
 
 def get_custom_library(data: Dict) -> QuerySet:
     s = (
-        Swatch.objects.select_related("manufacturer")
+        Swatch.objects.filter(
+            filament_type__parent_type__in=data["user_settings"]["types"],
+            replaced_by__isnull=True
+        )
+        .select_related("manufacturer")
         .prefetch_related("filament_type")
-        .filter(filament_type__parent_type__in=data["user_settings"]["types"])
     )
     if data["user_settings"]["show_unavailable"] is False and not data.get(
         "show_unavailable_anyway"
@@ -370,7 +373,7 @@ def get_custom_library(data: Dict) -> QuerySet:
 
 
 def get_swatches(data: Dict, force_all: bool = False) -> QuerySet:
-    # force_all is for when we want a swatch to be findable even if the user's
+    # `force_all` is for when we want a swatch to be findable even if the user's
     # settings would normally exclude it. An example is for the swatch detail
     # page, where we want to load the swatch as long as it's published. What if
     # they get sent a link to a filament they've disabled the type for? The page
@@ -379,9 +382,9 @@ def get_swatches(data: Dict, force_all: bool = False) -> QuerySet:
         queryset = get_custom_library(data)
     else:
         queryset = (
-            Swatch.objects.select_related("manufacturer")
+            Swatch.objects.filter(published=True)
+            .select_related("manufacturer")
             .prefetch_related("filament_type")
-            .filter(published=True)
         )
     queryset = annotate_with_calculated_td(queryset)
     return queryset

@@ -183,9 +183,7 @@ def librarysort(
     # the swatches
     data |= get_swatch_paginator(request, items)
 
-    is_infinite = is_infinite_scroll_request(request)
-
-    if is_infinite:
+    if is_infinite_scroll_request(request):
         # don't render the rest of the page, just the cards
         html = "partials/multiple_swatch_cards.partial"
 
@@ -360,10 +358,15 @@ def swatch_detail(request: HttpRequest, swatch_id: str) -> HttpResponse:
 
     # doing a simplified DB call allows reacting much faster when a filament
     # isn't found; this call is ~10x faster than the full call, and if the
-    # is found, it's less than 1ms of penalty
+    # swatch is found, it's less than 1ms of penalty
     library = get_swatches(data, force_all=True)
-    if not library.filter(**args).exists():
-        raise Http404
+    while True:
+        if swatch := library.filter(**args).first():
+            if not swatch.replaced_by:
+                break
+            args["id"] = swatch.replaced_by.id
+        else:
+            raise Http404
 
     swatch = (
         library.filter(**args)

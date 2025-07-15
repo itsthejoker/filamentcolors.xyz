@@ -2,6 +2,7 @@ from io import BytesIO
 from random import randrange
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.utils import timezone
 from PIL import Image
 
 from filamentcolors.models import (
@@ -41,6 +42,7 @@ BASE_SWATCH_DATA = {
     "manufacturer": None,  # needs to be replaced
     "filament_type": None,  # needs to be replaced
     "hex_color": TestColors.WHITE1,
+    "date_published": timezone.now(),
     "color_name": Swatch.WHITE,
     "color_parent": Swatch.WHITE,
     "image_front": test_image(),

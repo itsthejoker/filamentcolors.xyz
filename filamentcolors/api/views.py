@@ -81,7 +81,7 @@ class SwatchViewSet(ReadOnlyModelViewSet):
     @action(detail=False)
     def bulk_colormatch(self, request):
         """
-        Take a comma separated list of hex colors and return the best guess for swatches.
+        Take a comma-separated list of hex colors and return the best guess for swatches.
         """
         hex_colors = self.request.query_params.get("colors")
         materials = self.request.query_params.get("materials")

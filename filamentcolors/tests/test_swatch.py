@@ -1,5 +1,6 @@
 import pytest
 
+from filamentcolors.exceptions import ForeignKeyLoop
 from filamentcolors.tests.helpers import get_purchase_location, get_retailer, get_swatch, get_manufacturer
 
 
@@ -133,3 +134,54 @@ def test_mfr_aff_link(mfr_url_param, mfr_purchase_link, expected) -> None:
     if swatch.mfr_purchase_link:
         assert "??" not in swatch.mfr_purchase_link
     assert swatch.mfr_purchase_link == expected
+
+
+def test_swatch_replaced_by() -> None:
+    swatch = get_swatch(color_name="Blue")
+    swatch.replaced_by = get_swatch(color_name="Green")
+    swatch.save()
+    swatch.refresh_from_db()
+    assert swatch.replaced_by.color_name == "Green"
+
+
+def test_swatch_loop_detection() -> None:
+    blue = get_swatch(color_name="Blue")
+    green = get_swatch(color_name="Green")
+    blue.replaced_by = green
+    blue.save()
+    green.replaced_by = blue
+    with pytest.raises(ForeignKeyLoop):
+        green.save()
+
+
+def test_extended_swatch_loop_detection() -> None:
+    blue = get_swatch(color_name="Blue")
+    green = get_swatch(color_name="Green")
+    orange = get_swatch(color_name="Orange")
+    pink = get_swatch(color_name="Pink")
+    blue.replaced_by = green
+    blue.save()
+    green.replaced_by = orange
+    green.save()
+    orange.replaced_by = pink
+    orange.save()
+    pink.replaced_by = blue
+    with pytest.raises(ForeignKeyLoop):
+        pink.save()
+
+
+def test_cannot_set_own_swatch_as_replaced_by() -> None:
+    blue = get_swatch(color_name="Blue")
+    blue.replaced_by = blue
+    with pytest.raises(ValueError):
+        blue.save()
+
+
+def test_cannot_reference_unpublished_swatch() -> None:
+    blue = get_swatch(color_name="Blue")
+    green = get_swatch(color_name="Green")
+    blue.replaced_by = green
+    green.published = False
+    green.save()
+    with pytest.raises(ValueError):
+        blue.save()

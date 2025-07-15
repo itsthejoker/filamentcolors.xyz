@@ -74,3 +74,16 @@ def test_librarysort_gray_grey_4(prep_mock, rf) -> None:
     assert gray not in swatches
     assert grey not in swatches
     assert blue in swatches
+
+
+@patch("filamentcolors.views.prep_request")
+def test_replaced_swatches_not_in_library(prep_mock, rf) -> None:
+    swatch = get_swatch(color_name="Blue")
+    swatch.replaced_by = get_swatch(color_name="Green")
+    swatch.save()
+    request = rf.get("/")
+    librarysort(request)
+    prep_mock.assert_called_once()
+    swatches = prep_mock.call_args[0][2]['swatches'].object_list
+    assert swatch not in swatches
+    assert len(swatches) == 1

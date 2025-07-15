@@ -787,7 +787,7 @@ class Swatch(models.Model, DistanceMixin):
             # There is an issue in Pillow where the file is not closed properly.
             # There is no proper workaround except to close the django file handler
             # and the pillow file handler at the same time; however, this breaks
-            # normal operation of Django. This workaround is only for large batches
+            # the normal operation of Django. This workaround is only for large batches
             # of images.
             # https://github.com/python-pillow/Pillow/issues/5132#issuecomment-750918772
             with self.image_front.file, Img.open(self.image_front) as image_opengraph:
@@ -1112,7 +1112,7 @@ class Swatch(models.Model, DistanceMixin):
         raise UnknownSlugOrID
 
     def set_slug(self):
-        # just clobber what was there before. We need to fix the broken urls
+        # Just clobber what was there before. We need to fix the broken urls
         # that end in `-none`
         self.slug = slugify(
             f"{self.manufacturer.slug} {self.color_name} {self.filament_type.name} {self.id}"
@@ -1157,7 +1157,7 @@ class Swatch(models.Model, DistanceMixin):
             # invalid RGB colors that are too intense to display properly.
             # In this case, we should clamp each of the values to ensure that
             # we will always end up with a valid hex color.
-            clamped_rgb: tuple[int] = (
+            clamped_rgb: tuple[int, int, int] = (
                 int(clamp(rgb[0], 0, 255)),
                 int(clamp(rgb[1], 0, 255)),
                 int(clamp(rgb[2], 0, 255)),
@@ -1197,7 +1197,7 @@ class Swatch(models.Model, DistanceMixin):
                 raise ForeignKeyLoop("Reference loop detected, aborting save.")
 
         if self.regenerate_info:
-            # the joys of using flags on the models themselves. Because
+            # The joys of using flags on the models themselves. Because
             # this is only triggered from the admin panel, we treat it
             # like a button. If it's pushed, we do stuff. We have to reset
             # regenerate_info back to false before we save the model,
@@ -1219,9 +1219,9 @@ class Swatch(models.Model, DistanceMixin):
             self.update_all_color_matches(Swatch.objects.filter(published=True))
 
         if self.card_img or not self.published:
-            # we already have a card image, so just save everything and abort.
+            # we already have a card image, so save everything and abort.
 
-            # this will create a malformed url for inventory swatches, but it
+            # This will create a malformed url for inventory swatches, but it
             # will get corrected when the swatch is published. See #142 for
             # more information.
             self.set_slug()

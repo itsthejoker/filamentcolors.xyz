@@ -23,7 +23,7 @@ class SwatchAdmin(admin.ModelAdmin):
     list_display = ["color_name", "manufacturer", "filament_type", "published"]
     ordering = ("manufacturer__name",)
     search_fields = ["color_name", "manufacturer__name"]
-    autocomplete_fields = ['replaced_by']
+    autocomplete_fields = ["replaced_by"]
     exclude = (
         "complement",
         "analogous_1",

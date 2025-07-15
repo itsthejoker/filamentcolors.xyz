@@ -535,7 +535,7 @@ def colormatch(request: HttpRequest) -> HttpResponse:
         request,
         title="Color Match",
         show_colormatch_extras=True,
-        show_delta_e_distance_warning=True
+        show_delta_e_distance_warning=True,
     )
 
     if request.method == "POST":

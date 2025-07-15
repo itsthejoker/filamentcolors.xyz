@@ -21,7 +21,11 @@ from django.db.models.functions import Coalesce, Lower
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
-from filamentcolors import NAVBAR_MESSAGE, NAVBAR_MESSAGE_ID, NAVBAR_MESSAGE_ALLOW_DISMISSAL
+from filamentcolors import (
+    NAVBAR_MESSAGE,
+    NAVBAR_MESSAGE_ID,
+    NAVBAR_MESSAGE_ALLOW_DISMISSAL,
+)
 from filamentcolors import status as status_codes
 from filamentcolors.colors import clamp
 from filamentcolors.models import (
@@ -278,9 +282,7 @@ def get_settings_cookies(r: HttpRequest) -> Dict:
     if number_of_colormatch_results:
         try:
             number_of_colormatch_results = int(number_of_colormatch_results)
-            number_of_colormatch_results = clamp(
-                number_of_colormatch_results, 3, 12
-            )
+            number_of_colormatch_results = clamp(number_of_colormatch_results, 3, 12)
         except ValueError:
             number_of_colormatch_results = default_colormatch_count
     else:
@@ -357,7 +359,7 @@ def get_custom_library(data: Dict) -> QuerySet:
     s = (
         Swatch.objects.filter(
             filament_type__parent_type__in=data["user_settings"]["types"],
-            replaced_by__isnull=True
+            replaced_by__isnull=True,
         )
         .select_related("manufacturer")
         .prefetch_related("filament_type")

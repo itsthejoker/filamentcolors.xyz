@@ -1,7 +1,12 @@
 import pytest
 
 from filamentcolors.exceptions import ForeignKeyLoop
-from filamentcolors.tests.helpers import get_purchase_location, get_retailer, get_swatch, get_manufacturer
+from filamentcolors.tests.helpers import (
+    get_purchase_location,
+    get_retailer,
+    get_swatch,
+    get_manufacturer,
+)
 
 
 # def test_complement() -> None:
@@ -119,12 +124,32 @@ def test_aff_link_added_in_purchase_locations() -> None:
         ("hello=world", None, None),
         (None, "https://example.com", "https://example.com"),
         (None, None, None),
-        ("&hello=world", "https://example.com?foo=bar", "https://example.com?foo=bar&hello=world"),
-        ("&hello=world", "https://example.com?hello=world", "https://example.com?hello=world"),
-        ("&hello=world&utm_foo=foo&utm_bar=bar", "https://example.com", "https://example.com?hello=world&utm_foo=foo&utm_bar=bar"),
-        ("&hello=world&utm_foo=foo&utm_bar=bar", "https://example.com?utm_foo=foo", "https://example.com?utm_foo=foo&hello=world&utm_bar=bar"),
-        ("&hello=world&utm_foo=foo&utm_bar=bar", "https://example.com?something=else", "https://example.com?something=else&hello=world&utm_foo=foo&utm_bar=bar"),
-    ]
+        (
+            "&hello=world",
+            "https://example.com?foo=bar",
+            "https://example.com?foo=bar&hello=world",
+        ),
+        (
+            "&hello=world",
+            "https://example.com?hello=world",
+            "https://example.com?hello=world",
+        ),
+        (
+            "&hello=world&utm_foo=foo&utm_bar=bar",
+            "https://example.com",
+            "https://example.com?hello=world&utm_foo=foo&utm_bar=bar",
+        ),
+        (
+            "&hello=world&utm_foo=foo&utm_bar=bar",
+            "https://example.com?utm_foo=foo",
+            "https://example.com?utm_foo=foo&hello=world&utm_bar=bar",
+        ),
+        (
+            "&hello=world&utm_foo=foo&utm_bar=bar",
+            "https://example.com?something=else",
+            "https://example.com?something=else&hello=world&utm_foo=foo&utm_bar=bar",
+        ),
+    ],
 )
 def test_mfr_aff_link(mfr_url_param, mfr_purchase_link, expected) -> None:
     mfr = get_manufacturer(affiliate_url_param=mfr_url_param)

@@ -461,7 +461,7 @@ class Swatch(models.Model, DistanceMixin):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="replaced"
+        related_name="replaced",
     )
 
     # !!!!!!!!!!!!!!!!!!!!!!!!

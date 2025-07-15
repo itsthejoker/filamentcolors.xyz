@@ -21,7 +21,7 @@ from django.db.models.functions import Coalesce, Lower
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
-from filamentcolors import NAVBAR_MESSAGE, NAVBAR_MESSAGE_ID, NAVBAR_ALLOW_DISMISSAL
+from filamentcolors import NAVBAR_MESSAGE, NAVBAR_MESSAGE_ID, NAVBAR_MESSAGE_ALLOW_DISMISSAL
 from filamentcolors import status as status_codes
 from filamentcolors.colors import clamp
 from filamentcolors.models import (
@@ -115,25 +115,25 @@ def build_data_dict(
     the queries needed to populate it.
     Here's what these keys are used for:
 
-      manufacturers               |   used to populate dropdown from navbar
-      filament_types              |   ...
-      color_family                |   ...
-      settings_buttons            |   model objects that power the settings page
-      search_prefill              |   prepopulate the filter bar at top of page
-      user_settings               |   a dict pulled from the user's browser
-      show_search_bar             |   a boolean or boolean-like; only show search
-                                  |     bar on the library.
-      title                       |   the title of the page in the browser
-      navbar_message              |   the text of an optional banner message
-                                  |     or announcement at the top of the site.
-      navbar_message_id           |   the ID of that particular message. Each
-                                  |     message can be dismissed separately, so
-                                  |     each one having its own ID is important.
-      navbar_allow_dismissal      |   whether the banner message can be dismissed.
-      browser_console_message     |   for debugging. Pass a string in here to have
-                                  |     it written as a JS console log in the browser.
-      browser_console_message2    |   ...
-      browser_console_message3    |   ...
+      manufacturers                  |   used to populate dropdown from navbar
+      filament_types                 |   ...
+      color_family                   |   ...
+      settings_buttons               |   model objects that power the settings page
+      search_prefill                 |   prepopulate the filter bar at top of page
+      user_settings                  |   a dict pulled from the user's browser
+      show_search_bar                |   a boolean or boolean-like; only show search
+                                     |     bar on the library.
+      title                          |   the title of the page in the browser
+      navbar_message                 |   the text of an optional banner message
+                                     |     or announcement at the top of the site.
+      navbar_message_id              |   the ID of that particular message. Each
+                                     |     message can be dismissed separately, so
+                                     |     each one having its own ID is important.
+      navbar_message_allow_dismissal |   whether the banner message can be dismissed.
+      browser_console_message        |   for debugging. Pass a string in here to have
+                                     |     it written as a JS console log in the browser.
+      browser_console_message2       |   ...
+      browser_console_message3       |   ...
 
     :param request: WSGIRequest
     :param library: bool
@@ -183,7 +183,7 @@ def build_data_dict(
         "title": title or "FilamentColors",
         "navbar_message": NAVBAR_MESSAGE,
         "navbar_message_id": NAVBAR_MESSAGE_ID,
-        "navbar_allow_dismissal": NAVBAR_ALLOW_DISMISSAL,
+        "navbar_message_allow_dismissal": NAVBAR_MESSAGE_ALLOW_DISMISSAL,
         "browser_console_message": "",
         "browser_console_message2": "",
         "browser_console_message3": "",

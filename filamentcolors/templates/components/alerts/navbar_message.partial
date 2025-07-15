@@ -1,9 +1,9 @@
-<div class="alert alert-primary {% if navbar_allow_dismissal %}alert-dismissible {% endif %}fade show rounded-0 mb-0"
+<div class="alert alert-primary {% if navbar_message_allow_dismissal %}alert-dismissible {% endif %}fade show rounded-0 mb-0"
      id="{{ navbar_message_id|default:'navbarMessage1' }}"
      role="alert">
   <div class="container text-center">
     <span class="alert-text">{{ navbar_message|safe }}</span>
-    {% if navbar_allow_dismissal %}
+    {% if navbar_message_allow_dismissal %}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
       </button>
     {% endif %}

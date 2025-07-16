@@ -207,7 +207,7 @@ def build_data_dict(
     return data
 
 
-def clean_collection_ids(ids: str) -> list:
+def clean_collection_ids(ids: str) -> list[int]:
     # filter out bad input
     cleaned_ids = list()
     for item in ids.split(","):

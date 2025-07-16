@@ -56,9 +56,10 @@ class SwatchViewSet(ReadOnlyModelViewSet):
     }
     throttle_classes = [BurstRateThrottle, SustainedRateThrottle]
 
-    def get_queryset(self):
+    def get_queryset(self, force_all=False):
         # `published` is set in the init
-        queryset = Swatch.objects.annotate(
+        kwargs = {} if force_all else {"replaced_by__isnull": True}
+        queryset = Swatch.objects.filter(**kwargs).annotate(
             is_available=ExpressionWrapper(
                 Q(amazon_purchase_link__isnull=False)
                 & Q(mfr_purchase_link__isnull=False),
@@ -77,6 +78,18 @@ class SwatchViewSet(ReadOnlyModelViewSet):
             queryset = queryset.order_by("-date_published")
 
         return queryset
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_queryset(force_all=True).filter(id=kwargs["pk"]).first()
+        if not instance:
+            return Response(status.HTTP_404_NOT_FOUND)
+        while True:
+            if instance.replaced_by:
+                instance = instance.replaced_by
+            else:
+                break
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     @action(detail=False)
     def bulk_colormatch(self, request):

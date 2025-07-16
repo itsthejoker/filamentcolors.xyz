@@ -383,8 +383,11 @@ def get_swatches(data: dict, force_all: bool = False) -> QuerySet:
     if generate_custom_library(data) and not force_all:
         queryset = get_custom_library(data)
     else:
+        filters = {"published": True}
+        if not force_all:
+            filters |= {"replaced_by__isnull": True}
         queryset = (
-            Swatch.objects.filter(published=True)
+            Swatch.objects.filter(**filters)
             .select_related("manufacturer")
             .prefetch_related("filament_type")
         )

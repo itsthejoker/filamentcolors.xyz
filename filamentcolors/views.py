@@ -306,9 +306,31 @@ def typesort(request: HttpRequest, f_type_id: int) -> HttpResponse:
 
 def swatch_collection(request: HttpRequest, ids: str) -> HttpResponse:
     cleaned_ids = clean_collection_ids(ids)
+    # First, we need to identify if there are any swatches we need to go fishing for.
+    relocated_swatches = Swatch.objects.filter(
+        id__in=cleaned_ids, published=True, replaced_by__isnull=False
+    )
+    if relocated_swatches:
+        for swatch in relocated_swatches:
+            starter_id = swatch.id
+            while True:
+                if swatch.replaced_by:
+                    swatch = swatch.replaced_by
+                else:
+                    break
+            # Now we have the one we're supposed to link to
+            if swatch.id not in cleaned_ids:
+                # If it's not already here, add it in the same spot, then nuke the old
+                # refence.
+                cleaned_ids.insert(cleaned_ids.index(starter_id), swatch.id)
+            cleaned_ids.remove(starter_id)
 
+    # Now, refetch the collection with the updated ids
     collection = Swatch.objects.filter(id__in=cleaned_ids, published=True)
 
+    # Because we modified the list of IDs if we had a replaced swatch, when we send
+    # the updated list along with the button, the Edit button will transparently
+    # work.
     data = build_data_dict(
         request,
         library=True,

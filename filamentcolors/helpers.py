@@ -1,6 +1,6 @@
 import colorsys
 import secrets
-from typing import Any, Dict, List
+from typing import Any
 
 from django.conf import settings
 from django.core.paginator import EmptyPage, Paginator
@@ -49,7 +49,7 @@ def first_time_visitor(r: HttpRequest) -> bool:
 
 
 def prep_request(
-    r: HttpRequest, html: str, data: Dict = None, *args: Any, **kwargs: Any
+    r: HttpRequest, html: str, data: dict = None, *args: Any, **kwargs: Any
 ) -> HttpResponse:
     """
     Prepare the actual request for serving.
@@ -113,7 +113,7 @@ def set_tasty_cookies(response) -> HttpResponse:
 
 def build_data_dict(
     request: HttpRequest, library: bool = False, title: str = None, **kwargs
-) -> Dict:
+) -> dict:
     """
     This request requires rendering the base template, so perform all
     the queries needed to populate it.
@@ -207,7 +207,7 @@ def build_data_dict(
     return data
 
 
-def clean_collection_ids(ids: str) -> List:
+def clean_collection_ids(ids: str) -> list:
     # filter out bad input
     cleaned_ids = list()
     for item in ids.split(","):
@@ -238,7 +238,7 @@ def debug_check_for_cookies(r: HttpRequest):
     return message
 
 
-def get_settings_cookies(r: HttpRequest) -> Dict:
+def get_settings_cookies(r: HttpRequest) -> dict:
     # both of these cookies are set by the javascript in the frontend.
     default_colormatch_count = 4
     navbar_alert_key = "hideNavbarAlert-"
@@ -335,7 +335,7 @@ def annotate_with_calculated_td(qs: QuerySet) -> QuerySet:
     )
 
 
-def generate_custom_library(data: Dict) -> bool:
+def generate_custom_library(data: dict) -> bool:
     """
     Return a boolean based on whether we actually need to generate
     our own queryset to do matching from. The data here is from the user's
@@ -345,7 +345,7 @@ def generate_custom_library(data: Dict) -> bool:
     the inverse of that (for example, false to show that we don't need to
     take any further action).
 
-    :param data: Dict; the actual dict we'll use to build the templates.
+    :param data: dict; the actual dict we'll use to build the templates.
     :return:
     """
     return not (
@@ -355,7 +355,7 @@ def generate_custom_library(data: Dict) -> bool:
     )
 
 
-def get_custom_library(data: Dict) -> QuerySet:
+def get_custom_library(data: dict) -> QuerySet:
     s = (
         Swatch.objects.filter(
             filament_type__parent_type__in=data["user_settings"]["types"],
@@ -374,7 +374,7 @@ def get_custom_library(data: Dict) -> QuerySet:
     )
 
 
-def get_swatches(data: Dict, force_all: bool = False) -> QuerySet:
+def get_swatches(data: dict, force_all: bool = False) -> QuerySet:
     # `force_all` is for when we want a swatch to be findable even if the user's
     # settings would normally exclude it. An example is for the swatch detail
     # page, where we want to load the swatch as long as it's published. What if
@@ -409,7 +409,7 @@ def is_searchbar_request(request: HttpRequest) -> bool:
 
 def get_swatch_paginator(
     request: HttpRequest, items: QuerySet[Swatch]
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     paginator_data = {}
     paginator = Paginator(items, settings.PAGINATION_COUNT)
     paginator_data.update({"paginator": paginator})

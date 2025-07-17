@@ -489,7 +489,6 @@ def inventory_page(request: HttpRequest) -> HttpResponse:
         .order_by(Lower("manufacturer__name"), Lower("color_name")),
         "title": "Inventory",
     }
-    data |= {"published_count": data["swatches"].filter(published=True).count()}
     return prep_request(request, "standalone/inventory.html", data)
 
 

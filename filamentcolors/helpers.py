@@ -115,8 +115,8 @@ def build_data_dict(
     request: HttpRequest, library: bool = False, title: str = None, **kwargs
 ) -> dict:
     """
-    This request requires rendering the base template, so perform all
-    the queries needed to populate it.
+    This request requires rendering the base template, so perform all the queries
+     needed to populate it.
     Here's what these keys are used for:
 
       manufacturers                  |   used to populate dropdown from navbar
@@ -149,10 +149,10 @@ def build_data_dict(
         "manufacturers": (
             Manufacturer.objects.exclude(
                 id__in=(
-                    Manufacturer.objects.annotate(
+                    Manufacturer.objects.filter(swatch__published=False)
+                    .annotate(
                         total_count=Count("swatch", distinct=True)
                     )
-                    .filter(swatch__published=False)
                     .annotate(unpublished=Count("swatch", distinct=True))
                     .filter(Q(unpublished=F("total_count")))
                 )
@@ -178,6 +178,7 @@ def build_data_dict(
                 )
             )
         ),
+        "published_count": Swatch.objects.filter(published=True).count(),
         "filament_types": GenericFilamentType.objects.order_by(Lower("name")),
         "color_family": Swatch.BASE_COLOR_OPTIONS,
         "settings_buttons": GenericFilamentType.objects.all(),
@@ -193,7 +194,7 @@ def build_data_dict(
         "browser_console_message3": "",
     }
     if data.get("navbar_message_id") in user_settings.get("hide_alert_ids"):
-        # they've manually dismissed it, so remove the message. If we change the message
+        # They've manually dismissed it, so remove the message. If we change the message
         # (and the corresponding ID) then it will display until they click the close
         # button again.
         del data["navbar_message"]

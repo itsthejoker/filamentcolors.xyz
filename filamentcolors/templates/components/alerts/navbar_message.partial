@@ -1,6 +1,7 @@
-<div class="alert alert-primary {% if navbar_message_allow_dismissal %}alert-dismissible {% endif %}fade show rounded-0 mb-0"
+<div class="alert sticky-top alert-primary {% if navbar_message_allow_dismissal %}alert-dismissible {% endif %}fade show rounded-0 mb-0"
      id="{{ navbar_message_id|default:'navbarMessage1' }}"
-     role="alert">
+     role="alert"
+>
   <div class="container text-center">
     <span class="alert-text">{{ navbar_message|safe }}</span>
     {% if navbar_message_allow_dismissal %}
@@ -16,6 +17,8 @@
       const myAlert = document.getElementById("{{ navbar_message_id|default:'navbarMessage1' }}");
       myAlert.addEventListener("closed.bs.alert", event => {
         createCookie("hideNavbarAlert-{{ navbar_message_id }}", true, 365);
+        // reset offset for navbar
+        $("#navbar").css("top", 0)
       });
 
       // auto hide the thing if the cookie is present
@@ -26,7 +29,9 @@
       } else {
         el.css("display", "block");
       }
-    }
+      // set the navbar offset
+      $("#navbar").css("top", $("#{{ navbar_message_id|default:'navbarMessage1' }}").outerHeight())
+    },
   );
 
 </script>

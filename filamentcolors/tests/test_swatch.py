@@ -2,12 +2,11 @@ import pytest
 
 from filamentcolors.exceptions import ForeignKeyLoop
 from filamentcolors.tests.helpers import (
+    get_manufacturer,
     get_purchase_location,
     get_retailer,
     get_swatch,
-    get_manufacturer,
 )
-
 
 # def test_complement() -> None:
 #     # todo: broken test

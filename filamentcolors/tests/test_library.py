@@ -1,13 +1,6 @@
 from unittest.mock import patch
 
-import pytest
-
-from filamentcolors.tests.helpers import (
-    get_purchase_location,
-    get_retailer,
-    get_swatch,
-    get_manufacturer,
-)
+from filamentcolors.tests.helpers import get_swatch
 from filamentcolors.views import librarysort
 
 

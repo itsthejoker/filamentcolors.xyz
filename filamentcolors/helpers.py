@@ -23,8 +23,8 @@ from django.shortcuts import render
 
 from filamentcolors import (
     NAVBAR_MESSAGE,
-    NAVBAR_MESSAGE_ID,
     NAVBAR_MESSAGE_ALLOW_DISMISSAL,
+    NAVBAR_MESSAGE_ID,
 )
 from filamentcolors import status as status_codes
 from filamentcolors.colors import clamp
@@ -150,9 +150,7 @@ def build_data_dict(
             Manufacturer.objects.exclude(
                 id__in=(
                     Manufacturer.objects.filter(swatch__published=False)
-                    .annotate(
-                        total_count=Count("swatch", distinct=True)
-                    )
+                    .annotate(total_count=Count("swatch", distinct=True))
                     .annotate(unpublished=Count("swatch", distinct=True))
                     .filter(Q(unpublished=F("total_count")))
                 )

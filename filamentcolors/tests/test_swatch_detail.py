@@ -3,10 +3,10 @@ from unittest.mock import patch
 import pytest
 
 from filamentcolors.tests.helpers import (
+    get_manufacturer,
     get_purchase_location,
     get_retailer,
     get_swatch,
-    get_manufacturer,
 )
 from filamentcolors.views import swatch_detail
 

@@ -23,7 +23,7 @@ from taggit.managers import TaggableManager
 
 from filamentcolors.colors import Color, clamp
 from filamentcolors.constants import ILLUMINANT, OBSERVER_ANGLE
-from filamentcolors.exceptions import UnknownSlugOrID, ForeignKeyLoop
+from filamentcolors.exceptions import ForeignKeyLoop, UnknownSlugOrID
 
 
 class DistanceMixin:

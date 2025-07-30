@@ -52,6 +52,7 @@ black = "^25.1.0"
 django-debug-toolbar = "^5.2.0"
 djade = "^1.3.2"
 pytest-cov = "^6.2.1"
+pytest-xdist = "^3.8.0"
 
 [build-system]
 requires = ["poetry>=0.12"]

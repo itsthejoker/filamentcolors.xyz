@@ -26,7 +26,7 @@ def test_image(name="test.jpg", size=(4056, 3040)):
     img.save(output, format="JPEG", quality=60)
     output.seek(0)
     return InMemoryUploadedFile(
-        output, "ImageField", "test.jpg", "image/jpeg", len(output.read()), None
+        output, "ImageField", name, "image/jpeg", len(output.read()), None
     )
 
 

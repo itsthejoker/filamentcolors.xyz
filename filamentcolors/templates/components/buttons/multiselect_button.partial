@@ -23,4 +23,4 @@
   {% endif %}
 </script>
 
-<script src="{% static 'js/multiselect.js' %}"></script>
+<script src="{% static 'js/multiselect.js' %}?v=1"></script>

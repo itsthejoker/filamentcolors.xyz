@@ -100,7 +100,7 @@ function select_item(obj) {
   obj.addClass("selected-card");
   obj.removeClass("shadow");
   obj.css("transform", "translateZ(0px) scale3d(0.925, 0.925, 1)");
-  obj.addClass("big-shadow");
+  obj.addClass("shadow-lg");
 }
 
 
@@ -112,7 +112,7 @@ function deselect_item($obj) {
   $obj.removeClass("selected-card");
   $obj.addClass("shadow");
   $obj.css("transform", "");
-  $obj.removeClass("big-shadow");
+  $obj.removeClass("shadow-lg");
 }
 
 

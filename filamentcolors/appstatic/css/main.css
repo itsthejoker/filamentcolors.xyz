@@ -356,12 +356,6 @@ html[data-bs-theme='dark'] .card {
     bottom: -50%;
 }
 
-.big-shadow {
-    -webkit-box-shadow: 0 0 40px 0 rgba(0, 0, 0, 1);
-    -moz-box-shadow: 0 0 40px 0 rgba(0, 0, 0, 1);
-    box-shadow: 0 0 40px 0 rgba(0, 0, 0, 1);
-}
-
 .anim {
     -webkit-transition: 75ms ease-in-out;
     -moz-transition: 75ms ease-in-out;

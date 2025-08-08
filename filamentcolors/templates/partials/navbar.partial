@@ -125,7 +125,7 @@
 
       <ul class="navbar-nav d-flex">
         <li class="d-md-block d-lg-none nav-item clickable" onclick="showSettings()">Settings</li>
-        <li class="d-none d-lg-block nav-item clickable" onclick="showSettings()"><span style="font-size: 24px" class="icon-equalizer2"></span></li>
+        <li class="d-none d-lg-block nav-item clickable me-3" onclick="showSettings()"><span style="font-size: 32px" class="icon-gear"></span></li>
       </ul>
     </div>
   </div>

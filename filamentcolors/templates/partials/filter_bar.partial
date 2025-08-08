@@ -32,7 +32,7 @@
         <button
           type="button"
           id="cfFilterModalButton"
-          class="btn btn-outline-danger bg-gradient"
+          class="btn btn-outline-danger bg-gradient mb-2"
           data-bs-toggle="modal"
           data-bs-target="#cfFilterModal"
         >Color Family
@@ -40,7 +40,7 @@
         <button
           type="button"
           id="ftFilterModalButton"
-          class="btn btn-outline-success bg-gradient"
+          class="btn btn-outline-success bg-gradient mb-2"
           data-bs-toggle="modal"
           data-bs-target="#ftFilterModal"
         >Filament Type
@@ -48,7 +48,7 @@
         <button
           type="button"
           id="mfrFilterModalButton"
-          class="btn btn-outline-primary bg-gradient"
+          class="btn btn-outline-primary bg-gradient mb-2"
           data-bs-toggle="modal"
           data-bs-target="#mfrFilterModal"
         >Manufacturer
@@ -56,7 +56,7 @@
         <button
           type="button"
           id="tdFilterModalButton"
-          class="btn btn-outline-info bg-gradient"
+          class="btn btn-outline-info bg-gradient mb-2"
           data-bs-toggle="modal"
           data-bs-target="#tdFilterModal"
         >TD

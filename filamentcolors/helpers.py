@@ -149,8 +149,10 @@ def build_data_dict(
         "manufacturers": (
             Manufacturer.objects.exclude(
                 id__in=(
-                    Manufacturer.objects.filter(swatch__published=False)
-                    .annotate(total_count=Count("swatch", distinct=True))
+                    Manufacturer.objects.annotate(
+                        total_count=Count("swatch", distinct=True)
+                    )
+                    .filter(swatch__published=False)
                     .annotate(unpublished=Count("swatch", distinct=True))
                     .filter(Q(unpublished=F("total_count")))
                 )

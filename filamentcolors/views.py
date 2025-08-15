@@ -484,7 +484,8 @@ def swatch_detail(request: HttpRequest, swatch_id: str) -> HttpResponse:
 def inventory_page(request: HttpRequest) -> HttpResponse:
     data = build_data_dict(request)
     data |= {
-        "swatches": Swatch.objects.select_related("manufacturer")
+        "swatches": Swatch.objects.filter(replaced_by__isnull=True)
+        .select_related("manufacturer")
         .prefetch_related("filament_type")
         .order_by(Lower("manufacturer__name"), Lower("color_name")),
         "title": "Inventory",

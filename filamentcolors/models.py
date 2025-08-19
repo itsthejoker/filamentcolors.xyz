@@ -1185,6 +1185,21 @@ class Swatch(models.Model, DistanceMixin):
             if tortoise == hare:
                 return True
 
+    def get_text_color(self) -> str:
+        # returns the CSS hex color for the text color based on the background color
+        color = self.hex_color.lstrip("#")
+
+        # Convert the hex color to RGB
+        r = int(color[0:2], 16)
+        g = int(color[2:4], 16)
+        b = int(color[4:6], 16)
+
+        # Calculate the relative luminance
+        luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+
+        # Choose the text color based on the luminance
+        return "#000000" if luminance > 0.5 else "#ffffff"
+
     def save(self, *args, **kwargs):
         rebuild_matches = False
 

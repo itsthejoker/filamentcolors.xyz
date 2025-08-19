@@ -182,6 +182,7 @@
   htmx.config.refreshOnHistoryMiss = true;
   htmx.config.useTemplateFragments = true;
   htmx.config.globalViewTransitions = true;
+  htmx.config.scrollIntoViewOnBoost = false;
 
   // https://stackoverflow.com/a/920322
   $.fn.exists = function() {

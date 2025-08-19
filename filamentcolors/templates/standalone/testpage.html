@@ -1,0 +1,9 @@
+{% extends base_template %}
+
+{% block content %}
+  <div class="d-flex flex-wrap mt-5">
+    {% for s in swatches %}
+      <img src="{{ s.card_img.url }}" style="width: 288px !important;height:auto !important"/>
+    {% endfor %}
+  </div>
+{% endblock %}

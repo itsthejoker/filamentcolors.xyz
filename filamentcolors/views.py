@@ -46,8 +46,10 @@ from filamentcolors.models import (
 )
 
 
-def homepage(request: HttpRequest) -> HttpResponseRedirect:
-    return HttpResponseRedirect(reverse("library"))
+def homepage(request: HttpRequest) -> HttpResponse:
+    data = build_data_dict(request)
+    data |= {'recent_swatches': Swatch.objects.filter(published=True).order_by('-date_published')[:9]}
+    return prep_request(request, "standalone/landing.html", data)
 
 
 #   _________                __         .__      _________                  .___
@@ -760,3 +762,10 @@ def get_welcome_experience_video(request: HttpRequest) -> HttpResponse:
         f"htmx_partials/welcome_experience_video.partial",
         data,
     )
+
+
+def testpage(request):
+    data = build_data_dict(request)
+    swatches = Swatch.objects.filter(published=True).order_by("?")[:100]
+    data |= {"swatches": swatches}
+    return prep_request(request, "standalone/testpage.html", data)

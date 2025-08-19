@@ -4,7 +4,7 @@
   <div class="container-fluid">
     <a
       class="navbar-brand"
-      href="{% url 'library' %}"
+      href="{% url 'homepage' %}"
       hx-boost="false"
     >FilamentColors</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navigation"
@@ -161,7 +161,6 @@
 
   $(document).ready(function() {
       $('.navbar-nav li a').on("click", function(el) {
-          console.log(el.target);
           if ($(el.target).hasClass('dropdown-toggle')) {
               return;
           }

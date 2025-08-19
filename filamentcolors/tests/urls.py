@@ -26,6 +26,7 @@ def fivehundred(request):
 urlpatterns = [
     # stubs to make the tests pass
     path("", include("plausible_proxy.urls")),
+    path("/", example_view, name="homepage"),
     path("library/", example_view, name="library"),
     path("mfr_list/", example_view, name="mfr_list"),
     path("about/", example_view, name="about"),

@@ -1,0 +1,440 @@
+{% extends base_template %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+  <div class="container card shadow-sm my-5"
+       style="background-image: url('{% static 'background1.png' %}'); color: black">
+    <div class="py-5" style="z-index: 1">
+      <div class="row align-items-center">
+        <div class="col-xl-6 mb-4 mb-lg-0 position-relative ps-xl-4">
+          <div class="w-100 h-100 position-absolute start-0 top-0 rounded-4 mx-xl-4"
+               style="background: white; box-shadow:0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);z-index: -1;opacity: 0.8"
+          ></div>
+          <div class="ms-3" style="opacity: 1">
+            <h1 class="display-4 fw-bold my-4">FilamentColors.xyz</h1>
+            <p class="lead mb-4">Your comprehensive resource for accurate colors for your 3D printing projects!</p>
+            <div class="d-md-flex d-grid gap-3 d-md-block mb-4 mb-lg-4">
+              <a href="{% url 'library' %}" class="btn btn-success btn-lg px-4">Get Started</a>
+              <button class="btn btn-outline-dark btn-lg px-4">Learn More</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-6" id="swatchHighlight">
+          <div class="position-relative">
+            <div class="d-none d-md-block position-relative" style="margin-bottom: -3em">
+              <table class="w-100" style="transform-origin: 100% 10% !important;">
+                <tbody>
+                <tr>
+                  <td>
+                    <div class="alert alert-dark text-center rounded-5"
+                         style="transform: rotate(-7deg) !important;max-width: 90%">
+                      <strong>What color is it?</strong>
+                    </div>
+                  </td>
+                  <td>&nbsp</td>
+                  <td class="d-flex position-relative justify-content-end">
+                    <div class="alert alert-dark text-center rounded-5"
+                         style="transform: rotate(5deg) !important;max-width: 80%">
+                      <strong>What does it look like in sunlight?*</strong>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="d-flex justify-content-end position-relative">
+                    <div
+                      class="position-absolute top-0 start-0"
+                      style="transform: rotate(210deg) !important;transform-origin: 90% 40% !important;z-index: 10"
+                    >
+                      {% include 'components/svgs/arrow_left.svg' with width=90 height=90 %}
+                    </div>
+                  </td>
+                  <td>&nbsp</td>
+                  <td class="d-flex justify-content-center ms-5 position-relative">
+                    <div class="position-absolute top-0 end-0"
+                         style="transform: rotate(170deg) !important;transform-origin: 25% 50% !important;z-index: 10"
+                    >
+                      {% include 'components/svgs/arrow_right.svg' with width=90 height=90 %}
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="d-block d-md-none">
+              <table class="mb-2 w-100">
+                <tbody>
+                <tr>
+                  <td>
+                    <div class="alert alert-dark text-center rounded-5" style="transform: rotate(-3deg) !important">
+                      <strong>What color is it?</strong>
+                    </div>
+                  </td>
+                  <td>&nbsp</td>
+                  <td>
+                    <div class="alert alert-dark text-center rounded-5" style="transform: rotate(7deg) !important">
+                      <strong>What does it look like in sunlight?*</strong>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="d-flex justify-content-end position-relative">
+                    <div
+                      class="position-absolute top-0 start-0"
+                      style="transform: rotate(-100deg) !important;transform-origin: 50% 50% !important;z-index: 10"
+                    >
+                      {% include 'components/svgs/arrow_left.svg' with width=60 height=60 %}
+                    </div>
+                  </td>
+                  <td>&nbsp</td>
+                  <td class="d-flex justify-content-center ms-5 position-relative">
+                    <div class="position-absolute top-0 end-0"
+                         style="transform: rotate(80deg) !important;transform-origin: 40% 40% !important;z-index: 10"
+                    >
+                      {% include 'components/svgs/arrow_right.svg' with width=60 height=60 %}
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div
+              class="swatch-river-container rounded-3 shadow-lg overflow-hidden"
+              style="max-width: 500px; min-height: 300px; margin: 0 auto; background-color: #6a6a6a;"
+            >
+              <div id="recentSwatchCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#recentSwatchCarousel" data-bs-slide-to="0" class="active"
+                          aria-current="true" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#recentSwatchCarousel" data-bs-slide-to="1"
+                          aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#recentSwatchCarousel" data-bs-slide-to="2"
+                          aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <div class="swatchContainer" style="max-width: 500px;min-width: 300px;height: 250px">
+                      <div style="margin-top: 2rem !important;">
+                        {% include 'components/swatch/card.partial' with obj=recent_swatches.0 %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="carousel-item">
+                    <div class="swatchContainer" style="max-width: 500px;min-width: 300px;height: 250px">
+                      <div style="margin-top: 2rem !important;">
+                        {% include 'components/swatch/card.partial' with obj=recent_swatches.1 %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="carousel-item">
+                    <div class="swatchContainer" style="max-width: 500px;min-width: 300px;height: 250px">
+                      <div style="margin-top: 2rem !important;">
+                        {% include 'components/swatch/card.partial' with obj=recent_swatches.2 %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#recentSwatchCarousel"
+                        data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#recentSwatchCarousel"
+                        data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Section -->
+  <section class="container mb-5">
+    <div class="row g-4 text-center">
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow p-4">
+          <h2 class="display-4 fw-bold text-primary">{{ published_count|intcomma }}</h2>
+          <p class="lead">Filaments Indexed</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow p-4">
+          <h2 class="display-4 fw-bold text-primary">{{ manufacturers.count }}</h2>
+          <p class="lead">Manufacturers</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow p-4">
+          <div class="position-relative">
+            <h2>
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              style="transform: rotate(15deg) !important;transform-origin: 150% -400% !important;"
+            >
+              Free!
+            </span>
+            </h2>
+            <h2 class="display-4 fw-bold text-primary">24/7</h2>
+          </div>
+          <p class="lead">Library Access</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="container mb-4 py-5">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold">Manufacturer photos don't seem quite right?</h2>
+      <h2 class="display-5 fw-bold">Find what color that filament <span class="font-monospace">really</span> is.</h2>
+      <p class="lead">Community-funded and always free.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+          <div class="p-3 bg-primary text-white text-center rounded-top">
+            <i class="bi bi-palette-fill fs-1"></i>
+          </div>
+          <div class="card-body text-center">
+            <h3 class="card-title h4 mb-3">Real Colors</h3>
+            <p class="card-text">Every swatch is printed out and measured using scientific equipment.</p>
+            <img src="{% static 'equipment.png' %}" alt="A photo of the equipment we use."
+                 class="img-fluid rounded mb-3">
+            <a href="#real_colors" class="btn btn-outline-primary">Learn More</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+          <div class="p-3 bg-success text-white text-center rounded-top">
+            <i class="bi bi-sliders fs-1"></i>
+          </div>
+          <div class="card-body text-center">
+            <h3 class="card-title h4 mb-3">Auto-generated Color Palettes</h3>
+            <p class="card-text">Intuitive tools show you exactly what to buy to get the best results.</p>
+            <img src="{% static 'automatic_color_palettes.png' %}" alt="Automatic Color Palettes"
+                 class="img-fluid rounded mb-3">
+            <a href="#autogenerated_palettes" class="btn btn-outline-success">Learn More</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+          <div class="p-3 bg-info text-white text-center rounded-top">
+            <i class="bi bi-cloud-arrow-down-fill fs-1"></i>
+          </div>
+          <div class="card-body text-center">
+            <h3 class="card-title h4 mb-3">Match The Real World</h3>
+            <p class="card-text">Got a hex color in mind? Find the filaments that come closest to it.</p>
+            <img src="{% static 'spools.png' %}" alt="Find the right filament for your project"
+                 class="img-fluid rounded mb-3">
+            <a href="#match_the_real_world" class="btn btn-outline-info">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Color Showcase -->
+  <section class="py-5 mb-5 bg-light-subtle">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-5 mb-4 mb-lg-0">
+          <h2 class="display-5 fw-bold mb-4">Discover A World Of Color</h2>
+          <p class="lead mb-4">
+            Explore thousands of filaments from around the world. Find the right colors for your
+            next project.
+          </p>
+          <div class="d-grid gap-2 d-md-flex">
+            <a href="{% url 'library' %}" class="btn btn-primary btn-lg px-4">Browse Collection</a>
+          </div>
+        </div>
+        <div class="col-lg-7">
+          <div class="row g-2">
+            {% for s in recent_swatches %}
+              <div class="col-4">
+                <a href="{{ s.get_absolute_url }}">
+                  <div class="p-4 rounded hover-shadow transition-all"
+                       style="background-color: #{{ s.hex_color }};"></div>
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature 1 Callout -->
+  <section class="container mb-5" id="real_colors">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold">Real Colors</h2>
+      <p class="lead">Every plastic is printed and measured. No exceptions: real data only.</p>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-8 d-flex align-items-center">
+        <div class="card border-0 rounded-3 overflow-hidden shadow mx-lg-5 mb-4 mb-lg-0">
+          <div class="card-body p-5">
+            <p class="lead">
+              Most manufacturers show you what makes their filament look best, not what it actually looks like.
+            </p>
+            <p class="lead">
+              We print out every swatch in our collection using custom printers, built for this specific purpose.
+              Each swatch is measured using our colorimeter to ensure that you see the real colors, regardless of light.
+            </p>
+            <p class="lead">No marketing. No BS. Just color.</p>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <img
+          src="{% static 'ds220.png' %}"
+          alt="A picture of a spectrophotometer measuring a swatch."
+          class="img-fluid mb-2 rounded-3 mx-auto d-block" style="max-height: 500px">
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature 2 Callout -->
+  <section class="container mb-5" id="autogenerated_palettes">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold">Auto-generated Color Palettes</h2>
+      <p class="lead">Find filaments that will look good together. Period.</p>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-4">
+        <img
+          src="{% static 'color_palette.png' %}"
+          alt="A screenshot of three swatches in a color palette."
+          class="img-fluid mb-2 rounded-3 mx-auto d-block" style="max-height: 500px">
+      </div>
+      <div class="col-12 col-md-6 col-lg-8 d-flex align-items-center">
+        <div class="card border-0 rounded-3 overflow-hidden shadow mx-lg-5 mb-4 mb-lg-0">
+          <div class="card-body p-5">
+            <p class="lead">
+              From any given starting color, get automatic color palettes for complementary, analogous,
+              triadic, split-complementary, tetradic (rectangular), and tetradic (square) color schemes.
+            </p>
+            <p class="lead">
+              Mix and match between filament types and manufacturers to find the perfect colors for your
+              project. Rest easy knowing that it's going to look <strong>good</strong> when it's done.
+            </p>
+            <p class="lead">Filter out what you don't want. Include (or don't) colors that aren't in
+              production anymore. It's your project. Whatever you're looking for, we'll help.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature 3 Callout -->
+  <section class="container mb-5" id="match_the_real_world">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold">Match The Real World</h2>
+      <p class="lead">Use our tools to find the closest filament to a color. Any color.</p>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-8 d-flex align-items-center">
+        <div class="card border-0 rounded-3 overflow-hidden shadow mx-lg-5 mb-4 mb-lg-0">
+          <div class="card-body p-5">
+            <p class="lead">
+              Use any color reader (or color picker) to get the color you want in hex, RGB, HSV, or L*A*B* formats.
+              Drop it into our color matching tool and we'll find the closest filaments.
+            </p>
+            <p class="lead">
+              Easily see how far away the plastic's color is away from your target. Pick whichever ones you like best.
+            </p>
+            <p class="lead">Make prints that complement your IRL stuff. Life is too short for randomly mashing
+              colors together and hoping it works out.</p>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 text-center">
+        <img
+          src="{% static 'matthew-wiebe-tCrH5MhtLWM-unsplash.png' %}"
+          alt="A picture of a yellow sports car parked in a parking lot."
+          class="img-fluid mb-2 rounded-3 mx-auto d-block" style="max-height: 500px">
+        <div>Photo by <a
+          href="https://unsplash.com/@matthewjkwiebe?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Matthew
+          Wiebe</a> on <a
+          href="https://unsplash.com/photos/a-yellow-sports-car-parked-in-a-parking-lot-tCrH5MhtLWM?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="container mb-5">
+    <div class="row">
+      <div class="col-12">
+        <div class="card border-0 rounded-3 overflow-hidden">
+          <div class="card-body text-center position-relative"
+               style="background-image: url('{% static 'swatchrig_swatching.png' %}');background-size: cover;background-repeat: no-repeat;background-position: 50% 50%;color:black;padding-top:6em;padding-bottom:6em;min-height:400px">
+            <div class="w-100 h-100 position-absolute start-0 top-0 rounded"
+                 style="background: white; box-shadow:0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);z-index: 1;opacity: 0.8"
+            ></div>
+            <div class="position-absolute start-50 top-50 translate-middle w-75 w-lg-50" style="z-index: 2">
+              <h2 class="display-5 fw-bold mb-3">Ready to Explore?</h2>
+              <p class="lead mb-4">Thousands of colors. Hundreds of manufacturers. All at your fingertips, all for
+                free.</p>
+              <div class="d-grid d-lg-block">
+                <a href="{% url 'library' %}" class="btn btn-dark btn-lg px-lg-5 py-3 fw-bold">Get Started</a>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container text-center">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-7">
+        <div class="alert alert-secondary">
+          * Sunlight picture is simulated using a custom-built camera rig with 95-CRI LEDs.<br>Actual measured color
+          is found with a CHNSpec DS-220 colorimeter measuring directed from the printed plastic.
+          <p>Want to know more? <a href="#" class="alert-link">Check out our video walkthrough here! (placeholder)</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Custom styles for hover effects -->
+  <style>
+    .hover-shadow:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .transition-all {
+      transition: all 0.3s ease;
+    }
+
+    {# https://stackoverflow.com/a/22655654 #}
+    :target {
+      scroll-margin-top: 120px;
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    });
+  </script>
+{% endblock %}

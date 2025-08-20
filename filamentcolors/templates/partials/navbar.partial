@@ -86,6 +86,11 @@
                 Bluesky {% include 'partials/external_link_icon.partial' %}
               </a>
             </li>
+            <li>
+              <a class="dropdown-item" href="https://discord.gg/ceDJWqwcwT">
+                Discord {% include 'partials/external_link_icon.partial' %}
+              </a>
+            </li>
             <li><a class="dropdown-item" href="mailto:joe@filamentcolors.xyz">Email</a></li>
           </ul>
         </li>
@@ -125,7 +130,9 @@
 
       <ul class="navbar-nav d-flex">
         <li class="d-md-block d-lg-none nav-item clickable" onclick="showSettings()">Settings</li>
-        <li class="d-none d-lg-block nav-item clickable me-3" onclick="showSettings()"><span style="font-size: 32px" class="icon-gear"></span></li>
+        <li class="d-none d-lg-block nav-item clickable me-3" onclick="showSettings()"><span style="font-size: 32px"
+                                                                                             class="icon-gear"></span>
+        </li>
       </ul>
     </div>
   </div>
@@ -146,28 +153,28 @@
     $("#settingsModal").modal("show");
   }
 
-  $(document).ready(function() {
-    $(".dropdown-menu a.dropdown-toggle").on("click", function(o) {
+  $(document).ready(function () {
+    $(".dropdown-menu a.dropdown-toggle").on("click", function (o) {
       var s = $(this);
       s.toggleClass("active-dropdown");
       var n = $(this).offsetParent(".dropdown-menu");
       $(this).next().hasClass("show") || $(this).parents(".dropdown-menu").first().find(".show").removeClass("show");
       var e = $(this).next(".dropdown-menu");
-      return e.toggleClass("show"), $(this).parent("li").toggleClass("show"), $(this).parents("li.nav-item.dropdown.show").on("hidden.bs.dropdown", function(o) {
+      return e.toggleClass("show"), $(this).parent("li").toggleClass("show"), $(this).parents("li.nav-item.dropdown.show").on("hidden.bs.dropdown", function (o) {
         $(".dropdown-menu .show").removeClass("show"), s.removeClass("active-dropdown");
-      }), n.parent().hasClass("navbar-nav") || s.next().css({ top: s[0].offsetTop, left: n.outerWidth() - 4 }), !1;
+      }), n.parent().hasClass("navbar-nav") || s.next().css({top: s[0].offsetTop, left: n.outerWidth() - 4}), !1;
     });
   });
 
-  $(document).ready(function() {
-      $('.navbar-nav li a').on("click", function(el) {
-          if ($(el.target).hasClass('dropdown-toggle')) {
-              return;
-          }
-          if (window.innerWidth < 992) {
-              $('button.navbar-toggler').click();
-          }
-      });
+  $(document).ready(function () {
+    $('.navbar-nav li a').on("click", function (el) {
+      if ($(el.target).hasClass('dropdown-toggle')) {
+        return;
+      }
+      if (window.innerWidth < 992) {
+        $('button.navbar-toggler').click();
+      }
+    });
   });
 
 </script>

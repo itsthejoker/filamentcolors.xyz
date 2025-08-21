@@ -30,7 +30,7 @@
   {% include 'components/alerts/no-js-alert.partial' %}
 </noscript>
 
-<main id="main" hx-swap="morph:innerHTML">
+<main id="main" hx-swap="morph:innerHTML scroll:window:top show:window:top">
   {% block content %}
   {% endblock content %}
 </main>

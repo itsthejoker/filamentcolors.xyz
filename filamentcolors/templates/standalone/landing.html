@@ -16,7 +16,7 @@
             <p class="lead mb-4">Your comprehensive resource for accurate colors for your 3D printing projects!</p>
             <div class="d-md-flex d-grid gap-3 d-md-block mb-4 mb-lg-4">
               <a href="{% url 'library' %}" class="btn btn-success btn-lg px-4">Get Started</a>
-              <button class="btn btn-outline-dark btn-lg px-4">Learn More</button>
+              <a href="{% url 'about' %}" class="btn btn-outline-dark btn-lg px-4">Learn More</a>
             </div>
           </div>
         </div>
@@ -353,7 +353,8 @@
           <div class="card-body p-5">
             <p class="lead">
               Use any color reader (or color picker) to get the color you want in hex, RGB, HSV, or L*A*B* formats.
-              Drop it into our color matching tool and we'll find the closest filaments.
+              <a href="{% url 'colormatch' %}">Drop it into our color matching tool</a> and we'll find the closest
+              filaments.
             </p>
             <p class="lead">
               Easily see how far away the plastic's color is away from your target. Pick whichever ones you like best.

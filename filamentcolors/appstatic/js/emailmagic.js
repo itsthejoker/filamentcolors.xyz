@@ -60,9 +60,7 @@ function getModalContent({id, emailAddress, subject, cc, bcc, body, fullMailTo})
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Open email in...</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span class="icon-times" style="color:black; font-size:16px"></span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
                 <div class="d-grid gap-2">

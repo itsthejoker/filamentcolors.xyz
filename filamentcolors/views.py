@@ -719,6 +719,14 @@ def error_500(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
     )
 
 
+def testpage(request):
+    # show a page with random swatch card images for screenshots. Only works in dev mode
+    data = build_data_dict(request)
+    swatches = Swatch.objects.filter(published=True).order_by("?")[:100]
+    data |= {"swatches": swatches}
+    return prep_request(request, "standalone/testpage.html", data)
+
+
 # __________                __  .__       .__
 # \______   \_____ ________/  |_|__|____  |  |   ______
 #  |     ___/\__  \\_  __ \   __\  \__  \ |  |  /  ___/
@@ -762,10 +770,3 @@ def get_welcome_experience_video(request: HttpRequest) -> HttpResponse:
         f"htmx_partials/welcome_experience_video.partial",
         data,
     )
-
-
-def testpage(request):
-    data = build_data_dict(request)
-    swatches = Swatch.objects.filter(published=True).order_by("?")[:100]
-    data |= {"swatches": swatches}
-    return prep_request(request, "standalone/testpage.html", data)

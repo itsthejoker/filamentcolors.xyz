@@ -3,8 +3,10 @@
 {% load static %}
 
 {% block content %}
-  <div class="container card shadow-sm my-5"
-       style="background-image: url('{% static 'background1.png' %}'); color: black">
+  <div
+    class="container card shadow-sm my-5"
+    style="background-image: url('{% static 'background1.png' %}'); color: black"
+  >
     <div class="py-5" style="z-index: 1">
       <div class="row align-items-center">
         <div class="col-xl-6 mb-4 mb-lg-0 position-relative ps-xl-4">
@@ -427,14 +429,32 @@
     }
 
     {# https://stackoverflow.com/a/22655654 #}
+    {# https://stackoverflow.com/a/49908529 #}
     {# Bumps down the scroll on the id links to account for the height of the navbar and announcement. #}
-    :target {
-      scroll-margin-top: 120px;
+    section {
+      --scroll-offset: 60px;
+    }
+
+    section:target {
+      /* fallback */
+      scroll-margin-top: 60px;
+      /* dynamic */
+      scroll-margin-top: var(--scroll-offset);
     }
   </style>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      const $alertContainer = $("#alertContainer");
+      let offset = $("#navbar").outerHeight();
+      if ($alertContainer !== undefined && $alertContainer.length > 0) {
+        offset += $alertContainer.outerHeight();
+      }
+      offset += 7;
+      const sections = document.querySelectorAll('section');
+      sections.forEach(section => {
+        section.style.setProperty('--scroll-offset', offset + "px");
+      });
     });
   </script>
 {% endblock %}

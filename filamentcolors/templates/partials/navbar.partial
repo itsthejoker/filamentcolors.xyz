@@ -54,7 +54,7 @@
             About
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'about' %}">The Project (FAQ)</a></li>
+            <li><a class="dropdown-item" href="{% url 'about' %}">FAQ</a></li>
             <li><a class="dropdown-item" href="{% url 'about_us' %}">The Librarians</a></li>
             <li>
               <a href="https://itsthejoker.github.io/posts/" class="dropdown-item">
@@ -69,7 +69,10 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="https://forum.filamentcolors.xyz/">Forum</a>
+          <a class="nav-link" href="https://discord.gg/ceDJWqwcwT">
+            Discord
+            {% include 'partials/external_link_icon.partial' %}
+          </a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -84,11 +87,6 @@
             <li>
               <a class="dropdown-item" href="https://bsky.app/profile/filamentcolors.xyz">
                 Bluesky {% include 'partials/external_link_icon.partial' %}
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="https://discord.gg/ceDJWqwcwT">
-                Discord {% include 'partials/external_link_icon.partial' %}
               </a>
             </li>
             <li><a class="dropdown-item" href="mailto:joe@filamentcolors.xyz">Email</a></li>

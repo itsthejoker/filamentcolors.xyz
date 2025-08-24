@@ -18,6 +18,7 @@
             Browse by
           </a>
           <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'library' %}">Date Uploaded</a></li>
             <li><a class="dropdown-item" href="{% url 'mfr_list' %}">Manufacturer</a></li>
             <li>
               <hr class="dropdown-divider">

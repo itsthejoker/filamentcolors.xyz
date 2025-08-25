@@ -32,7 +32,7 @@ def test_inventory_page_with_replaced_swatches(prep_mock, rf) -> None:
     green2.replaced_by = green
     green2.save()
     inventory_page(request)
-    swatches = list(prep_mock.call_args[0][2]['swatches'])
+    swatches = list(prep_mock.call_args[0][2]["swatches"])
     assert len(swatches) == 1
     assert green in swatches
     assert green2 not in swatches

@@ -48,7 +48,11 @@ from filamentcolors.models import (
 
 def homepage(request: HttpRequest) -> HttpResponse:
     data = build_data_dict(request)
-    data |= {'recent_swatches': Swatch.objects.filter(published=True).order_by('-date_published')[:9]}
+    data |= {
+        "recent_swatches": Swatch.objects.filter(published=True).order_by(
+            "-date_published"
+        )[:9]
+    }
     return prep_request(request, "standalone/landing.html", data)
 
 

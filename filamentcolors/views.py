@@ -692,6 +692,14 @@ def donation_page(request: HttpRequest) -> HttpResponse:
     )
 
 
+def work_with_us(request: HttpRequest) -> HttpResponse:
+    return prep_request(
+        request,
+        "standalone/work_with_us.html",
+        build_data_dict(request, title="Work With Us"),
+    )
+
+
 def error_400(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
     return prep_request(
         request,

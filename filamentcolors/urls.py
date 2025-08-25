@@ -70,6 +70,7 @@ urlpatterns = [
     ),
     path("donating/", views.donation_page, name="donations"),
     path("monetary_donating/", views.monetary_donation_page, name="monetary_donations"),
+    path("work_with_us/", views.work_with_us, name="work_with_us"),
     path("inventory/", views.inventory_page, name="inventory"),
     path("about/", views.about_page, name="about"),
     path("the_librarians/", views.about_me, name="about_us"),

@@ -1,0 +1,183 @@
+{% extends base_template %}
+{% load plausible %}
+{% load static %}
+
+{% block content %}
+  <div class="container py-5">
+    <!-- Hero -->
+    <div class="p-4 p-md-5 mb-4 rounded-3 bg-body-secondary">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <h1 class="display-5 fw-bold mb-3">Partner with us to showcase your filaments and help kids.</h1>
+          <p class="lead mb-4">
+            FilamentColors connects makers to your products through color-matching, driving qualified traffic
+            to manufacturer listings worldwide. When you partner with us, you get meaningful visibility while we
+            grow a community resource that also supports children and families at Riley Children's Hospital.
+          </p>
+          <div class="text-center">
+            <div class="d-xl-block d-grid gap-2">
+              <a class="btn btn-primary btn-lg" href="{% url 'monetary_donations' %}">Make a small donation</a>
+              <a class="btn btn-outline-primary btn-lg" href="{% url 'inventory' %}">See our current inventory</a>
+            </div>
+            <div class="d-xl-block d-grid gap-2 mt-4">
+              <a class="btn btn-success btn-lg" href="mailto:joe@filamentcolors.xyz">Send us an email!</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <figure class="m-0 text-center">
+            <img src="{% static 'jacob_at_riley.jpg' %}" alt="3D prints supporting Riley Children's Hospital"
+                 class="img-fluid rounded shadow" width="720" height="405">
+            <figcaption class="form-text mt-2">Your support helps create toys, teaching aids, and medical training
+              devices for kids.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <!-- Why it matters -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Why partner</h5>
+            <ul class="mb-0">
+              <li>Color-first discovery brings makers directly to your product pages.</li>
+              <li>Free, targeted exposure to a global audience.</li>
+              <li>Simple onboarding — we’ll catalog your lineup for you.</li>
+              <li>Help your customers make informed decisions about their filament purchases.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">How it works</h5>
+            <ul class="mb-0">
+              <li>Send <strong>sample coils</strong> when possible (cost‑effective for you, easy for us).</li>
+              <li>No coils? Full spools are welcome; we’ll carefully sample and put them to good use.</li>
+              <li>Your products appear in our color library for makers to discover.</li>
+            </ul>
+            <p class="mt-3 mb-0">To start the process, please email us at <a href="mailto:joe@filamentcolors.xyz">joe@filamentcolors.xyz</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Community impact</h5>
+            <p class="mb-2">Through our partnership with
+              <a href="https://www.rileychildrens.org/support-services/child-life" target="_blank">Riley Children's
+                Hospital</a>,
+              remaining filament from full spools becomes toys, teaching aids, and medical training devices.</p>
+            <p class="mb-0">Your participation supports makers and brightens hospital stays.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social proof / CTA -->
+    <div class="text-center mb-4">
+      <p class="lead">Join {{ manufacturers.count }} manufacturers already reaching makers through FilamentColors.</p>
+      <div class="d-flex gap-2 justify-content-center flex-wrap">
+        <a class="btn btn-primary" href="{% url 'monetary_donations' %}">Donate now</a>
+        <a class="btn btn-outline-secondary" href="{% url 'inventory' %}">Browse inventory</a>
+        <a class="btn btn-success" href="mailto:joe@filamentcolors.xyz">Send us an email!</a>
+      </div>
+    </div>
+
+    <!-- Analytics accordion -->
+    <div class="accordion" id="analyticsAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingMetrics">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapseMetrics" aria-expanded="false" aria-controls="collapseMetrics">
+            See our reach (live traffic and geography)
+          </button>
+        </h2>
+        <div id="collapseMetrics" class="accordion-collapse collapse" aria-labelledby="headingMetrics"
+             data-bs-parent="#analyticsAccordion">
+          <div class="accordion-body">
+            <p class="mb-3">Our metrics are powered by <a href="https://plausible.io" target="_blank">Plausible
+              Analytics</a>. Explore who’s visiting and from where.</p>
+            <div id="plausible-embed-location"></div>
+            <script src="https://plausible.io/js/embed.host.js" async defer></script>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fine print / details -->
+    <div class="mt-5">
+      <h2 class="h4">What we’re building — together</h2>
+      <p>
+        Our mission is to catalogue every filament we can find so makers can match by color and find the right brand
+        and material for their project. If you make or sell a filament we don’t have yet, we’d love to add it.
+      </p>
+      <p>
+        We prefer <strong>sample coils</strong>, but if you send full spools we’ll sample them and route the remainder
+        to Riley’s Child Life team
+        for impact projects. It’s a win‑win: you get authentic exposure, makers get better choices, and kids get
+        hands‑on tools that make a difference.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function setupWorkWithUsPage() {
+      const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const currentTheme = localStorage.getItem("bsTheme") || (prefersDarkScheme ? "dark" : "light");
+      const src = `https://plausible.io/share/filamentcolors.xyz?auth=RaPGXKkYcYkNSdsNYJM1k&embed=true&theme=${currentTheme}`;
+
+      fetch(src, {method: 'HEAD'})
+        .then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            $("#plausible-embed-location").html(`
+                <iframe
+                  plausible-embed
+                  src="${src}"
+                  scrolling="auto"
+                  frameborder="0"
+                  loading="lazy"
+                  style="width: 1px;min-width: 100%;height:1600px">
+                  </iframe>
+                  <div style="font-size: 14px; padding-bottom: 14px;">
+                    Stats powered by
+                    <a
+                      target="_blank"
+                      style="color: #4F46E5; text-decoration: underline;"
+                      href="https://plausible.io"
+                    >Plausible Analytics</a>
+                  </div>`
+            )
+          } else {
+            $("#plausible-embed-location").html(`
+              <div class="alert alert-danger">
+                Sorry, Plausible returned an error. You can try
+                <a target="_blank" href="${src}" class="alert-link">loading our dashboard yourself, though!</a>
+              </div>`
+            )
+          }
+        }).catch((error) => {
+        // This will catch any network errors, including those caused by adblockers
+        $("#plausible-embed-location").html(`
+          <div class="alert alert-danger">
+            Sorry, something went wrong and we can't reach Plausible.
+            <a target="_blank" href="${src}" class="alert-link">Check out our dashboard here!</a>
+          </div>`
+        );
+        console.log(error);
+      });
+    }
+
+    $(document).ready(function () {
+      setupWorkWithUsPage()
+    })
+
+    htmx.onLoad(function (t) {setupWorkWithUsPage()})
+
+  </script>
+{% endblock %}

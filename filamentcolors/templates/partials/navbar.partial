@@ -98,8 +98,9 @@
             Donating
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'donations' %}">Filament Donations</a></li>
-            <li><a class="dropdown-item" href="{% url 'monetary_donations' %}">Monetary Donations</a></li>
+            <li><a class="dropdown-item" href="{% url 'donations' %}">Filament donations</a></li>
+            <li><a class="dropdown-item" href="{% url 'monetary_donations' %}">Monetary donations</a></li>
+            <li><a class="dropdown-item" href="{% url 'work_with_us' %}">Work with us!</a></li>
           </ul>
         </li>
         <li class="nav-item">

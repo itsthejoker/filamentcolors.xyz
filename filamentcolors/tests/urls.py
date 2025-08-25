@@ -34,6 +34,7 @@ urlpatterns = [
     path("donations/", example_view, name="donations"),
     path("monetary_donations/", example_view, name="monetary_donations"),
     path("monetary_donations/", example_view, name="colormatch"),
+    path("work_with_us/", example_view, name="work_with_us"),
     path(
         "welcome_experience_image/<int:image_id>/",
         example_view,

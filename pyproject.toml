@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "filamentcolors"
-version = "4.6.2"
+version = "4.7.0"
 description = "The source code for a small website to compare pieces of printed filament."
 authors = ["Joe Kaufeld <opensource@joekaufeld.com>"]
 license = "MIT"

@@ -292,6 +292,19 @@
     </div>
   </div>
 
+  <style>
+      h4 {
+      --scroll-offset: 60px;
+    }
+
+    h4:target {
+      /* fallback */
+      scroll-margin-top: 60px;
+      /* dynamic */
+      scroll-margin-top: var(--scroll-offset);
+    }
+  </style>
+
   <script>
     function setupAboutPage() {
       const $alertContainer = $("#alertContainer");
@@ -300,6 +313,12 @@
         offset += $alertContainer.outerHeight();
       }
       $("#outer-faq-list").css("top", offset + "px");
+
+      offset += 7;
+      const sections = document.querySelectorAll('h4');
+      sections.forEach(section => {
+        section.style.setProperty('--scroll-offset', offset + "px");
+      });
     }
 
     $(document).ready(function () {

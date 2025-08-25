@@ -9,10 +9,7 @@
 from hashlib import md5
 
 # A string that will be displayed in full at the top of the site. Can contain html.
-NAVBAR_MESSAGE: str | None = (
-    "Be a part of our future! <a href='https://forum.filamentcolors.xyz/d/31-a-call-for-support'"
-    " class='alert-link'>Click here to help!</a>"
-)
+NAVBAR_MESSAGE: str | None = None
 # An ID for the 'don't show' cookie. Unique per message.
 NAVBAR_MESSAGE_ID: str | None = (
     md5(NAVBAR_MESSAGE.encode("utf-8")).hexdigest() if NAVBAR_MESSAGE else None

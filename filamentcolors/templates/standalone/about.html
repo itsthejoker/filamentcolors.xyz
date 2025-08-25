@@ -46,14 +46,7 @@
         </div>
       </div>
 
-      <div
-        class="col-lg-9"
-        data-bs-spy="scroll"
-        data-bs-target="#faq-list"
-        data-bs-offset="0"
-        tabindex="0"
-        data-bs-root-margin="0px 0px -85%"
-      >
+      <div class="col-lg-9">
         <h4 id="what-does-this-solve" class="pt-4 d-flex align-items-center">
           <a class="me-2 small text-decoration-none link-secondary" href="#what-does-this-solve"
              aria-label="Permalink to What Does This Project Solve">#</a>
@@ -300,15 +293,21 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    function setupAboutPage() {
       const $alertContainer = $("#alertContainer");
       let offset = $("#navbar").outerHeight();
-      console.log(offset);
       if ($alertContainer !== undefined && $alertContainer.length > 0) {
         offset += $alertContainer.outerHeight();
       }
-      console.log(offset);
       $("#outer-faq-list").css("top", offset + "px");
-    });
+    }
+
+    $(document).ready(function () {
+      setupAboutPage()
+    })
+
+    htmx.onLoad(function (t) {
+      setupAboutPage()
+    })
   </script>
 {% endblock content %}

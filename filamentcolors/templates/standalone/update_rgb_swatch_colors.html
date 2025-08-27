@@ -49,7 +49,13 @@
                   </div>
                   <input type="text" style="display: none" value="{{ s.id }}" name="swatch_id">
                 </div>
-                <div class="col-lg-3 text-center d-grid d-lg-block px-5 px-lg-0">
+                <div class="col-lg-3 text-center d-grid d-lg-block px-5 mb-3 px-lg-0">
+                  <div class="lab-preview-wrapper mb-3" data-id="{{ s.id }}">
+                    <div class="lab-preview" id="preview-{{ s.id }}">
+                      <div class="lab-preview-empty">No data</div>
+                    </div>
+                    <div class="lab-preview-meta small text-muted" id="preview-meta-{{ s.id }}"></div>
+                  </div>
                   <a
                     data-id="{{ s.id }}"
                     class="btn btn-secondary submitButton"
@@ -72,6 +78,31 @@
     </div>
   </div>
 
+  <style>
+    .lab-preview-wrapper { display: flex; flex-direction: column; align-items: center; }
+    .lab-preview {
+      width: 100%;
+      aspect-ratio: 3 / 2;
+      border-radius: 8px;
+      border: 2px dashed #bbb;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(45deg, #e9ecef 25%, transparent 25%) -10px 0/20px 20px,
+        linear-gradient(-45deg, #e9ecef 25%, transparent 25%) -10px 0/20px 20px,
+        linear-gradient(45deg, transparent 75%, #e9ecef 75%) -10px 0/20px 20px,
+        linear-gradient(-45deg, transparent 75%, #e9ecef 75%) -10px 0/20px 20px,
+        #f8f9fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6c757d;
+      font-weight: 600;
+    }
+    .lab-preview.filled { border-style: solid; background: none; color: #fff; }
+    .lab-preview-empty { pointer-events: none; user-select: none; }
+  </style>
+
   <script>
     function filterStuff() {
       var input, filter, elements, i, txtValue, filterArray;
@@ -93,6 +124,76 @@
       }
     }
 
+    function parseQc2(text) {
+      const lines = text.replace(/\r\n?/g, "\n").split("\n").filter(Boolean);
+      if (lines.length < 2) return null;
+
+      const header = lines[0].split("\t");
+      const lastLine = lines[lines.length - 1];
+      const cols = lastLine.split("\t");
+
+      const findIO = (arr) => arr.find(c => /D\s*65/i.test(c) && /(10|10\s*°|10\s*deg|10\s*degree)/i.test(c));
+      const ioCell = findIO(header) || findIO(cols) || "";
+
+      const hasD65 = /D\s*65/i.test(ioCell);
+      const has10 = /(10|10\s*°|10\s*deg|10\s*degree)/i.test(ioCell);
+
+      const nums = cols.map(c => parseFloat(String(c).replace(/[^0-9+\-\.eE]/g, ""))).filter(v => !Number.isNaN(v));
+      if (nums.length < 3) return null;
+      const L = nums[nums.length - 3];
+      const a = nums[nums.length - 2];
+      const b = nums[nums.length - 1];
+
+      return { L, a, b, hasD65, has10 };
+    }
+
+    function labToRgb(L, a, b) {
+      const Xn = 94.811, Yn = 100.0, Zn = 107.304; // D65 10°
+      const fy = (L + 16) / 116;
+      const fx = fy + (a / 500);
+      const fz = fy - (b / 200);
+      const f3 = (t) => t * t * t;
+      const invf = (t) => {
+        const t3 = f3(t);
+        return t3 > 0.008856451679035631 ? t3 : (t - 16/116) / 7.787037;
+      };
+      let X = Xn * invf(fx);
+      let Y = Yn * invf(fy);
+      let Z = Zn * invf(fz);
+      X /= 100; Y /= 100; Z /= 100;
+      let r =  3.2404542 * X + (-1.5371385) * Y + (-0.4985314) * Z;
+      let g = (-0.9692660) * X +  1.8760108  * Y +  0.0415560  * Z;
+      let bl = 0.0556434 * X + (-0.2040259) * Y +  1.0572252  * Z;
+      const gamma = (u) => u <= 0.0031308 ? 12.92 * u : 1.055 * Math.pow(u, 1/2.4) - 0.055;
+      const R = Math.round(Math.min(255, Math.max(0, gamma(r) * 255)));
+      const G = Math.round(Math.min(255, Math.max(0, gamma(g) * 255)));
+      const B = Math.round(Math.min(255, Math.max(0, gamma(bl) * 255)));
+      return { R, G, B };
+    }
+
+    function updatePreview(el) {
+      const id = el.dataset.id;
+      const box = document.getElementById(`preview-${id}`);
+      const meta = document.getElementById(`preview-meta-${id}`);
+      if (!box || !meta) return;
+
+      const parsed = parseQc2(el.value || "");
+      if (!parsed) {
+        box.style.backgroundColor = "";
+        box.classList.remove("filled");
+        box.innerHTML = '<div class="lab-preview-empty">No data</div>';
+        meta.textContent = "";
+        return;
+      }
+
+      const { L, a, b, hasD65, has10 } = parsed;
+      const { R, G, B } = labToRgb(L, a, b);
+      box.style.backgroundColor = `rgb(${R}, ${G}, ${B})`;
+      box.classList.add("filled");
+      box.innerHTML = "";
+      meta.textContent = `${hasD65 ? 'D65' : 'Unknown'} / ${has10 ? '10°' : '?°'}  —  L*: ${L.toFixed(2)}  a*: ${a.toFixed(2)}  b*: ${b.toFixed(2)}  |  rgb(${R}, ${G}, ${B})`;
+    }
+
     function validateLAB(el) {
       const val = el.value;
       const submitButton = $(`a[data-id=${el.dataset.id}]`);
@@ -101,6 +202,7 @@
         el.classList.remove("is-valid", "is-invalid");
         el.classList.add("is-invalid");
         submitButton.toggleClass('disabled', true)
+        updatePreview(el);
         return;
       }
 
@@ -109,11 +211,14 @@
 
       const isValid = $(`textarea[data-id=${el.dataset.id}].is-valid`).length === 1;
       submitButton.toggleClass('disabled', !isValid);
+
+      updatePreview(el);
     }
 
     $(document).ready(function() {
       filterStuff();
       $(".submitButton").addClass('disabled')
+      $("textarea[name='reading']").each(function() { updatePreview(this); });
     });
   </script>
 

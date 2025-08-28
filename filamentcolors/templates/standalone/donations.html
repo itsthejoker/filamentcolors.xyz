@@ -5,20 +5,8 @@
   <div class="container mt-4">
     {% include 'partials/messages.partial' %}
     <h1>Filament Donations</h1>
-    <div class="alert alert-danger d-none" role="alert" id="non-us-shipping-alert">
-      <div class="my-5">
-        <h2>Hey!</h2>
-        <p>
-          It looks like you're not based in the US. Due to the current administration's
-          <a class="alert-link" href="https://www.theguardian.com/us-news/2025/aug/26/postal-services-suspend-us-usa-deliveries-how-will-it-affect-you" target="_blank">
-            shipping changes,
-          </a> please <strong>do not ship me anything</strong> until everything
-          gets ironed out. I don't want you to waste money and effort on a package
-          that might not ever arrive. Once everything is sorted, we'll start accepting
-          donations from abroad again.
-        </p>
-      </div>
-    </div>
+
+    {% include 'components/alerts/non-us-shipping-warning.partial' %}
 
     <p>
       This site is mostly powered by filament donations, either from manufacturers
@@ -265,14 +253,4 @@
       Cheers and happy printing!
     </p>
   </div>
-  <script>
-  function showNonUSShippingAlert() {
-    if (getCountry() !== "United States of America") {
-      $("#non-us-shipping-alert").removeClass("d-none");
-    }
-  }
-
-  $(document).ready(function() {showNonUSShippingAlert()})
-  htmx.onLoad(function() {showNonUSShippingAlert()})
-  </script>
 {% endblock content %}

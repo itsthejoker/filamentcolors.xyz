@@ -267,11 +267,9 @@
   </div>
   <script>
   function showNonUSShippingAlert() {
-    $.get("https://ipinfo.io", function(response) {
-      if (response.country !== "US") {
-        $("#non-us-shipping-alert").removeClass("d-none");
-      }
-    }, "jsonp")
+    if (getCountry() !== "United States of America") {
+      $("#non-us-shipping-alert").removeClass("d-none");
+    }
   }
 
   $(document).ready(function() {showNonUSShippingAlert()})

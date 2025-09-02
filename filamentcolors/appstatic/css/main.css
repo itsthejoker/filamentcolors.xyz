@@ -188,10 +188,6 @@ html[data-bs-theme='dark'] .card-text {
     border-color: white;
 }
 
-.nav-item {
-    padding-left: 25px;
-}
-
 .gray-background {
     background: #efefef !important;
 }

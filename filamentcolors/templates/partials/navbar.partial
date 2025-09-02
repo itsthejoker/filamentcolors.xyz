@@ -13,6 +13,10 @@
     </button>
     <div class="collapse navbar-collapse" id="navigation">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link position-relative d-none d-lg-block" href="{% url 'library' %}"><span style="font-size: 24px" class="align-middle icon-home"></span></a>
+          <a class="nav-link d-lg-none" href="{% url 'library' %}">Home</a>
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Browse by
@@ -130,8 +134,8 @@
 
       <ul class="navbar-nav d-flex">
         <li class="d-md-block d-lg-none nav-item clickable" onclick="showSettings()">Settings</li>
-        <li class="d-none d-lg-block nav-item clickable me-3" onclick="showSettings()"><span style="font-size: 32px"
-                                                                                             class="icon-gear"></span>
+        <li class="d-none d-lg-block nav-item clickable me-3 position-relative" onclick="showSettings()">
+          <span style="font-size: 24px" class="icon-gear align-middle"></span>
         </li>
       </ul>
     </div>

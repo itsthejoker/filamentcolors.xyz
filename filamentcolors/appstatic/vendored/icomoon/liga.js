@@ -25,6 +25,8 @@
     var icons;
     if (!supportsProperty('fontFeatureSettings')) {
         icons = {
+            'home': '&#xe901;',
+            'house': '&#xe901;',
             'warning': '&#xea07;',
             'sign': '&#xea07;',
             'copy': '&#xe92c;',

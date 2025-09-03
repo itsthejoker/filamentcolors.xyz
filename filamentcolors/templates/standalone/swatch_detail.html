@@ -71,9 +71,9 @@
               <div>
                 <div class="item position-relative">
                   <div style="pointer-events: none; top: 75% !important;" class="text-center position-absolute start-0 w-100">
-                    <small class="text-body-secondary">
+                    {# force light mode for this specific element so that it doesn't change color #}
+                    <small class="text-body-secondary" data-bs-theme="light">
                       Image color is approximate.<br>For accurate color, see hex code.
-
                     </small>
                   </div>
                   <a class="lightbox" href="{{ swatch.image_front.url }}"
@@ -601,7 +601,7 @@
 
     <script>
       function copyValue(el) {
-        const text = el.textContent;
+        const text = el.textContent.trim();
         navigator.clipboard.writeText(text).then(function () {
           showToast("Color code copied to clipboard!");
         }).catch(function (err) {

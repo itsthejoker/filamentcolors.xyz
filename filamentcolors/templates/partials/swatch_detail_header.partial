@@ -1,0 +1,44 @@
+<div class="text-center">
+  <h1 class="mt-lg-5 mt-md-0 fs-2">
+    {{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}
+  </h1>
+  <div class="position-relative d-inline-block mt-2 w-100">
+    <div class="row">
+      <div class="col-md-3">
+
+      </div>
+      <div class="col-md-8 offset-md-2">
+        <div class="d-grid gap-2">
+          <div>Color as measured by colorimeter:</div>
+          <button
+            type="button"
+            class="btn btn-lg btn-colorful"
+            onclick="copyValue(this)"
+          ><span style="font-size: 28px" class="icon-copy align-middle pe-2"></span>
+            #{{ swatch.hex_color|upper }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .btn-colorful {
+    --bs-btn-padding-y: 1em;
+    --bs-btn-color: {{ swatch.get_text_color }};
+    --bs-btn-bg: #{{ swatch.hex_color }};
+    --bs-btn-border-color: #{{ swatch.hex_color }};
+    --bs-btn-hover-color: {{ swatch.get_hover_text_color }};
+    --bs-btn-hover-bg: {{ swatch.get_bg_hover_color }};
+    --bs-btn-hover-border-color: {{ swatch.get_hover_border_color }};
+    --bs-btn-focus-shadow-rgb: {{ swatch.get_focus_shadow_rgb }};
+    --bs-btn-active-color: {{ swatch.get_hover_text_color }};
+    --bs-btn-active-bg: {{ swatch.get_hover_border_color }};
+    --bs-btn-active-border-color: {{ swatch.get_active_border_color }};
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: {{ swatch.get_text_color }};
+    --bs-btn-disabled-bg: {{ swatch.hex_color }};
+    --bs-btn-disabled-border-color: {{ swatch.hex_color }};
+  }
+</style>

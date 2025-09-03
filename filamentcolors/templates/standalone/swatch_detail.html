@@ -62,14 +62,23 @@
     {% endif %}
     {% if not error %}
       <div class="row">
+        <div class="d-lg-none mt-4">
+          {% include 'partials/swatch_detail_header.partial' %}
+        </div>
         <div class="col-lg-6">
           <div class="position-relative" style="display: unset">
-            <section class="gallery-block grid-gallery" hx-boost="false" style="position: sticky; top: 0">
+            <section class="gallery-block grid-gallery mt-lg-5 mt-3" hx-boost="false" style="position: sticky; top: 0">
               <div>
-                <div class="item">
+                <div class="item position-relative">
+                  <div style="pointer-events: none; top: 75% !important;" class="text-center position-absolute start-0 w-100">
+                    <small class="text-body-secondary">
+                      Image color is approximate.<br>For accurate color, see hex code.
+
+                    </small>
+                  </div>
                   <a class="lightbox" href="{{ swatch.image_front.url }}"
                      title="Representative picture of the swatch front">
-                    <img class="img-fluid image scale-on-hover" src="{{ swatch.image_front.url }}"
+                    <img class="img-fluid image scale-on-hover rounded" src="{{ swatch.image_front.url }}"
                          alt="An image of the front of the color swatch."
                          fetchpriority="high"
                     >
@@ -77,36 +86,32 @@
                 </div>
                 {% if swatch.image_other %}
                   <div class="row">
-                    <div class="col-sm-3"></div>
-                    <div class="col-sm-3 item">
+                    <div class="col-3 offset-3 item">
                       <a class="lightbox" href="{{ swatch.image_back.url }}"
                          title="Representative picture of the swatch back">
-                        <img class="img-fluid image scale-on-hover"
+                        <img class="img-fluid image scale-on-hover rounded"
                              src="{{ swatch.image_back.url }}"
                              alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
                       </a>
                     </div>
-                    <div class="col-sm-3 item">
+                    <div class="col-3 item">
                       <a class="lightbox" href="{{ swatch.image_other.url }}">
-                        <img class="img-fluid image scale-on-hover"
+                        <img class="img-fluid image scale-on-hover rounded"
                              src="{{ swatch.image_other.url }}"
                              alt="An image of a small object printed with the filament.">
                       </a>
                     </div>
-                    <div class="col-sm-3"></div>
                   </div>
                 {% else %}
                   <div class="row">
-                    <div class="col-sm-4"></div>
-                    <div class="col-sm-4">
+                    <div class="col-4 offset-4">
                       <a class="lightbox" href="{{ swatch.image_back.url }}"
                          title="Representative picture of the swatch back">
-                        <img class="img-fluid image scale-on-hover"
+                        <img class="img-fluid image scale-on-hover rounded"
                              src="{{ swatch.image_back.url }}"
                              alt="An image of the back of a color swatch, with the manufacturer, type, and color written on it.">
                       </a>
                     </div>
-                    <div class="col-sm-4"></div>
                   </div>
                 {% endif %}
               </div>
@@ -115,25 +120,10 @@
           </div>
         </div>
         <div class="col-lg-6">
-          <div class="text-center">
-            <h1 class="mt-lg-5 mt-md-0 fs-2">{{ swatch.manufacturer.name }}
-              - {{ swatch.color_name }} {{ swatch.filament_type.name }}</h1>
-
-            <div
-              class="big-color-cube"
-              style="background-color:#{{ swatch.hex_color }};"
-              data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              title="This value is measured directly from the printed plastic with a colorimeter."
-            ></div>
-            <div class="position-relative d-inline-block mt-2">
-              <p id="swatchHexColor" class="mb-0">#{{ swatch.hex_color|upper }}</p>
-              <span id="copyIcon" class="copy-icon" title="Copy hex color to clipboard">
-                <span style="font-size: 24px" class="icon-copy"></span>
-              </span>
-            </div>
+          <div class="d-none d-lg-block">
+            {% include 'partials/swatch_detail_header.partial' %}
           </div>
-          <div class="row mt-lg-5 mt-md-2 mt-2">
+          <div class="row mt-lg-4 mt-md-2 mt-2">
             <div class="col-md-1"></div>
             <div class="col-md-10 swatch-info-table bg-body-secondary">
               <table class="table table-borderless">
@@ -610,20 +600,26 @@
     </div>
 
     <script>
-      baguetteBox.run(".grid-gallery", {animation: "slideIn"});
-      document.addEventListener('DOMContentLoaded', function () {
-        const copyIcon = document.getElementById('copyIcon');
-        const hexColor = document.getElementById('swatchHexColor');
-
-        copyIcon.addEventListener('click', function () {
-          const text = hexColor.textContent;
-          navigator.clipboard.writeText(text).then(function () {
-            showToast("Color code copied to clipboard!");
-          }).catch(function (err) {
-            showToastError('Could not copy text: ', err);
-          });
+      function copyValue(el) {
+        const text = el.textContent;
+        navigator.clipboard.writeText(text).then(function () {
+          showToast("Color code copied to clipboard!");
+        }).catch(function (err) {
+          showToastError('Could not copy text: ', err);
         });
+      }
+
+      function setupBaguetteBox() {
+        baguetteBox.run(".grid-gallery", {animation: "slideIn"});
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        setupBaguetteBox();
       });
+
+      htmx.onLoad(function () {
+        setupBaguetteBox();
+      })
     </script>
 
   </div>

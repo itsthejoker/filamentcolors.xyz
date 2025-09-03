@@ -1,3 +1,4 @@
+import colorsys
 import os
 import random
 from io import BytesIO
@@ -31,6 +32,79 @@ class DistanceMixin:
         target_color = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
         self_color = convert_color(sRGBColor.new_from_rgb_hex(self.hex_color), LabColor)
         return delta_e_cie2000(target_color, self_color)
+
+
+class CSSMixin:
+    # this is on the swatch class
+    hex_color: str
+    # these values are just what I think looks good
+    BTN_BG_HOVER_PERCENT = -17
+    BTN_BG_BORDER_HOVER_PERCENT = -23
+    BTN_ACTIVE_BORDER_PERCENT = BTN_BG_HOVER_PERCENT - 10
+
+    def get_text_color(self, hex_code: str = None) -> str:
+        # returns the CSS hex color for the text color based on the background color
+        if not hex_code:
+            hex_code = self.hex_color
+        hex_code = hex_code.lstrip("#")
+
+        # Convert the hex color to RGB
+        r, g, b = tuple(int(hex_code[i:i + 2], 16) for i in (0, 2, 4))
+
+        # Calculate the relative luminance
+        luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+
+        # Choose the text color based on the luminance
+        return "#000000" if luminance > 0.5 else "#ffffff"
+
+    def get_bg_hover_color(self, hex_code: str = None) -> str:
+        if not hex_code:
+            hex_code = self.hex_color
+        return self.adjust_hex_shade(hex_code, self.BTN_BG_HOVER_PERCENT)
+
+    def get_hover_text_color(self, hex_code: str = None) -> str:
+        if not hex_code:
+            hex_code = self.hex_color
+        return self.get_text_color(self.get_bg_hover_color(hex_code))
+
+    def get_focus_shadow_rgb(self, hex_code: str = None) -> str:
+        if not hex_code:
+            hex_code = self.hex_color
+        return ",".join(
+            [str(i) for i in self.adjust_hex_shade(hex_code, 15, return_rgb=True)]
+        )
+
+    def get_hover_border_color(self, hex_code: str = None) -> str:
+        if not hex_code:
+            hex_code = self.hex_color
+        return self.adjust_hex_shade(hex_code, self.BTN_BG_BORDER_HOVER_PERCENT)
+
+    def get_active_border_color(self, hex_code: str = None) -> str:
+        if not hex_code:
+            hex_code = self.hex_color
+        return self.adjust_hex_shade(hex_code, self.BTN_ACTIVE_BORDER_PERCENT)
+
+    def adjust_hex_shade(self, hex_code, percent, return_rgb: bool = False) -> tuple | str:
+        """
+        Adjusts a hex color by a given percentage lighter or darker.
+        The percent is how much to adjust the shade (e.g., -10 for 10% darker,
+         +5 for 5% lighter).
+        """
+        hex_code = hex_code.lstrip('#')
+        r, g, b = tuple(int(hex_code[i:i + 2], 16) for i in (0, 2, 4))
+        h, l, s = colorsys.rgb_to_hls(r / 255.0, g / 255.0, b / 255.0)
+
+        # Adjust lightness by the given percentage
+        l = max(0, min(1, l * (1 + percent / 100)))
+
+        # Convert back to RGB
+        r, g, b = colorsys.hls_to_rgb(h, l, s)
+        r, g, b = round(r * 255), round(g * 255), round(b * 255)
+
+        if return_rgb:
+            return r, g, b
+
+        return f'#{r:02x}{g:02x}{b:02x}'
 
 
 class Manufacturer(models.Model):
@@ -237,7 +311,7 @@ class UserSubmittedTD(models.Model):
         return f"{str(self.swatch)} - {self.td}"
 
 
-class Swatch(models.Model, DistanceMixin):
+class Swatch(models.Model, DistanceMixin, CSSMixin):
     """
     The swatch model is used to keep track of two states of swatch;
     if the swatch is unpublished, then it's treated as a swatch
@@ -620,7 +694,7 @@ class Swatch(models.Model, DistanceMixin):
         return tds[0], tds[0]
 
     def get_rgb(self, hex: str) -> Tuple[int, ...]:
-        return tuple(int(hex[i : i + 2], 16) for i in (0, 2, 4))
+        return tuple(int(hex[i: i + 2], 16) for i in (0, 2, 4))
 
     def get_hex(self, rgb: tuple) -> str:
         return "{R}{G}{B}".format(
@@ -823,15 +897,15 @@ class Swatch(models.Model, DistanceMixin):
 
         for step_option in self.STEP_OPTIONS:
             if result := self._get_closest_color(
-                queryset,
-                rgb=self_color,
-                step=step_option,
-                extra_args=extra_args,
+                    queryset,
+                    rgb=self_color,
+                    step=step_option,
+                    extra_args=extra_args,
             ):
                 return result
 
     def _get_closest_color(
-        self, queryset, step: int, rgb: tuple = None, extra_args: dict = None
+            self, queryset, step: int, rgb: tuple = None, extra_args: dict = None
     ):
         """Takes in either Pantone or RAL, then returns the matching element."""
         distance_dict = {}
@@ -999,7 +1073,7 @@ class Swatch(models.Model, DistanceMixin):
             self.save()
 
     def update_all_color_matches(
-        self, library: QuerySet, include_third_party=False
+            self, library: QuerySet, include_third_party=False
     ) -> None:
         # NOTE: This does not save to the database!!! This is deliberate -
         # we only want to save it if we're updating the defaults. Otherwise,
@@ -1184,21 +1258,6 @@ class Swatch(models.Model, DistanceMixin):
 
             if tortoise == hare:
                 return True
-
-    def get_text_color(self) -> str:
-        # returns the CSS hex color for the text color based on the background color
-        color = self.hex_color.lstrip("#")
-
-        # Convert the hex color to RGB
-        r = int(color[0:2], 16)
-        g = int(color[2:4], 16)
-        b = int(color[4:6], 16)
-
-        # Calculate the relative luminance
-        luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-
-        # Choose the text color based on the luminance
-        return "#000000" if luminance > 0.5 else "#ffffff"
 
     def save(self, *args, **kwargs):
         rebuild_matches = False

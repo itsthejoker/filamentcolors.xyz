@@ -155,7 +155,7 @@
                 {% endif %}
               {% else %}
                 {% if field.field.widget.input_type == 'file' %}
-                  <div class="my-auto pe-3 text-muted">{{ field.label }}:</div>
+                  <div class="my-auto pe-3 text-body-secondary">{{ field.label }}:</div>
                   {{ field|add_class:"form-control"|attr:"type=file"|add_class:"file-input" }}
                 {% elif field.field.widget.input_type == 'select' %}
                   <div>
@@ -171,7 +171,7 @@
               {% endif %}
 
               {% if field.help_text %}
-                <small class="form-text text-muted">{{ field.help_text }}</small>
+                <small class="form-text text-body-secondary">{{ field.help_text }}</small>
               {% endif %}
             </div>
           {% endfor %}

@@ -9,7 +9,7 @@
       </div>
       <div class="col-md-8 offset-md-2">
         <div class="d-grid gap-2">
-          <div>Color as measured by colorimeter:</div>
+          <div>Measured color:</div>
           <button
             type="button"
             class="btn btn-lg btn-colorful"

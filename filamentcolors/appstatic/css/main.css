@@ -127,11 +127,6 @@ html[data-bs-theme='dark'] .card-text {
 
 /*Gallery for swatch detail page*/
 
-.gallery-block.grid-gallery {
-    padding-bottom: 60px;
-    padding-top: 60px;
-}
-
 .gallery-block.grid-gallery .heading {
     margin-bottom: 50px;
     text-align: center;

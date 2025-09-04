@@ -223,7 +223,7 @@ class FilamentType(models.Model):
     still PLAs, so we want them to be included when searching by PLA.
     """
 
-    name = models.CharField(max_length=24, default="PLA")
+    name = models.CharField(max_length=50, default="PLA")
     hot_end_temp = models.IntegerField(default=205)
     bed_temp = models.IntegerField(default=60)
     parent_type = models.ForeignKey(

@@ -351,10 +351,23 @@ def swatch_collection(request: HttpRequest, ids: str) -> HttpResponse:
 
 def edit_swatch_collection(request: HttpRequest, ids: str) -> HttpResponse:
     cleaned_ids = clean_collection_ids(ids)
+    collection_data = Swatch.objects.filter(id__in=cleaned_ids, published=True).values(
+        "id", "color_name", "hex_color", "manufacturer__name", "filament_type__name"
+    )
+
+    for item in list(collection_data):
+        # collapse down the data. This is a _massive_ data savings over the wire
+        item["i"] = item.pop("id")
+        item["n"] = item.pop("color_name")
+        item["c"] = item.pop("hex_color")
+        item["m"] = item.pop("manufacturer__name")
+        item["t"] = item.pop("filament_type__name")
+
     data = build_data_dict(
         request,
         library=True,
         preselect_collection=cleaned_ids,
+        preselect_data=list(collection_data),
         title="Edit Collection",
     )
     library = get_swatches(data).order_by("-date_published")

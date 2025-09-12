@@ -104,7 +104,7 @@
     emailMagic();
   }
 
-  htmx.onLoad(debounce_leading(onLoadMain, 50));
+  htmx.onLoad(debounce_leading(onLoadMain, 30));
 
   function showToast(message) {
     Toastify({
@@ -143,14 +143,14 @@
     }
   });
 
-  htmx.on("htmx:afterRequest", function(evt) {
+  htmx.on("htmx:afterRequest", function (evt) {
     const element = evt.detail.elt;
     if (element.id === "filterInput") {
       $deck.masonry("destroy");
     }
   });
 
-  htmx.on("htmx:afterSwap", function(evt) {
+  htmx.on("htmx:afterSwap", function (evt) {
     const element = evt.detail.elt;
     if (!$deck) {
       // on first load, we need to finish initializing everything
@@ -233,7 +233,7 @@
   htmx.config.globalViewTransitions = true;
 
   // https://stackoverflow.com/a/920322
-  $.fn.exists = function() {
+  $.fn.exists = function () {
     return this.length !== 0;
   };
 

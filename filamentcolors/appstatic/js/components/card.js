@@ -232,6 +232,42 @@ class Card extends HTMLElement {
       this.addEventListener('contextmenu', this._preventContextMenu, { passive: false })
       this._eventsBound = true;
     }
+
+    // Install IntersectionObserver to sync selection when the card becomes visible
+    if (!this._ioInstalled) {
+      try {
+        const onIntersect = (entries, obs) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting && entry.intersectionRatio > 0) {
+              // Determine the swatch/card id to check in the tray
+              const idToCheck = this.getAttribute('id') || this.objId || this.id;
+              const multiselect = window.multiselect;
+              const tray = multiselect && multiselect.swatchTray;
+              if (tray && Array.isArray(tray.swatches)) {
+                const exists = tray.swatches.some(sw => String(sw.objId) === String(idToCheck));
+                // If collection mode is disabled, never allow selection
+                if (multiselect && multiselect.collectionModeEnabled === false) {
+                  this.deselect();
+                } else if (exists) {
+                  // Select without re-adding to the tray
+                  this.select(false);
+                } else {
+                  this.deselect();
+                }
+              }
+              // Fire this check every time the element becomes visible; do not disconnect here
+              break;
+            }
+          }
+        };
+        this._io = new IntersectionObserver(onIntersect, { root: null, threshold: [0, 0.01, 0.1] });
+        this._io.observe(this);
+        this._ioInstalled = true;
+      } catch (e) {
+        // Fail silently if IntersectionObserver is unavailable
+        this._ioInstalled = true;
+      }
+    }
   }
 
   disconnectedCallback() {
@@ -258,6 +294,11 @@ class Card extends HTMLElement {
       // Remove contextmenu prevention on host
       this.removeEventListener('contextmenu', this._preventContextMenu);
       this._eventsBound = false;
+    }
+    // Clean up IntersectionObserver if present
+    if (this._io && typeof this._io.disconnect === 'function') {
+      try { this._io.disconnect(); } catch (e) {}
+      this._io = null;
     }
   }
 

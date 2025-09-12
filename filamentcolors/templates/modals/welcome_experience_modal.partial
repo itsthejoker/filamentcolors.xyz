@@ -201,7 +201,7 @@
       <div class="modal-body">
         What happens when you find colors that you like? We believe that old
         school is the best school here; rather than dealing with cookies or
-        user accounts, the URL that is generated in the address bar can be
+        user accounts, the URL that's generated in the address bar can be
         bookmarked or otherwise saved. Whenever you navigate to it, the library
         items that are in it will always be there as long as we're still online!
         <p></p>
@@ -240,12 +240,12 @@
       </div>
       <div class="modal-body">
         <p>
-          You can create your own collections, too! Just click / tap and hold on
-          a swatch for half a second, watch it shrink, and you'll be in collections
+          You can create your own collections, too! Click or tap and hold on
+          a swatch for half a second, watch it grow, and you'll be in collections
           mode! You can click on any swatch you want to; it will add or remove it
-          from the collection you're actively building (and you can see the number
-          of swatches you have selected on the left). Check out the video below for
-          a quick demonstration of how it works!
+          from the collection you're actively building (and you can see the swatches
+          you've selected at the bottom of the screen). Check out the video below
+          for a quick demonstration of how it works!
         </p>
         <div class="text-center"
              hx-get="{% url 'welcome_experience_video' %}"
@@ -256,10 +256,6 @@
                alt="A spinning swatch loading animation."
           >
         </div>
-        <p>
-          You will also automatically enter this view if you are in a collection
-          and click "Modify this collection".
-        </p>
         <p>
           Save your collections by bookmarking the page! Once created, your
           collections will never expire and will be accessible by the same link.

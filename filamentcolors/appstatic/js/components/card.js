@@ -3,28 +3,105 @@ class Card extends HTMLElement {
   constructor() {
     super();
     this.retrieveAttrs();
+    this.selected = this.hasAttribute('selected');
+    this._didLongPress = false;
+    this._preventContextMenu = (e) => e.preventDefault();
+    // Touch tracking for scroll-vs-tap discrimination
+    this._touchMoved = false;
+    this._touchStartX = 0;
+    this._touchStartY = 0;
+    this._suppressClickUntil = 0;
+    this._onTouchStartOverlay = (e) => {
+      const t = e.touches && e.touches[0];
+      if (!t) return;
+      this._touchMoved = false;
+      this._touchStartX = t.clientX;
+      this._touchStartY = t.clientY;
+    };
+    this._onTouchMoveOverlay = (e) => {
+      const t = e.touches && e.touches[0];
+      if (!t) return;
+      const dx = Math.abs(t.clientX - this._touchStartX);
+      const dy = Math.abs(t.clientY - this._touchStartY);
+      if (dx > 10 || dy > 10) {
+        this._touchMoved = true;
+        // Suppress potential synthetic click after a touch-scroll
+        this._suppressClickUntil = Date.now() + 1000;
+      }
+    };
+    this._onTouchCancelOverlay = () => {
+      this._touchMoved = true;
+    };
+    this._onLongPress = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this._didLongPress = true;
+      if (!window.multiselect.collectionModeEnabled) {
+        window.multiselect.startCollectionMode()
+      }
+      this.select();
+    };
+    // Bind once so we can add/remove reliably
+    this._onHostClick = (e) => {
+      const overlay = e.target.closest('.card-img-overlay');
+      // Ensure the overlay is inside this component instance
+      if (!overlay || !this.contains(overlay)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      this.handleSelect();
+    };
+
+    // Passthrough handler for the click overlay: forward taps to anchor
+    this._onClickOverlayActivate = (e) => {
+      // If a long-press just happened, consume this activation
+      if (this._didLongPress) {
+        this._didLongPress = false;
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      // Ignore synthetic click after a scroll gesture within suppression window
+      if (e.type === 'click' && Date.now() < this._suppressClickUntil) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      // If the user scrolled, do not treat as a tap
+      if (e.type === 'touchend' && this._touchMoved) {
+        this._touchMoved = false;
+        return;
+      }
+      // In collection mode, the img-overlay (above) handles selection; do nothing here
+      if (window.multiselect && window.multiselect.collectionModeEnabled) return;
+      const anchor = this.querySelector('a');
+      if (!anchor) return;
+      e.preventDefault();
+      e.stopPropagation();
+      // Programmatically trigger navigation
+      anchor.click();
+      // Reset movement state after handling
+      this._touchMoved = false;
+    };
+
+    // Prevent accidental navigation if a long-press happened on the anchor itself
+    this._onAnchorClick = (e) => {
+      if (this._didLongPress) {
+        this._didLongPress = false;
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
   }
 
   // component attributes
   static get observedAttributes() {
-    return [
-      'selected',
-      'objId',
-      'showColormatchExtras',
-      'hexColor',
-      'mfr',
-      'name',
-      'type',
-      'slug',
-      'td',
-      'available',
-      'cardImgUrl',
-      'distance'
-    ];
+    return ['selected', 'objId', 'showColormatchExtras', 'hexColor', 'mfr', 'name', 'type', 'slug', 'td', 'available', 'cardImgUrl', 'distance'];
   }
 
   retrieveAttrs() {
-    this.color = this.getAttribute('color') || '#000000';
+    // normalize color to hex without leading '#'
+    const rawColor = this.getAttribute('color') || '000000';
+    this.color = ('' + rawColor).replace(/^#/, '');
     this.objId = this.getAttribute('id') || '';
     this.mfr = this.getAttribute('mfr') || '';
     this.name = this.getAttribute('name') || '';
@@ -40,25 +117,6 @@ class Card extends HTMLElement {
     if (oldValue === newValue) return;
     this[property] = newValue;
   }
-
-
-  // constructor(objId, showColormatchExtras, hexColor, mfr, name, type, slug, td = null, available = null) {
-  //   super();
-  //   this.objId = `s${objId}`
-  //   this.showColormatchExtras = false;
-  //   this.swatchId = objId;
-  //   this.color = hexColor.toString();
-  //   this.mfr = mfr;
-  //   this.name = name;
-  //   this.type = type;
-  //   this.slug = slug;
-  //
-  //   this.td = td === "None" ? null : td;
-  //   this.available = available !== "True";
-  //
-  //   this.selected = false;
-  //   this.showDeltaEDistanceWarning = false;
-  // }
 
   deltaEWarning5To10() {
     return `
@@ -144,8 +202,63 @@ class Card extends HTMLElement {
   // connect component
   connectedCallback() {
     this.retrieveAttrs();
-    htmx.process(this);
-    this.render();
+    if (!this._rendered) {
+      this.render();
+      htmx.process(this);
+      this._rendered = true;
+    }
+    if (!this._eventsBound) {
+      this.addEventListener('click', this._onHostClick);
+      const $clickOverlay = $(this).find('.card-click-overlay');
+      $clickOverlay.on('long-press', this._onLongPress);
+      // Forward taps/clicks from the overlay to the anchor (passthrough)
+      const clickOverlayEl = this.querySelector('.card-click-overlay');
+      if (clickOverlayEl) {
+        clickOverlayEl.addEventListener('click', this._onClickOverlayActivate, { passive: false });
+        clickOverlayEl.addEventListener('touchend', this._onClickOverlayActivate, { passive: false });
+        // Track touch movement to distinguish scroll from tap
+        clickOverlayEl.addEventListener('touchstart', this._onTouchStartOverlay, { passive: true });
+        clickOverlayEl.addEventListener('touchmove', this._onTouchMoveOverlay, { passive: true });
+        clickOverlayEl.addEventListener('touchcancel', this._onTouchCancelOverlay, { passive: true });
+      }
+      // Bind as fallback on the anchor as well
+      const anchor = this.querySelector('a');
+      if (anchor) {
+        $(anchor).on('long-press', this._onLongPress);
+        anchor.addEventListener('click', this._onAnchorClick, { passive: false });
+        anchor.addEventListener('contextmenu', this._preventContextMenu, { passive: false });
+      }
+      // fix mobile devices triggering link previews
+      this.addEventListener('contextmenu', this._preventContextMenu, { passive: false })
+      this._eventsBound = true;
+    }
+  }
+
+  disconnectedCallback() {
+    if (this._eventsBound) {
+      this.removeEventListener('click', this._onHostClick);
+      // Unbind long-press from overlay
+      $(this).find('.card-click-overlay').off('long-press', this._onLongPress);
+      // Remove passthrough listeners
+      const clickOverlayEl = this.querySelector('.card-click-overlay');
+      if (clickOverlayEl) {
+        clickOverlayEl.removeEventListener('click', this._onClickOverlayActivate);
+        clickOverlayEl.removeEventListener('touchend', this._onClickOverlayActivate);
+        clickOverlayEl.removeEventListener('touchstart', this._onTouchStartOverlay);
+        clickOverlayEl.removeEventListener('touchmove', this._onTouchMoveOverlay);
+        clickOverlayEl.removeEventListener('touchcancel', this._onTouchCancelOverlay);
+      }
+      // Unbind from anchor
+      const anchor = this.querySelector('a');
+      if (anchor) {
+        $(anchor).off('long-press', this._onLongPress);
+        anchor.removeEventListener('click', this._onAnchorClick);
+        anchor.removeEventListener('contextmenu', this._preventContextMenu);
+      }
+      // Remove contextmenu prevention on host
+      this.removeEventListener('contextmenu', this._preventContextMenu);
+      this._eventsBound = false;
+    }
   }
 
   render() {
@@ -160,7 +273,8 @@ class Card extends HTMLElement {
       data-name="${this.name}"
       data-type="${this.type}"
     >
-      <div class="card-img-overlay p-0" onclick="this.select()"></div>
+      <div class="card-img-overlay p-0"></div>
+      <div class="card-click-overlay p-0"></div>
        ${this.getDeltaEWarning()}
       <a
         href="/swatch/${this.slug}"
@@ -170,7 +284,10 @@ class Card extends HTMLElement {
         hx-push-url="true"
       >
         <div class="card-img-container">
-          <div class="card-img-top img-fluid layer position-relative" style="background-color: #${this.color}; height: 89px;border-top-left-radius: var(--bs-border-radius-xl); border-top-right-radius: 2em">
+          <div 
+            class="card-img-top img-fluid layer position-relative"
+            style="background-color: #${this.color}; height: 89px;border-top-left-radius: var(--bs-border-radius-xl); border-top-right-radius: 2em"
+           >
             <div class="position-absolute end-0" style="background-color: white; height: 89px; width: 89px;border-top-left-radius: var(--bs-border-radius-xl); border-top-right-radius: var(--bs-border-radius-xl)"></div>
             <img class="lazy-load-image position-absolute end-0"
                src='data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 287.1 89"><defs><style>.c1 {fill: %23fff} .c1, .c2, .c3, .c4, .c5 {stroke: %23231f20;stroke-miterlimit: 10} .c2 {fill: %23${this.color}} .c3 {opacity: 0.35;fill: %23000} .c4 {opacity: 0.25;fill: %23000} .c5 {opacity: 0.45;fill: %23000}</style></defs><g id="L6" data-name="L6"><path class="c2" d="M264.57,78.41H30.91c-7.93,0-14.37-6.43-14.37-14.37V21.99c0-7.93,6.43-14.37,14.37-14.37h233.66c7.93,0,14.37,6.43,14.37,14.37v42.06c0,7.93-6.43,14.37-14.37,14.37"/><circle class="c1" cx="34.2" cy="41.97" r="11.89"/></g><g id="L2" data-name="L2"><rect class="c4" x="115.67" y="16.26" width="51.03" height="53.5"/></g><g id="L3" data-name="L3"><rect class="c3" x="166.7" y="16.26" width="51.36" height="53.5"/></g><g id="L4" data-name="L4"><path class="c5" d="M269.6,58.45c0,6.25-5.06,11.31-11.31,11.31h-40.24V16.26h40.24c6.25,0,11.31,5.06,11.31,11.31"/><line class="c5" x1="269.6" y1="27.57" x2="269.6" y2="58.45"/></g></svg>'
@@ -194,13 +311,36 @@ class Card extends HTMLElement {
       </a>
     </div>
     `;
+    if (window.multiselect && window.multiselect.collectionModeEnabled) {
+      const $overlay = $(this.querySelector(".card-img-overlay"))
+      $overlay.css("display", "block").css("height", "100%").css("width", "100%")
+    }
+
   }
 
-  select() {
-    console.log("selected!")
+  handleSelect() {
+    this.selected ? this.deselect() : this.select();
   }
 
+  select(addCard=true) {
+    this.selected = true;
+    const affectedEl = $(this).find(".swatchcard").first()
+    affectedEl.addClass("selected-card");
+    affectedEl.removeClass("shadow-sm");
+    affectedEl.css("transform", "translateY(-10px) scale3d(1.05, 1.05, 1)");
+    affectedEl.addClass("big-shadow");
+    if (addCard) window.multiselect.swatchTray.addItemFromCard($(this));
+  }
+
+  deselect() {
+    this.selected = false;
+    window.multiselect.swatchTray.removeItemByCard($(this));
+    const affectedEl = $(this).find(".swatchcard").first()
+    affectedEl.removeClass("selected-card");
+    affectedEl.addClass("shadow-sm");
+    affectedEl.css("transform", "translateY(0px) scale3d(1, 1, 1)");
+    affectedEl.removeClass("big-shadow");
+  }
 }
-
 
 customElements.define('swatch-card', Card);

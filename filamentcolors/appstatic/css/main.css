@@ -582,101 +582,321 @@ html[data-bs-theme='dark'] .htmx-indicator.htmx-request {
 /* Infinite Scroll Spinner */
 
 .infinity-loader-wheel {
-  font-size: 64px; /* change size here */
-  position: relative;
-  height: 1em;
-  width: 1em;
-  padding-left: 0.45em;
-  overflow: hidden;
-  margin: 0 auto;
-  animation: loader-wheel-rotate 0.5s steps(12) infinite;
+    font-size: 64px; /* change size here */
+    position: relative;
+    height: 1em;
+    width: 1em;
+    padding-left: 0.45em;
+    overflow: hidden;
+    margin: 0 auto;
+    animation: loader-wheel-rotate 0.5s steps(12) infinite;
 }
 
 .infinity-loader-wheel i {
-  display: block;
-  position: absolute;
-  height: 0.3em;
-  width: 0.1em;
-  border-radius: 0.05em;
-  background: #333; /* change color here */
-  opacity: 0.8;
-  transform: rotate(-30deg);
-  transform-origin: center 0.5em;
+    display: block;
+    position: absolute;
+    height: 0.3em;
+    width: 0.1em;
+    border-radius: 0.05em;
+    background: #333; /* change color here */
+    opacity: 0.8;
+    transform: rotate(-30deg);
+    transform-origin: center 0.5em;
 }
 
 @keyframes loader-wheel-rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 svg {
     fill: currentColor;
 }
 
+.swatchcard {
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+}
+
 /* Mostly ripped from https://stackoverflow.com/a/62245627/ */
 /* Small devices (landscape phones, 576px and up)*/
 @media (min-width: 576px) {
-  .w-sm-100 {width: 100% !important;}
-  .w-sm-75 {width: 75% !important;}
-  .w-sm-50 {width: 50% !important;}
-  .w-sm-25 {width: 25% !important;}
-  .h-sm-100 {height: 100% !important;}
-  .h-sm-75 {height: 75% !important;}
-  .h-sm-50 {height: 50% !important;}
-  .h-sm-25 {height: 25% !important;}
+    .w-sm-100 {
+        width: 100% !important;
+    }
+
+    .w-sm-75 {
+        width: 75% !important;
+    }
+
+    .w-sm-50 {
+        width: 50% !important;
+    }
+
+    .w-sm-25 {
+        width: 25% !important;
+    }
+
+    .h-sm-100 {
+        height: 100% !important;
+    }
+
+    .h-sm-75 {
+        height: 75% !important;
+    }
+
+    .h-sm-50 {
+        height: 50% !important;
+    }
+
+    .h-sm-25 {
+        height: 25% !important;
+    }
 }
 
 /* Medium devices (tablets, 768px and up)*/
 @media (min-width: 768px) {
-  .w-md-100 {width: 100% !important;}
-  .w-md-75 {width: 75% !important;}
-  .w-md-50 {width: 50% !important;}
-  .w-md-25 {width: 25% !important;}
-  .h-md-100 {height: 100% !important;}
-  .h-md-75 {height: 75% !important;}
-  .h-md-50 {height: 50% !important;}
-  .h-md-25 {height: 25% !important;}
+    .w-md-100 {
+        width: 100% !important;
+    }
+
+    .w-md-75 {
+        width: 75% !important;
+    }
+
+    .w-md-50 {
+        width: 50% !important;
+    }
+
+    .w-md-25 {
+        width: 25% !important;
+    }
+
+    .h-md-100 {
+        height: 100% !important;
+    }
+
+    .h-md-75 {
+        height: 75% !important;
+    }
+
+    .h-md-50 {
+        height: 50% !important;
+    }
+
+    .h-md-25 {
+        height: 25% !important;
+    }
 }
 
 /* Large devices (desktops, 992px and up)*/
 @media (min-width: 992px) {
-  .w-lg-100 {width: 100% !important;}
-  .w-lg-75 {width: 75% !important;}
-  .w-lg-50 {width: 50% !important;}
-  .w-lg-25 {width: 25% !important;}
-  .h-lg-100 {height: 100% !important;}
-  .h-lg-75 {height: 75% !important;}
-  .h-lg-50 {height: 50% !important;}
-  .h-lg-25 {height: 25% !important;}
+    .w-lg-100 {
+        width: 100% !important;
+    }
+
+    .w-lg-75 {
+        width: 75% !important;
+    }
+
+    .w-lg-50 {
+        width: 50% !important;
+    }
+
+    .w-lg-25 {
+        width: 25% !important;
+    }
+
+    .h-lg-100 {
+        height: 100% !important;
+    }
+
+    .h-lg-75 {
+        height: 75% !important;
+    }
+
+    .h-lg-50 {
+        height: 50% !important;
+    }
+
+    .h-lg-25 {
+        height: 25% !important;
+    }
 }
 
 /* Extra large devices (large desktops, 1200px and up)*/
 @media (min-width: 1200px) {
-  .w-xl-100 {width: 100% !important;}
-  .w-xl-75 {width: 75% !important;}
-  .w-xl-50 {width: 50% !important;}
-  .w-xl-25 {width: 25% !important;}
-  .h-xl-100 {height: 100% !important;}
-  .h-xl-75 {height: 75% !important;}
-  .h-xl-50 {height: 50% !important;}
-  .h-xl-25 {height: 25% !important;}
+    .w-xl-100 {
+        width: 100% !important;
+    }
+
+    .w-xl-75 {
+        width: 75% !important;
+    }
+
+    .w-xl-50 {
+        width: 50% !important;
+    }
+
+    .w-xl-25 {
+        width: 25% !important;
+    }
+
+    .h-xl-100 {
+        height: 100% !important;
+    }
+
+    .h-xl-75 {
+        height: 75% !important;
+    }
+
+    .h-xl-50 {
+        height: 50% !important;
+    }
+
+    .h-xl-25 {
+        height: 25% !important;
+    }
 }
 
 /* XXL devices (large desktops, 1400px and up) */
 @media (min-width: 1400px) {
-  .w-xxl-100 {width: 100% !important;}
-  .w-xxl-75 {width: 75% !important;}
-  .w-xxl-50 {width: 50% !important;}
-  .w-xxl-25 {width: 25% !important;}
-  .h-xxl-100 {height: 100% !important;}
-  .h-xxl-75 {height: 75% !important;}
-  .h-xxl-50 {height: 50% !important;}
-  .h-xxl-25 {height: 25% !important;}
+    .w-xxl-100 {
+        width: 100% !important;
+    }
+
+    .w-xxl-75 {
+        width: 75% !important;
+    }
+
+    .w-xxl-50 {
+        width: 50% !important;
+    }
+
+    .w-xxl-25 {
+        width: 25% !important;
+    }
+
+    .h-xxl-100 {
+        height: 100% !important;
+    }
+
+    .h-xxl-75 {
+        height: 75% !important;
+    }
+
+    .h-xxl-50 {
+        height: 50% !important;
+    }
+
+    .h-xxl-25 {
+        height: 25% !important;
+    }
 }
 
 .icon {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  overflow: hidden;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+}
+
+/* from https://codepen.io/nelledejones/pen/gOOPWrK, modded slightly */
+.wiggle {
+    animation: wiggle 0.5s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes wiggle {
+    from, to {
+        transform: scale(1, 1);
+    }
+    25% {
+        transform: scale(0.9, 1.1);
+    }
+    50% {
+        transform: scale(1.1, 0.9);
+    }
+    75% {
+        transform: scale(0.95, 1.05);
+    }
+}
+
+.wiggle.clockwise {
+    animation: wiggle-cw 1s ease;
+}
+
+@keyframes wiggle-cw {
+    30%, 60% {
+        transform: rotate(10deg);
+    }
+    50% {
+        transform: rotate(-10deg);
+    }
+    70% {
+        transform: rotate(0deg);
+    }
+}
+
+.wiggle.counterclockwise {
+    animation: wiggle-ccw 1s ease;
+}
+
+@keyframes wiggle-ccw {
+    30%, 60% {
+        transform: rotate(-10deg);
+    }
+    50% {
+        transform: rotate(10deg);
+    }
+    70% {
+        transform: rotate(0deg);
+    }
+}
+
+.bounce-in {
+    animation: bounce-in 0.3s ease;
+    animation-fill-mode: forwards;
+}
+
+@keyframes bounce-in {
+    0% {
+        opacity: 0;
+        transform: scale(.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.bounce-out {
+    animation: bounce-out 0.3s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes bounce-out {
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(.3);
+    }
 }

@@ -1,25 +1,100 @@
 {% load static %}
 
-<div class="collection-buttons way-off-screen" id="collection-buttons">
-  <div id="multiselect-badge" class="badge badge-lg text-bg-success fs-2 p-1">0</div>
-  <p></p>
-  <button type="button" id="go-button" class="btn shadow-lg btn-primary">
-    {% if preselect_collection %}
-      Update Collection
-    {% endif %}
-    {% if not preselect_collection %}
-      Create Collection
-    {% endif %}
-  </button>
-  <p></p>
-  <button type="button" id="clear-button" class="btn btn-secondary shadow-lg">Unselect All</button>
+{% comment %}
+{# Uncomment to manually control the tray #}
+
+<button
+  class="btn btn-primary mt-4"
+  type="button"
+  data-bs-toggle="offcanvas"
+  data-bs-target="#swatchCollectionTray"
+  aria-controls="swatchCollectionTray"
+>Toggle bottom offcanvas
+</button>
+
+{% endcomment %}
+
+<div
+  class="offcanvas offcanvas-bottom"
+  tabindex="-1"
+  style="--bs-offcanvas-height:22vh"
+  id="swatchCollectionTray"
+  aria-labelledby="swatchCollectionTrayLabel"
+  data-bs-scroll="true"
+  data-bs-backdrop="false"
+  data-bs-keyboard="false"
+>
+  <div class="position-relative">
+    <div class="offcanvas-header container">
+      <div class="d-none d-sm-flex">
+        <h5 class="offcanvas-title d-none d-sm-flex" id="swatchCollectionTrayLabel">
+          {% if preselect_collection %}
+            Update Collection
+          {% endif %}
+          {% if not preselect_collection %}
+            Create Collection
+          {% endif %}
+        </h5>
+        <div class="badge multiselect-badge text-bg-primary fs-3 p-1 ms-3" style="width:2em">0</div>
+      </div>
+      <div
+        class="d-flex d-sm-none d-grid"
+        id="mobileGoButton"
+      >
+        <button
+          type="button"
+          class="btn btn-outline-primary go-button"
+        >
+          {% if preselect_collection %}
+            Update Collection
+          {% endif %}
+          {% if not preselect_collection %}
+            Create Collection
+          {% endif %}
+          <div class="badge multiselect-badge text-bg-primary fs-3 p-1 ms-3" style="width:1.5em">0</div>
+        </button>
+      </div>
+      <button type="button" class="ms-auto d-none d-md-block align-end btn btn-primary go-button">
+        {% if preselect_collection %}
+          Update Collection
+        {% endif %}
+        {% if not preselect_collection %}
+          Create Collection
+        {% endif %}
+      </button>
+
+      <button
+        type="button"
+        class="ms-auto ms-md-2 align-end btn btn-outline-danger"
+        data-bs-dismiss="offcanvas"
+        aria-label="Cancel"
+        id="swatch-collection-tray-cancel-button"
+      >Cancel
+      </button>
+    </div>
+    <div class="offcanvas-body small container position-relative">
+      <div id="arrow-holder" class="container position-absolute" style="z-index: 100;left:0">
+        <div class="position-absolute ms-2" style="top:1.5em">
+          {% include 'components/buttons/arrow_left_button.partial' with start_hidden=True id="trayLeftButton" %}
+        </div>
+        <div class="position-absolute end-0" style="top:1.5em;margin-right: 1.5em">
+          {% include 'components/buttons/arrow_right_button.partial' with start_hidden=True id="trayRightButton" %}
+        </div>
+      </div>
+      <div id="offcanvas-swatchtray" class="pt-3"></div>
+    </div>
+  </div>
 </div>
 
 <script>
   {% if preselect_collection %}
+    window.multiselectArray = {{ preselect_collection }};
     window.preselected = {{ preselect_collection }};
+    window.preselected_data = {{ preselect_data|safe }};
+    window.collectionModeEnabled = true;
   {% else %}
     window.preselected = "";
+    window.preselected_data = "";
   {% endif %}
 </script>
 

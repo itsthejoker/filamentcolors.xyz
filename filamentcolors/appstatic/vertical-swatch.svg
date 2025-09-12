@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="a" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 71.79 263.4">
+  <defs>
+    <style>
+      .g {
+        opacity: 0.25;fill: #000
+      }
+
+      .g, .h, .i, .j, .k {
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+      }
+
+      .h {
+        opacity: 0.45;fill: #000
+      }
+
+      .l {
+        fill: green;
+      }
+
+      .i {
+        fill: #fff;
+      }
+
+      .j {
+        opacity: 0.35;fill: #000
+      }
+
+      .k {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="b" data-name="color">
+    <rect class="l" x=".5" y="13.31" width="70.79" height="237.8"/>
+    <circle class="l" cx="15.27" cy="15.27" r="14.77"/>
+    <circle class="l" cx="56.52" cy="15.27" r="14.77"/>
+    <rect class="l" x="14.87" y=".5" width="42.05" height="17.66"/>
+    <circle class="l" cx="56.52" cy="248.53" r="14.77"/>
+    <circle class="l" cx="15.27" cy="248.53" r="14.77"/>
+    <rect class="l" x="14.87" y="245.65" width="42.05" height="17.66" transform="translate(71.79 508.95) rotate(180)"/>
+  </g>
+  <g id="c" data-name="L6">
+    <path class="k" d="M71.29,14.87v233.66c0,7.93-6.43,14.37-14.37,14.37H14.86"/>
+    <path class="k" d="M71.29,14.87c0-7.93-6.43-14.37-14.37-14.37"/>
+    <path class="k" d="M.5,248.53V14.87C.5,6.94,6.93.5,14.87.5h42.05"/>
+    <path class="k" d="M.5,248.53c0,7.93,6.43,14.37,14.37,14.37"/>
+  </g>
+  <circle class="i" cx="36.94" cy="18.16" r="11.89"/>
+  <g id="d" data-name="L2">
+    <rect class="g" x="9.15" y="99.63" width="53.5" height="51.03"/>
+  </g>
+  <g id="e" data-name="L3">
+    <rect class="j" x="9.15" y="150.66" width="53.5" height="51.36"/>
+  </g>
+  <g id="f" data-name="L4">
+    <path class="h" d="M20.46,253.56c-6.25,0-11.31-5.06-11.31-11.31v-40.24h53.5v40.24c0,6.25-5.06,11.31-11.31,11.31"/>
+    <line class="k" x1="51.34" y1="253.56" x2="20.46" y2="253.56"/>
+  </g>
+</svg>

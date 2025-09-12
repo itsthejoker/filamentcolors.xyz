@@ -7,7 +7,7 @@
       <div hx-get="/library/collection/edit/{{ collection_ids }}"
            class="btn btn-primary">Modify this collection
       </div>
-      <div class="btn btn-secondary" onclick="copyUrlToClipboard()">Copy URL</div>
+      <div class="btn btn-secondary mt-2 mt-sm-0" onclick="copyUrlToClipboard()">Copy URL</div>
     </div>
   </div>
 </div>

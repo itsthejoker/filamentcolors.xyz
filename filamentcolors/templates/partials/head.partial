@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script src="{% static 'vendored/js/htmx.min.js' %}?v=1.9.9"></script>
-<script src="{% static 'vendored/js/diomorph-ext.min.js' %}"></script>
+<script src="{% static 'vendored/js/idiomorph-ext.min.js' %}"></script>
 {% django_htmx_script %}
 <link rel="stylesheet" href="{% static 'vendored/css/baguetteBox.min.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/css/toastify.css' %}">

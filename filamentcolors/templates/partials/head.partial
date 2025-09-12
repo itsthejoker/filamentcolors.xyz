@@ -15,10 +15,10 @@
 <link rel="stylesheet" href="{% static 'vendored/css/material_icons.css' %}">
 
 <style>
-    @font-face {
-        font-family: "Roboto";
-        src: url("{% static 'vendored/Roboto-Regular.ttf' %}") format("truetype");
-    }
+  @font-face {
+    font-family: "Roboto";
+    src: url("{% static 'vendored/Roboto-Regular.ttf' %}") format("truetype");
+  }
 </style>
 
 {% if not request.user.is_staff %}
@@ -56,18 +56,18 @@
   let $deck, $msnry;
 
   function debounce_leading(func, timeout = 300) {
-      // https://www.freecodecamp.org/news/javascript-debounce-example/
-      let timer;
-      return (...args) => {
-        if (!timer) {
-          func.apply(this, args);
-        }
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-          timer = undefined;
-        }, timeout);
-      };
-    }
+    // https://www.freecodecamp.org/news/javascript-debounce-example/
+    let timer;
+    return (...args) => {
+      if (!timer) {
+        func.apply(this, args);
+      }
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        timer = undefined;
+      }, timeout);
+    };
+  }
 
 
   function onLoadMain(evt) {
@@ -83,9 +83,6 @@
           "itemSelector": ".swatchbox"
         });
       window.msnry = $msnry.data("masonry");
-    }
-    if (window.collectionModeEnabled) {
-      preselect_items(window.multiselectArray);
     }
 
     emailMagic();
@@ -109,21 +106,11 @@
     }).showToast();
   }
 
-  htmx.on("htmx:beforeOnLoad", function(evt) {
-    // wipe the tooltips if they're loaded so that they don't screw
-    // up the new page
-    if (window.tooltipList) {
-      window.tooltipList.forEach((tooltip) => {
-        try {
-          tooltip.dispose();
-        } catch (error) {
-          // ignore errors if the tooltip is already disposed
-        }
-      });
-    }
-  });
+  function hideAllPopovers() {
+    $("[data-bs-toggle='popover']").popover('hide')
+  }
 
-  htmx.on("htmx:responseError", function(evt) {
+  htmx.on("htmx:responseError", function (evt) {
     if (evt.detail.xhr.status === 701) {
       showToastError("That doesn't look like a valid color. Try again?");
     } else if (evt.detail.xhr.status === 702) {
@@ -219,7 +206,9 @@
 
   function tooltips() {
     const tooltipTriggerList = document.querySelectorAll("[data-bs-toggle=\"tooltip\"]");
-    window.tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    window.tooltipList = [...tooltipTriggerList].map(
+      tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl)
+    );
   }
 
   htmx.config.historyCacheSize = 10;
@@ -238,7 +227,7 @@
     return typeof hex === "string" && (hex.length === 6 || hex.length === 3) && !isNaN(Number("0x" + hex))
   };
 
-  $(document).ready(function() {
+  $(document).ready(function () {
     onLoadMain({})
     jscolor.presets.default = {
       format: "hex"
@@ -248,7 +237,9 @@
     // adapted from https://stackoverflow.com/a/48432381
     document.body.addEventListener('shown.bs.modal', (e) => {
       var ele = $(e.target).find('input[type=text],textarea,select').filter(':visible:first'); // find the first input on the bs modal
-      if (ele) {ele.focus();} // if we found one then set focus.
+      if (ele) {
+        ele.focus();
+      } // if we found one then set focus.
     })
   });
 </script>

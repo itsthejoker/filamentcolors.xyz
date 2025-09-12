@@ -221,6 +221,31 @@
   }
 
   function tooltips() {
+    // wipe the tooltips and popovers if they're loaded so that they don't screw
+    // up the new page
+    if (window.popoverList) {
+      window.popoverList.forEach((popover) => {
+        try {
+          popover.dispose();
+        } catch (error) {
+          // ignore errors if the popover is already disposed
+        }
+      });
+    }
+    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    window.popoverList = [...popoverTriggerList].map(
+      popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl)
+    );
+
+    if (window.tooltipList) {
+      window.tooltipList.forEach((tooltip) => {
+        try {
+          tooltip.dispose();
+        } catch (error) {
+          // ignore errors if the tooltip is already disposed
+        }
+      });
+    }
     const tooltipTriggerList = document.querySelectorAll("[data-bs-toggle=\"tooltip\"]");
     window.tooltipList = [...tooltipTriggerList].map(
       tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl)

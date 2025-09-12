@@ -687,7 +687,10 @@ htmx.on("htmx:beforeRequest", function (evt) {
     const isInfiniteScroll = (
       JSON.parse($(evt.target).attr('hx-headers'))["X-Infinite-Scroll"] ?? null
     )
-    if (!isInfiniteScroll) {
+    const isSearch = (
+      JSON.parse($(evt.target).attr('hx-headers'))["X-Searchbar"] ?? null
+    )
+    if (!(isInfiniteScroll || isSearch)) {
       window.multiselect.exitCollectionMode()
     }
   } catch {

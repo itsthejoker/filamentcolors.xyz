@@ -49,7 +49,7 @@ class CSSMixin:
         hex_code = hex_code.lstrip("#")
 
         # Convert the hex color to RGB
-        r, g, b = tuple(int(hex_code[i:i + 2], 16) for i in (0, 2, 4))
+        r, g, b = tuple(int(hex_code[i : i + 2], 16) for i in (0, 2, 4))
 
         # Calculate the relative luminance
         luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
@@ -84,14 +84,16 @@ class CSSMixin:
             hex_code = self.hex_color
         return self.adjust_hex_shade(hex_code, self.BTN_ACTIVE_BORDER_PERCENT)
 
-    def adjust_hex_shade(self, hex_code, percent, return_rgb: bool = False) -> tuple | str:
+    def adjust_hex_shade(
+        self, hex_code, percent, return_rgb: bool = False
+    ) -> tuple | str:
         """
         Adjusts a hex color by a given percentage lighter or darker.
         The percent is how much to adjust the shade (e.g., -10 for 10% darker,
          +5 for 5% lighter).
         """
-        hex_code = hex_code.lstrip('#')
-        r, g, b = tuple(int(hex_code[i:i + 2], 16) for i in (0, 2, 4))
+        hex_code = hex_code.lstrip("#")
+        r, g, b = tuple(int(hex_code[i : i + 2], 16) for i in (0, 2, 4))
         h, l, s = colorsys.rgb_to_hls(r / 255.0, g / 255.0, b / 255.0)
 
         # Adjust lightness by the given percentage
@@ -104,7 +106,7 @@ class CSSMixin:
         if return_rgb:
             return r, g, b
 
-        return f'#{r:02x}{g:02x}{b:02x}'
+        return f"#{r:02x}{g:02x}{b:02x}"
 
 
 class Manufacturer(models.Model):
@@ -694,7 +696,7 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         return tds[0], tds[0]
 
     def get_rgb(self, hex: str) -> Tuple[int, ...]:
-        return tuple(int(hex[i: i + 2], 16) for i in (0, 2, 4))
+        return tuple(int(hex[i : i + 2], 16) for i in (0, 2, 4))
 
     def get_hex(self, rgb: tuple) -> str:
         return "{R}{G}{B}".format(
@@ -897,15 +899,15 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
 
         for step_option in self.STEP_OPTIONS:
             if result := self._get_closest_color(
-                    queryset,
-                    rgb=self_color,
-                    step=step_option,
-                    extra_args=extra_args,
+                queryset,
+                rgb=self_color,
+                step=step_option,
+                extra_args=extra_args,
             ):
                 return result
 
     def _get_closest_color(
-            self, queryset, step: int, rgb: tuple = None, extra_args: dict = None
+        self, queryset, step: int, rgb: tuple = None, extra_args: dict = None
     ):
         """Takes in either Pantone or RAL, then returns the matching element."""
         distance_dict = {}
@@ -1073,7 +1075,7 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
             self.save()
 
     def update_all_color_matches(
-            self, library: QuerySet, include_third_party=False
+        self, library: QuerySet, include_third_party=False
     ) -> None:
         # NOTE: This does not save to the database!!! This is deliberate -
         # we only want to save it if we're updating the defaults. Otherwise,

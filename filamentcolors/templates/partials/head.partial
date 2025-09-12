@@ -165,13 +165,56 @@
   });
 
   function lazyloadimages() {
-    let images = $(".lazy-load-image");
-    images.each(function() {
-        let image = $(this);
-        image.attr("loading", "lazy");
-        image.attr("src", image.attr('data-src'));
-        image.removeClass("lazy-load-image");
+    const images = document.querySelectorAll('img.lazy-load-image[data-src]');
+
+    // Fallback for very old browsers: just do the minimal-change approach
+    if (!('IntersectionObserver' in window)) {
+      images.forEach(preloadAndSwap);
+      return;
+    }
+
+    const io = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const img = entry.target;
+        observer.unobserve(img);
+        preloadAndSwap(img);
+      });
+    }, {
+      root: null,
+      rootMargin: '200px 0px', // start 200px before it appears
+      threshold: 0.01
     });
+
+    images.forEach((img) => io.observe(img));
+
+    function preloadAndSwap(img) {
+      img.setAttribute('loading', 'lazy');
+      img.setAttribute('decoding', 'async');
+
+      const realSrc = img.getAttribute('data-src');
+      if (!realSrc) return;
+
+      const preloader = new Image();
+      preloader.decoding = 'async';
+
+      preloader.addEventListener('load', async () => {
+        try {
+          if (preloader.decode) await preloader.decode();
+        } catch (e) { /* ignore */
+        }
+        img.src = realSrc;
+        img.removeAttribute('data-src');
+        img.classList.remove('lazy-load-image');
+      }, {once: true});
+
+      preloader.addEventListener('error', () => {
+        img.classList.remove('lazy-load-image');
+        img.classList.add('lazy-load-error');
+      }, {once: true});
+
+      preloader.src = realSrc;
+    }
   }
 
   function tooltips() {

@@ -254,6 +254,7 @@ html[data-bs-theme='dark'] .card {
     left: 0;
     display: none;
     border-radius: .75em;
+    cursor: pointer;
 }
 
 .card-click-overlay {
@@ -899,4 +900,12 @@ svg {
         opacity: 0;
         transform: scale(.3);
     }
+}
+
+.grabbable {
+   cursor: grab;
+}
+
+.grabbable:active {
+   cursor: grabbing;
 }

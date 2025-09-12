@@ -30,7 +30,7 @@ var SwatchItem = class SwatchItem {
 
     let div = document.createElement("div")
     div.id = `swatchItem-${this.objId}`
-    div.className = `ms-2 swatch-collection-tray-item ${this.noAnim ? '' : 'slide-in-bottom'}`
+    div.className = `ms-2 swatch-collection-tray-item ${this.noAnim ? '' : 'slide-in-bottom'} grabbable`
     div.onclick = () => {
       this.select()
     }
@@ -345,6 +345,7 @@ var SwatchTray = class SwatchTray {
           window.touchEventDetected = true;
           window.multiselect.swatchTray.sortableTouchEventTriggered = true;
           window.multiselect.swatchTray.disableSortable();
+          $(".swatch-collection-tray-item").removeClass("grabbable");
         }
       }, {once: true});
     }

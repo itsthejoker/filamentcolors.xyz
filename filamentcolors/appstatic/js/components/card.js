@@ -247,12 +247,12 @@ class Card extends HTMLElement {
                 const exists = tray.swatches.some(sw => String(sw.objId) === String(idToCheck));
                 // If collection mode is disabled, never allow selection
                 if (multiselect && multiselect.collectionModeEnabled === false) {
-                  this.deselect();
+                  this.deselect(false);
                 } else if (exists) {
                   // Select without re-adding to the tray
                   this.select(false);
                 } else {
-                  this.deselect();
+                  this.deselect(false);
                 }
               }
               // Fire this check every time the element becomes visible; do not disconnect here
@@ -373,9 +373,9 @@ class Card extends HTMLElement {
     if (addCard) window.multiselect.swatchTray.addItemFromCard($(this));
   }
 
-  deselect() {
+  deselect(removeCard=true) {
     this.selected = false;
-    window.multiselect.swatchTray.removeItemByCard($(this));
+    if (removeCard) window.multiselect.swatchTray.removeItemByCard($(this));
     const affectedEl = $(this).find(".swatchcard").first()
     affectedEl.removeClass("selected-card");
     affectedEl.addClass("shadow-sm");

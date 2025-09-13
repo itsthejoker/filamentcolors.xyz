@@ -119,17 +119,57 @@ var SwatchTray = class SwatchTray {
       return {
         show: function () {
         },
-        hide: function () {
+        unshow: function () {
         }
       };
     }
     const instance = bootstrap.Offcanvas.getOrCreateInstance(el);
     this._tray = instance;
+    this._tray._show = instance.show;
+    this._tray._hide = instance.hide;
+    this._tray.show = () => {console.log("showing tray"); this._tray._show()};
+    this._tray.unshow = () => {console.log("hiding tray"); instance.hide()};
     return this._tray;
   }
-
-  // Ensure we always have a live reference to the tray body element
   get el() {
+    if (this._el) {
+      if (document.contains(this._el)) {
+        return this._el;
+      }
+    }
+    this._el = document.getElementById("offcanvas-swatchtray");
+    this.sortableEnabled = false;
+    this.eosEnabled = false;
+    this.horizontalScrollEnabled = false;
+        try {
+        if (this.rightButton) {
+          this.rightButton.el = $("#trayRightButton");
+          this.rightButton.isVisible = false; // recalc visibility below
+        }
+        if (this.leftButton) {
+          this.leftButton.el = $("#trayLeftButton");
+          this.leftButton.isVisible = false;
+        }
+        // Reinstall click handlers on new elements if not present
+        if (this.rightButton && !this.rightButton.el.hasClass('evtInstalled')) {
+          this.rightButton.el.addClass('evtInstalled').on('click', this.NavButtonScrollRight);
+        }
+        if (this.leftButton && !this.leftButton.el.hasClass('evtInstalled')) {
+          this.leftButton.el.addClass('evtInstalled').on('click', this.NavButtonScrollLeft);
+        }
+      } catch (e) {
+      }
+    this.enableSortable();
+    this.disableSortableOnTouch();
+    this.enableEOS();
+    this.enableHorizontalScroll();
+    this.testForNavButtons();
+
+    $(this._el).disableSelection()
+    return this._el;
+  }
+  // Ensure we always have a live reference to the tray body element
+  get el_old() {
     const el = document.getElementById("offcanvas-swatchtray");
     if (!el) {
       this._el = null;
@@ -458,13 +498,14 @@ var SwatchTray = class SwatchTray {
   }
 
   show() {
+    console.log("SHOWING")
     this.tray.show();
     this.enableTrayCancelButton();
     $("#mobileGoButton").removeClass("d-none")
   }
 
   hide() {
-    this.tray.hide();
+    this.tray.unshow();
     $("#mobileGoButton").addClass("d-none")
   }
 
@@ -615,6 +656,7 @@ var Multiselect = class Multiselect {
   }
 
   startCollectionMode() {
+    console.log("STARTING")
     try {
       // under normal circumstances, this is fine. Explodes when editing
       // a collection, though.
@@ -629,9 +671,10 @@ var Multiselect = class Multiselect {
   }
 
   exitCollectionMode() {
+    console.log("EXITING")
     this.collectionModeEnabled = false;
     this.preselectMode = false;
-    this.swatchTray.hide();
+    this.swatchTray.unshow();
     this.disableOverlays();
   }
 

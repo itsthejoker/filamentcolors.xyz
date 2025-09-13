@@ -87,10 +87,6 @@
   }
 
   function onLoadMain(evt) {
-    var perfEntries = performance.getEntriesByType("navigation");
-    for (var i = 0; i < perfEntries.length; i++) {
-        console.log(perfEntries[i].type);
-    }
     tooltips();
     lazyloadimages();
 

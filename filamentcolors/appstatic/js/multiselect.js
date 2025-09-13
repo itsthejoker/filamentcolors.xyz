@@ -119,20 +119,21 @@ var SwatchTray = class SwatchTray {
       return {
         show: function () {
         },
-        unshow: function () {
+        hide: function () {
         }
       };
     }
     const instance = bootstrap.Offcanvas.getOrCreateInstance(el);
     this._tray = instance;
-    this._tray._show = instance.show;
-    this._tray._hide = instance.hide;
-    this._tray.show = () => {console.log("showing tray"); this._tray._show()};
-    this._tray.unshow = () => {console.log("hiding tray"); instance.hide()};
+    this._tray.show = instance.show;
+    this._tray.hide = instance.hide;
     return this._tray;
   }
   get el() {
     if (this._el) {
+      // during htmx history snapshots, it's possible for the tray to become orphaned.
+      // if that happens, find the new tray and initialize it with the data the old
+      // tray had.
       if (document.contains(this._el)) {
         return this._el;
       }
@@ -165,61 +166,6 @@ var SwatchTray = class SwatchTray {
     this.enableHorizontalScroll();
     this.testForNavButtons();
 
-    $(this._el).disableSelection()
-    return this._el;
-  }
-  // Ensure we always have a live reference to the tray body element
-  get el_old() {
-    const el = document.getElementById("offcanvas-swatchtray");
-    if (!el) {
-      this._el = null;
-      return null;
-    }
-    // If the element has changed (e.g., after navigation/back), rewire features
-    if (this._el && this._el !== el) {
-      // Element was replaced; reset flags so we can re-initialize on the new element
-      if (this.sortableEnabled) {
-        try {
-          $(this._el).sortable('destroy');
-        } catch (e) {
-        }
-        this.sortableEnabled = false;
-      }
-      // eos/horizontal scroll listeners were bound to old element; mark for re-enable
-      this.eosEnabled = false;
-      this.horizontalScrollEnabled = false;
-      // Also refresh nav button element references because their DOM nodes were replaced
-      try {
-        if (this.rightButton) {
-          this.rightButton.el = $("#trayRightButton");
-          this.rightButton.isVisible = false; // recalc visibility below
-        }
-        if (this.leftButton) {
-          this.leftButton.el = $("#trayLeftButton");
-          this.leftButton.isVisible = false;
-        }
-        // Reinstall click handlers on new elements if not present
-        if (this.rightButton && !this.rightButton.el.hasClass('evtInstalled')) {
-          this.rightButton.el.addClass('evtInstalled').on('click', this.NavButtonScrollRight);
-        }
-        if (this.leftButton && !this.leftButton.el.hasClass('evtInstalled')) {
-          this.leftButton.el.addClass('evtInstalled').on('click', this.NavButtonScrollLeft);
-        }
-      } catch (e) {
-      }
-      // Re-enable features on the new element to keep UX consistent
-      // Note: these methods internally check flags
-      this._el = el;
-      this.enableSortable();
-      this.disableSortableOnTouch();
-      this.enableEOS();
-      this.enableHorizontalScroll();
-      this.testForNavButtons();
-
-      $(this._el).disableSelection()
-      return this._el;
-    }
-    this._el = el;
     $(this._el).disableSelection()
     return this._el;
   }
@@ -498,14 +444,13 @@ var SwatchTray = class SwatchTray {
   }
 
   show() {
-    console.log("SHOWING")
     this.tray.show();
     this.enableTrayCancelButton();
     $("#mobileGoButton").removeClass("d-none")
   }
 
   hide() {
-    this.tray.unshow();
+    this.tray.hide();
     $("#mobileGoButton").addClass("d-none")
   }
 
@@ -656,7 +601,6 @@ var Multiselect = class Multiselect {
   }
 
   startCollectionMode() {
-    console.log("STARTING")
     try {
       // under normal circumstances, this is fine. Explodes when editing
       // a collection, though.
@@ -671,10 +615,9 @@ var Multiselect = class Multiselect {
   }
 
   exitCollectionMode() {
-    console.log("EXITING")
     this.collectionModeEnabled = false;
     this.preselectMode = false;
-    this.swatchTray.unshow();
+    this.swatchTray.hide();
     this.disableOverlays();
   }
 
@@ -742,6 +685,12 @@ htmx.on("htmx:beforeRequest", function (evt) {
   }
 })
 
+// $(document).on('hide.bs.offcanvas', (el) => console.log(el))
+//
+// htmx.on("htmx:beforeHistorySave", function (evt) {
+//   console.log(evt)
+//   console.log($(evt.target).attr("hx-headers"))
+// })
 
 $(document).ready(function () {
   if (!(window.multiselect)) {

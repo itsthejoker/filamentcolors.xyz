@@ -602,6 +602,7 @@ def colormatch(request: HttpRequest) -> HttpResponse:
             matches.append(matching_swatch)
             library = library.exclude(id=matching_swatch.id)
 
+        matches.sort(key=lambda s: s.distance)
         data["swatches"] = matches
         return prep_request(request, "partials/colormatch_results.partial", data)
 

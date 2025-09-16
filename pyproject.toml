@@ -51,7 +51,7 @@ seed-isort-config = "^2.2.0"
 black = "^25.1.0"
 django-debug-toolbar = "^6.0.0"
 djade = "^1.6.0"
-pytest-cov = "^6.3.0"
+pytest-cov = "^7.0.0"
 pytest-xdist = "^3.8.0"
 
 [build-system]

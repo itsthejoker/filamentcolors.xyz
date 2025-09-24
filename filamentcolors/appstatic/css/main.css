@@ -535,12 +535,25 @@ html[data-bs-theme='dark'] .card {
     height: 100%;
     width: 100%;
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 999; /* Sit on top */
     left: 0;
     top: 0;
     background-color: rgb(255, 255, 255); /* Black fallback color */
-    background-color: rgba(255, 255, 255, 255); /* Black w/opacity */
+    background-color: rgba(255, 255, 255, 0.6); /* Black w/opacity */
     overflow-x: hidden; /* Disable horizontal scroll */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 300ms ease, visibility 300ms ease;
+}
+
+/* Visible state for overlay (when HTMX is requesting) */
+.htmx-request .overlay,
+.htmx-request.overlay,
+.overlay.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 /* Position the content inside the overlay */
@@ -568,13 +581,11 @@ html[data-bs-theme='dark'] .htmx-indicator.htmx-request {
     background: #212529;
 }
 
-.htmx-request .overlay {
+/* Keep overlay mounted so opacity/visibility transitions can animate */
+.overlay.htmx-indicator {
     display: block;
 }
 
-.htmx-request.overlay {
-    display: block;
-}
 
 .inventory-row:hover {
     background-color: rgba(0, 0, 0, 0.1)

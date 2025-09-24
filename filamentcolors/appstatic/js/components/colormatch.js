@@ -411,6 +411,15 @@ class ColorMatch extends HTMLElement {
     window.inputs['lab_a'] = document.getElementById('a-input') || this.q('#a-input')
     window.inputs['lab_b'] = document.getElementById('b-input') || this.q('#b-input')
 
+    // Ensure LAB inputs are included in form submissions
+    try {
+      if (window.inputs['lab_l']) window.inputs['lab_l'].setAttribute('name', 'lab_l')
+      if (window.inputs['lab_a']) window.inputs['lab_a'].setAttribute('name', 'lab_a')
+      if (window.inputs['lab_b']) window.inputs['lab_b'].setAttribute('name', 'lab_b')
+    } catch (e) {
+      // no-op if inputs are not present
+    }
+
     // Initial sync
     this.updateAll()
 

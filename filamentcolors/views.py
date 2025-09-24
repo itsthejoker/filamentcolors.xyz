@@ -6,6 +6,8 @@ from typing import Any
 import numpy
 import pandas
 from altcha import verify_solution
+from colormath.color_conversions import convert_color
+from colormath.color_objects import LabColor, sRGBColor
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q, QuerySet
@@ -16,12 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 from plotly import graph_objects
 
 from filamentcolors import status
-from filamentcolors.colors import (
-    convert_short_to_full_hex,
-    hex_to_rgb,
-    is_hex,
-    is_short_hex,
-)
+from filamentcolors.colors import convert_short_to_full_hex, is_hex, is_short_hex
 from filamentcolors.exceptions import UnknownSlugOrID
 from filamentcolors.helpers import (
     ErrorStatusResponse,
@@ -580,24 +577,44 @@ def colormatch(request: HttpRequest) -> HttpResponse:
     )
 
     if request.method == "POST":
-        incoming_color = request.POST.get("hex_color")
-        if not incoming_color:
-            # validation is always a good thing
-            return ErrorStatusResponse(status=status.HTTP_702_MISSING_COLOR_CODE)
-        if is_short_hex(incoming_color):
-            incoming_color = convert_short_to_full_hex(incoming_color)
-        if not is_hex(incoming_color):
-            return ErrorStatusResponse(status=status.HTTP_701_BAD_COLOR_CODE)
+        # Prefer LAB input if provided; fall back to HEX
+        lab_l = request.POST.get("lab_l")
+        lab_a = request.POST.get("lab_a")
+        lab_b = request.POST.get("lab_b")
+
+        target_lab = None  # LabColor used for distance and filtering
+        if lab_l and lab_a and lab_b:
+            try:
+                l_val = float(str(lab_l).strip())
+                a_val = float(str(lab_a).strip())
+                b_val = float(str(lab_b).strip())
+                # Clamp L to [0,100] like frontend does; A/B are typically within ~[-128,127]
+                l_val = max(0.0, min(100.0, l_val))
+                target_lab = LabColor(l_val, a_val, b_val)
+            except (ValueError, TypeError):
+                # If LAB provided but invalid, return bad color code
+                return ErrorStatusResponse(status=status.HTTP_701_BAD_COLOR_CODE)
+        else:
+            incoming_color = request.POST.get("hex_color")
+            if not incoming_color:
+                # validation is always a good thing
+                return ErrorStatusResponse(status=status.HTTP_702_MISSING_COLOR_CODE)
+            if is_short_hex(incoming_color):
+                incoming_color = convert_short_to_full_hex(incoming_color)
+            if not is_hex(incoming_color):
+                return ErrorStatusResponse(status=status.HTTP_701_BAD_COLOR_CODE)
+            target_lab = convert_color(
+                sRGBColor.new_from_rgb_hex(incoming_color), LabColor
+            )
+
         library = get_swatches(data)
         matches = []
 
         for _ in range(data["user_settings"].get("number_of_colormatch_results", 3)):
-            matching_swatch = Swatch().get_closest_color_swatch(
-                library, hex_to_rgb(incoming_color)
-            )
+            matching_swatch = Swatch().get_closest_color_swatch(library, target_lab)
             if not matching_swatch:
                 continue
-            distance = matching_swatch.get_distance_to(hex_to_rgb(incoming_color))
+            distance = matching_swatch.get_distance_to(target_lab)
             matching_swatch.distance = distance
             matches.append(matching_swatch)
             library = library.exclude(id=matching_swatch.id)

@@ -1,4 +1,4 @@
-from colormath.color_objects import sRGBColor
+from colormath.color_objects import LabColor, sRGBColor
 from django.db.models import BooleanField, ExpressionWrapper, Q
 from django.db.models.functions import Lower
 from django.http import JsonResponse
@@ -131,9 +131,11 @@ class SwatchViewSet(ReadOnlyModelViewSet):
                 )
             else:
                 library = Swatch.objects.filter(filters)
+            from colormath.color_conversions import convert_color
+
             results[color] = Swatch().get_closest_color_swatch(
                 library,
-                sRGBColor.new_from_rgb_hex(color.strip()).get_upscaled_value_tuple(),
+                convert_color(sRGBColor.new_from_rgb_hex(color.strip()), LabColor),
             )
 
         results = {

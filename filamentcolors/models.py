@@ -28,9 +28,47 @@ from filamentcolors.exceptions import ForeignKeyLoop, UnknownSlugOrID
 
 
 class DistanceMixin:
-    def get_distance_to(self, rgb: tuple[str]) -> float:
-        target_color = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
-        self_color = convert_color(sRGBColor.new_from_rgb_hex(self.hex_color), LabColor)
+    def get_distance_to(self, lab: tuple | LabColor) -> float:
+        # Accept a LabColor or (L, a, b) tuple and compute Delta E to this object
+        if isinstance(lab, LabColor):
+            target_color = lab
+        else:
+            # tuple: ensure it's (L, a, b)
+            target_color = LabColor(lab[0], lab[1], lab[2], OBSERVER_ANGLE, ILLUMINANT)
+        # Ensure consistent illuminant/observer
+        try:
+            target_color.set_illuminant(ILLUMINANT)
+            target_color.set_observer(OBSERVER_ANGLE)
+        except Exception:
+            pass
+        # Determine self color in LAB without relying on hex, if possible
+        try:
+            if (
+                getattr(self, "lab_l", None) is not None
+                and getattr(self, "lab_a", None) is not None
+                and getattr(self, "lab_b", None) is not None
+            ):
+                self_color = LabColor(
+                    self.lab_l, self.lab_a, self.lab_b, OBSERVER_ANGLE, ILLUMINANT
+                )
+            elif (
+                getattr(self, "rgb_r", None) is not None
+                and getattr(self, "rgb_g", None) is not None
+                and getattr(self, "rgb_b", None) is not None
+            ):
+                self_color = convert_color(
+                    sRGBColor(self.rgb_r, self.rgb_g, self.rgb_b, is_upscaled=True),
+                    LabColor,
+                )
+            else:
+                # As a last resort, fall back to hex
+                self_color = convert_color(
+                    sRGBColor.new_from_rgb_hex(self.hex_color), LabColor
+                )
+        except Exception:
+            self_color = convert_color(
+                sRGBColor.new_from_rgb_hex(self.hex_color), LabColor
+            )
         return delta_e_cie2000(target_color, self_color)
 
 
@@ -885,55 +923,77 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         this.save()
         return this.image_opengraph.url
 
-    def get_closest_color_swatch(self, library: Union[QuerySet, List], rgb: tuple):
+    def get_closest_color_swatch(
+        self, library: Union[QuerySet, List], lab: tuple | LabColor
+    ):
         """Get a swatch that fits with progressively less-strict clamps."""
         for step_option in self.STEP_OPTIONS:
-            if result := self._get_closest_color(library, rgb=rgb, step=step_option):
+            if result := self._get_closest_color(library, lab=lab, step=step_option):
                 return result
 
     def get_closest_third_party_color(self, model, category=None, queryset=None):
         """Get a swatch that fits with progressively less-strict clamps."""
-        self_color = self.get_rgb(self.hex_color)
+        self_color = self.get_lab_from_self()
         queryset = queryset if queryset else model.objects.all()
         extra_args = {"category": category} if category else None
 
         for step_option in self.STEP_OPTIONS:
             if result := self._get_closest_color(
                 queryset,
-                rgb=self_color,
+                lab=self_color,
                 step=step_option,
                 extra_args=extra_args,
             ):
                 return result
 
     def _get_closest_color(
-        self, queryset, step: int, rgb: tuple = None, extra_args: dict = None
+        self, queryset, step: int, lab: tuple | LabColor = None, extra_args: dict = None
     ):
-        """Takes in either Pantone or RAL, then returns the matching element."""
+        """Takes in either Pantone or RAL, then returns the matching element.
+        Operates in LAB space for distance; uses sRGB only for initial DB filtering.
+        """
         distance_dict = {}
 
         if not extra_args:
             extra_args = {}
 
-        if not rgb:
-            rgb = self.get_rgb(self.hex_color)
+        # Determine target LAB
+        if lab is None:
+            target_lab = self.get_lab_from_self()
+        else:
+            target_lab = (
+                lab
+                if isinstance(lab, LabColor)
+                else LabColor(lab[0], lab[1], lab[2], OBSERVER_ANGLE, ILLUMINANT)
+            )
 
-        target_color = convert_color(sRGBColor(*rgb, is_upscaled=True), LabColor)
+        # Convert to sRGB for the initial clamp (0..255 upscaled)
+        # target_srgb = convert_color(target_lab, sRGBColor)
+        # rgb = target_srgb.get_upscaled_value_tuple()
 
+        # options = queryset.filter(
+        #     **extra_args,
+        #     rgb_r__gt=max(rgb[0] - step, 0),
+        #     rgb_r__lt=min(rgb[0] + step, 255),
+        #     rgb_g__gt=max(rgb[1] - step, 0),
+        #     rgb_g__lt=min(rgb[1] + step, 255),
+        #     rgb_b__gt=max(rgb[2] - step, 0),
+        #     rgb_b__lt=min(rgb[2] + step, 255),
+        # )
         options = queryset.filter(
             **extra_args,
-            rgb_r__gt=max(rgb[0] - step, 0),
-            rgb_r__lt=min(rgb[0] + step, 255),
-            rgb_g__gt=max(rgb[1] - step, 0),
-            rgb_g__lt=min(rgb[1] + step, 255),
-            rgb_b__gt=max(rgb[2] - step, 0),
-            rgb_b__lt=min(rgb[2] + step, 255),
+            lab_l__gt=max(target_lab.lab_l - step, 0),
+            lab_l__lt=min(target_lab.lab_l + step, 100),
+            lab_a__gt=max(target_lab.lab_a - step, -127),
+            lab_a__lt=min(target_lab.lab_a + step, 128),
+            lab_b__gt=max(target_lab.lab_b - step, -127),
+            lab_b__lt=min(target_lab.lab_b + step, 128),
         )
         for option in options:
-            possible_color = convert_color(
-                sRGBColor.new_from_rgb_hex(option.hex_color), LabColor
+            possible_lab = LabColor(
+                option.lab_l, option.lab_a, option.lab_b, OBSERVER_ANGLE, ILLUMINANT
             )
-            distance = delta_e_cie2000(target_color, possible_color)
+            distance = delta_e_cie2000(target_lab, possible_lab)
             distance_dict.update({option: distance})
 
         distance_dict = {
@@ -973,10 +1033,9 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
     def update_complement_swatch(self, l):
         complement = Color(self.hex_color).complementary()[1]
         complement = sRGBColor.new_from_rgb_hex(str(complement))
+        complement_lab = convert_color(complement, LabColor)
 
-        self.complement = self.get_closest_color_swatch(
-            l, complement.get_upscaled_value_tuple()
-        )
+        self.complement = self.get_closest_color_swatch(l, complement_lab)
 
     def update_analogous_swatches(self, l):
         analogous = Color(self.hex_color).analagous()
@@ -984,10 +1043,10 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         a_2 = sRGBColor.new_from_rgb_hex(str(analogous[2]))
 
         self.analogous_1 = self.get_closest_color_swatch(
-            l, a_1.get_upscaled_value_tuple()
+            l, convert_color(a_1, LabColor)
         )
         self.analogous_2 = self.get_closest_color_swatch(
-            l, a_2.get_upscaled_value_tuple()
+            l, convert_color(a_2, LabColor)
         )
 
     def update_triadic_swatches(self, l):
@@ -995,12 +1054,8 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         t_1 = sRGBColor.new_from_rgb_hex(str(triadic[1]))
         t_2 = sRGBColor.new_from_rgb_hex(str(triadic[2]))
 
-        self.triadic_1 = self.get_closest_color_swatch(
-            l, t_1.get_upscaled_value_tuple()
-        )
-        self.triadic_2 = self.get_closest_color_swatch(
-            l, t_2.get_upscaled_value_tuple()
-        )
+        self.triadic_1 = self.get_closest_color_swatch(l, convert_color(t_1, LabColor))
+        self.triadic_2 = self.get_closest_color_swatch(l, convert_color(t_2, LabColor))
 
     def update_split_complement_swatches(self, l):
         split_c = Color(self.hex_color).split_complementary()
@@ -1008,10 +1063,10 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         s_2 = sRGBColor.new_from_rgb_hex(str(split_c[2]))
 
         self.split_complement_1 = self.get_closest_color_swatch(
-            l, s_1.get_upscaled_value_tuple()
+            l, convert_color(s_1, LabColor)
         )
         self.split_complement_2 = self.get_closest_color_swatch(
-            l, s_2.get_upscaled_value_tuple()
+            l, convert_color(s_2, LabColor)
         )
 
     def update_tetradic_swatches(self, l):
@@ -1020,15 +1075,9 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         t_2 = sRGBColor.new_from_rgb_hex(str(tetradic[2]))
         t_3 = sRGBColor.new_from_rgb_hex(str(tetradic[3]))
 
-        self.tetradic_1 = self.get_closest_color_swatch(
-            l, t_1.get_upscaled_value_tuple()
-        )
-        self.tetradic_2 = self.get_closest_color_swatch(
-            l, t_2.get_upscaled_value_tuple()
-        )
-        self.tetradic_3 = self.get_closest_color_swatch(
-            l, t_3.get_upscaled_value_tuple()
-        )
+        self.tetradic_1 = self.get_closest_color_swatch(l, convert_color(t_1, LabColor))
+        self.tetradic_2 = self.get_closest_color_swatch(l, convert_color(t_2, LabColor))
+        self.tetradic_3 = self.get_closest_color_swatch(l, convert_color(t_3, LabColor))
 
     def update_square_swatches(self, l):
         square = Color(self.hex_color).square()
@@ -1036,23 +1085,21 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         s_2 = sRGBColor.new_from_rgb_hex(str(square[2]))
         s_3 = sRGBColor.new_from_rgb_hex(str(square[3]))
 
-        self.square_1 = self.get_closest_color_swatch(l, s_1.get_upscaled_value_tuple())
-        self.square_2 = self.get_closest_color_swatch(l, s_2.get_upscaled_value_tuple())
-        self.square_3 = self.get_closest_color_swatch(l, s_3.get_upscaled_value_tuple())
+        self.square_1 = self.get_closest_color_swatch(l, convert_color(s_1, LabColor))
+        self.square_2 = self.get_closest_color_swatch(l, convert_color(s_2, LabColor))
+        self.square_3 = self.get_closest_color_swatch(l, convert_color(s_3, LabColor))
 
     def update_closest_swatches(self, l):
-        own_color = sRGBColor.new_from_rgb_hex(
-            self.hex_color
-        ).get_upscaled_value_tuple()
+        own_lab = self.get_lab_from_self()
         l = l.exclude(pk=self.pk)
 
-        self.closest_1 = self.get_closest_color_swatch(l, own_color)
+        self.closest_1 = self.get_closest_color_swatch(l, own_lab)
         if not self.closest_1:
             # correct for an empty library during testing and dev work
             self.closest_1 = self
 
         l = l.exclude(pk=self.closest_1.pk)
-        self.closest_2 = self.get_closest_color_swatch(l, own_color)
+        self.closest_2 = self.get_closest_color_swatch(l, own_lab)
         if not self.closest_2:
             self.closest_2 = self
 

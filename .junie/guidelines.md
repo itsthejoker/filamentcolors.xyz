@@ -11,9 +11,10 @@ Last updated: 2025-09-15 23:54 (local time)
 - Versions: Python >= 3.10, < 3.13 (see `pyproject.toml`).
 - Formatting: Black and isort are used for consistent style.
   - Run formatter locally: `make pretty` (runs `black .` and `isort .`).
+  - All imports should go at the top of the file unless a specific ordering is required.
   - Import ordering follows isort defaults (see `pyproject.toml` dev dependencies for tooling).
 - Linting: A dedicated linter is not configured; rely on Black/isort and tests.
-- Type hints: Not enforced across the repo; add where they help readability.
+- Type hints: add where possible, even though they are not enforced.
 - Naming:
   - Modules/files follow Django conventions (`models.py`, `views.py`, `urls.py`, etc.).
   - Tests use `test_*.py` naming.
@@ -122,3 +123,9 @@ Top-level (selected):
 - Run tests: `make tests`
 
 IMPORTANT: Always update README.md and this document as necessary when making changes.
+
+## MCPs
+
+Always use context7 when I need code generation, setup or configuration steps, or
+library/API documentation. This means you should automatically use the Context7 MCP
+tools to resolve library id and get library docs without me having to explicitly ask.

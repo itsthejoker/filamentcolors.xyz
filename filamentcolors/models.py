@@ -301,6 +301,9 @@ class Pantone(models.Model, DistanceMixin):
     rgb_r = models.IntegerField()
     rgb_g = models.IntegerField()
     rgb_b = models.IntegerField()
+    lab_l = models.FloatField(null=True, blank=True)
+    lab_a = models.FloatField(null=True, blank=True)
+    lab_b = models.FloatField(null=True, blank=True)
     hex_color = models.CharField(max_length=6, null=True, blank=True)
     category = models.CharField(max_length=30)
 
@@ -318,6 +321,9 @@ class PantonePMS(models.Model, DistanceMixin):
     rgb_r = models.IntegerField()
     rgb_g = models.IntegerField()
     rgb_b = models.IntegerField()
+    lab_l = models.FloatField(null=True, blank=True)
+    lab_a = models.FloatField(null=True, blank=True)
+    lab_b = models.FloatField(null=True, blank=True)
     hex_color = models.CharField(max_length=6, null=True, blank=True)
 
     def __str__(self):
@@ -332,6 +338,9 @@ class RAL(models.Model, DistanceMixin):
     rgb_r = models.IntegerField()
     rgb_g = models.IntegerField()
     rgb_b = models.IntegerField()
+    lab_l = models.FloatField(null=True, blank=True)
+    lab_a = models.FloatField(null=True, blank=True)
+    lab_b = models.FloatField(null=True, blank=True)
     hex_color = models.CharField(max_length=6, null=True, blank=True)
     category = models.CharField(max_length=30)
 

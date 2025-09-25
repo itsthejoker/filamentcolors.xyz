@@ -77,8 +77,6 @@ Top-level (selected):
 - Test framework: pytest + pytest-django (see `pyproject.toml` dev dependencies).
 - Settings for test runs are configured in `pyproject.toml` under `[tool.pytest.ini_options]`:
   - `DJANGO_SETTINGS_MODULE = "filamentcolors.settings.testing"`
-  - `python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]`
-  - `testpaths = ["tests"]` (tests live in `filamentcolors/tests/`)
   - `addopts = "--cov --cov-report html"` for coverage reporting
 - Coverage configuration omits migrations, management, tests, and specific large/3rd-party-like files (see `[tool.coverage.run]`).
 

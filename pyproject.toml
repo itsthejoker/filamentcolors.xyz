@@ -61,9 +61,8 @@ build-backend = "poetry.masonry.api"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "filamentcolors.settings.testing"
 # -- recommended but optional:
-python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
+python_files = ["test_*.py"]
 addopts = "--cov --cov-report html"
-testpaths = ["tests"]
 
 [tool.coverage.run]
 omit = [

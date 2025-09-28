@@ -233,6 +233,7 @@ daily_tweet_intro = [
     "Land ho! A new swatch has been sighted!",
     "Proof that the library is expanding: this swatch!",
     "Remember: the library is always open!",
+    "Hey Mom, swatch this!",
 ]
 
 

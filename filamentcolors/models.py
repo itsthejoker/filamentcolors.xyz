@@ -19,6 +19,7 @@ from django.db.models.query import QuerySet
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
+from html2image import Html2Image
 from PIL import Image as Img
 from taggit.managers import TaggableManager
 
@@ -44,17 +45,17 @@ class DistanceMixin:
         # Determine self color in LAB without relying on hex, if possible
         try:
             if (
-                getattr(self, "lab_l", None) is not None
-                and getattr(self, "lab_a", None) is not None
-                and getattr(self, "lab_b", None) is not None
+                    getattr(self, "lab_l", None) is not None
+                    and getattr(self, "lab_a", None) is not None
+                    and getattr(self, "lab_b", None) is not None
             ):
                 self_color = LabColor(
                     self.lab_l, self.lab_a, self.lab_b, OBSERVER_ANGLE, ILLUMINANT
                 )
             elif (
-                getattr(self, "rgb_r", None) is not None
-                and getattr(self, "rgb_g", None) is not None
-                and getattr(self, "rgb_b", None) is not None
+                    getattr(self, "rgb_r", None) is not None
+                    and getattr(self, "rgb_g", None) is not None
+                    and getattr(self, "rgb_b", None) is not None
             ):
                 self_color = convert_color(
                     sRGBColor(self.rgb_r, self.rgb_g, self.rgb_b, is_upscaled=True),
@@ -87,7 +88,7 @@ class CSSMixin:
         hex_code = hex_code.lstrip("#")
 
         # Convert the hex color to RGB
-        r, g, b = tuple(int(hex_code[i : i + 2], 16) for i in (0, 2, 4))
+        r, g, b = tuple(int(hex_code[i: i + 2], 16) for i in (0, 2, 4))
 
         # Calculate the relative luminance
         luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
@@ -123,7 +124,7 @@ class CSSMixin:
         return self.adjust_hex_shade(hex_code, self.BTN_ACTIVE_BORDER_PERCENT)
 
     def adjust_hex_shade(
-        self, hex_code, percent, return_rgb: bool = False
+            self, hex_code, percent, return_rgb: bool = False
     ) -> tuple | str:
         """
         Adjusts a hex color by a given percentage lighter or darker.
@@ -131,7 +132,7 @@ class CSSMixin:
          +5 for 5% lighter).
         """
         hex_code = hex_code.lstrip("#")
-        r, g, b = tuple(int(hex_code[i : i + 2], 16) for i in (0, 2, 4))
+        r, g, b = tuple(int(hex_code[i: i + 2], 16) for i in (0, 2, 4))
         h, l, s = colorsys.rgb_to_hls(r / 255.0, g / 255.0, b / 255.0)
 
         # Adjust lightness by the given percentage
@@ -743,7 +744,7 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         return tds[0], tds[0]
 
     def get_rgb(self, hex: str) -> Tuple[int, ...]:
-        return tuple(int(hex[i : i + 2], 16) for i in (0, 2, 4))
+        return tuple(int(hex[i: i + 2], 16) for i in (0, 2, 4))
 
     def get_hex(self, rgb: tuple) -> str:
         return "{R}{G}{B}".format(
@@ -895,29 +896,32 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
 
         self.crop_and_save_images()
 
-    def create_opengraph_image(self, close_django_file_too=False):
-        opengraph_size = (1370, 1028)
+    def create_opengraph_image(self, *args, **kwargs):
+        hti = Html2Image(
+            browser="chrome",
+            size=(760, 400),
+            output_path=".",
+            custom_flags=[
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-gpu",
+                "--screen-info={1600x1200}",
+                "--window-size=760x400",
+                '--virtual-time-budget=500'
+            ],
+            temp_path="."
+        )
 
-        def do_update(img_obj):
-            img_obj.thumbnail(opengraph_size, Img.Resampling.LANCZOS)
-            filename_opengraph = self._save_image(img_obj, "opengraph")
+        filename = f"{self.id}-opengraph.png"
+        base_domain = "http://localhost:8000" if settings.DEBUG else "https://filamentcolors.xyz"
+        file_path = hti.screenshot(
+            url=base_domain + self.get_absolute_url() + "opengraph/",
+            save_as=filename
+        )[0]
+        self.image_opengraph = ImageFile(open(file_path, "rb"))
+        self.image_opengraph.name = os.path.relpath(os.path.join(settings.MEDIA_ROOT, file_path))
+        os.unlink(file_path)
 
-            path = os.path.join(settings.MEDIA_ROOT, filename_opengraph)
-            self.image_opengraph = ImageFile(open(path, "rb"))
-            self.image_opengraph.name = filename_opengraph
-
-        if close_django_file_too:
-            # There is an issue in Pillow where the file is not closed properly.
-            # There is no proper workaround except to close the django file handler
-            # and the pillow file handler at the same time; however, this breaks
-            # the normal operation of Django. This workaround is only for large batches
-            # of images.
-            # https://github.com/python-pillow/Pillow/issues/5132#issuecomment-750918772
-            with self.image_front.file, Img.open(self.image_front) as image_opengraph:
-                do_update(image_opengraph)
-        else:
-            with Img.open(self.image_front) as image_opengraph:
-                do_update(image_opengraph)
 
     def get_opengraph_image(self):
         # this is only to tide us over until we create all the proper images
@@ -933,7 +937,7 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         return this.image_opengraph.url
 
     def get_closest_color_swatch(
-        self, library: Union[QuerySet, List], lab: tuple | LabColor
+            self, library: Union[QuerySet, List], lab: tuple | LabColor
     ):
         """Get a swatch that fits with progressively less-strict clamps."""
         for step_option in self.STEP_OPTIONS:
@@ -948,15 +952,15 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
 
         for step_option in self.STEP_OPTIONS:
             if result := self._get_closest_color(
-                queryset,
-                lab=self_color,
-                step=step_option,
-                extra_args=extra_args,
+                    queryset,
+                    lab=self_color,
+                    step=step_option,
+                    extra_args=extra_args,
             ):
                 return result
 
     def _get_closest_color(
-        self, queryset, step: int, lab: tuple | LabColor = None, extra_args: dict = None
+            self, queryset, step: int, lab: tuple | LabColor = None, extra_args: dict = None
     ):
         """Takes in either Pantone or RAL, then returns the matching element.
         Operates in LAB space for distance; uses sRGB only for initial DB filtering.
@@ -1131,7 +1135,7 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
             self.save()
 
     def update_all_color_matches(
-        self, library: QuerySet, include_third_party=False
+            self, library: QuerySet, include_third_party=False
     ) -> None:
         # NOTE: This does not save to the database!!! This is deliberate -
         # we only want to save it if we're updating the defaults. Otherwise,

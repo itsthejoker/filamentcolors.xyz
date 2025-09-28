@@ -84,8 +84,14 @@ class SwatchSerializer(HyperlinkedModelSerializer):
     closest_pms_2 = PantonePMSSerializer(read_only=True)
     closest_pms_3 = PantonePMSSerializer(read_only=True)
 
+    # Derived fields / helpers
     td = serializers.SerializerMethodField()
     td_range = serializers.SerializerMethodField()
+
+    # LAB values should be included unless they were computed; when computed, return None
+    lab_l = serializers.SerializerMethodField()
+    lab_a = serializers.SerializerMethodField()
+    lab_b = serializers.SerializerMethodField()
 
     tags = TagListSerializerField()
 
@@ -94,6 +100,21 @@ class SwatchSerializer(HyperlinkedModelSerializer):
 
     def get_td_range(self, obj):
         return obj.get_td_range()
+
+    def _lab_value_or_none(self, obj, attr: str):
+        # If the LAB value was computed (not measured), hide it in the API per requirements
+        if getattr(obj, "computed_lab", False):
+            return None
+        return getattr(obj, attr)
+
+    def get_lab_l(self, obj):
+        return self._lab_value_or_none(obj, "lab_l")
+
+    def get_lab_a(self, obj):
+        return self._lab_value_or_none(obj, "lab_a")
+
+    def get_lab_b(self, obj):
+        return self._lab_value_or_none(obj, "lab_b")
 
     class Meta:
         model = Swatch
@@ -139,6 +160,9 @@ class SwatchSerializer(HyperlinkedModelSerializer):
             "tags",
             "card_img",
             "hex_color",
+            "lab_l",
+            "lab_a",
+            "lab_b",
             "td",
             "td_range",
             "human_readable_date",

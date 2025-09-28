@@ -1,0 +1,25 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% include 'partials/head.partial' %}
+</head>
+
+<style>
+  table {
+    background-image: url("{% static 'opengraph_bg.png' %}?v=8");
+  }
+</style>
+
+<body>
+<table style="width: 760px; min-width:760px; min-height: 400px; max-height: 400px">
+  <tbody>
+    <tr>
+      <td style="width: 360px"></td>
+      <td class="align-middle" id="swatch">{% include 'components/swatch/card.partial' %}</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

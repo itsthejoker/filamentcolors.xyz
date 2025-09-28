@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,9 +7,27 @@
   {% block title %}
     <title>{{ title|default:"FilamentColors" }}</title>
   {% endblock title %}
-</head>
+  {% block meta_description %}
+    <meta
+      name="twitter:description"
+      content="FilamentColors.xyz: find the best colors for your 3D printing projects!"
+    >
+    <meta
+      name="description"
+      content="FilamentColors.xyz: find the best colors for your 3D printing projects!"
+    >
+  {% endblock %}
 
-{% include 'components/indicators/loading_screen.partial' %}
+  {% block meta_title %}
+    <meta name="twitter:title" content="FilamentColors.xyz">
+    <meta property="og:title" content="FilamentColors.xyz">
+  {% endblock %}
+
+  {% block meta_img %}
+    <meta name="twitter:image:src" content="https://filamentcolors.xyz{% static 'generic_opengraph.png' %}">
+    <meta property="og:image" content="https://filamentcolors.xyz{% static 'generic_opengraph.png' %}">
+  {% endblock %}
+</head>
 
 <body
   hx-ext="morph" {# Allow using the morph transition. #}
@@ -17,6 +37,9 @@
   hx-push-url="true" {# Update the URL that displays in the browser. #}
   hx-indicator="#loading" {# The location of the loading spinner. #}
 >
+
+{% include 'components/indicators/loading_screen.partial' %}
+
 {% if navbar_message %}
   {% include 'components/alerts/navbar_message.partial' %}
 {% endif %}

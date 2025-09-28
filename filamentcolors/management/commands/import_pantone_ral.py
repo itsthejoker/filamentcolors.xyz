@@ -96,7 +96,7 @@ class Command(BaseCommand):
                         lab_l=L,
                         lab_a=a,
                         lab_b=b,
-                        hex_color=hex_code
+                        hex_color=hex_code,
                     )
                 )
             PantonePMS.objects.bulk_create(to_write)

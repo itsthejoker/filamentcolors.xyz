@@ -21,7 +21,7 @@
   }
 </style>
 
-{% if not request.user.is_staff %}
+{% if not request.user.is_staff or not 'opengraph' in request.path %}
   {% plausible script='script.outbound-links.js' %}
 {% endif %}
 
@@ -54,6 +54,15 @@
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="msapplication-config" content="/static/favicons/browserconfig.xml?v=QEJXGyWNR3">
 <meta name="theme-color" content="#ffffff">
+
+<meta name="twitter:card" content="summary">
+{#<meta name="twitter:creator" content="@filamentcolors">#}
+<meta name="twitter:site" content="@filamentcolors">
+
+<meta name="twitter:image:width" content="760">
+<meta name="twitter:image:height" content="400">
+<meta name="og:image:width" content="760">
+<meta name="og:image:height" content="400">
 
 <script>
   let $deck, $msnry;
@@ -89,6 +98,11 @@
   function onLoadMain(evt) {
     tooltips();
     lazyloadimages();
+
+    let loadedInTitle = $("#newTitle");
+    if (loadedInTitle) {
+      $("title").text(loadedInTitle.text())
+    }
 
     $deck = $("#deck-of-many-things");
     if ($deck.length) {

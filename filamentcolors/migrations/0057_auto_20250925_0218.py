@@ -12,7 +12,6 @@ def backfill_lab_colors(apps, schema_editor):
         color.set_observer("10")
         return float(color.lab_l), float(color.lab_a), float(color.lab_b)
 
-
     def process_model(model_name: str):
         Model = apps.get_model("filamentcolors", model_name)
         # Iterate efficiently to avoid loading all rows at once
@@ -35,4 +34,6 @@ class Migration(migrations.Migration):
         ("filamentcolors", "0056_pantone_lab_a_pantone_lab_b_pantone_lab_l_and_more"),
     ]
 
-    operations = [migrations.RunPython(backfill_lab_colors),]
+    operations = [
+        migrations.RunPython(backfill_lab_colors),
+    ]

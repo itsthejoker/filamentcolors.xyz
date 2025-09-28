@@ -380,9 +380,7 @@ def edit_swatch_collection(request: HttpRequest, ids: str) -> HttpResponse:
 #         \/           \/     \/      \/     \/                 \/     \/
 
 
-def swatch_detail(request: HttpRequest, swatch_id: str) -> HttpResponse:
-    html = "standalone/swatch_detail.html"
-    data = build_data_dict(request)
+def _get_swatch_args(swatch_id: str) -> dict[str, Any]:
     try:
         # it can either be the ID of the swatch itself or the slug
         swatch_id = int(swatch_id)
@@ -393,6 +391,28 @@ def swatch_detail(request: HttpRequest, swatch_id: str) -> HttpResponse:
             args = {"slug__startswith": swatch_id[:-4]}
         else:
             args = {"slug": swatch_id}
+    return args
+
+
+def opengraph_card(request: HttpRequest, swatch_id: str) -> HttpResponse:
+    html = "standalone/opengraph_card.html"
+    data = build_data_dict(request)
+
+    args = _get_swatch_args(swatch_id)
+
+    args["published"] = True
+
+    swatch = Swatch.objects.filter(**args).first()
+    if not swatch:
+        raise Http404
+    data['obj'] = swatch
+    return prep_request(request, html, data)
+
+
+def swatch_detail(request: HttpRequest, swatch_id: str) -> HttpResponse:
+    html = "standalone/swatch_detail.html"
+    data = build_data_dict(request)
+    args = _get_swatch_args(swatch_id)
 
     # doing a simplified DB call allows reacting much faster when a filament
     # isn't found; this call is ~10x faster than the full call, and if the
@@ -715,7 +735,7 @@ def about_me(request: HttpRequest) -> HttpResponse:
     return prep_request(
         request,
         "standalone/about_us.html",
-        build_data_dict(request, title="About the Filament Librarian"),
+        build_data_dict(request, title="About the Filament Librarians"),
     )
 
 

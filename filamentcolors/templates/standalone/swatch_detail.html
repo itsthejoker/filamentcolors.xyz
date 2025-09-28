@@ -1,28 +1,34 @@
 {% extends base_template %}
 {% load delta_e %}
 
-{% block content %}
-  {# twitter #}
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:creator" content="@filamentcolors">
-  <meta name="twitter:site" content="@filamentcolors">
-  <meta name="twitter:title"
-        content="{{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}">
-  <meta name="twitter:description" content="{{ swatch.notes }}">
-  <meta name="twitter:image:src" content="https://filamentcolors.xyz{{ swatch.get_opengraph_image }}">
-  <meta name="twitter:image:width" content="1370">
-  <meta name="twitter:image:height" content="1028">
-
-  {# facebook #}
-  <meta property="og:title"
-        content="{{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}">
-  <meta property="og:image" content="https://filamentcolors.xyz{{ swatch.get_opengraph_image }}">
-  <meta name="og:image:width" content="1370">
-  <meta name="og:image:height" content="1028">
-
-  <meta name="description"
-        content="Color info on {{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}: {{ swatch.hex_color }}!"
+{% block meta_description %}
+  <meta
+    name="twitter:description"
+    content="FilamentColors.xyz: {{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}: {{ swatch.hex_color }}!"
+>
+  <meta
+    name="description"
+    content="FilamentColors.xyz: {{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}: {{ swatch.hex_color }}!"
   >
+{% endblock %}
+
+{% block meta_title %}
+  <meta
+    name="twitter:title"
+    content="{{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}"
+  >
+  <meta
+    property="og:title"
+    content="{{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}"
+  >
+{% endblock %}
+
+{% block meta_img %}
+  <meta name="twitter:image:src" content="https://filamentcolors.xyz{{ swatch.get_opengraph_image }}">
+  <meta property="og:image" content="https://filamentcolors.xyz{{ swatch.get_opengraph_image }}">
+{% endblock %}
+
+{% block content %}
   <div class="container mt-3">
     {% include 'partials/messages.partial' %}
     {% if error %}

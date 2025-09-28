@@ -1,6 +1,7 @@
 import colorsys
 import os
 import random
+import time
 from io import BytesIO
 from pathlib import Path
 from typing import List, Tuple, Union
@@ -932,8 +933,20 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         # Reload the object from disk and then generate the opengraph image,
         # then save that version.
         this = Swatch.objects.get(id=self.id)
-        this.create_opengraph_image()
-        this.save()
+        try:
+            this.create_opengraph_image()
+            this.save()
+        except FileNotFoundError:
+            # It got triggered twice. There is a race condition when creating
+            # new images where it's possible that the first one will remove
+            # the image before the second call finishes, which will result
+            # in a FileNotFoundError. In this case, we just want to wait a
+            # small bit for the first call to finish, then refresh from the
+            # db and pull the value the first call wrote. This only has a
+            # chance of happening on a swatch that doesn't yet have an
+            # opengraph image, so having this happen should be extremely rare.
+            time.sleep(0.3)
+            return Swatch.objects.get(id=self.id).image_opengraph.url
         return this.image_opengraph.url
 
     def get_closest_color_swatch(

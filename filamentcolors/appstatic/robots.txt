@@ -1,0 +1,27 @@
+User-agent: *
+Disallow: /collection
+Disallow: /collection/*
+Disallow: /swatch/*/opengraph
+Disallow: /swatch/*/opengraph/
+Disallow: /welcome_experience_images
+Disallow: /welcome_experience_images/*
+Disallow: /welcome_experience_video
+Disallow: /welcome_experience_video/
+Disallow: /visualizer
+Disallow: /visualizer/
+Disallow: /altcha
+Disallow: /altcha/*
+Disallow: /add/*
+Disallow: /edit/*
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /update_images
+Disallow: /update_images/*
+Disallow: /force_swatch_color
+Disallow: /force_swatch_color/*
+Disallow: /recalculate_color
+Disallow: /recalculate_color/*
+Disallow: /update_lab_colors
+Disallow: /set_colors
+
+Sitemap: https://filamentcolors.xyz/sitemap.xml

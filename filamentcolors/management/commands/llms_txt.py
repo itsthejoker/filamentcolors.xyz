@@ -96,7 +96,7 @@ class Command(BaseCommand):
                     s.color_name,
                     (s.filament_type.name if s.filament_type_id else None),
                 ]
-                label = " — ".join([p for p in label_parts if p])
+                label = " -- ".join([p for p in label_parts if p])
                 swatches_section.append(link(label, url))
         except Exception:
             swatches_section.append("- No swatch data available.")

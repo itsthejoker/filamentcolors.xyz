@@ -1,6 +1,6 @@
 # filamentcolors.xyz
 
-The source code for filamentcolors.xyz — a small website for comparing pieces of printed filament and exploring color data. This repo includes the Django backend, REST API, templates, and frontend assets.
+The source code for filamentcolors.xyz ??? a small website for comparing pieces of printed filament and exploring color data. This repo includes the Django backend, REST API, templates, and frontend assets.
 
 - Live site: https://filamentcolors.xyz/
 - Public API root: https://filamentcolors.xyz/api/
@@ -9,7 +9,7 @@ The source code for filamentcolors.xyz — a small website for comparing pieces 
 
 This project is a Django 5.x application managed with Poetry. It provides:
 - A public JSON API for swatches and related data
-- A server‑rendered frontend (Django templates) with progressive enhancement using HTMX and a bit of jQuery/vanilla JS
+- A server???rendered frontend (Django templates) with progressive enhancement using HTMX and a bit of jQuery/vanilla JS
 - Management commands for importing/curating data
 
 The codebase favors small, focused modules and minimal dependencies beyond Django and a handful of utilities for color processing and images.
@@ -31,11 +31,9 @@ Optional (used in development/tests/formatting):
 - poetry install
 
 3) Configure settings
-There are two common local approaches:
-- EITHER set ENVIRONMENT=local to use filamentcolors.settings.local
-- OR create a local_settings.py in the project root (same folder as manage.py). If present, it is automatically loaded and takes precedence.
+Create a local_settings.py in the project root (same folder as manage.py) with the below content.
 
-Example local_settings.py:
+local_settings.py:
 
 ```python
 from filamentcolors.settings.base import *
@@ -68,13 +66,13 @@ Note on static files:
 ## Scripts and common tasks
 
 Make targets:
-- make run — start dev server
-- make migrate — apply migrations
-- make tests — run test suite with coverage (xdist enabled)
-- make pretty — run black and isort
+- make run ??? start dev server
+- make migrate ??? apply migrations
+- make tests ??? run test suite with coverage (xdist enabled)
+- make pretty ??? run black and isort
 
 Other helpers:
-- format.sh — runs black and djade (template formatter) across templates
+- format.sh ??? runs black and djade (template formatter) across templates
 
 ## Environment variables
 These are read by settings; exact usage can be seen in filamentcolors/settings/*.py.
@@ -98,23 +96,23 @@ Database configuration:
 
 Notes:
 - Tests run with DJANGO_SETTINGS_MODULE=filamentcolors.settings.testing (see pyproject.toml).
-- A session‑scoped fixture seeds reference color data automatically; database access is enabled for tests by default.
+- A session???scoped fixture seeds reference color data automatically; database access is enabled for tests by default.
 - External side effects (e.g., social posting) are disabled in testing settings.
 
 ## Project structure (selected)
 
-- filamentcolors/ — main Django app
-  - settings/ — base, local, prod, testing, routing
-  - api/ — REST API endpoints
-  - templates/ — Django templates (partials/, modals/, standalone/)
-  - appstatic/ — JS and CSS authored assets (e.g., js/components, css/main.css)
-  - static/ — collected/static files (do not edit)
-  - management/ — management commands (e.g., seed_swatches, importers)
-  - tests/ — pytest test suite
-  - helpers/constants/middleware/etc. — small support modules
-- manage.py — Django entry point
-- pyproject.toml — Poetry project, dependencies, and pytest config
-- Makefile — convenience tasks
+- filamentcolors/ ??? main Django app
+  - settings/ ??? base, local, prod, testing, routing
+  - api/ ??? REST API endpoints
+  - templates/ ??? Django templates (partials/, modals/, standalone/)
+  - appstatic/ ??? JS and CSS authored assets (e.g., js/components, css/main.css)
+  - static/ ??? collected/static files (do not edit)
+  - management/ ??? management commands (e.g., seed_swatches, importers)
+  - tests/ ??? pytest test suite
+  - helpers/constants/middleware/etc. ??? small support modules
+- manage.py ??? Django entry point
+- pyproject.toml ??? Poetry project, dependencies, and pytest config
+- Makefile ??? convenience tasks
 
 ## Public API
 
@@ -124,11 +122,11 @@ API root: https://filamentcolors.xyz/api/
 
 If you use the API for a project, please consider supporting server costs:
 - Patreon: https://www.patreon.com/filamentcolors
-- One‑time donation: https://buy.stripe.com/8wMbKg8UT4k8fBKaEE
+- One???time donation: https://buy.stripe.com/8wMbKg8UT4k8fBKaEE
 
 API notes:
 
-- Color family is marked by a 3‑letter code for data savings; the map can be found here: https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/models.py
+- Color family is marked by a 3???letter code for data savings; the map can be found here: https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/models.py
 - /api/swatch/ supports sort methods: type and manufacturer. See: https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/api/views.py
 - Example URLs:
   - https://filamentcolors.xyz/api/swatch/?m=manufacturer
@@ -144,4 +142,4 @@ Questions? Email [joe@filamentcolors.xyz](mailto:joe@filamentcolors.xyz).
 
 ## License
 
-MIT © 2018–present Joe Kaufeld. See LICENSE for details.
+MIT ?? 2018???present Joe Kaufeld. See LICENSE for details.

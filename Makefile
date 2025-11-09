@@ -6,8 +6,11 @@ tests:
 migrate:
 	@poetry run python manage.py migrate
 
-run:
+runwin:
 	@dbus-launch --exit-with-session poetry run python manage.py runserver
+
+run:
+	poetry run python manage.py runserver
 
 pretty:
 	@poetry run black . && poetry run isort .

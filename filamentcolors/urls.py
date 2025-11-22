@@ -54,9 +54,10 @@ urlpatterns = [
         name="swatchcollection",
     ),
     path("library/", views.librarysort, name="library"),
-    path("swatch/<str:swatch_id>/opengraph/", views.opengraph_card, name="opengraph_card"),
+    path(
+        "swatch/<str:swatch_id>/opengraph/", views.opengraph_card, name="opengraph_card"
+    ),
     path("swatch/<str:swatch_id>/", views.swatch_detail, name="swatchdetail"),
-
     path(
         "library/manufacturer/<str:mfr_id>/",
         views.manufacturersort,

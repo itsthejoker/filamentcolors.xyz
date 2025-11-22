@@ -405,7 +405,7 @@ def opengraph_card(request: HttpRequest, swatch_id: str) -> HttpResponse:
     swatch = Swatch.objects.filter(**args).first()
     if not swatch:
         raise Http404
-    data['obj'] = swatch
+    data["obj"] = swatch
     return prep_request(request, html, data)
 
 

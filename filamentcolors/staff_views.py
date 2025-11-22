@@ -22,12 +22,14 @@ from filamentcolors.helpers import ErrorStatusResponse, build_data_dict, prep_re
 from filamentcolors.models import Manufacturer, PurchaseLocation, Swatch
 
 
-def get_path_redirect(request, viewname: str, *args, **kwargs):
-    if path := request.META.get("HTTP_REFERER"):
-        # reload the page we came from
-        return redirect(path)
-    else:
-        return redirect(reverse(viewname, args=args, kwargs=kwargs))
+def get_path_redirect(
+    request, viewname: str, *args, ignore_referer: bool = False, **kwargs
+):
+    if not ignore_referer:
+        if path := request.META.get("HTTP_REFERER"):
+            # reload the page we came from
+            return redirect(path)
+    return redirect(reverse(viewname, args=args, kwargs=kwargs))
 
 
 @csrf_exempt
@@ -289,7 +291,7 @@ def add_manufacturer(request):
     if request.method == "POST":
         form = ManufacturerForm(request.POST)
         form.save()
-        return get_path_redirect(request, "add_swatch")
+        return get_path_redirect(request, "add_swatch", ignore_referer=True)
     else:
         data = build_data_dict(request)
         form = ManufacturerForm()
@@ -398,7 +400,7 @@ def add_filament_type(request):
     if request.method == "POST":
         form = FilamentTypeForm(request.POST)
         form.save()
-        return get_path_redirect(request, "add_swatch")
+        return get_path_redirect(request, "add_swatch", ignore_referer=True)
     else:
         data = build_data_dict(request)
         form = FilamentTypeForm()

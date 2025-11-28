@@ -53,7 +53,11 @@
   {% include 'components/alerts/no-js-alert.partial' %}
 </noscript>
 
-<main id="main" hx-swap="morph:innerHTML scroll:window:top show:window:top" hx-history-elt>
+<main
+  id="main"
+  hx-swap="innerHTML scroll:window:top show:window:top"
+  hx-history-elt
+>
   {% block content %}
   {% endblock content %}
 </main>

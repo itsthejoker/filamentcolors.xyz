@@ -15,10 +15,10 @@
 <link rel="stylesheet" href="{% static 'vendored/css/material_icons.css' %}">
 
 <style>
-  @font-face {
-    font-family: "Roboto";
-    src: url("{% static 'vendored/Roboto-Regular.ttf' %}") format("truetype");
-  }
+    @font-face {
+        font-family: "Roboto";
+        src: url("{% static 'vendored/Roboto-Regular.ttf' %}") format("truetype");
+    }
 </style>
 
 {% if not request.user.is_staff or not 'opengraph' in request.path %}
@@ -83,7 +83,7 @@
 
   function throttle(fn, wait, args = null) {
     let time = Date.now();
-    return function () {
+    return function() {
       if ((time + wait - Date.now()) < 0) {
         if (args !== null) {
           fn(...args);
@@ -92,7 +92,7 @@
         }
         time = Date.now();
       }
-    }
+    };
   }
 
   function onLoadMain(evt) {
@@ -101,7 +101,7 @@
 
     let loadedInTitle = $("#newTitle");
     if (loadedInTitle) {
-      $("title").text(loadedInTitle.text())
+      $("title").text(loadedInTitle.text());
     }
 
     $deck = $("#deck-of-many-things");
@@ -137,10 +137,10 @@
   }
 
   function hideAllPopovers() {
-    $("[data-bs-toggle='popover']").popover('hide')
+    $("[data-bs-toggle='popover']").popover("hide");
   }
 
-  htmx.on("htmx:responseError", function (evt) {
+  htmx.on("htmx:responseError", function(evt) {
     if (evt.detail.xhr.status === 701) {
       showToastError("That doesn't look like a valid color. Try again?");
     } else if (evt.detail.xhr.status === 702) {
@@ -157,14 +157,14 @@
     }
   });
 
-  htmx.on("htmx:afterRequest", function (evt) {
+  htmx.on("htmx:afterRequest", function(evt) {
     const element = evt.detail.elt;
     if (element.id === "filterInput") {
       $deck.masonry("destroy");
     }
   });
 
-  htmx.on("htmx:afterSwap", function (evt) {
+  htmx.on("htmx:afterSwap", function(evt) {
     const element = evt.detail.elt;
     if (!$deck) {
       // on first load, we need to finish initializing everything
@@ -182,10 +182,10 @@
   });
 
   function lazyloadimages() {
-    const images = document.querySelectorAll('img.lazy-load-image[data-src]');
+    const images = document.querySelectorAll("img.lazy-load-image[data-src]");
 
     // Fallback for very old browsers: just do the minimal-change approach
-    if (!('IntersectionObserver' in window)) {
+    if (!("IntersectionObserver" in window)) {
       images.forEach(preloadAndSwap);
       return;
     }
@@ -199,36 +199,36 @@
       });
     }, {
       root: null,
-      rootMargin: '200px 0px', // start 200px before it appears
+      rootMargin: "200px 0px", // start 200px before it appears
       threshold: 0.01
     });
 
     images.forEach((img) => io.observe(img));
 
     function preloadAndSwap(img) {
-      img.setAttribute('loading', 'lazy');
-      img.setAttribute('decoding', 'async');
+      img.setAttribute("loading", "lazy");
+      img.setAttribute("decoding", "async");
 
-      const realSrc = img.getAttribute('data-src');
+      const realSrc = img.getAttribute("data-src");
       if (!realSrc) return;
 
       const preloader = new Image();
-      preloader.decoding = 'async';
+      preloader.decoding = "async";
 
-      preloader.addEventListener('load', async () => {
+      preloader.addEventListener("load", async () => {
         try {
           if (preloader.decode) await preloader.decode();
         } catch (e) { /* ignore */
         }
         img.src = realSrc;
-        img.removeAttribute('data-src');
-        img.classList.remove('lazy-load-image');
-      }, {once: true});
+        img.removeAttribute("data-src");
+        img.classList.remove("lazy-load-image");
+      }, { once: true });
 
-      preloader.addEventListener('error', () => {
-        img.classList.remove('lazy-load-image');
-        img.classList.add('lazy-load-error');
-      }, {once: true});
+      preloader.addEventListener("error", () => {
+        img.classList.remove("lazy-load-image");
+        img.classList.add("lazy-load-error");
+      }, { once: true });
 
       preloader.src = realSrc;
     }
@@ -246,7 +246,7 @@
         }
       });
     }
-    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    const popoverTriggerList = [].slice.call(document.querySelectorAll("[data-bs-toggle=\"popover\"]"));
     window.popoverList = [...popoverTriggerList].map(
       popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl)
     );
@@ -272,44 +272,80 @@
   htmx.config.globalViewTransitions = true;
 
   // https://stackoverflow.com/a/920322
-  $.fn.exists = function () {
+  $.fn.exists = function() {
     return this.length !== 0;
   };
 
   // https://stackoverflow.com/a/8027526
   $.isHexColor = hex => {
     hex = hex.replace("#", "").trim();
-    return typeof hex === "string" && (hex.length === 6 || hex.length === 3) && !isNaN(Number("0x" + hex))
+    return typeof hex === "string" && (hex.length === 6 || hex.length === 3) && !isNaN(Number("0x" + hex));
   };
   $.fn.extend({
-    disableSelection: function () {
-      return this.each(function () {
-        this.onselectstart = function () {
+    disableSelection: function() {
+      return this.each(function() {
+        this.onselectstart = function() {
           return false;
         };
         this.unselectable = "on";
-        $(this).css('user-select', 'none');
-        $(this).css('-o-user-select', 'none');
-        $(this).css('-moz-user-select', 'none');
-        $(this).css('-khtml-user-select', 'none');
-        $(this).css('-webkit-user-select', 'none');
+        $(this).css("user-select", "none");
+        $(this).css("-o-user-select", "none");
+        $(this).css("-moz-user-select", "none");
+        $(this).css("-khtml-user-select", "none");
+        $(this).css("-webkit-user-select", "none");
       });
     }
   });
 
-  $(document).ready(function () {
-    onLoadMain({})
+  $(document).ready(function() {
+    onLoadMain({});
     jscolor.presets.default = {
       format: "hex"
     };
     // do this to make bootstrap modals auto-focus.
     // delegate to body so that we only have to set it up once.
     // adapted from https://stackoverflow.com/a/48432381
-    document.body.addEventListener('shown.bs.modal', (e) => {
-      var ele = $(e.target).find('input[type=text],textarea,select').filter(':visible:first'); // find the first input on the bs modal
+    document.body.addEventListener("shown.bs.modal", (e) => {
+      var ele = $(e.target).find("input[type=text],textarea,select").filter(":visible:first"); // find the first input on the bs modal
       if (ele) {
         ele.focus();
-      } // if we found one then set focus.
-    })
+      } // if we found one, set focus.
+    });
   });
+
+  function observeElement(element, config = {
+    attributes: true,
+    childList: true,
+    subtree: true,
+    characterData: true
+  }) {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        console.log("Mutation type:", mutation.type);
+
+        if (mutation.type === "attributes") {
+          console.log(`Attribute "${mutation.attributeName}" changed.`);
+        }
+
+        if (mutation.type === "childList") {
+          console.log("Child nodes changed:");
+          mutation.addedNodes.forEach((node) => {
+            console.log("Added node:", node);
+          });
+          mutation.removedNodes.forEach((node) => {
+            console.log("Removed node:", node);
+          });
+        }
+
+        if (mutation.type === "characterData") {
+          console.log("Character data changed:", mutation.target.textContent);
+        }
+      });
+    });
+
+    observer.observe(element, config);
+
+    return observer;
+  }
+
 </script>

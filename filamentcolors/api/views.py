@@ -1,3 +1,5 @@
+import random
+
 from colormath.color_objects import LabColor, sRGBColor
 from django.db.models import BooleanField, ExpressionWrapper, Q
 from django.db.models.functions import Lower
@@ -6,6 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
@@ -18,6 +21,7 @@ from filamentcolors.api.serializers import (
 )
 from filamentcolors.api.throttles import BurstRateThrottle, SustainedRateThrottle
 from filamentcolors.colors import is_hex
+from filamentcolors.helpers import get_hsv, get_new_seed
 from filamentcolors.models import RAL, FilamentType, Manufacturer, Pantone, Swatch
 
 
@@ -39,6 +43,12 @@ class CustomSwatchFilterBackend(DjangoFilterBackend):
         return kwargs
 
 
+class SmallPageNumberPagination(PageNumberPagination):
+    page_size = 15
+    page_size_query_param = "page_size"
+    max_page_size = 100
+
+
 class SwatchViewSet(ReadOnlyModelViewSet):
     serializer_class = SwatchSerializer
     basename = "swatch"
@@ -48,36 +58,93 @@ class SwatchViewSet(ReadOnlyModelViewSet):
         "manufacturer": ["exact"],
         "manufacturer__name": ["exact", "icontains"],
         "manufacturer__id": ["exact"],
+        "manufacturer__slug": ["exact", "in"],
         "color_name": ["exact", "icontains"],
         "published": ["exact"],
         "color_parent": ["exact", "icontains"],
         "alt_color_parent": ["exact", "icontains"],
         "filament_type__parent_type__name": ["exact", "icontains", "in"],
+        "filament_type__parent_type__slug": ["exact", "in"],
     }
     throttle_classes = [BurstRateThrottle, SustainedRateThrottle]
+    pagination_class = SmallPageNumberPagination
 
     def get_queryset(self, force_all=False):
         # `published` is set in the init
         kwargs = {} if force_all else {"replaced_by__isnull": True}
         queryset = Swatch.objects.filter(**kwargs).annotate(
             is_available=ExpressionWrapper(
-                Q(amazon_purchase_link__isnull=False)
-                & Q(mfr_purchase_link__isnull=False),
+                (
+                    (Q(amazon_purchase_link__isnull=False) & ~Q(amazon_purchase_link=""))
+                    |
+                    (Q(mfr_purchase_link__isnull=False) & ~Q(mfr_purchase_link=""))
+                ),
                 output_field=BooleanField(),
             )
         )
-        # localhost:8000/api/swatch/?m=type
+
+        # Full-text search (q or f) across color_name, manufacturer.name, filament_type.name
+        search = self.request.query_params.get("q") or self.request.query_params.get(
+            "f"
+        )
+        if search and search != "null":
+            for token in search.strip().lower().split():
+                filters = (
+                    Q(color_name__icontains=token)
+                    | Q(manufacturer__name__icontains=token)
+                    | Q(filament_type__name__icontains=token)
+                )
+                if token in ["grey", "gray"]:
+                    filters = filters | Q(
+                        color_name__icontains="grey" if token == "gray" else "gray"
+                    )
+                queryset = queryset.filter(filters)
+
+        # Default ordering and basic server-side ordering options
         method = self.request.query_params.get("m")  # for method
         if method == "type":
             queryset = queryset.order_by("filament_type")
-
         elif method == "manufacturer":
             queryset = queryset.order_by("manufacturer")
-
         else:
             queryset = queryset.order_by("-date_published")
 
         return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        method = request.query_params.get("m")
+
+        if method in {"color", "random"}:
+            items = list(queryset)
+            if method == "color":
+                items = sorted(items, key=get_hsv)
+            else:  # random
+                page = request.query_params.get("page")
+                seed = request.session.get("random_seed")
+                if page in (None, "1"):
+                    seed = get_new_seed()
+                    request.session["random_seed"] = seed
+                elif not seed:
+                    seed = get_new_seed()
+                    request.session["random_seed"] = seed
+                rng = random.Random(seed)
+                rng.shuffle(items)
+
+            page_obj = self.paginate_queryset(items)
+            if page_obj is not None:
+                serializer = self.get_serializer(page_obj, many=True)
+                return self.get_paginated_response(serializer.data)
+            serializer = self.get_serializer(items, many=True)
+            return Response(serializer.data)
+
+        # default behavior (type/manufacturer/date ordering handled in get_queryset)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_queryset(force_all=True).filter(id=kwargs["pk"]).first()

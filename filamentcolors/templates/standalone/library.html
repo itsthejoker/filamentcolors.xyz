@@ -18,10 +18,13 @@
       {% include "components/buttons/collection_edit_button.partial" %}
     {% endif %}
     {% include 'components/alerts/manufacturer_library_unavailable_swatches_notice.partial' %}
-    <div id="swatch-container">
+    <div id="swatch-container" data-json-pagination="true">
       {% include "partials/library_swatch_display.partial" %}
     </div>
   </div>
 
   {% include 'components/buttons/multiselect_button.partial' %}
+  {# JSON pagination script (hybrid mode enabled via data-json-pagination) #}
+  {% load static %}
+  <script src="{% static 'js/library-pagination.js' %}"></script>
 {% endblock content %}

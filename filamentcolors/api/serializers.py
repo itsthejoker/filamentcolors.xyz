@@ -120,6 +120,7 @@ class SwatchSerializer(HyperlinkedModelSerializer):
         model = Swatch
         fields = (
             "id",
+            "slug",
             "manufacturer",
             "color_name",
             "filament_type",

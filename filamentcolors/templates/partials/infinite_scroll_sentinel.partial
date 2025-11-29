@@ -1,0 +1,45 @@
+{% comment %}
+  Decoupled infinite-scroll sentinel. When included with `oob=True`, this renders
+  with `hx-swap-oob` so it replaces the existing sentinel and updates next-page params.
+
+  Context:
+  - request: Django request (for request.path)
+  - infinite_scroll_params: JSON-safe string for hx-vals with next-page params (may be empty/falsey when no more pages)
+  - oob: truthy when rendering as out-of-band replacement
+{% endcomment %}
+
+{% if oob %}
+  {# Out-of-band replacement payload #}
+  {% if infinite_scroll_params %}
+    <div id="infinite-scroll-sentinel" class="infinite-scroll-sentinel"
+         hx-swap-oob="true"
+         hx-get="{{ request.path }}"
+         hx-trigger="intersect once rootMargin:0px 0px -25% 0px"
+         hx-target="#deck-of-many-things"
+         hx-swap="beforeend"
+         hx-headers='{ "X-Infinite-Scroll": "true" }'
+         hx-push-url="false"
+         hx-vals="{{ infinite_scroll_params }}"
+         hx-indicator="#infiniteLoadSpinner">
+    </div>
+  {% else %}
+    {# No more pages — replace existing sentinel with an inert placeholder #}
+    <div id="infinite-scroll-sentinel" hx-swap-oob="true"></div>
+  {% endif %}
+{% else %}
+  {# Initial, in-DOM sentinel #}
+  {% if infinite_scroll_params %}
+    <div id="infinite-scroll-sentinel"
+         hx-get="{{ request.path }}"
+         hx-trigger="intersect once rootMargin:0px 0px -25% 0px"
+         hx-target="#deck-of-many-things"
+         hx-swap="beforeend"
+         hx-headers='{ "X-Infinite-Scroll": "true" }'
+         hx-push-url="false"
+         hx-vals="{{ infinite_scroll_params }}"
+         hx-indicator="#infiniteLoadSpinner">
+    </div>
+  {% else %}
+    <div id="infinite-scroll-sentinel"></div>
+  {% endif %}
+{% endif %}

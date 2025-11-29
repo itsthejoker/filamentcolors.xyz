@@ -9,20 +9,7 @@
 {% endif %}
 
 {% for s in swatches %}
-  {% if forloop.last and infinite_scroll_params %}
-    <div class="col-md-6 col-lg-4 col-xl-4 col-xxl-3 swatchbox"
-         hx-get="{{ request.path }}"
-         hx-trigger="revealed"
-         hx-swap="afterend show:none"
-         hx-headers='{ "X-Infinite-Scroll": "true" }'
-         hx-target="this"
-         hx-push-url="false"
-         hx-vals="{{ infinite_scroll_params }}"
-         hx-indicator="#infiniteLoadSpinner"
-    >
-  {% else %}
-    <div class="col-md-6 col-lg-4 col-xl-4 col-xxl-3 swatchbox {% if show_colormatch_extras %}mb-3{% endif %}">
-  {% endif %}
+  <div class="col-md-6 col-lg-4 col-xl-4 col-xxl-3 swatchbox {% if show_colormatch_extras %}mb-3{% endif %}">
   {% include 'components/swatch/card.partial' with obj=s %}
   {% if show_colormatch_extras %}
     {% if user_settings.show_delta_e_values %}

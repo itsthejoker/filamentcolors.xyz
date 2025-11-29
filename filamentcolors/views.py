@@ -203,6 +203,17 @@ def librarysort(
         "ft": f_type_str,
         "td": td_range,
     }
+    # If this is a manufacturer route, force the manufacturer slug into params
+    forced_mfr = data.get("force_mfr_slug")
+    if forced_mfr and not params_minus_filter.get("mfr"):
+        params_minus_filter["mfr"] = forced_mfr
+
+    # If we're rendering a Collection page, include the exact IDs so the
+    # JSON paginator will constrain subsequent API requests to only these.
+    collection_ids = data.get("collection_ids")
+    if collection_ids:
+        params_minus_filter["id__in"] = collection_ids
+
     params_minus_filter = {
         k: v for k, v in params_minus_filter.items() if v is not None
     }
@@ -219,8 +230,11 @@ def librarysort(
             }
             data.update({"infinite_scroll_params": json.dumps(params_plus_next_page)})
 
-    if params_minus_filter:
-        params_minus_filter = json.dumps(params_minus_filter)
+    # NOTE: Do NOT JSON-dump params_minus_filter here.
+    # The template uses `json_script` which will safely JSON-encode
+    # this Python object into a JS value. If we pre-dump it, the
+    # client receives a JSON string which then gets spread into
+    # character-indexed query params like 0,1,2... in URLSearchParams.
 
     data.update(
         {
@@ -273,6 +287,9 @@ def manufacturersort(request: HttpRequest, mfr_id: str) -> HttpResponse:
         h1_title=f"{mfr.name} Swatches",
         show_unavailable_anyway=True,
     )
+    # Ensure client-side pagination keeps manufacturer constraint
+    data["force_mfr_slug"] = mfr.slug
+
     s = get_swatches(data)
 
     s = s.filter(manufacturer=mfr)

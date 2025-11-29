@@ -92,13 +92,29 @@
     }
   }
 
+  async function fetchWithRetry(url, opts={}, retries=2, backoffMs=400){
+    let lastErr
+    for (let attempt = 0; attempt <= retries; attempt++){
+      try {
+        const res = await fetch(url, { credentials: 'same-origin', ...opts })
+        if (!res.ok) throw new Error('HTTP '+res.status)
+        return res
+      } catch (e) {
+        lastErr = e
+        if (attempt === retries) break
+        const delay = backoffMs * Math.pow(2, attempt)
+        await new Promise(r => setTimeout(r, delay))
+      }
+    }
+    throw lastErr
+  }
+
   async function fetchAndAppend(url){
     if (loading || !url) return
     loading = true
     showSpinner()
     try {
-      const res = await fetch(url, { credentials: 'same-origin' })
-      if (!res.ok) throw new Error('HTTP '+res.status)
+      const res = await fetchWithRetry(url)
       const data = await res.json()
       const grid = qs('#deck-of-many-things')
       if (!grid) return
@@ -115,7 +131,8 @@
       if (!nextUrl) observer && observer.disconnect()
     } catch (e) {
       console.error('Failed to load more swatches', e)
-      // TODO: render an inline alert with retry
+      showToastError('Failed to load more swatches. Please try again later.')
+      // retries are handled in fetchWithRetry; surface error toast after final failure
     } finally {
       hideSpinner()
       loading = false

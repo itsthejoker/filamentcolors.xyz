@@ -920,3 +920,20 @@ svg {
 .grabbable:active {
    cursor: grabbing;
 }
+
+@media (min-width: 992px) {
+    .dropdown-menu {
+      overflow: hidden;
+      overflow-y: auto;
+      max-height: calc(100vh - 150px);
+    }
+}
+
+
+@media (max-width: 991px) {
+    .dropdown-menu {
+      overflow: hidden;
+      overflow-y: auto;
+      max-height: 300px;
+    }
+}

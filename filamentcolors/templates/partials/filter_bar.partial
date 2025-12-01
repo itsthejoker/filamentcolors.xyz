@@ -554,43 +554,64 @@
       });
     }
 
-    if (currentUrl.searchParams.has("td")) {
-      const tdFilter = currentUrl.searchParams.get("td").split("-");
-      const minTd = parseFloat(tdFilter[0]);
-      const maxTd = parseFloat(tdFilter[1]);
-      const minRange = document.querySelector('td-min-range');
-      const maxRange = document.querySelector('td-max-range');
-      minRange.setValue(minTd);
-      minRange.syncValue();
-      maxRange.setValue(maxTd);
-      maxRange.syncValue();
-      $("#tdFilterModalButton")
-        .text(`TD: ${minTd} - ${maxTd}`)
-        .removeClass("btn-outline-info")
-        .addClass("btn-info");
-    } else {
-      const minRange = document.querySelector('td-min-range');
-      const maxRange = document.querySelector('td-max-range');
-      if (!minRange) {
-        // we're on a page where this parsing is running, but the filter
-        // bar is not present. Abort here.
-        return
+    const initTdControls = () => {
+      if (currentUrl.searchParams.has("td")) {
+        const tdFilter = currentUrl.searchParams.get("td").split("-");
+        const minTd = parseFloat(tdFilter[0]);
+        const maxTd = parseFloat(tdFilter[1]);
+        const minRange = document.querySelector('td-min-range');
+        const maxRange = document.querySelector('td-max-range');
+        if (!minRange || !maxRange) return;
+        minRange.setValue(minTd);
+        minRange.syncValue();
+        maxRange.setValue(maxTd);
+        maxRange.syncValue();
+        $("#tdFilterModalButton")
+          .text(`TD: ${minTd} - ${maxTd}`)
+          .removeClass("btn-outline-info")
+          .addClass("btn-info");
+      } else {
+        const minRange = document.querySelector('td-min-range');
+        const maxRange = document.querySelector('td-max-range');
+        if (!minRange || !maxRange) {
+          // we're on a page where this parsing is running, but the filter
+          // bar is not present. Abort here.
+          return
+        }
+        minRange.setValue(0.1);
+        minRange.syncValue();
+        maxRange.setValue(100);
+        maxRange.syncValue();
       }
-      minRange.setValue(0.1);
-      minRange.syncValue();
-      maxRange.setValue(100);
-      maxRange.syncValue();
+    };
+
+    if (window.customElements && customElements.whenDefined) {
+      Promise.all([
+        customElements.whenDefined('td-min-range'),
+        customElements.whenDefined('td-max-range'),
+        customElements.whenDefined('td-min-text'),
+        customElements.whenDefined('td-max-text'),
+      ]).then(initTdControls).catch(initTdControls);
+    } else {
+      // Fallback: just try now
+      initTdControls();
     }
 
-    document.querySelector('#tdMaxTextInput').addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') {
-        selectTdFilter();
-      }
-    });
-    document.querySelector('#tdMinTextInput').addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') {
-        selectTdFilter();
-      }
-    });
+    const maxTextEl = document.querySelector('#tdMaxTextInput');
+    if (maxTextEl) {
+      maxTextEl.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          selectTdFilter();
+        }
+      });
+    }
+    const minTextEl = document.querySelector('#tdMinTextInput');
+    if (minTextEl) {
+      minTextEl.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          selectTdFilter();
+        }
+      });
+    }
   });
 </script>

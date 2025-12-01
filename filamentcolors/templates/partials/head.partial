@@ -42,7 +42,7 @@
 
 <script type="text/javascript" src="{% static 'js/emailmagic.js' %}?v=3" defer></script>
 <script src="{% static 'js/multistepmodal.js' %}" defer></script>
-<script src="{% static 'js/components/tdInputs.js' %}" async defer></script>
+<script src="{% static 'js/components/tdInputs.js' %}" defer></script>
 <script src="{% static 'vendored/js/getCountryByTZ.min.js' %}"></script>
 
 <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicons/apple-touch-icon.png' %}?v=QEJXGyWNR2">

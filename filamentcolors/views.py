@@ -213,6 +213,11 @@ def librarysort(
     if forced_ft and not params_minus_filter.get("ft"):
         params_minus_filter["ft"] = forced_ft
 
+    # If this is a color family route, force the color family identifier into params
+    forced_cf = data.get("force_cf")
+    if forced_cf and not params_minus_filter.get("cf"):
+        params_minus_filter["cf"] = forced_cf
+
     # If we're rendering a Collection page, include the exact IDs so the
     # JSON paginator will constrain subsequent API requests to only these.
     collection_ids = data.get("collection_ids")
@@ -271,6 +276,9 @@ def colorfamilysort(request: HttpRequest, family_id: str) -> HttpResponse:
         title=f"{family_name} Swatches",
         h1_title=f"{family_name} Swatches",
     )
+    # Ensure client-side pagination keeps color family constraint
+    # Pass through the original identifier (slug or id); API accepts either via `cf`
+    data["force_cf"] = family_id
     s = get_swatches(data)
 
     s = s.filter(Q(color_parent=f_id) | Q(alt_color_parent=f_id))

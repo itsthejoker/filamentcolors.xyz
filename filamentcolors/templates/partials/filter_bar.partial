@@ -315,12 +315,29 @@
       if (filterName in window.quickfilters) {
         return window.quickfilters[filterName];
       }
-      const filterData = JSON.parse(JSON.parse(document.getElementById("filterValues").textContent));
-      let resp = filterData[filterName];
-      if (!resp) {
+      const el = document.getElementById("filterValues");
+      if (!el) {
         return "";
       }
-      return filterData[filterName];
+      let data = el.textContent;
+      try {
+        data = JSON.parse(data);
+      } catch (e) {
+        return "";
+      }
+      // If the server accidentally double-encoded the JSON, parse again
+      if (typeof data === "string") {
+        try {
+          data = JSON.parse(data);
+        } catch (e) {
+          // leave as string; will return empty below
+        }
+      }
+      if (!data || typeof data !== "object") {
+        return "";
+      }
+      const resp = data[filterName];
+      return resp ? resp : "";
     } catch (e) {
       return "";
     }
@@ -461,6 +478,23 @@
     window.quickfiltersToClear = [];
     updateClearAllButton();
     const currentUrl = new URL(window.location.href);
+
+    // Hydrate quickfilters from server-provided active filters (if present)
+    try {
+      const el = document.getElementById("filterValues");
+      if (el) {
+        let data = el.textContent;
+        try { data = JSON.parse(data); } catch(e) { data = {}; }
+        if (typeof data === 'string') {
+          try { data = JSON.parse(data); } catch(e) { data = {}; }
+        }
+        if (data && typeof data === 'object') {
+          ["cf", "mfr", "ft", "td"].forEach(function(k){
+            if (data[k]) window.quickfilters[k] = data[k];
+          });
+        }
+      }
+    } catch (e) { /* noop */ }
 
     // set the display information for the filter modals
     if (currentUrl.searchParams.has("cf")) {

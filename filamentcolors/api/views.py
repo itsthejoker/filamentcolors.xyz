@@ -21,7 +21,11 @@ from filamentcolors.api.serializers import (
 )
 from filamentcolors.api.throttles import BurstRateThrottle, SustainedRateThrottle
 from filamentcolors.colors import is_hex
-from filamentcolors.helpers import get_hsv, get_new_seed
+from filamentcolors.helpers import (
+    annotate_with_calculated_td,
+    get_hsv,
+    get_new_seed,
+)
 from filamentcolors.models import RAL, FilamentType, Manufacturer, Pantone, Swatch
 
 
@@ -82,6 +86,8 @@ class SwatchViewSet(ReadOnlyModelViewSet):
                 output_field=BooleanField(),
             )
         )
+        # Ensure TD range filters can be applied consistently with the HTML views
+        queryset = annotate_with_calculated_td(queryset)
 
         # Full-text search (q or f) across color_name, manufacturer.name, filament_type.name
         search = self.request.query_params.get("q") or self.request.query_params.get(
@@ -100,6 +106,42 @@ class SwatchViewSet(ReadOnlyModelViewSet):
                     )
                 queryset = queryset.filter(filters)
 
+        # Alias filters to match page routes without requiring frontend remap
+        # mfr: manufacturer slug (alias)
+        mfr = self.request.query_params.get("mfr")
+        if mfr and mfr != "null":
+            queryset = queryset.filter(manufacturer__slug=mfr)
+
+        # ft: parent filament type (slug or id)
+        ft = self.request.query_params.get("ft")
+        if ft and ft != "null":
+            try:
+                # numeric id
+                int(ft)
+                queryset = queryset.filter(filament_type__parent_type__id=ft)
+            except ValueError:
+                queryset = queryset.filter(filament_type__parent_type__slug=ft)
+
+        # cf: color family (slug or id) — matches either color_parent or alt_color_parent
+        cf = self.request.query_params.get("cf")
+        if cf and cf != "null":
+            try:
+                # Try to resolve via Swatch helper (accepts slug or id)
+                f_id = Swatch().get_color_id_from_slug_or_id(cf)
+            except Exception:
+                f_id = None
+            if f_id is not None:
+                queryset = queryset.filter(Q(color_parent=f_id) | Q(alt_color_parent=f_id))
+
+        # td: transmission distance range filter in the form "min-max"
+        td = self.request.query_params.get("td")
+        if td and td != "null":
+            try:
+                min_td, max_td = [float(x) for x in td.split("-")]
+            except Exception:
+                min_td, max_td = 0.0, 100.0
+            queryset = queryset.filter(calculated_td__gte=min_td, calculated_td__lte=max_td)
+
         # Default ordering and basic server-side ordering options
         method = self.request.query_params.get("m")  # for method
         if method == "type":
@@ -107,7 +149,8 @@ class SwatchViewSet(ReadOnlyModelViewSet):
         elif method == "manufacturer":
             queryset = queryset.order_by("manufacturer")
         else:
-            queryset = queryset.order_by("-date_published")
+            # Add a deterministic tie-breaker to avoid duplicates/gaps across pages
+            queryset = queryset.order_by("-date_published", "-id")
 
         return queryset
 
@@ -120,12 +163,9 @@ class SwatchViewSet(ReadOnlyModelViewSet):
             if method == "color":
                 items = sorted(items, key=get_hsv)
             else:  # random
-                page = request.query_params.get("page")
+                # Persist seed across the whole session for determinism, even if page=1 is re-requested
                 seed = request.session.get("random_seed")
-                if page in (None, "1"):
-                    seed = get_new_seed()
-                    request.session["random_seed"] = seed
-                elif not seed:
+                if not seed:
                     seed = get_new_seed()
                     request.session["random_seed"] = seed
                 rng = random.Random(seed)

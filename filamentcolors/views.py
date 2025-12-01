@@ -208,6 +208,11 @@ def librarysort(
     if forced_mfr and not params_minus_filter.get("mfr"):
         params_minus_filter["mfr"] = forced_mfr
 
+    # If this is a type route, force the parent type slug into params
+    forced_ft = data.get("force_ft_slug")
+    if forced_ft and not params_minus_filter.get("ft"):
+        params_minus_filter["ft"] = forced_ft
+
     # If we're rendering a Collection page, include the exact IDs so the
     # JSON paginator will constrain subsequent API requests to only these.
     collection_ids = data.get("collection_ids")
@@ -236,10 +241,16 @@ def librarysort(
     # client receives a JSON string which then gets spread into
     # character-indexed query params like 0,1,2... in URLSearchParams.
 
+    # For JSON pagination, include the search term in the active filters so the client
+    # can continue paging with the same query across API requests.
+    active_filters = dict(params_minus_filter)
+    if filter_str:
+        active_filters["f"] = filter_str
+
     data.update(
         {
             "show_filter_bar": True,
-            "active_filters": params_minus_filter,
+            "active_filters": active_filters,
         }
     )
 
@@ -316,6 +327,8 @@ def typesort(request: HttpRequest, f_type_id: int) -> HttpResponse:
         title=f"{f_type.name} Swatches",
         h1_title=f"{f_type.name} Swatches",
     )
+    # Ensure client-side pagination keeps type constraint
+    data["force_ft_slug"] = f_type.slug
 
     s = get_swatches(data)
 

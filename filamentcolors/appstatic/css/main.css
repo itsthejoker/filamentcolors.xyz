@@ -616,6 +616,11 @@ html[data-bs-theme='dark'] .htmx-indicator.htmx-request {
     transform-origin: center 0.5em;
 }
 
+/* Dark mode override: make pagination indicator white in Bootstrap dark theme */
+[data-bs-theme="dark"] .infinity-loader-wheel i {
+    background: #fff;
+}
+
 @keyframes loader-wheel-rotate {
     from {
         transform: rotate(0deg);

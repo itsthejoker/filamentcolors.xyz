@@ -116,10 +116,17 @@
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
         const res = await fetch(url, { credentials: "same-origin", ...opts });
-        if (!res.ok) throw new Error("HTTP " + res.status);
+        if (!res.ok) {
+          const err = new Error("HTTP " + res.status);
+          err.status = res.status;
+          err.response = res;
+          throw err;
+        }
         return res;
       } catch (e) {
         lastErr = e;
+        // Do not retry on 404 — treat as terminal (e.g., end of pagination)
+        if (e && e.status === 404) break;
         if (attempt === retries) break;
         const delay = backoffMs * Math.pow(2, attempt);
         await new Promise(r => setTimeout(r, delay));
@@ -149,8 +156,17 @@
       nextUrl = data.next;
       if (!nextUrl) observer && observer.disconnect();
     } catch (e) {
-      console.error("Failed to load more swatches", e);
-      showToastError("Failed to load more swatches. Please try again later.");
+      if (e && e.status === 404) {
+        // Gracefully end infinite scroll on 404 without showing an error toast
+        nextUrl = null;
+        try {
+          if (observer && typeof observer.disconnect === "function") observer.disconnect();
+        } catch {/* noop */}
+        console.info("No more swatches to load (404).");
+      } else {
+        console.error("Failed to load more swatches", e);
+        showToastError("Failed to load more swatches. Please try again later.");
+      }
       // retries are handled in fetchWithRetry; surface error toast after final failure
     } finally {
       hideSpinner();

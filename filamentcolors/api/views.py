@@ -21,11 +21,7 @@ from filamentcolors.api.serializers import (
 )
 from filamentcolors.api.throttles import BurstRateThrottle, SustainedRateThrottle
 from filamentcolors.colors import is_hex
-from filamentcolors.helpers import (
-    annotate_with_calculated_td,
-    get_hsv,
-    get_new_seed,
-)
+from filamentcolors.helpers import annotate_with_calculated_td, get_hsv, get_new_seed
 from filamentcolors.models import RAL, FilamentType, Manufacturer, Pantone, Swatch
 
 
@@ -79,14 +75,15 @@ class SwatchViewSet(ReadOnlyModelViewSet):
         queryset = Swatch.objects.filter(**kwargs).annotate(
             is_available=ExpressionWrapper(
                 (
-                    (Q(amazon_purchase_link__isnull=False) & ~Q(amazon_purchase_link=""))
-                    |
-                    (Q(mfr_purchase_link__isnull=False) & ~Q(mfr_purchase_link=""))
+                    (
+                        Q(amazon_purchase_link__isnull=False)
+                        & ~Q(amazon_purchase_link="")
+                    )
+                    | (Q(mfr_purchase_link__isnull=False) & ~Q(mfr_purchase_link=""))
                 ),
                 output_field=BooleanField(),
             )
         )
-        # Ensure TD range filters can be applied consistently with the HTML views
         queryset = annotate_with_calculated_td(queryset)
 
         # Full-text search (q or f) across color_name, manufacturer.name, filament_type.name
@@ -131,7 +128,9 @@ class SwatchViewSet(ReadOnlyModelViewSet):
             except Exception:
                 f_id = None
             if f_id is not None:
-                queryset = queryset.filter(Q(color_parent=f_id) | Q(alt_color_parent=f_id))
+                queryset = queryset.filter(
+                    Q(color_parent=f_id) | Q(alt_color_parent=f_id)
+                )
 
         # td: transmission distance range filter in the form "min-max"
         td = self.request.query_params.get("td")
@@ -140,7 +139,9 @@ class SwatchViewSet(ReadOnlyModelViewSet):
                 min_td, max_td = [float(x) for x in td.split("-")]
             except Exception:
                 min_td, max_td = 0.0, 100.0
-            queryset = queryset.filter(calculated_td__gte=min_td, calculated_td__lte=max_td)
+            queryset = queryset.filter(
+                calculated_td__gte=min_td, calculated_td__lte=max_td
+            )
 
         # Default ordering and basic server-side ordering options
         method = self.request.query_params.get("m")  # for method

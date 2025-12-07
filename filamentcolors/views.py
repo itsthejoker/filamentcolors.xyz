@@ -180,7 +180,11 @@ def librarysort(
         data["title"] = "Library, sorted by Color"
 
     else:
-        items = items.order_by("-date_published")
+        # Default ordering must match API ordering to keep server-rendered
+        # first page consistent with JSON pagination that follows. Add a
+        # deterministic tie-breaker on id to avoid duplicates/gaps when
+        # many items share the same publication timestamp (common in tests).
+        items = items.order_by("-date_published", "-id")
 
     # this loads the data obj with everything needed to render
     # the swatches
@@ -405,7 +409,7 @@ def edit_swatch_collection(request: HttpRequest, ids: str) -> HttpResponse:
         preselect_data=list(collection_data),
         title="Edit Collection",
     )
-    library = get_swatches(data).order_by("-date_published")
+    library = get_swatches(data).order_by("-date_published", "-id")
 
     return librarysort(request, library=library, prebuilt_data=data)
 

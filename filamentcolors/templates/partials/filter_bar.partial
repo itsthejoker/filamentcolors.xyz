@@ -14,7 +14,7 @@
           value="{{ search_prefill }}"
           {# Trigger on both normal interactions with the user or if the event #}
           {# is triggered for the search bar itself. #}
-          hx-trigger="keyup changed delay:0.4s, fireSearch from:body"
+          hx-trigger="keyup changed delay:0.4s, input changed delay:0.4s, fireSearch from:body"
           hx-get="{{ request.path }}"
           name="f"
           hx-vals="js:{...populateFilters()}"

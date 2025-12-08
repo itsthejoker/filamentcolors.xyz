@@ -917,9 +917,12 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         base_domain = (
             "http://localhost:8000" if settings.DEBUG else "https://filamentcolors.xyz"
         )
-        file_path = hti.screenshot(
-            url=base_domain + self.get_absolute_url() + "opengraph/", save_as=filename
-        )[0]
+        # Build the opengraph URL directly and prefer a stable identifier (ID) when available
+        og_path = reverse(
+            "opengraph_card",
+            kwargs={"swatch_id": str(self.id) if self.id else self.slug},
+        )
+        file_path = hti.screenshot(url=base_domain + og_path, save_as=filename)[0]
         self.image_opengraph = ImageFile(open(file_path, "rb"))
         self.image_opengraph.name = os.path.relpath(
             os.path.join(settings.MEDIA_ROOT, file_path)
@@ -1379,14 +1382,22 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
             super(Swatch, self).save(*args, **kwargs)
             return
         else:
-            self.crop_and_save_images()
-            self.create_opengraph_image()
-            self.regenerate_all()
-
+            # For newly published swatches without prebuilt assets, persist first
+            # to ensure we have a valid ID, then generate assets that depend on it.
             super(Swatch, self).save(*args, **kwargs)
 
-            self.update_affiliate_links()
             self.set_slug()
+            # Now that a slug exists (and ID is assigned), generate images
+            self.crop_and_save_images()
+            self.regenerate_all()
+            # Create OpenGraph image after slug/ID are set so the URL resolves correctly
+            self.create_opengraph_image()
+
+            # Persist generated assets and derived fields
+            safe_kwargs = {k: v for k, v in kwargs.items() if k != "force_insert"}
+            super(Swatch, self).save(*args, **safe_kwargs)
+
+            self.update_affiliate_links()
 
             if kwargs.get("force_insert"):
                 # In normal operation, this will never trigger. However,

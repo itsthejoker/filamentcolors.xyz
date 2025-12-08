@@ -65,14 +65,10 @@ def test_welcome_experience_button(page, live_server):
     expect(page.get_by_role("heading", name="Step 4:")).to_be_visible()
 
     page.locator("#welcomeExperienceContent").get_by_role("button", name="Next").click()
-    expect(
-        page.get_by_role("heading", name="Step 5:")
-    ).to_be_visible()
+    expect(page.get_by_role("heading", name="Step 5:")).to_be_visible()
 
     page.locator("#welcomeExperienceContent").get_by_role("button", name="Next").click()
-    expect(
-        page.get_by_role("heading", name="Step 6:")
-    ).to_be_visible()
+    expect(page.get_by_role("heading", name="Step 6:")).to_be_visible()
 
     page.get_by_role("button", name="Finish").click()
     expect(page.get_by_text("Your comprehensive resource")).to_be_visible()
@@ -94,5 +90,7 @@ def test_welcome_experience_back_buttons(page, live_server):
     page.locator("#welcomeExperienceContent").get_by_role("button", name="Next").click()
     expect(page.get_by_role("heading", name="Step 2:")).to_be_visible()
 
-    page.locator("#welcomeExperienceContent").get_by_role("button", name="Previous").click()
+    page.locator("#welcomeExperienceContent").get_by_role(
+        "button", name="Previous"
+    ).click()
     expect(page.get_by_role("heading", name="Step 1:")).to_be_visible()

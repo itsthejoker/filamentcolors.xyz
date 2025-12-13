@@ -148,7 +148,13 @@ def librarysort(
         except ValueError:
             min_td, max_td = 0, 100
 
-        items = items.filter(calculated_td__gte=min_td, calculated_td__lte=max_td)
+        # When the requested range covers the full spectrum, treat it as "no TD filter".
+        # This ensures swatches without any TD value are still included (common case).
+        if not (min_td <= 0 and max_td >= 100):
+            items = items.filter(
+                calculated_td__gte=min_td,
+                calculated_td__lte=max_td,
+            )
 
     if method == "type":
         items = items.order_by("filament_type")

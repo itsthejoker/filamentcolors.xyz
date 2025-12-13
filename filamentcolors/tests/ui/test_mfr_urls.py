@@ -59,9 +59,7 @@ def test_manufacturer_route_pagination(nwo_page, live_server):
     nwo_page.mouse.wheel(0, 10000)
 
     # After pagination, one more swatch from the same manufacturer should appear
-    expect(nwo_page.locator(".swatchbox")).to_have_count(
-        settings.PAGINATION_COUNT + 1
-    )
+    expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT + 1)
     expect(
         nwo_page.locator(".card-text").filter(has_text="Unique Early")
     ).to_have_count(1)

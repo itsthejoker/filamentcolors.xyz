@@ -56,7 +56,9 @@ def test_filament_type_route_pagination(nwo_page, live_server):
     nwo_page.goto(f"{live_server.url}/library/filament_type/{pla.slug}/")
 
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT)
-    expect(nwo_page.locator(".card-text").filter(has_text="Unique Early - PLA")).to_have_count(0)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Unique Early - PLA")
+    ).to_have_count(0)
     expect(nwo_page.locator(".card-text").filter(has_text="PETG-2")).to_have_count(0)
 
     # Trigger infinite scroll pagination
@@ -64,7 +66,9 @@ def test_filament_type_route_pagination(nwo_page, live_server):
 
     # After pagination, one more swatch from the same type should appear
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT + 1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Unique Early - PLA")).to_have_count(1)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Unique Early - PLA")
+    ).to_have_count(1)
     expect(nwo_page.locator(".card-text").filter(has_text="PETG-2")).to_have_count(0)
 
 
@@ -105,8 +109,12 @@ def test_filament_type_page_manufacturer_quick_filter(nwo_page, live_server):
     nwo_page.goto(f"{live_server.url}/library/filament_type/{pla.slug}/")
 
     expect(nwo_page.locator(".swatchbox")).to_have_count(2)
-    expect(nwo_page.locator(".card-text").filter(has_text="Blorbo Green")).to_have_count(1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Bleepo Blue")).to_have_count(1)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Blorbo Green")
+    ).to_have_count(1)
+    expect(nwo_page.locator(".card-text").filter(has_text="Bleepo Blue")).to_have_count(
+        1
+    )
 
     # Apply quick filter: Manufacturer → Blorbo
     nwo_page.get_by_role("button", name="Manufacturer").click()
@@ -114,8 +122,12 @@ def test_filament_type_page_manufacturer_quick_filter(nwo_page, live_server):
 
     expect(nwo_page.locator("#mfrFilterModalButton")).to_contain_text(blorbo.name)
     expect(nwo_page.locator(".swatchbox")).to_have_count(1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Blorbo Green")).to_have_count(1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Bleepo Blue")).to_have_count(0)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Blorbo Green")
+    ).to_have_count(1)
+    expect(nwo_page.locator(".card-text").filter(has_text="Bleepo Blue")).to_have_count(
+        0
+    )
 
 
 @pytest.mark.playwright
@@ -166,9 +178,7 @@ def test_filament_type_color_family_quick_filter_handles_pagination(
     nwo_page.mouse.wheel(0, 10000)
 
     # After pagination: we should see exactly one more Black swatch (the early one)
-    expect(nwo_page.locator(".swatchbox")).to_have_count(
-        settings.PAGINATION_COUNT + 1
-    )
+    expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT + 1)
     expect(nwo_page.locator(".card-text").filter(has_text="Old Black")).to_have_count(1)
     expect(nwo_page.locator(".card-text").filter(has_text="White")).to_have_count(0)
 
@@ -212,7 +222,9 @@ def test_filament_type_manufacturer_quick_filter_handles_pagination(
 
     # Before pagination: only page-size Blorbo swatches; "Old Blorbo" not present yet; no Bleepo
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT)
-    expect(nwo_page.locator(".card-text").filter(has_text="Old Blorbo")).to_have_count(0)
+    expect(nwo_page.locator(".card-text").filter(has_text="Old Blorbo")).to_have_count(
+        0
+    )
     expect(nwo_page.locator(".card-text").filter(has_text=bleepo.name)).to_have_count(0)
 
     # Trigger infinite scroll pagination
@@ -220,8 +232,8 @@ def test_filament_type_manufacturer_quick_filter_handles_pagination(
     nwo_page.mouse.wheel(0, 10000)
 
     # After pagination: we should see exactly one more Blorbo swatch (the early one)
-    expect(nwo_page.locator(".swatchbox")).to_have_count(
-        settings.PAGINATION_COUNT + 1
+    expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT + 1)
+    expect(nwo_page.locator(".card-text").filter(has_text="Old Blorbo")).to_have_count(
+        1
     )
-    expect(nwo_page.locator(".card-text").filter(has_text="Old Blorbo")).to_have_count(1)
     expect(nwo_page.locator(".card-text").filter(has_text=bleepo.name)).to_have_count(0)

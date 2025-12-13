@@ -6,7 +6,9 @@ should be written in a way that each test only tests one concept. Add more tests
 The base color routes are `/library/color_family/{color_slug}/`. The color options are found in
 Swatch.BASE_COLOR_OPTIONS.
 """
+
 import time
+
 import pytest
 from django.conf import settings
 from playwright.sync_api import expect
@@ -56,16 +58,24 @@ def test_base_color_route_pagination(nwo_page, live_server):
     nwo_page.goto(f"{live_server.url}/library/color_family/black/")
 
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT)
-    expect(nwo_page.locator(".card-text").filter(has_text="Unique Early - Black")).to_have_count(0)
-    expect(nwo_page.locator(".card-text").filter(has_text="Other White")).to_have_count(0)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Unique Early - Black")
+    ).to_have_count(0)
+    expect(nwo_page.locator(".card-text").filter(has_text="Other White")).to_have_count(
+        0
+    )
 
     # Trigger infinite scroll pagination
     nwo_page.mouse.wheel(0, 10000)
 
     # After pagination, one more swatch from the same color family should appear
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT + 1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Unique Early - Black")).to_have_count(1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Other White")).to_have_count(0)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Unique Early - Black")
+    ).to_have_count(1)
+    expect(nwo_page.locator(".card-text").filter(has_text="Other White")).to_have_count(
+        0
+    )
 
 
 @pytest.mark.playwright
@@ -74,10 +84,16 @@ def test_mfr_quick_filter_on_base_color_route(nwo_page, live_server):
     bleepo = get_manufacturer(name="Bleepo")
 
     # Black swatches for two different manufacturers
-    get_swatch(color_name="Blorbo Black", manufacturer=blorbo, color_parent=Swatch.BLACK)
-    get_swatch(color_name="Bleepo Black", manufacturer=bleepo, color_parent=Swatch.BLACK)
+    get_swatch(
+        color_name="Blorbo Black", manufacturer=blorbo, color_parent=Swatch.BLACK
+    )
+    get_swatch(
+        color_name="Bleepo Black", manufacturer=bleepo, color_parent=Swatch.BLACK
+    )
     # Non-target color family should never appear on this route
-    get_swatch(color_name="Blorbo White", manufacturer=blorbo, color_parent=Swatch.WHITE)
+    get_swatch(
+        color_name="Blorbo White", manufacturer=blorbo, color_parent=Swatch.WHITE
+    )
 
     nwo_page.goto(f"{live_server.url}/library/color_family/black/")
 
@@ -91,8 +107,12 @@ def test_mfr_quick_filter_on_base_color_route(nwo_page, live_server):
     # Button label updates and only Blorbo's Black swatch remains
     expect(nwo_page.locator("#mfrFilterModalButton")).to_contain_text(blorbo.name)
     expect(nwo_page.locator(".swatchbox")).to_have_count(1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Blorbo Black")).to_have_count(1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Bleepo Black")).to_have_count(0)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Blorbo Black")
+    ).to_have_count(1)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Bleepo Black")
+    ).to_have_count(0)
 
 
 @pytest.mark.playwright
@@ -136,7 +156,9 @@ def test_mfr_quick_filter_on_base_color_route_pagination(nwo_page, live_server):
 
     # Before pagination: page-size Blorbo Blacks; early one not present; no Bleepo
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT)
-    expect(nwo_page.locator(".card-text").filter(has_text="Old Blorbo Black")).to_have_count(0)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Old Blorbo Black")
+    ).to_have_count(0)
     expect(nwo_page.locator(".card-text").filter(has_text="Bleepo")).to_have_count(0)
 
     # Trigger infinite scroll pagination
@@ -145,7 +167,9 @@ def test_mfr_quick_filter_on_base_color_route_pagination(nwo_page, live_server):
 
     # After pagination: exactly one more Blorbo Black swatch (the early one)
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT + 1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Old Blorbo Black")).to_have_count(1)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Old Blorbo Black")
+    ).to_have_count(1)
     expect(nwo_page.locator(".card-text").filter(has_text="Bleepo")).to_have_count(0)
 
 
@@ -179,7 +203,9 @@ def test_filament_type_quick_filter_on_base_color_route(nwo_page, live_server):
 
 
 @pytest.mark.playwright
-def test_filament_type_quick_filter_on_base_color_route_pagination(nwo_page, live_server):
+def test_filament_type_quick_filter_on_base_color_route_pagination(
+    nwo_page, live_server
+):
     # Create two generic filament types and child types
     pla = get_generic_filament_type(name="PLA")
     petg = get_generic_filament_type(name="PETG")
@@ -187,7 +213,9 @@ def test_filament_type_quick_filter_on_base_color_route_pagination(nwo_page, liv
     petg2 = get_filament_type(name="PETG-2", parent_type=petg)
 
     # One early Black swatch for PLA that should appear only after pagination
-    get_swatch(color_name="Old PLA Black", color_parent=Swatch.BLACK, filament_type=pla2)
+    get_swatch(
+        color_name="Old PLA Black", color_parent=Swatch.BLACK, filament_type=pla2
+    )
 
     # Fill the first page with newer Black swatches for PLA
     for i in range(settings.PAGINATION_COUNT):
@@ -220,7 +248,9 @@ def test_filament_type_quick_filter_on_base_color_route_pagination(nwo_page, liv
 
     # Before pagination: page-size PLA Blacks; early one not present; no PETG
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT)
-    expect(nwo_page.locator(".card-text").filter(has_text="Old PLA Black")).to_have_count(0)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Old PLA Black")
+    ).to_have_count(0)
     expect(nwo_page.locator(".card-text").filter(has_text="PETG-2")).to_have_count(0)
 
     # Trigger infinite scroll pagination
@@ -229,7 +259,9 @@ def test_filament_type_quick_filter_on_base_color_route_pagination(nwo_page, liv
 
     # After pagination: exactly one more PLA Black swatch (the early one)
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT + 1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Old PLA Black")).to_have_count(1)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Old PLA Black")
+    ).to_have_count(1)
     expect(nwo_page.locator(".card-text").filter(has_text="PETG-2")).to_have_count(0)
 
 
@@ -239,10 +271,16 @@ def test_filter_on_base_color_route(nwo_page, live_server):
     bleepo = get_manufacturer(name="Bleepo")
 
     # Black swatches for two different manufacturers
-    get_swatch(color_name="Blorbo Black", manufacturer=blorbo, color_parent=Swatch.BLACK)
-    get_swatch(color_name="Bleepo Black", manufacturer=bleepo, color_parent=Swatch.BLACK)
+    get_swatch(
+        color_name="Blorbo Black", manufacturer=blorbo, color_parent=Swatch.BLACK
+    )
+    get_swatch(
+        color_name="Bleepo Black", manufacturer=bleepo, color_parent=Swatch.BLACK
+    )
     # Non-target color family that matches the text query should never appear on this route
-    get_swatch(color_name="Blorbo White", manufacturer=blorbo, color_parent=Swatch.WHITE)
+    get_swatch(
+        color_name="Blorbo White", manufacturer=blorbo, color_parent=Swatch.WHITE
+    )
 
     nwo_page.goto(f"{live_server.url}/library/color_family/black/")
 
@@ -255,8 +293,12 @@ def test_filter_on_base_color_route(nwo_page, live_server):
 
     # Only Blorbo's Black swatch should remain; Bleepo and any Whites should not appear
     expect(nwo_page.locator(".swatchbox")).to_have_count(1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Blorbo Black")).to_have_count(1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Bleepo Black")).to_have_count(0)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Blorbo Black")
+    ).to_have_count(1)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Bleepo Black")
+    ).to_have_count(0)
 
 
 @pytest.mark.playwright
@@ -299,7 +341,9 @@ def test_filter_on_base_color_route_pagination(nwo_page, live_server):
 
     # Before pagination: page-size Blorbo Blacks; early one not present; no Bleepo
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT)
-    expect(nwo_page.locator(".card-text").filter(has_text="Old Blorbo Black")).to_have_count(0)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Old Blorbo Black")
+    ).to_have_count(0)
     expect(nwo_page.locator(".card-text").filter(has_text="Bleepo")).to_have_count(0)
 
     # Trigger infinite scroll pagination
@@ -308,7 +352,9 @@ def test_filter_on_base_color_route_pagination(nwo_page, live_server):
 
     # After pagination: exactly one more Blorbo Black swatch (the early one)
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT + 1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Old Blorbo Black")).to_have_count(1)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Old Blorbo Black")
+    ).to_have_count(1)
     expect(nwo_page.locator(".card-text").filter(has_text="Bleepo")).to_have_count(0)
 
 
@@ -332,19 +378,25 @@ def test_td_filter_on_base_color_route(nwo_page, live_server):
     # Button label updates and only the Black swatch within range remains
     expect(nwo_page.locator("#tdFilterModalButton")).to_contain_text("TD: 10 - 20")
     expect(nwo_page.locator(".swatchbox")).to_have_count(1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Black TD 15")).to_have_count(1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Black TD 5")).to_have_count(0)
-    expect(nwo_page.locator(".card-text").filter(has_text="Black TD 60")).to_have_count(0)
+    expect(nwo_page.locator(".card-text").filter(has_text="Black TD 15")).to_have_count(
+        1
+    )
+    expect(nwo_page.locator(".card-text").filter(has_text="Black TD 5")).to_have_count(
+        0
+    )
+    expect(nwo_page.locator(".card-text").filter(has_text="Black TD 60")).to_have_count(
+        0
+    )
     # White swatches should never appear on the Black route
-    expect(nwo_page.locator(".card-text").filter(has_text="White TD 15")).to_have_count(0)
+    expect(nwo_page.locator(".card-text").filter(has_text="White TD 15")).to_have_count(
+        0
+    )
 
 
 @pytest.mark.playwright
 def test_td_filter_on_base_color_route_pagination(nwo_page, live_server):
     # One early Black swatch within TD range that should appear only after pagination
-    get_swatch(
-        color_name="Old Black TD 15", color_parent=Swatch.BLACK, td=15.0
-    )
+    get_swatch(color_name="Old Black TD 15", color_parent=Swatch.BLACK, td=15.0)
 
     # Fill the first page with newer Black swatches within the same TD range
     for i in range(settings.PAGINATION_COUNT):
@@ -380,9 +432,15 @@ def test_td_filter_on_base_color_route_pagination(nwo_page, live_server):
 
     # Before pagination: page-size Blacks within TD range; early one not present; no Whites or out-of-range
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT)
-    expect(nwo_page.locator(".card-text").filter(has_text="Old Black TD 15")).to_have_count(0)
-    expect(nwo_page.locator(".card-text").filter(has_text="White TD 15")).to_have_count(0)
-    expect(nwo_page.locator(".card-text").filter(has_text="Other Black TD")).to_have_count(0)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Old Black TD 15")
+    ).to_have_count(0)
+    expect(nwo_page.locator(".card-text").filter(has_text="White TD 15")).to_have_count(
+        0
+    )
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Other Black TD")
+    ).to_have_count(0)
 
     # Trigger infinite scroll pagination
     time.sleep(0.3)
@@ -390,9 +448,15 @@ def test_td_filter_on_base_color_route_pagination(nwo_page, live_server):
 
     # After pagination: exactly one more Black swatch (the early one) appears
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT + 1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Old Black TD 15")).to_have_count(1)
-    expect(nwo_page.locator(".card-text").filter(has_text="White TD 15")).to_have_count(0)
-    expect(nwo_page.locator(".card-text").filter(has_text="Other Black TD")).to_have_count(0)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Old Black TD 15")
+    ).to_have_count(1)
+    expect(nwo_page.locator(".card-text").filter(has_text="White TD 15")).to_have_count(
+        0
+    )
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Other Black TD")
+    ).to_have_count(0)
 
 
 @pytest.mark.playwright

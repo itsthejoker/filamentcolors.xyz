@@ -29,6 +29,7 @@
     <div class="text-center mb-4">
       <div class="mb-2">Quick filters:</div>
       <div class="gap-1">
+      {% if 'color_family' not in request.path %}
         <button
           type="button"
           id="cfFilterModalButton"
@@ -37,6 +38,8 @@
           data-bs-target="#cfFilterModal"
         >Color Family
         </button>
+        {% endif %}
+        {% if 'filament_type' not in request.path %}
         <button
           type="button"
           id="ftFilterModalButton"
@@ -45,6 +48,7 @@
           data-bs-target="#ftFilterModal"
         >Filament Type
         </button>
+        {% endif %}
         <button
           type="button"
           id="mfrFilterModalButton"
@@ -286,6 +290,18 @@
 </div>
 
 <script>
+  // Returns true when the current page URL is already constrained by a
+  // collection route, e.g. /library/color_family/<slug>/ or
+  // /library/filament_type/<slug>/, so those filters should not count as
+  // "active" for purposes of showing the Clear button.
+  function isPageConstrainedFor(filterName) {
+    const path = window.location.pathname || "";
+    if (filterName === "cf" && path.includes("/library/color_family/")) {
+      return true;
+    }
+    return filterName === "ft" && path.includes("/library/filament_type/");
+  }
+
   function hideModal(modalId) {
     const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId));
     modal.hide();
@@ -439,7 +455,12 @@
   });
 
   function updateClearAllButton() {
-    if (getFilters("cf") || getFilters("mfr") || getFilters("ft") || getFilters("td") || window.quickfiltersToClear.length > 0) {
+    // Only consider filters that are user-applied
+    const hasUserCf = !isPageConstrainedFor("cf") && !!getFilters("cf");
+    const hasUserFt = !isPageConstrainedFor("ft") && !!getFilters("ft");
+    const hasUserMfr = !isPageConstrainedFor("mfr") && !!getFilters("mfr");
+    const hasUserTd = !isPageConstrainedFor("td") && !!getFilters("td");
+    if (hasUserCf || hasUserMfr || hasUserFt || hasUserTd || window.quickfiltersToClear.length > 0) {
       $("#clearAllFiltersButton").removeClass("d-none");
     } else {
       $("#clearAllFiltersButton").addClass("d-none");
@@ -449,10 +470,20 @@
   function clearAllFilters() {
     window.quickfilters = {};
     window.quickfiltersToClear = [];
-    clearFtFilter(false);
-    clearCfFilter(false);
-    clearMfrFilter(false);
-    clearTdFilter(false);
+    // Do not clear page-level constraints (e.g., when already on
+    // /library/color_family/<slug>/ or /library/filament_type/<slug>/).
+    if (!isPageConstrainedFor("ft")) {
+      clearFtFilter(false);
+    }
+    if (!isPageConstrainedFor("cf")) {
+      clearCfFilter(false);
+    }
+    if (!isPageConstrainedFor("mfr")) {
+      clearMfrFilter(false);
+    }
+    if (!isPageConstrainedFor("td")) {
+      clearTdFilter(false);
+    }
     document.body.dispatchEvent(new Event("fireSearch"));
     updateClearAllButton();
   }

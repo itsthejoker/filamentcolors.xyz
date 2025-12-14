@@ -35,7 +35,8 @@
     <div class="donation-search-wrapper mt-3 mb-3 container">
       <p class="text-muted mb-3">
         Start typing the filament name, manufacturer, or color family to see if I already have it. If there are no
-        results, you've got something I don't have, and I'd love to add it to the library!
+        results, you've got something I don't have, and I'd love to add it to the library! Search results here
+        include both published and not-yet-published swatches.
       </p>
       <div class="donation-search input-group input-group-lg">
         <span class="input-group-text"><span class="icon-search"></span></span>
@@ -57,7 +58,6 @@
           hx-push-url="false"
         />
       </div>
-      <div class="form-text">Results include both published and not-yet-published swatches.</div>
 
       <div id="donationSearchOverlay" class="donation-overlay" role="listbox" aria-labelledby="donationSearchInput">
         <div id="donationSearchIndicator" class="htmx-indicator p-3">
@@ -311,7 +311,7 @@
       const clamp = (n, min, max) => Math.max(min, Math.min(max, n))
       const updateIndicatorPlaceholders = (count) => {
         if (!indicator) return
-        const n = clamp(count || 0, 1, 5) // show at least one row; cap at five
+        const n = clamp(count || 0, 1, 5)  // safety limiter
         let html = ''
         for (let i = 0; i < n; i++) {
           html += `

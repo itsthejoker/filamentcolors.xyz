@@ -80,6 +80,15 @@
       }, timeout);
     };
   }
+  function debounce(func, wait) {
+    let timeoutId = null;
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, wait);
+    };
+  };
 
   function throttle(fn, wait, args = null) {
     let time = Date.now();

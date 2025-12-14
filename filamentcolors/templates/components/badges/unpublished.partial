@@ -1,0 +1,7 @@
+<span
+  data-bs-toggle="tooltip"
+  data-bs-placement="top"
+  data-container="body"
+  class="badge text-bg-danger text-uppercase mt-2 mt-lg-0"
+  title="This swatch is not yet available in the library."
+>Not Published</span>

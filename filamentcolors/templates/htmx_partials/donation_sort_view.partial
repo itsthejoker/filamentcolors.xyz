@@ -1,0 +1,26 @@
+<div class="container mb-2">
+  {% if results %}
+    {% for swatch in results %}
+      <div class="d-flex w-100 justify-content-between align-items-start mt-2" role="option">
+        <div>
+          {% if swatch.published %}
+            {% include 'components/badges/published.partial' %}
+          {% else %}
+            {% include 'components/badges/unpublished.partial' %}
+          {% endif %}
+          <span
+            class="fw-semibold">{{ swatch.manufacturer.name }} {{ swatch.color_name }} {{ swatch.filament_type.name }}</span>
+        </div>
+      </div>
+    {% endfor %}
+    {% if results_count > 5 %}
+      <div class="text-muted mt-2">...and {{ minus_five }} other result{{ minus_five|pluralize }}</div>
+    {% endif %}
+  {% else %}
+    <div id="donationNoResults" class="alert alert-info mt-3 text-center mb-2">
+      <strong>You found something I don't have!</strong> Set that one aside, because I'd love to get a bit of it for the
+      library!
+    </div>
+  {% endif %}
+</div>
+

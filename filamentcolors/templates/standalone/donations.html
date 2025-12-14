@@ -31,11 +31,48 @@
       yet—take a look at the inventory to make sure what you have is new to the
       library! If you have any questions, give me a shout!
     </p>
-    <div class="row mt-4 mb-3">
-      <div class="col-sm-12 col-md-4 mx-auto d-grid">
-        <a class="btn btn-lg btn-danger bg-gradient" href="{% url 'inventory' %}">Inventory</a>
+    <h2>Check The Inventory</h2>
+    <div class="donation-search-wrapper mt-3 mb-3 container">
+      <p class="text-muted mb-3">
+        Start typing the filament name, manufacturer, or color family to see if I already have it. If there are no
+        results, you've got something I don't have, and I'd love to add it to the library! Search results here
+        include both published and not-yet-published swatches.
+      </p>
+      <div class="donation-search input-group input-group-lg">
+        <span class="input-group-text"><span class="icon-search"></span></span>
+        <input
+          type="text"
+          id="donationSearchInput"
+          class="form-control"
+          placeholder="e.g., Hatchbox, Sakura Pink, PLA, Blue"
+          aria-label="Search swatches"
+          role="combobox"
+          aria-expanded="false"
+          aria-controls="donationSearchOverlay"
+          hx-trigger="keyup changed delay:0.4s, fireSearch from:body"
+          hx-get="{% url 'inventory_search' %}"
+          name="f"
+          hx-target="#donationSearchResults"
+          hx-swap="innerHTML"
+          hx-indicator="#donationSearchIndicator"
+          hx-push-url="false"
+        />
+      </div>
+
+      <div id="donationSearchOverlay" class="donation-overlay" role="listbox" aria-labelledby="donationSearchInput">
+        <div id="donationSearchIndicator" class="htmx-indicator p-3">
+          <div class="placeholder-glow">
+            <span class="placeholder col-3"></span>
+            <span class="placeholder col-4"></span>
+            <span class="placeholder col-2"></span>
+          </div>
+        </div>
+        <div id="donationSearchResults" class="list-group">
+          <div class="text-center text-muted py-3">Start typing to search…</div>
+        </div>
       </div>
     </div>
+
     <h2>Supplies Needed</h2>
     <ul>
       <li>
@@ -253,4 +290,90 @@
       Cheers and happy printing!
     </p>
   </div>
+  <script>
+    (function () {
+      const input = document.getElementById('donationSearchInput')
+      const overlay = document.getElementById('donationSearchOverlay')
+      const indicator = document.getElementById('donationSearchIndicator')
+      const results = document.getElementById('donationSearchResults')
+      if (!input || !overlay) return
+
+      const open = () => {
+        overlay.classList.add('is-open');
+        input.setAttribute('aria-expanded', 'true')
+      }
+      const close = () => {
+        overlay.classList.remove('is-open');
+        input.setAttribute('aria-expanded', 'false')
+      }
+      const hasText = () => input.value.trim().length > 0
+
+      const clamp = (n, min, max) => Math.max(min, Math.min(max, n))
+      const updateIndicatorPlaceholders = (count) => {
+        if (!indicator) return
+        const n = clamp(count || 0, 1, 5)  // safety limiter
+        let html = ''
+        for (let i = 0; i < n; i++) {
+          html += `
+            <div class="placeholder-glow mt-2">
+              <span class="placeholder col-${Math.round((Math.random()/2*10)+1).toString()}"></span>
+              <span class="placeholder col-${Math.round((Math.random()/2*10)+1).toString()} ms-2"></span>
+              <span class="placeholder col-${Math.round((Math.random()/2*10)+1).toString()} ms-2"></span>
+            </div>
+          `
+        }
+        indicator.innerHTML = html
+      }
+
+      // Observe the HTMX indicator visibility and wipe results when it shows
+      if (indicator && results) {
+        const isIndicatorVisible = () => (
+          indicator.classList.contains('htmx-request') ||
+          window.getComputedStyle(indicator).display !== 'none'
+        )
+        let wasVisible = isIndicatorVisible()
+        const wipeResults = () => {
+          // Clear existing results so placeholders are the only visible content
+          results.innerHTML = ''
+        }
+        const mo = new MutationObserver(() => {
+          const nowVisible = isIndicatorVisible()
+          if (nowVisible && !wasVisible) {
+            wipeResults()
+          }
+          wasVisible = nowVisible
+        })
+        mo.observe(indicator, { attributes: true, attributeFilter: ['class', 'style', 'hidden', 'aria-hidden'] })
+      }
+
+      input.addEventListener('focus', () => {
+        if (hasText()) open()
+      })
+      input.addEventListener('input', () => {
+        hasText() ? open() : close()
+      })
+
+      document.addEventListener('click', (e) => {
+        if (e.target === input || overlay.contains(e.target)) return
+        close()
+      })
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') close()
+      })
+
+      // HTMX lifecycle: open when results arrive, close if server echoes empty input
+      document.body.addEventListener('htmx:afterSwap', (evt) => {
+        const tgt = evt.detail && evt.detail.target
+        if (tgt && tgt.id === 'donationSearchResults') {
+          // Update the indicator to have the same number of placeholder rows as the
+          // number of result items that were just rendered (up to five). This sets
+          // up the next request to display a matching skeleton while loading.
+          const items = tgt.querySelectorAll('[role="option"]').length
+          updateIndicatorPlaceholders(items)
+
+          if (hasText()) open(); else close()
+        }
+      })
+    })()
+  </script>
 {% endblock content %}

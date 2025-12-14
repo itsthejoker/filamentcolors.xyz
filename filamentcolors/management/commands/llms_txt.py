@@ -82,7 +82,8 @@ class Command(BaseCommand):
                 except Exception:
                     # Fallback to id if slug is missing (rare)
                     m_url = reverse("manufacturersort", args=(str(m.id),))
-                notes = f"{getattr(m, 'published_count', 0)} swatches"
+                p_count = getattr(m, "published_count", 0)
+                notes = f"{p_count} swatch{'es' if p_count > 1 else ''}"
                 manufacturers_section.append(link(m.get_display_name(), m_url, notes))
         except Exception:
             # If DB unavailable (e.g., during collectstatic without DB), skip gracefully
@@ -107,7 +108,7 @@ class Command(BaseCommand):
                     s.color_name,
                     (s.filament_type.name if s.filament_type_id else None),
                 ]
-                label = " -- ".join([p for p in label_parts if p])
+                label = " ".join([p for p in label_parts if p])
                 swatches_section.append(link(label, url))
         except Exception:
             swatches_section.append("- No swatch data available.")

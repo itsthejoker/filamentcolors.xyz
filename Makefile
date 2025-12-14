@@ -1,7 +1,7 @@
 .PHONY: tests migrate run pretty build up down
 
 tests:
-	@poetry run pytest --cov --cov-report html -n 4
+	@poetry run pytest --cov --cov-report html
 
 migrate:
 	@poetry run python manage.py migrate

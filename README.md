@@ -1,6 +1,6 @@
 # filamentcolors.xyz
 
-The source code for filamentcolors.xyz ??? a small website for comparing pieces of printed filament and exploring color data. This repo includes the Django backend, REST API, templates, and frontend assets.
+The source code for filamentcolors.xyz, a small website for comparing pieces of printed filament and exploring color data. This repo includes the Django backend, REST API, templates, and frontend assets.
 
 - Live site: https://filamentcolors.xyz/
 - Public API root: https://filamentcolors.xyz/api/
@@ -9,7 +9,7 @@ The source code for filamentcolors.xyz ??? a small website for comparing pieces 
 
 This project is a Django 5.x application managed with Poetry. It provides:
 - A public JSON API for swatches and related data
-- A server???rendered frontend (Django templates) with progressive enhancement using HTMX and a bit of jQuery/vanilla JS
+- A server--rendered frontend (Django templates) with progressive enhancement using HTMX and a bit of jQuery/vanilla JS
 - Management commands for importing/curating data
 
 The codebase favors small, focused modules and minimal dependencies beyond Django and a handful of utilities for color processing and images.
@@ -66,13 +66,13 @@ Note on static files:
 ## Scripts and common tasks
 
 Make targets:
-- make run ??? start dev server
-- make migrate ??? apply migrations
-- make tests ??? run test suite with coverage (xdist enabled)
-- make pretty ??? run black and isort
+- make run -- start dev server
+- make migrate -- apply migrations
+- make tests -- run test suite with coverage
+- make pretty -- run black and isort
 
 Other helpers:
-- format.sh ??? runs black and djade (template formatter) across templates
+- format.sh -- runs black and djade (template formatter) across templates
 
 ## Environment variables
 These are read by settings; exact usage can be seen in filamentcolors/settings/*.py.
@@ -96,23 +96,23 @@ Database configuration:
 
 Notes:
 - Tests run with DJANGO_SETTINGS_MODULE=filamentcolors.settings.testing (see pyproject.toml).
-- A session???scoped fixture seeds reference color data automatically; database access is enabled for tests by default.
+- A session-scoped fixture seeds reference color data automatically; database access is enabled for tests by default.
 - External side effects (e.g., social posting) are disabled in testing settings.
 
 ## Project structure (selected)
 
-- filamentcolors/ ??? main Django app
-  - settings/ ??? base, local, prod, testing, routing
-  - api/ ??? REST API endpoints
-  - templates/ ??? Django templates (partials/, modals/, standalone/)
-  - appstatic/ ??? JS and CSS authored assets (e.g., js/components, css/main.css)
-  - static/ ??? collected/static files (do not edit)
-  - management/ ??? management commands (e.g., seed_swatches, importers)
-  - tests/ ??? pytest test suite
-  - helpers/constants/middleware/etc. ??? small support modules
-- manage.py ??? Django entry point
-- pyproject.toml ??? Poetry project, dependencies, and pytest config
-- Makefile ??? convenience tasks
+- filamentcolors/ -- main Django app
+  - settings/ -- base, local, prod, testing, routing
+  - api/ -- REST API endpoints
+  - templates/ -- Django templates (partials/, modals/, standalone/)
+  - appstatic/ -- JS and CSS authored assets (e.g., js/components, css/main.css)
+  - static/ -- collected/static files (do not edit)
+  - management/ -- management commands (e.g., seed_swatches, importers)
+  - tests/ -- pytest test suite
+  - helpers/constants/middleware/etc. -- small support modules
+- manage.py -- Django entry point
+- pyproject.toml -- Poetry project, dependencies, and pytest config
+- Makefile -- convenience tasks
 
 ## Public API
 
@@ -147,20 +147,6 @@ Please avoid hammering the API if you only need specific values; keep a cache of
   - db_last_modified is an ISO timestamp of the last swatch upload
 
 Questions? Email [joe@filamentcolors.xyz](mailto:joe@filamentcolors.xyz).
-
-## Library page: JSON pagination
-
-The Library now uses client-side infinite scroll that fetches JSON from `/api/swatch/` and renders `<swatch-card>` elements dynamically.
-
-- Page size: 15 (configurable via `page_size`)
-- Infinite scroll: Uses an IntersectionObserver watching `#infinite-scroll-sentinel`
-- Hybrid mode: The first page is server-rendered; pages 2+ are fetched via JSON
-- Script: `filamentcolors/appstatic/js/library-pagination.js` (initialized automatically on the library page)
-- Fallback: HTMX-based infinite scroll has been removed from the template to avoid double-loading
-
-Contributor notes:
-- The card component expects attribute presence for booleans (e.g., `available` present means available). The API exposes `is_available`; the script sets `available` only when true.
-- If you need absolute image URLs, pass `request` in serializer context; by default, relative URLs like `/media/...` are fine for the site.
 
 ## License
 

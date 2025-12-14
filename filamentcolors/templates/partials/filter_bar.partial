@@ -14,7 +14,7 @@
           value="{{ search_prefill }}"
           {# Trigger on both normal interactions with the user or if the event #}
           {# is triggered for the search bar itself. #}
-          hx-trigger="keyup changed delay:0.4s, fireSearch from:body"
+          hx-trigger="keyup changed delay:0.4s, input changed delay:0.4s, fireSearch from:body"
           hx-get="{{ request.path }}"
           name="f"
           hx-vals="js:{...populateFilters()}"
@@ -29,6 +29,7 @@
     <div class="text-center mb-4">
       <div class="mb-2">Quick filters:</div>
       <div class="gap-1">
+      {% if 'color_family' not in request.path %}
         <button
           type="button"
           id="cfFilterModalButton"
@@ -37,6 +38,8 @@
           data-bs-target="#cfFilterModal"
         >Color Family
         </button>
+        {% endif %}
+        {% if 'filament_type' not in request.path %}
         <button
           type="button"
           id="ftFilterModalButton"
@@ -45,6 +48,7 @@
           data-bs-target="#ftFilterModal"
         >Filament Type
         </button>
+        {% endif %}
         <button
           type="button"
           id="mfrFilterModalButton"
@@ -286,6 +290,18 @@
 </div>
 
 <script>
+  // Returns true when the current page URL is already constrained by a
+  // collection route, e.g. /library/color_family/<slug>/ or
+  // /library/filament_type/<slug>/, so those filters should not count as
+  // "active" for purposes of showing the Clear button.
+  function isPageConstrainedFor(filterName) {
+    const path = window.location.pathname || "";
+    if (filterName === "cf" && path.includes("/library/color_family/")) {
+      return true;
+    }
+    return filterName === "ft" && path.includes("/library/filament_type/");
+  }
+
   function hideModal(modalId) {
     const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById(modalId));
     modal.hide();
@@ -315,12 +331,29 @@
       if (filterName in window.quickfilters) {
         return window.quickfilters[filterName];
       }
-      const filterData = JSON.parse(JSON.parse(document.getElementById("filterValues").textContent));
-      let resp = filterData[filterName];
-      if (!resp) {
+      const el = document.getElementById("filterValues");
+      if (!el) {
         return "";
       }
-      return filterData[filterName];
+      let data = el.textContent;
+      try {
+        data = JSON.parse(data);
+      } catch (e) {
+        return "";
+      }
+      // If the server accidentally double-encoded the JSON, parse again
+      if (typeof data === "string") {
+        try {
+          data = JSON.parse(data);
+        } catch (e) {
+          // leave as string; will return empty below
+        }
+      }
+      if (!data || typeof data !== "object") {
+        return "";
+      }
+      const resp = data[filterName];
+      return resp ? resp : "";
     } catch (e) {
       return "";
     }
@@ -422,7 +455,12 @@
   });
 
   function updateClearAllButton() {
-    if (getFilters("cf") || getFilters("mfr") || getFilters("ft") || getFilters("td") || window.quickfiltersToClear.length > 0) {
+    // Only consider filters that are user-applied
+    const hasUserCf = !isPageConstrainedFor("cf") && !!getFilters("cf");
+    const hasUserFt = !isPageConstrainedFor("ft") && !!getFilters("ft");
+    const hasUserMfr = !isPageConstrainedFor("mfr") && !!getFilters("mfr");
+    const hasUserTd = !isPageConstrainedFor("td") && !!getFilters("td");
+    if (hasUserCf || hasUserMfr || hasUserFt || hasUserTd || window.quickfiltersToClear.length > 0) {
       $("#clearAllFiltersButton").removeClass("d-none");
     } else {
       $("#clearAllFiltersButton").addClass("d-none");
@@ -432,10 +470,20 @@
   function clearAllFilters() {
     window.quickfilters = {};
     window.quickfiltersToClear = [];
-    clearFtFilter(false);
-    clearCfFilter(false);
-    clearMfrFilter(false);
-    clearTdFilter(false);
+    // Do not clear page-level constraints (e.g., when already on
+    // /library/color_family/<slug>/ or /library/filament_type/<slug>/).
+    if (!isPageConstrainedFor("ft")) {
+      clearFtFilter(false);
+    }
+    if (!isPageConstrainedFor("cf")) {
+      clearCfFilter(false);
+    }
+    if (!isPageConstrainedFor("mfr")) {
+      clearMfrFilter(false);
+    }
+    if (!isPageConstrainedFor("td")) {
+      clearTdFilter(false);
+    }
     document.body.dispatchEvent(new Event("fireSearch"));
     updateClearAllButton();
   }
@@ -461,6 +509,23 @@
     window.quickfiltersToClear = [];
     updateClearAllButton();
     const currentUrl = new URL(window.location.href);
+
+    // Hydrate quickfilters from server-provided active filters (if present)
+    try {
+      const el = document.getElementById("filterValues");
+      if (el) {
+        let data = el.textContent;
+        try { data = JSON.parse(data); } catch(e) { data = {}; }
+        if (typeof data === 'string') {
+          try { data = JSON.parse(data); } catch(e) { data = {}; }
+        }
+        if (data && typeof data === 'object') {
+          ["cf", "mfr", "ft", "td"].forEach(function(k){
+            if (data[k]) window.quickfilters[k] = data[k];
+          });
+        }
+      }
+    } catch (e) { /* noop */ }
 
     // set the display information for the filter modals
     if (currentUrl.searchParams.has("cf")) {
@@ -520,43 +585,64 @@
       });
     }
 
-    if (currentUrl.searchParams.has("td")) {
-      const tdFilter = currentUrl.searchParams.get("td").split("-");
-      const minTd = parseFloat(tdFilter[0]);
-      const maxTd = parseFloat(tdFilter[1]);
-      const minRange = document.querySelector('td-min-range');
-      const maxRange = document.querySelector('td-max-range');
-      minRange.setValue(minTd);
-      minRange.syncValue();
-      maxRange.setValue(maxTd);
-      maxRange.syncValue();
-      $("#tdFilterModalButton")
-        .text(`TD: ${minTd} - ${maxTd}`)
-        .removeClass("btn-outline-info")
-        .addClass("btn-info");
-    } else {
-      const minRange = document.querySelector('td-min-range');
-      const maxRange = document.querySelector('td-max-range');
-      if (!minRange) {
-        // we're on a page where this parsing is running, but the filter
-        // bar is not present. Abort here.
-        return
+    const initTdControls = () => {
+      if (currentUrl.searchParams.has("td")) {
+        const tdFilter = currentUrl.searchParams.get("td").split("-");
+        const minTd = parseFloat(tdFilter[0]);
+        const maxTd = parseFloat(tdFilter[1]);
+        const minRange = document.querySelector('td-min-range');
+        const maxRange = document.querySelector('td-max-range');
+        if (!minRange || !maxRange) return;
+        minRange.setValue(minTd);
+        minRange.syncValue();
+        maxRange.setValue(maxTd);
+        maxRange.syncValue();
+        $("#tdFilterModalButton")
+          .text(`TD: ${minTd} - ${maxTd}`)
+          .removeClass("btn-outline-info")
+          .addClass("btn-info");
+      } else {
+        const minRange = document.querySelector('td-min-range');
+        const maxRange = document.querySelector('td-max-range');
+        if (!minRange || !maxRange) {
+          // we're on a page where this parsing is running, but the filter
+          // bar is not present. Abort here.
+          return
+        }
+        minRange.setValue(0.1);
+        minRange.syncValue();
+        maxRange.setValue(100);
+        maxRange.syncValue();
       }
-      minRange.setValue(0.1);
-      minRange.syncValue();
-      maxRange.setValue(100);
-      maxRange.syncValue();
+    };
+
+    if (window.customElements && customElements.whenDefined) {
+      Promise.all([
+        customElements.whenDefined('td-min-range'),
+        customElements.whenDefined('td-max-range'),
+        customElements.whenDefined('td-min-text'),
+        customElements.whenDefined('td-max-text'),
+      ]).then(initTdControls).catch(initTdControls);
+    } else {
+      // Fallback: just try now
+      initTdControls();
     }
 
-    document.querySelector('#tdMaxTextInput').addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') {
-        selectTdFilter();
-      }
-    });
-    document.querySelector('#tdMinTextInput').addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') {
-        selectTdFilter();
-      }
-    });
+    const maxTextEl = document.querySelector('#tdMaxTextInput');
+    if (maxTextEl) {
+      maxTextEl.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          selectTdFilter();
+        }
+      });
+    }
+    const minTextEl = document.querySelector('#tdMinTextInput');
+    if (minTextEl) {
+      minTextEl.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          selectTdFilter();
+        }
+      });
+    }
   });
 </script>

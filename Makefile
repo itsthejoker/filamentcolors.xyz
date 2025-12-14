@@ -3,6 +3,9 @@
 tests:
 	@poetry run pytest --cov --cov-report html
 
+test_all:
+	@poetry run pytest filamentcolors/tests --runplaywright
+
 migrate:
 	@poetry run python manage.py migrate
 

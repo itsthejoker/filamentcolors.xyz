@@ -16,7 +16,7 @@ from filamentcolors.models import (
 from filamentcolors.tests.constants import TestColors
 
 
-def test_image(name="test.jpg", size=(4056, 3040)):
+def test_image(name="test.jpg", size=(64, 64)):
     # https://stackoverflow.com/q/69141293
     # the size is the swatchrig photo size
     solidcolor = (randrange(0, 255), randrange(0, 255), randrange(0, 255))
@@ -45,10 +45,14 @@ BASE_SWATCH_DATA = {
     "date_published": timezone.now(),
     "color_name": Swatch.WHITE,
     "color_parent": Swatch.WHITE,
-    "image_front": test_image(),
-    "image_back": test_image(),
-    "image_other": test_image(),
-    "image_opengraph": test_image(),
+    # Keep images tiny for tests to avoid expensive JPEG processing
+    "image_front": test_image(name="front.jpg"),
+    "image_back": test_image(name="back.jpg"),
+    "image_other": test_image(name="other.jpg"),
+    "image_opengraph": test_image(name="og.jpg"),
+    # Pre-populate a small card image so Swatch.save() takes the fast path
+    # (it skips heavy image cropping/generation when card_img is already set).
+    "card_img": test_image(name="card.jpg", size=(96, 96)),
     "mfr_purchase_link": "https://example.com/",
 }
 BASE_FILAMENT_TYPE_DATA = {"name": "Test", "parent_type": None}
@@ -84,10 +88,24 @@ def get_filament_type(**kwargs) -> FilamentType:
 
 
 def get_swatch(**kwargs) -> Swatch:
+    # Allow tests to force full image processing via `_process_images=True`.
+    # This triggers the heavy Swatch.save() path to generate cropped images.
+    process_images: bool = bool(kwargs.pop("_process_images", False))
+
     info = {
         **BASE_SWATCH_DATA,
         **{key: kwargs[key] for key in kwargs if key in dir(Swatch)},
     }
+
+    if process_images:
+        # Use large source images and remove pre-populated card image to
+        # exercise the full cropping pipeline in Swatch.save().
+        info["image_front"] = test_image(name="front.jpg", size=(4056, 3040))
+        info["image_back"] = test_image(name="back.jpg", size=(4056, 3040))
+        info["image_other"] = test_image(name="other.jpg", size=(4056, 3040))
+        info["image_opengraph"] = test_image(name="og.jpg", size=(4056, 3040))
+        if "card_img" in info:
+            del info["card_img"]
     if not info.get("manufacturer"):
         info["manufacturer"] = get_manufacturer()
     if not info.get("filament_type"):
@@ -97,6 +115,17 @@ def get_swatch(**kwargs) -> Swatch:
         obj._set_rgb_from_hex()
         obj._set_lab_from_rgb()
         obj.save()
+    # Ensure computed relationships and affiliate links are populated without
+    # triggering heavy image processing.
+    try:
+        library = Swatch.objects.filter(published=True)
+        obj.regenerate_all(library)
+    except Exception:
+        # In case third-party tables are missing in a particular environment,
+        # skip silently; individual tests will assert as needed.
+        pass
+    obj.update_affiliate_links()
+    obj.save()
     return obj
 
 

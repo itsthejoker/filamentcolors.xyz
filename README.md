@@ -122,15 +122,23 @@ API root: https://filamentcolors.xyz/api/
 
 If you use the API for a project, please consider supporting server costs:
 - Patreon: https://www.patreon.com/filamentcolors
-- One???time donation: https://buy.stripe.com/8wMbKg8UT4k8fBKaEE
+- One-time donation: https://buy.stripe.com/8wMbKg8UT4k8fBKaEE
 
 API notes:
 
-- Color family is marked by a 3???letter code for data savings; the map can be found here: https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/models.py
-- /api/swatch/ supports sort methods: type and manufacturer. See: https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/api/views.py
+- Color family is marked by a 3-letter code for data savings; the map can be found here: https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/models.py
+- /api/swatch/ supports sort methods via the `m` query parameter: `type`, `manufacturer`, `color`, and `random`. See: https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/api/views.py
+- Text search: use `q` (or `f`) to search across `color_name`, `manufacturer.name`, and `filament_type.name`.
+- Additional filters:
+  - `manufacturer__slug` (exact or comma-separated for `in`)
+  - `filament_type__parent_type__slug` (exact or comma-separated for `in`)
+  - `td` range as `min-max` (e.g., `td=0-30`)
+- Pagination: standard page-number pagination. Default page size for swatch list is 15; override with `page_size` up to a max of 100.
 - Example URLs:
   - https://filamentcolors.xyz/api/swatch/?m=manufacturer
   - https://filamentcolors.xyz/api/swatch/?m=type
+  - https://filamentcolors.xyz/api/swatch/?m=color
+  - https://filamentcolors.xyz/api/swatch/?m=random&q=orange&manufacturer__slug=prusa&page=1&page_size=15
 
 Please avoid hammering the API if you only need specific values; keep a cache of the information important to you. To validate your cache, request:
 - GET https://filamentcolors.xyz/api/version/
@@ -140,6 +148,20 @@ Please avoid hammering the API if you only need specific values; keep a cache of
 
 Questions? Email [joe@filamentcolors.xyz](mailto:joe@filamentcolors.xyz).
 
+## Library page: JSON pagination
+
+The Library now uses client-side infinite scroll that fetches JSON from `/api/swatch/` and renders `<swatch-card>` elements dynamically.
+
+- Page size: 15 (configurable via `page_size`)
+- Infinite scroll: Uses an IntersectionObserver watching `#infinite-scroll-sentinel`
+- Hybrid mode: The first page is server-rendered; pages 2+ are fetched via JSON
+- Script: `filamentcolors/appstatic/js/library-pagination.js` (initialized automatically on the library page)
+- Fallback: HTMX-based infinite scroll has been removed from the template to avoid double-loading
+
+Contributor notes:
+- The card component expects attribute presence for booleans (e.g., `available` present means available). The API exposes `is_available`; the script sets `available` only when true.
+- If you need absolute image URLs, pass `request` in serializer context; by default, relative URLs like `/media/...` are fine for the site.
+
 ## License
 
-MIT ?? 2018???present Joe Kaufeld. See LICENSE for details.
+MIT © 2018–present Joe Kaufeld. See LICENSE for details.

@@ -100,17 +100,30 @@ class Card extends HTMLElement {
 
   retrieveAttrs() {
     // normalize color to hex without leading '#'
-    const rawColor = this.getAttribute('color') || '000000';
-    this.color = ('' + rawColor).replace(/^#/, '');
-    this.objId = this.getAttribute('id') || '';
-    this.mfr = this.getAttribute('mfr') || '';
-    this.name = this.getAttribute('name') || '';
-    this.type = this.getAttribute('type') || '';
-    this.td = this.getAttribute('td') === "None" ? null : this.getAttribute('td');
-    this.showColormatchExtras = this.getAttribute('showColormatchExtras') || '';
-    this.slug = this.getAttribute('slug') || '';
-    this.available = this.getAttribute('available') || '';
-    this.cardImgUrl = this.getAttribute('cardImgUrl') || '';
+    const rawColor = this.getAttribute('color') || '000000'
+    this.color = ('' + rawColor).replace(/^#/, '')
+    this.objId = this.getAttribute('id') || ''
+    this.mfr = this.getAttribute('mfr') || ''
+    this.name = this.getAttribute('name') || ''
+    this.type = this.getAttribute('type') || ''
+    this.td = this.getAttribute('td') === "None" ? null : this.getAttribute('td')
+    this.showColormatchExtras = this.getAttribute('showColormatchExtras') || ''
+    this.slug = this.getAttribute('slug') || ''
+    // Availability: two sources
+    // - SSR: available="True" or "False" (string)
+    // - JSON/DOM: boolean presence attribute (available="" or just present)
+    const availAttr = this.getAttribute('available')
+    if (availAttr === '') {
+      // Presence-only attribute => available
+      this.available = true
+    } else if (availAttr === null) {
+      // Not present
+      this.available = false
+    } else {
+      // String value from SSR; accept common truthy tokens
+      this.available = /^(true|1|yes)$/i.test(String(availAttr))
+    }
+    this.cardImgUrl = this.getAttribute('cardImgUrl') || ''
   }
 
   attributeChangedCallback(property, oldValue, newValue) {

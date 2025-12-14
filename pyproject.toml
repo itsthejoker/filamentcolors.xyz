@@ -54,6 +54,8 @@ django-debug-toolbar = "^6.1.0"
 djade = "^1.6.0"
 pytest-cov = "^7.0.0"
 pytest-xdist = "^3.8.0"
+playwright = "^1.56.0"
+pytest-playwright = "^0.7.2"
 
 [build-system]
 requires = ["poetry>=0.12"]
@@ -64,6 +66,10 @@ DJANGO_SETTINGS_MODULE = "filamentcolors.settings.testing"
 # -- recommended but optional:
 python_files = ["test_*.py"]
 addopts = "--cov --cov-report html"
+
+markers = [
+    "playwright: mark a test as needing playwright because they are slower"
+]
 
 [tool.coverage.run]
 omit = [

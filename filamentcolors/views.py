@@ -138,7 +138,13 @@ def librarysort(
         except ValueError:
             min_td, max_td = 0, 100
 
-        items = items.filter(calculated_td__gte=min_td, calculated_td__lte=max_td)
+        # When the requested range covers the full spectrum, treat it as "no TD filter".
+        # This ensures swatches without any TD value are still included (common case).
+        if not (min_td <= 0 and max_td >= 100):
+            items = items.filter(
+                calculated_td__gte=min_td,
+                calculated_td__lte=max_td,
+            )
 
     if method == "type":
         items = items.order_by("filament_type")
@@ -170,7 +176,11 @@ def librarysort(
         data["title"] = "Library, sorted by Color"
 
     else:
-        items = items.order_by("-date_published")
+        # Default ordering must match API ordering to keep server-rendered
+        # first page consistent with JSON pagination that follows. Add a
+        # deterministic tie-breaker on id to avoid duplicates/gaps when
+        # many items share the same publication timestamp (common in tests).
+        items = items.order_by("-date_published", "-id")
 
     # this loads the data obj with everything needed to render
     # the swatches
@@ -193,6 +203,27 @@ def librarysort(
         "ft": f_type_str,
         "td": td_range,
     }
+    # If this is a manufacturer route, force the manufacturer slug into params
+    forced_mfr = data.get("force_mfr_slug")
+    if forced_mfr and not params_minus_filter.get("mfr"):
+        params_minus_filter["mfr"] = forced_mfr
+
+    # If this is a type route, force the parent type slug into params
+    forced_ft = data.get("force_ft_slug")
+    if forced_ft and not params_minus_filter.get("ft"):
+        params_minus_filter["ft"] = forced_ft
+
+    # If this is a color family route, force the color family identifier into params
+    forced_cf = data.get("force_cf")
+    if forced_cf and not params_minus_filter.get("cf"):
+        params_minus_filter["cf"] = forced_cf
+
+    # If we're rendering a Collection page, include the exact IDs so the
+    # JSON paginator will constrain subsequent API requests to only these.
+    collection_ids = data.get("collection_ids")
+    if collection_ids:
+        params_minus_filter["id__in"] = collection_ids
+
     params_minus_filter = {
         k: v for k, v in params_minus_filter.items() if v is not None
     }
@@ -209,13 +240,22 @@ def librarysort(
             }
             data.update({"infinite_scroll_params": json.dumps(params_plus_next_page)})
 
-    if params_minus_filter:
-        params_minus_filter = json.dumps(params_minus_filter)
+    # NOTE: Do NOT JSON-dump params_minus_filter here.
+    # The template uses `json_script` which will safely JSON-encode
+    # this Python object into a JS value. If we pre-dump it, the
+    # client receives a JSON string which then gets spread into
+    # character-indexed query params like 0,1,2... in URLSearchParams.
+
+    # For JSON pagination, include the search term in the active filters so the client
+    # can continue paging with the same query across API requests.
+    active_filters = dict(params_minus_filter)
+    if filter_str:
+        active_filters["f"] = filter_str
 
     data.update(
         {
             "show_filter_bar": True,
-            "active_filters": params_minus_filter,
+            "active_filters": active_filters,
         }
     )
 
@@ -236,6 +276,9 @@ def colorfamilysort(request: HttpRequest, family_id: str) -> HttpResponse:
         title=f"{family_name} Swatches",
         h1_title=f"{family_name} Swatches",
     )
+    # Ensure client-side pagination keeps color family constraint
+    # Pass through the original identifier (slug or id); API accepts either via `cf`
+    data["force_cf"] = family_id
     s = get_swatches(data)
 
     s = s.filter(Q(color_parent=f_id) | Q(alt_color_parent=f_id))
@@ -263,6 +306,9 @@ def manufacturersort(request: HttpRequest, mfr_id: str) -> HttpResponse:
         h1_title=f"{mfr.name} Swatches",
         show_unavailable_anyway=True,
     )
+    # Ensure client-side pagination keeps manufacturer constraint
+    data["force_mfr_slug"] = mfr.slug
+
     s = get_swatches(data)
 
     s = s.filter(manufacturer=mfr)
@@ -289,6 +335,8 @@ def typesort(request: HttpRequest, f_type_id: int) -> HttpResponse:
         title=f"{f_type.name} Swatches",
         h1_title=f"{f_type.name} Swatches",
     )
+    # Ensure client-side pagination keeps type constraint
+    data["force_ft_slug"] = f_type.slug
 
     s = get_swatches(data)
 
@@ -357,7 +405,7 @@ def edit_swatch_collection(request: HttpRequest, ids: str) -> HttpResponse:
         preselect_data=list(collection_data),
         title="Edit Collection",
     )
-    library = get_swatches(data).order_by("-date_published")
+    library = get_swatches(data).order_by("-date_published", "-id")
 
     return librarysort(request, library=library, prebuilt_data=data)
 

@@ -616,6 +616,11 @@ html[data-bs-theme='dark'] .htmx-indicator.htmx-request {
     transform-origin: center 0.5em;
 }
 
+/* Dark mode override: make pagination indicator white in Bootstrap dark theme */
+[data-bs-theme="dark"] .infinity-loader-wheel i {
+    background: #fff;
+}
+
 @keyframes loader-wheel-rotate {
     from {
         transform: rotate(0deg);
@@ -957,5 +962,22 @@ svg {
 @media (max-width: 576px) {
     .donation-overlay {
         max-height: 70vh;
+    }
+}
+
+@media (min-width: 992px) {
+    .dropdown-menu {
+      overflow: hidden;
+      overflow-y: auto;
+      max-height: calc(100vh - 150px);
+    }
+}
+
+
+@media (max-width: 991px) {
+    .dropdown-menu {
+      overflow: hidden;
+      overflow-y: auto;
+      max-height: 300px;
     }
 }

@@ -10,6 +10,7 @@
   >
     {% include 'partials/multiple_swatch_cards.partial' %}
   </div>
+  <div id="infinite-scroll-sentinel" aria-hidden="true"></div>
   {% include 'components/indicators/pagination_indicator.partial' %}
 {% elif not swatches and show_search_bar %}
   <div class="container text-center mt-5">

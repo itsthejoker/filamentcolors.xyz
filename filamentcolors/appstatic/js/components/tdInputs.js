@@ -3,6 +3,7 @@ class TdTextComponent extends HTMLElement {
     super();
     this.textInput = null;
     this.errorMessage = null;
+    this._initialized = false;
   }
 
   /**
@@ -16,7 +17,13 @@ class TdTextComponent extends HTMLElement {
   }
 
   syncValue() {
-    this.syncTarget.setValue(this.getValue())
+    if (!this.syncTarget) {
+      // lazily resolve in case counterpart isn't ready yet
+      this.syncTarget = document.querySelector(this.syncSelector)
+    }
+    if (this.syncTarget && typeof this.syncTarget.setValue === 'function') {
+      this.syncTarget.setValue(this.getValue())
+    }
   }
 
   roundToOneDecimal(value) {
@@ -77,6 +84,7 @@ class TdRangeComponent extends HTMLElement {
     this.minlval = Math.log(0.1);
     this.maxlval = Math.log(99.9);
     this.scale = (this.maxlval - this.minlval) / (this.maxpos - this.minpos)
+    this._initialized = false;
   }
 
   roundToOneDecimal(value) {
@@ -84,7 +92,13 @@ class TdRangeComponent extends HTMLElement {
   }
 
   syncValue() {
-    this.syncTarget.setValue(this.getValue())
+    if (!this.syncTarget) {
+      // lazily resolve in case counterpart isn't ready yet
+      this.syncTarget = document.querySelector(this.syncSelector)
+    }
+    if (this.syncTarget && typeof this.syncTarget.setValue === 'function') {
+      this.syncTarget.setValue(this.getValue())
+    }
   }
 
   getValue() {
@@ -186,11 +200,20 @@ class TdMinRange extends TdRangeComponent {
         id="tdMinRange"
       >
     `;
-    this.maxlval = Math.log(99.9);
-    this.rangeInput = document.getElementById('tdMinRange');
-    this.valueLabel = document.getElementById('tdMinValueLabel');
-    this.syncTarget = document.querySelector('td-min-text');
-    this.rangeInput.addEventListener('input', this.updateTdMinRange.bind(this));
+    this.syncSelector = 'td-min-text'
+  }
+
+  connectedCallback() {
+    if (this._initialized) return
+    this.maxlval = Math.log(99.9)
+    // query within this element; not the whole document
+    this.rangeInput = this.querySelector('#tdMinRange')
+    this.valueLabel = this.querySelector('#tdMinValueLabel')
+    this.syncTarget = document.querySelector(this.syncSelector)
+    if (this.rangeInput) {
+      this.rangeInput.addEventListener('input', this.updateTdMinRange.bind(this))
+    }
+    this._initialized = true
   }
 
   getMinValue() {
@@ -232,11 +255,19 @@ class TdMaxRange extends TdRangeComponent {
         id="tdMaxRange"
       >
     `;
-    this.maxlval = Math.log(100);
-    this.rangeInput = document.getElementById('tdMaxRange');
-    this.valueLabel = document.getElementById('tdMaxValueLabel');
-    this.syncTarget = document.querySelector('td-max-text');
-    this.rangeInput.addEventListener('input', this.updateTdMaxRange.bind(this));
+    this.syncSelector = 'td-max-text'
+  }
+
+  connectedCallback() {
+    if (this._initialized) return
+    this.maxlval = Math.log(100)
+    this.rangeInput = this.querySelector('#tdMaxRange')
+    this.valueLabel = this.querySelector('#tdMaxValueLabel')
+    this.syncTarget = document.querySelector(this.syncSelector)
+    if (this.rangeInput) {
+      this.rangeInput.addEventListener('input', this.updateTdMaxRange.bind(this))
+    }
+    this._initialized = true
   }
 
   getMinValue() {
@@ -274,12 +305,19 @@ class TdMinText extends TdTextComponent {
         <div class="invalid-feedback" id="tdMinTextInputFeedback"></div>
       </div>
     `;
+    this.syncSelector = 'td-min-range'
+  }
 
-    this.textInput = document.getElementById('tdMinTextInput');
-    this.maxTd = document.querySelector('td-max-text');
-    this.errorMessage = document.getElementById('tdMinTextInputFeedback');
-    this.syncTarget = document.querySelector('td-min-range');
-    this.textInput.addEventListener('input', this.updateTdMinText.bind(this));
+  connectedCallback() {
+    if (this._initialized) return
+    this.textInput = this.querySelector('#tdMinTextInput')
+    this.maxTd = document.querySelector('td-max-text')
+    this.errorMessage = this.querySelector('#tdMinTextInputFeedback')
+    this.syncTarget = document.querySelector(this.syncSelector)
+    if (this.textInput) {
+      this.textInput.addEventListener('input', this.updateTdMinText.bind(this))
+    }
+    this._initialized = true
   }
 
   updateTdMinText(event) {
@@ -319,12 +357,19 @@ class TdMaxText extends TdTextComponent {
         </div>
       </div>
     `;
+    this.syncSelector = 'td-max-range'
+  }
 
-    this.textInput = document.getElementById('tdMaxTextInput');
-    this.minTd = document.querySelector('td-min-text');
-    this.errorMessage = document.getElementById('tdMaxTextInputFeedback');
-    this.syncTarget = document.querySelector('td-max-range');
-    this.textInput.addEventListener('input', this.updateTdMaxText.bind(this));
+  connectedCallback() {
+    if (this._initialized) return
+    this.textInput = this.querySelector('#tdMaxTextInput')
+    this.minTd = document.querySelector('td-min-text')
+    this.errorMessage = this.querySelector('#tdMaxTextInputFeedback')
+    this.syncTarget = document.querySelector(this.syncSelector)
+    if (this.textInput) {
+      this.textInput.addEventListener('input', this.updateTdMaxText.bind(this))
+    }
+    this._initialized = true
   }
 
   updateTdMaxText(event) {

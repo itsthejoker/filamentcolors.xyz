@@ -29,7 +29,7 @@ def test_pantone_and_ral_colors_get_automatically_added() -> None:
 
 
 def test_cropped_images_automatically_added() -> None:
-    swatch = get_swatch()
+    swatch = get_swatch(_process_images=True)
 
     assert swatch.card_img is not None
     assert swatch.card_img.height == 89

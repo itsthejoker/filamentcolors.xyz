@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="{% static 'vendored/css/toastify.css' %}">
 <link rel="stylesheet" href="{% static 'vendored/icomoon/style.css' %}?v=2">
 <link rel="stylesheet" href="{% static 'vendored/css/bootstrap.min.css' %}">
-<link rel="stylesheet" href="{% static 'css/main.css' %}?v=13">
+<link rel="stylesheet" href="{% static 'css/main.css' %}?v=14">
 <link rel="stylesheet" href="{% static 'vendored/css/material_icons.css' %}">
 
 <style>
@@ -80,6 +80,15 @@
       }, timeout);
     };
   }
+  function debounce(func, wait) {
+    let timeoutId = null;
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, wait);
+    };
+  };
 
   function throttle(fn, wait, args = null) {
     let time = Date.now();

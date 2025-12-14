@@ -24,6 +24,7 @@ from filamentcolors.helpers import (
     ErrorStatusResponse,
     build_data_dict,
     clean_collection_ids,
+    filter_qs_by_search_string,
     generate_custom_library,
     get_custom_library,
     get_hsv,
@@ -105,18 +106,7 @@ def librarysort(
     if filter_str:
         split_filter_str = filter_str.strip().lower().split()
         data.update({"search_prefill": filter_str})
-        for section in split_filter_str:
-            filters = (
-                Q(color_name__icontains=section)
-                | Q(manufacturer__name__icontains=section)
-                | Q(filament_type__name__icontains=section)
-            )
-
-            if section in ["grey", "gray"]:
-                filters = filters | Q(
-                    color_name__icontains="grey" if section == "gray" else "gray"
-                )
-            items = items.filter(filters)
+        items = filter_qs_by_search_string(items, split_filter_str)
 
     if color_family_str:
         try:
@@ -405,7 +395,7 @@ def opengraph_card(request: HttpRequest, swatch_id: str) -> HttpResponse:
     swatch = Swatch.objects.filter(**args).first()
     if not swatch:
         raise Http404
-    data['obj'] = swatch
+    data["obj"] = swatch
     return prep_request(request, html, data)
 
 
@@ -833,3 +823,19 @@ def get_welcome_experience_video(request: HttpRequest) -> HttpResponse:
         f"htmx_partials/welcome_experience_video.partial",
         data,
     )
+
+
+def inventory_search(request: HttpRequest) -> HttpResponse:
+    if not request.htmx:
+        return HttpResponse(status=404)
+
+    value = request.GET.get("f", "")
+
+    data = build_data_dict(request)
+
+    data["results"] = filter_qs_by_search_string(Swatch.objects.all(), value)
+    data["results_count"] = data["results"].count()
+    data["minus_five"] = data["results_count"] - 5
+    data["results"] = data["results"][:5]
+
+    return prep_request(request, "htmx_partials/donation_sort_view.partial", data)

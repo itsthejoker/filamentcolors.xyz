@@ -1,6 +1,6 @@
 import colorsys
 import secrets
-from typing import Any
+from typing import Any, Optional
 
 from django.conf import settings
 from django.core.paginator import EmptyPage, Paginator
@@ -458,3 +458,23 @@ def get_new_seed() -> int:
     # we need a cryptographically secure way to generate a new seed.
     # This uses the underlying OS to generate a random number.
     return secrets.SystemRandom().getrandbits(64)
+
+
+def filter_qs_by_search_string(
+    qs: QuerySet, search_str: list[str] | str
+) -> Optional[list[Q]]:
+    if isinstance(search_str, str):
+        search_str = search_str.strip().lower().split()
+    for section in search_str:
+        filters = (
+            Q(color_name__icontains=section)
+            | Q(manufacturer__name__icontains=section)
+            | Q(filament_type__name__icontains=section)
+        )
+
+        if section in ["grey", "gray"]:
+            filters = filters | Q(
+                color_name__icontains="grey" if section == "gray" else "gray"
+            )
+        qs = qs.filter(filters)
+    return qs

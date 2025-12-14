@@ -914,9 +914,48 @@ svg {
 }
 
 .grabbable {
-   cursor: grab;
+    cursor: grab;
 }
 
 .grabbable:active {
-   cursor: grabbing;
+    cursor: grabbing;
+}
+
+/* Donations search overlay */
+.donation-search-wrapper {
+    position: relative;
+}
+
+.donation-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 0.25rem);
+    background: var(--bs-body-bg, #fff);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    max-height: min(60vh, 28rem);
+    overflow: auto;
+    z-index: 1030;
+    opacity: 0;
+    transform: translateY(-4px);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 300ms ease, transform 300ms ease, visibility 300ms step-end;
+    max-width: 600px;
+}
+
+.donation-overlay.is-open {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 300ms ease, transform 300ms ease, visibility 0ms step-start;
+}
+
+@media (max-width: 576px) {
+    .donation-overlay {
+        max-height: 70vh;
+    }
 }

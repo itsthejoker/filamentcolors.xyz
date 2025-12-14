@@ -4,30 +4,12 @@
   </div>
   <div class="col-12 col-lg-4 text-center">
     {% if item.published %}
-      <span
-        data-bs-toggle="tooltip"
-        data-bs-placement="top"
-        data-container="body"
-        class="badge text-bg-success text-uppercase"
-        title="This swatch is available in the library!"
-      >Published</span>
+      {% include 'components/badges/published.partial' %}
       {% if not item.is_available %}
-        <span
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-          data-container="body"
-          class="badge text-bg-secondary text-uppercase"
-          title="This swatch is not available for sale."
-        >Unavailable</span>
+        {% include 'components/badges/unavailable.partial' %}
       {% endif %}
     {% else %}
-      <span
-        data-bs-toggle="tooltip"
-        data-bs-placement="top"
-        data-container="body"
-        class="badge text-bg-danger text-uppercase"
-        title="This swatch is not yet available in the library."
-      >Not Published</span>
+      {% include 'components/badges/unpublished.partial' %}
     {% endif %}
   </div>
   {% if not forloop.last %}

@@ -31,33 +31,15 @@
     <h4>Legend</h4>
     <div class="row">
       <div class="col-lg-4">
-        <span
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-          data-container="body"
-          class="badge text-bg-success text-uppercase"
-          title="This swatch is available in the library!"
-        >Published</span>
+        {% include 'components/badges/published.partial' %}
         This swatch can be viewed in the library.
       </div>
       <div class="col-lg-4">
-        <span
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-          data-container="body"
-          class="badge text-bg-danger text-uppercase mt-2 mt-lg-0"
-          title="This swatch is not yet available in the library."
-        >Not Published</span>
+        {% include 'components/badges/unpublished.partial' %}
         We have this filament in the queue, but it has not yet been indexed and published.
       </div>
       <div class="col-lg-4">
-        <span
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-          data-container="body"
-          class="badge text-bg-secondary text-uppercase mt-2 mt-lg-0"
-          title="This swatch is not available for sale."
-        >Unavailable</span>
+        {% include 'components/badges/unavailable.partial' %}
         This filament has been published, but is not available for sale for various reasons.
       </div>
     </div>

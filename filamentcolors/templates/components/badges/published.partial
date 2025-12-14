@@ -1,0 +1,7 @@
+<span
+  data-bs-toggle="tooltip"
+  data-bs-placement="top"
+  data-container="body"
+  class="badge text-bg-success text-uppercase"
+  title="This swatch is available in the library!"
+>Published</span>

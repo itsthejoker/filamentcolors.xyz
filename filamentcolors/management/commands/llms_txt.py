@@ -16,7 +16,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Resolve output path (project static directory)
-        static_root = getattr(settings, "STATIC_ROOT", os.path.join(settings.BASE_DIR, "static"))
+        static_root = getattr(
+            settings, "STATIC_ROOT", os.path.join(settings.BASE_DIR, "static")
+        )
         os.makedirs(static_root, exist_ok=True)
         out_path = os.path.join(static_root, "llms.txt")
 
@@ -49,19 +51,28 @@ class Command(BaseCommand):
             link("Color Match", reverse("colormatch"), "Find nearest colors by input"),
             link("About", reverse("about"), "What this site is and FAQ"),
             link("The Librarians", reverse("about_us"), "Who maintains the library"),
-            link("Donations", reverse("donations"), "How to donate filament for the library"),
-            link("Monetary Donations", reverse("monetary_donations"), "How to support hosting costs"),
+            link(
+                "Donations",
+                reverse("donations"),
+                "How to donate filament for the library",
+            ),
+            link(
+                "Monetary Donations",
+                reverse("monetary_donations"),
+                "How to support hosting costs",
+            ),
             link("API root", "/api/", "Public JSON endpoints"),
-            link("Sitemap", reverse("django.contrib.sitemaps.views.sitemap"))
+            link("Sitemap", reverse("django.contrib.sitemaps.views.sitemap")),
         ]
 
-    # Dynamic Manufacturers section — only those with published swatches
+        # Dynamic Manufacturers section — only those with published swatches
         manufacturers_section: list[str] = []
         try:
             mfr_counts = (
-                Manufacturer.objects
-                .filter(swatch__published=True)
-                .annotate(published_count=Count("swatch", filter=Q(swatch__published=True)))
+                Manufacturer.objects.filter(swatch__published=True)
+                .annotate(
+                    published_count=Count("swatch", filter=Q(swatch__published=True))
+                )
                 .order_by("name")
             )
             for m in mfr_counts:
@@ -71,7 +82,7 @@ class Command(BaseCommand):
                 except Exception:
                     # Fallback to id if slug is missing (rare)
                     m_url = reverse("manufacturersort", args=(str(m.id),))
-                p_count = getattr(m, 'published_count', 0)
+                p_count = getattr(m, "published_count", 0)
                 notes = f"{p_count} swatch{'es' if p_count > 1 else ''}"
                 manufacturers_section.append(link(m.get_display_name(), m_url, notes))
         except Exception:

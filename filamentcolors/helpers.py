@@ -1,6 +1,6 @@
 import colorsys
 import secrets
-from typing import Any, Optional
+from typing import Any, Optional, Tuple
 
 from django.conf import settings
 from django.core.paginator import EmptyPage, Paginator
@@ -18,7 +18,7 @@ from django.db.models import (
     When,
 )
 from django.db.models.functions import Coalesce, Lower
-from django.http import HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from filamentcolors import (
@@ -28,6 +28,7 @@ from filamentcolors import (
 )
 from filamentcolors import status as status_codes
 from filamentcolors.colors import clamp
+from filamentcolors.exceptions import UnknownSlugOrID
 from filamentcolors.models import (
     DeadLink,
     GenericFilamentType,
@@ -478,3 +479,102 @@ def filter_qs_by_search_string(
             )
         qs = qs.filter(filters)
     return qs
+
+
+# ---- Shared filtering helpers for views and API ----
+
+
+def apply_color_family_filter(
+    qs: QuerySet,
+    cf: Optional[str],
+    *,
+    strict: bool = False,
+) -> QuerySet:
+    """Filter swatches by color family across `color_parent` or `alt_color_parent`.
+
+    - Accepts slug or id via `Swatch().get_color_id_from_slug_or_id`.
+    - When `strict=True`, raises Http404 if the slug/id is unknown (matching server views).
+    - When `strict=False`, returns the original queryset if value is invalid (matching API).
+    """
+    if not cf or cf == "null":
+        return qs
+    try:
+        f_id = Swatch().get_color_id_from_slug_or_id(cf)
+    except UnknownSlugOrID:
+        if strict:
+            raise Http404
+        return qs
+    return qs.filter(Q(color_parent=f_id) | Q(alt_color_parent=f_id))
+
+
+def apply_manufacturer_filter(
+    qs: QuerySet,
+    mfr: Optional[str],
+    *,
+    resolve: bool = True,
+    strict: bool = False,
+) -> QuerySet:
+    """Filter by manufacturer.
+
+    - When `resolve=True`, attempt to resolve slug from either id or slug via
+      `Manufacturer().get_slug_from_id_or_slug`.
+      - If resolution fails and `strict=True`, raise Http404 (server views behavior).
+      - If resolution fails and `strict=False`, return the original queryset (API lenient behavior).
+    - When `resolve=False`, filter directly by `manufacturer__slug=mfr` (API legacy behavior).
+    """
+    if not mfr or mfr == "null":
+        return qs
+    if not resolve:
+        return qs.filter(manufacturer__slug=mfr)
+    try:
+        mfr_slug = Manufacturer().get_slug_from_id_or_slug(mfr)
+    except Manufacturer.DoesNotExist:
+        if strict:
+            raise Http404
+        return qs
+    return qs.filter(manufacturer__slug=mfr_slug)
+
+
+def apply_filament_parent_type_filter(qs: QuerySet, ft: Optional[str]) -> QuerySet:
+    """Filter by filament parent type using either id or slug string."""
+    if not ft or ft == "null":
+        return qs
+    try:
+        int(ft)
+        return qs.filter(filament_type__parent_type__id=ft)
+    except ValueError:
+        return qs.filter(filament_type__parent_type__slug=ft)
+
+
+def parse_td_range(
+    td: Optional[str], default: Tuple[float, float] = (0.0, 100.0)
+) -> Tuple[float, float]:
+    """Parse a transmission distance range string of the form "min-max" into floats.
+    Falls back to `default` on error.
+    """
+    if not td or td == "null":
+        return default
+    try:
+        min_td, max_td = [float(x) for x in td.split("-")]
+        return min_td, max_td
+    except Exception:
+        return default
+
+
+def apply_td_range_filter(
+    qs: QuerySet,
+    td: Optional[str],
+    *,
+    treat_full_as_no_filter: bool = True,
+    default: Tuple[float, float] = (0.0, 100.0),
+) -> QuerySet:
+    """Apply `calculated_td` range filtering.
+
+    - When `treat_full_as_no_filter=True`, a full-span range (<=0 and >=100) results in no filtering
+      so swatches without TD remain visible (server views behavior).
+    - When `treat_full_as_no_filter=False`, always filter using the parsed range (API behavior).
+    """
+    min_td, max_td = parse_td_range(td, default=default)
+    if treat_full_as_no_filter and (min_td <= 0 and max_td >= 100):
+        return qs
+    return qs.filter(calculated_td__gte=min_td, calculated_td__lte=max_td)

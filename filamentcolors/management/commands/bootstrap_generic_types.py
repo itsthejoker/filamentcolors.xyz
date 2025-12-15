@@ -7,7 +7,7 @@ class Command(BaseCommand):
     help = "Creates the base types used for navigation"
 
     def handle(self, *args, **options):
-        TYPES = ["PLA", "PETG", "ABS", "TPU / TPE", "Exotics"]
+        TYPES = ["PLA", "PETG", "ABS / ASA", "TPU / TPE", "Exotics"]
 
         created_types = list()
 

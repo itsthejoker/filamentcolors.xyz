@@ -21,7 +21,17 @@ from filamentcolors.api.serializers import (
 )
 from filamentcolors.api.throttles import BurstRateThrottle, SustainedRateThrottle
 from filamentcolors.colors import is_hex
-from filamentcolors.helpers import annotate_with_calculated_td, get_hsv, get_new_seed
+from filamentcolors.helpers import (
+    annotate_with_calculated_td,
+    apply_color_family_filter,
+    apply_filament_parent_type_filter,
+    apply_manufacturer_filter,
+    apply_td_range_filter,
+    filter_qs_by_search_string,
+    get_hsv,
+    get_new_seed,
+    get_settings_cookies,
+)
 from filamentcolors.models import RAL, FilamentType, Manufacturer, Pantone, Swatch
 
 
@@ -91,56 +101,26 @@ class SwatchViewSet(ReadOnlyModelViewSet):
             "f"
         )
         if search and search != "null":
-            for token in search.strip().lower().split():
-                filters = (
-                    Q(color_name__icontains=token)
-                    | Q(manufacturer__name__icontains=token)
-                    | Q(filament_type__name__icontains=token)
-                )
-                if token in ["grey", "gray"]:
-                    filters = filters | Q(
-                        color_name__icontains="grey" if token == "gray" else "gray"
-                    )
-                queryset = queryset.filter(filters)
+            queryset = filter_qs_by_search_string(queryset, search)
 
         # Alias filters to match page routes without requiring frontend remap
         # mfr: manufacturer slug (alias)
         mfr = self.request.query_params.get("mfr")
-        if mfr and mfr != "null":
-            queryset = queryset.filter(manufacturer__slug=mfr)
+        queryset = apply_manufacturer_filter(queryset, mfr, resolve=False)
 
         # ft: parent filament type (slug or id)
         ft = self.request.query_params.get("ft")
-        if ft and ft != "null":
-            try:
-                # numeric id
-                int(ft)
-                queryset = queryset.filter(filament_type__parent_type__id=ft)
-            except ValueError:
-                queryset = queryset.filter(filament_type__parent_type__slug=ft)
+        queryset = apply_filament_parent_type_filter(queryset, ft)
 
         # cf: color family (slug or id) — matches either color_parent or alt_color_parent
         cf = self.request.query_params.get("cf")
-        if cf and cf != "null":
-            try:
-                # Try to resolve via Swatch helper (accepts slug or id)
-                f_id = Swatch().get_color_id_from_slug_or_id(cf)
-            except Exception:
-                f_id = None
-            if f_id is not None:
-                queryset = queryset.filter(
-                    Q(color_parent=f_id) | Q(alt_color_parent=f_id)
-                )
+        queryset = apply_color_family_filter(queryset, cf, strict=False)
 
         # td: transmission distance range filter in the form "min-max"
         td = self.request.query_params.get("td")
         if td and td != "null":
-            try:
-                min_td, max_td = [float(x) for x in td.split("-")]
-            except Exception:
-                min_td, max_td = 0.0, 100.0
-            queryset = queryset.filter(
-                calculated_td__gte=min_td, calculated_td__lte=max_td
+            queryset = apply_td_range_filter(
+                queryset, td, treat_full_as_no_filter=False, default=(0.0, 100.0)
             )
 
         # Default ordering and basic server-side ordering options
@@ -152,6 +132,44 @@ class SwatchViewSet(ReadOnlyModelViewSet):
         else:
             # Add a deterministic tie-breaker to avoid duplicates/gaps across pages
             queryset = queryset.order_by("-date_published", "-id")
+
+        # Apply user settings (cookies) so pagination respects global filters
+        # This mirrors the behavior used by server-rendered library views.
+        # Do not apply when force_all=True (e.g., detail retrieve should ignore user filters).
+        if not force_all:
+            try:
+                settings_cookies = get_settings_cookies(self.request)
+            except Exception:
+                settings_cookies = None
+
+            if settings_cookies:
+                # Restrict by selected filament parent types
+                try:
+                    types_qs = settings_cookies.get("types")
+                    if types_qs is not None:
+                        queryset = queryset.filter(
+                            filament_type__parent_type__in=types_qs
+                        )
+                except Exception:
+                    pass
+
+                # Restrict by manufacturer whitelist (derived from blacklist cookie)
+                try:
+                    mfr_whitelist = settings_cookies.get("mfr_whitelist")
+                    if mfr_whitelist is not None:
+                        queryset = queryset.filter(manufacturer__in=mfr_whitelist)
+                except Exception:
+                    pass
+
+                # Hide unavailable swatches unless explicitly allowed in cookies
+                try:
+                    show_unavailable = bool(
+                        settings_cookies.get("show_unavailable", False)
+                    )
+                    if not show_unavailable:
+                        queryset = queryset.filter(is_available=True)
+                except Exception:
+                    pass
 
         return queryset
 

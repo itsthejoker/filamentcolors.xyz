@@ -3,18 +3,23 @@ import os
 
 import pytest
 
-from filamentcolors.management.commands import import_pantone_ral
+from filamentcolors.management.commands import (
+    bootstrap_generic_types,
+    import_pantone_ral,
+)
 from filamentcolors.tests.ui import AVOID_WELCOME_OVERLAY_COOKIE
 
 
 @pytest.fixture(scope="session")
 def django_db_setup(django_db_setup, django_db_blocker):
     with django_db_blocker.unblock():
+        bootstrap_generic_types.Command().handle()
         import_pantone_ral.Command().handle()
 
 
 @pytest.fixture(autouse=True)
 def enable_database_for_all_tests(db) -> None:
+    bootstrap_generic_types.Command().handle()
     pass
 
 

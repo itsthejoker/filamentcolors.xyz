@@ -1,4 +1,7 @@
+import time
+
 import pytest
+from django.conf import settings
 from playwright.sync_api import expect
 
 from filamentcolors.models import Swatch
@@ -8,6 +11,7 @@ from filamentcolors.tests.helpers import (
     get_manufacturer,
     get_swatch,
 )
+from filamentcolors.tests.ui import scroll_down
 
 
 @pytest.mark.playwright
@@ -56,17 +60,49 @@ def test_mfr_filter_button(nwo_page, live_server):
         1
     )
 
-    nwo_page.get_by_role("button", name="Manufacturer").click()
-    nwo_page.get_by_label("Filter by Manufacturer").get_by_text(blorbo.name).click()
-    expect(nwo_page.locator("#mfrFilterModalButton")).to_contain_text(blorbo.name)
 
-    expect(nwo_page.locator(".swatchbox")).to_have_count(1)
+@pytest.mark.playwright
+def test_mfr_filter_button_pagination(nwo_page, live_server):
+    target_mfr = get_manufacturer()  # Defaults to "Tester Materials"
+    other_mfr = get_manufacturer(name="Bleepo")
+
+    # Create one early swatch for the target manufacturer that should only appear after pagination
+    get_swatch(color_name="Unique Early", manufacturer=target_mfr)
+
+    # Fill the first page with newer swatches from the same manufacturer
+    for i in range(settings.PAGINATION_COUNT):
+        get_swatch(color_name=f"Page Fill {i + 1}", manufacturer=target_mfr)
+
+    # Create a few swatches for another manufacturer; they should never appear once filtered
+    for i in range(3):
+        get_swatch(color_name=f"Other {i + 1}", manufacturer=other_mfr)
+
+    nwo_page.goto(f"{live_server.url}/library/")
+
+    # Apply Manufacturer filter via UI
+    nwo_page.get_by_role("button", name="Manufacturer").click()
+    nwo_page.get_by_label("Filter by Manufacturer").get_by_text(target_mfr.name).click()
+    expect(nwo_page.locator("#mfrFilterModalButton")).to_contain_text(target_mfr.name)
+
+    # First page should contain exactly PAGINATION_COUNT swatches, no early item yet
+    expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT)
     expect(
-        nwo_page.locator(".card-text").filter(has_text="Blorbo Green")
+        nwo_page.locator(".card-text").filter(has_text=other_mfr.name)
+    ).to_have_count(0)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Unique Early")
+    ).to_have_count(0)
+
+    scroll_down(nwo_page)
+
+    # After pagination, the early swatch from the same manufacturer should appear
+    expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT + 1)
+    expect(
+        nwo_page.locator(".card-text").filter(has_text="Unique Early")
     ).to_have_count(1)
-    expect(nwo_page.locator(".card-text").filter(has_text="Bleepo Blue")).to_have_count(
-        0
-    )
+    expect(
+        nwo_page.locator(".card-text").filter(has_text=other_mfr.name)
+    ).to_have_count(0)
 
 
 @pytest.mark.playwright

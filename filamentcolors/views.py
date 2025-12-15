@@ -22,6 +22,10 @@ from filamentcolors.colors import convert_short_to_full_hex, is_hex, is_short_he
 from filamentcolors.exceptions import UnknownSlugOrID
 from filamentcolors.helpers import (
     ErrorStatusResponse,
+    apply_color_family_filter,
+    apply_filament_parent_type_filter,
+    apply_manufacturer_filter,
+    apply_td_range_filter,
     build_data_dict,
     clean_collection_ids,
     filter_qs_by_search_string,
@@ -104,47 +108,14 @@ def librarysort(
         method = request.GET.get("m", None)
 
     if filter_str:
-        split_filter_str = filter_str.strip().lower().split()
         data.update({"search_prefill": filter_str})
-        items = filter_qs_by_search_string(items, split_filter_str)
+        items = filter_qs_by_search_string(items, filter_str)
 
-    if color_family_str:
-        try:
-            f_id = Swatch().get_color_id_from_slug_or_id(color_family_str)
-        except UnknownSlugOrID:
-            raise Http404
-
-        items = items.filter(Q(color_parent=f_id) | Q(alt_color_parent=f_id))
-
-    if mfr_str:
-        try:
-            mfr_id = Manufacturer().get_slug_from_id_or_slug(mfr_str)
-        except Manufacturer.DoesNotExist:
-            raise Http404
-
-        items = items.filter(manufacturer__slug=mfr_id)
-
-    if f_type_str:
-        try:
-            int(f_type_str)  # will explode if it's not an int
-            items = items.filter(filament_type__parent_type__id=f_type_str)
-        except ValueError:
-            items = items.filter(filament_type__parent_type__slug=f_type_str)
-
-    if td_range:
-        # It should be in the format of 0-100 (min dash max)
-        try:
-            min_td, max_td = list(map(float, td_range.split("-")))
-        except ValueError:
-            min_td, max_td = 0, 100
-
-        # When the requested range covers the full spectrum, treat it as "no TD filter".
-        # This ensures swatches without any TD value are still included (common case).
-        if not (min_td <= 0 and max_td >= 100):
-            items = items.filter(
-                calculated_td__gte=min_td,
-                calculated_td__lte=max_td,
-            )
+    # Shared filters via helpers
+    items = apply_color_family_filter(items, color_family_str, strict=True)
+    items = apply_manufacturer_filter(items, mfr_str, resolve=True, strict=True)
+    items = apply_filament_parent_type_filter(items, f_type_str)
+    items = apply_td_range_filter(items, td_range, treat_full_as_no_filter=True)
 
     if method == "type":
         items = items.order_by("filament_type")

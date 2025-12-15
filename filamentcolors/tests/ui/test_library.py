@@ -3,7 +3,7 @@ from playwright.sync_api import expect
 
 from filamentcolors.models import Swatch
 from filamentcolors.tests.helpers import get_manufacturer, get_swatch
-from filamentcolors.tests.ui import AVOID_WELCOME_OVERLAY_COOKIE
+from filamentcolors.tests.ui import AVOID_WELCOME_OVERLAY_COOKIE, scroll_down
 
 
 @pytest.mark.playwright
@@ -28,8 +28,7 @@ def test_basic_pagination(nwo_page, live_server):
     expect(nwo_page.locator(".swatchbox")).to_have_count(15)
     expect(nwo_page.locator(".card-text").filter(has_text="Green")).to_have_count(0)
 
-    # trigger pagination
-    nwo_page.mouse.wheel(0, 10000)
+    scroll_down(nwo_page)
     expect(nwo_page.locator(".swatchbox")).to_have_count(16)
     expect(nwo_page.locator(".card-text").filter(has_text="Green")).to_have_count(1)
 

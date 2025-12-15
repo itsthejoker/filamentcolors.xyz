@@ -3,6 +3,7 @@ from django.conf import settings
 from playwright.sync_api import expect
 
 from filamentcolors.tests.helpers import get_manufacturer, get_swatch
+from filamentcolors.tests.ui import scroll_down
 
 
 @pytest.mark.playwright
@@ -55,8 +56,7 @@ def test_manufacturer_route_pagination(nwo_page, live_server):
         nwo_page.locator(".card-text").filter(has_text="Unique Early")
     ).to_have_count(0)
 
-    # Trigger infinite scroll pagination
-    nwo_page.mouse.wheel(0, 10000)
+    scroll_down(nwo_page)
 
     # After pagination, one more swatch from the same manufacturer should appear
     expect(nwo_page.locator(".swatchbox")).to_have_count(settings.PAGINATION_COUNT + 1)

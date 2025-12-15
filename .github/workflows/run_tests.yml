@@ -22,7 +22,7 @@ jobs:
         python -m pip install --upgrade pip
         poetry install --all-groups
     - name: Ensure browsers are installed
-      run: python -m playwright install --with-deps
+      run: poetry run playwright install --with-deps
     - name: Run your tests
       run: poetry run pytest filamentcolors/tests --tracing=retain-on-failure --runplaywright
     - uses: actions/upload-artifact@v4

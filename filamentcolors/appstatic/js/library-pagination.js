@@ -56,7 +56,9 @@
     el.setAttribute("type", s.filament_type?.name || "");
     if (s.slug) el.setAttribute("slug", s.slug);
     el.setAttribute("td", s.td == null ? "None" : String(s.td));
-    if (s.is_available) el.setAttribute("available", "");
+    // Always set an explicit boolean string so the custom element can parse deterministically
+    // This avoids cases where a missing attribute is treated as unavailable by default
+    el.setAttribute("available", String(Boolean(s.is_available)));
     if (s.card_img) el.setAttribute("cardImgUrl", s.card_img);
     if (typeof s.distance !== "undefined") el.setAttribute("distance", String(s.distance));
     return el;

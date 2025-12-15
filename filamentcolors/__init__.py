@@ -9,7 +9,7 @@
 from hashlib import md5
 
 # A string that will be displayed in full at the top of the site. Can contain html.
-NAVBAR_MESSAGE: str | None = None
+NAVBAR_MESSAGE: str | None = "We are currently experiencing some technical issues. Sorry for any issues!"
 # An ID for the 'don't show' cookie. Unique per message.
 NAVBAR_MESSAGE_ID: str | None = (
     md5(NAVBAR_MESSAGE.encode("utf-8")).hexdigest() if NAVBAR_MESSAGE else None

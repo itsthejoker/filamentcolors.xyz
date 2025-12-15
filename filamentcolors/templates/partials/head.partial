@@ -27,7 +27,7 @@
 
 <script src="{% static 'vendored/js/jquery-3.4.1.min.js' %}"></script>
 <script src="{% static 'vendored/js/baguetteBox.min.js' %}"></script>
-<script src="{% static 'js/components/card.js' %}"></script>
+<script src="{% static 'js/components/card.js' %}?v=2"></script>
 <script src="{% static 'vendored/js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'vendored/js/masonry.min.js' %}"></script>
 <script src="{% static 'vendored/js/long_press.js' %}" async defer></script>

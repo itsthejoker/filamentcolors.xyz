@@ -261,6 +261,14 @@
     NS.eventsBound = true;
   }
 
+  // Fallback: if the script loads after DOMContentLoaded (common on first page load),
+  // ensure initialization still happens immediately.
+  if (document.readyState === "interactive" || document.readyState === "complete") {
+    try {
+      init();
+    } catch {/* noop */}
+  }
+
   // Proactive cleanup before HTMX swaps to avoid any lingering observers
   if (!NS.cleanupBound) {
     document.body.addEventListener("htmx:beforeSwap", function() {

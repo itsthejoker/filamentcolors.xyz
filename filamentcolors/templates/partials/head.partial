@@ -357,4 +357,38 @@
     return observer;
   }
 
+  // UGLY HACK TO TRY AND FIX PAGINATION INIT ISSUES IN PROD
+  (function() {
+    const KEY = "__FC_LIBPAG_INTERVAL";
+    if (window[KEY]) return;
+
+    function tryInitLibraryPagination() {
+      try {
+        const container = document.querySelector("#swatch-container");
+        if (!container) return;
+        if (container.dataset && container.dataset.jsonPagination === "true" && typeof window.initLibraryPagination === "function") {
+          window.initLibraryPagination();
+        }
+      } catch (e) {
+        // noop
+      }
+    }
+
+    // Run once immediately in case everything is ready
+    tryInitLibraryPagination();
+    // Then poll every 1 second to catch HTMX swaps or late script loads
+    window[KEY] = setInterval(tryInitLibraryPagination, 1000);
+
+    if (window.htmx && window.htmx.onLoad) {
+      window.htmx.onLoad(function() {
+        tryInitLibraryPagination();
+      });
+    }
+
+    window.addEventListener("beforeunload", function() {
+      try { clearInterval(window[KEY]); } catch (_) {}
+      window[KEY] = null;
+    });
+  })();
+
 </script>

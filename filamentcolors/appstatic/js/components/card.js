@@ -128,7 +128,18 @@ class Card extends HTMLElement {
 
   attributeChangedCallback(property, oldValue, newValue) {
     if (oldValue === newValue) return;
-    this[property] = newValue;
+    // Special handling for 'available' to ensure proper boolean conversion
+    if (property === 'available') {
+      if (newValue === '') {
+        this.available = true;
+      } else if (newValue === null) {
+        this.available = false;
+      } else {
+        this.available = /^(true|1|yes)$/i.test(String(newValue));
+      }
+    } else {
+      this[property] = newValue;
+    }
   }
 
   deltaEWarning5To10() {

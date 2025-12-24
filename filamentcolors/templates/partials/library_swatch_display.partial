@@ -1,4 +1,7 @@
 {{ active_filters|json_script:"filterValues" }}
+{% if FC_NO_MORE %}
+  <span id="{{ FC_NO_MORE_CONSTANT }}" style="display: none;"></span>
+{% endif %}
 
 {% if swatches %}
   {% if previous_pages_to_render %}

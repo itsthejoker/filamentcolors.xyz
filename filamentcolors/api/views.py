@@ -1,6 +1,7 @@
 import random
 
 from colormath.color_objects import LabColor, sRGBColor
+from django.conf import settings
 from django.db.models import BooleanField, ExpressionWrapper, Q
 from django.db.models.functions import Lower
 from django.http import JsonResponse
@@ -57,6 +58,12 @@ class SmallPageNumberPagination(PageNumberPagination):
     page_size = 15
     page_size_query_param = "page_size"
     max_page_size = 100
+
+    def get_paginated_response(self, data):
+        response = super().get_paginated_response(data)
+        if not self.get_next_link():
+            response.data[settings.FC_NO_MORE] = True
+        return response
 
 
 class SwatchViewSet(ReadOnlyModelViewSet):

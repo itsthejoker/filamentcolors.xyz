@@ -193,6 +193,7 @@ def build_data_dict(
         "browser_console_message": "",
         "browser_console_message2": "",
         "browser_console_message3": "",
+        "FC_NO_MORE_CONSTANT": settings.FC_NO_MORE,
     }
     if data.get("navbar_message_id") in user_settings.get("hide_alert_ids"):
         # They've manually dismissed it, so remove the message. If we change the message

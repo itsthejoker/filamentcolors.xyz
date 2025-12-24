@@ -18,7 +18,7 @@
       {% include "components/buttons/collection_edit_button.partial" %}
     {% endif %}
     {% include 'components/alerts/manufacturer_library_unavailable_swatches_notice.partial' %}
-    <div id="swatch-container" data-json-pagination="true">
+    <div id="swatch-container" data-json-pagination="true" {% if FC_NO_MORE %}data-{{ FC_NO_MORE_CONSTANT }}="true"{% endif %}>
       {% include "partials/library_swatch_display.partial" %}
     </div>
   </div>

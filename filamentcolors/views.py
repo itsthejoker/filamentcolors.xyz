@@ -210,6 +210,8 @@ def librarysort(
                 "f": filter_str,
             }
             data.update({"infinite_scroll_params": json.dumps(params_plus_next_page)})
+        else:
+            data.update({settings.FC_NO_MORE: True})
 
     # NOTE: Do NOT JSON-dump params_minus_filter here.
     # The template uses `json_script` which will safely JSON-encode

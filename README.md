@@ -9,7 +9,7 @@ The source code for filamentcolors.xyz, a small website for comparing pieces of 
 
 This project is a Django 5.x application managed with Poetry. It provides:
 - A public JSON API for swatches and related data
-- A server--rendered frontend (Django templates) with progressive enhancement using HTMX and a bit of jQuery/vanilla JS
+- A server-rendered frontend (Django templates) with progressive enhancement using HTMX and a bit of jQuery/vanilla JS
 - Management commands for importing/curating data
 
 The codebase favors small, focused modules and minimal dependencies beyond Django and a handful of utilities for color processing and images.

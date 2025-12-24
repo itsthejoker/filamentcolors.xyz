@@ -65,6 +65,7 @@
 <meta name="og:image:height" content="400">
 
 <script>
+  window.__FC_NO_MORE_CONSTANT = "{{ FC_NO_MORE_CONSTANT }}";
   let $deck, $msnry;
 
   function debounce_leading(func, timeout = 300) {
@@ -105,6 +106,15 @@
   }
 
   function onLoadMain(evt) {
+    const fcNoMoreFlag = document.getElementById(window.__FC_NO_MORE_CONSTANT);
+    const container = document.querySelector("#swatch-container");
+    if (fcNoMoreFlag && container) {
+      container.setAttribute("data-" + window.__FC_NO_MORE_CONSTANT, "true");
+      fcNoMoreFlag.remove();
+    } else if (container && container.dataset.jsonPagination === "true" && !fcNoMoreFlag) {
+      container.removeAttribute("data-" + window.__FC_NO_MORE_CONSTANT);
+    }
+
     tooltips();
     lazyloadimages();
 
@@ -366,6 +376,7 @@
       try {
         const container = document.querySelector("#swatch-container");
         if (!container) return;
+        if (container.getAttribute("data-" + window.__FC_NO_MORE_CONSTANT) === "true") return;
         if (container.dataset && container.dataset.jsonPagination === "true" && typeof window.initLibraryPagination === "function") {
           window.initLibraryPagination();
         }

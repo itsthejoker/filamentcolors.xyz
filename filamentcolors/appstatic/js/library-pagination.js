@@ -156,11 +156,17 @@
       grid.appendChild(frag);
       afterAppend(newBoxes);
       nextUrl = data.next;
+      if (data[window.__FC_NO_MORE_CONSTANT]) {
+        const container = qs("#swatch-container");
+        if (container) container.setAttribute("data-" + window.__FC_NO_MORE_CONSTANT, "true");
+      }
       if (!nextUrl) observer && observer.disconnect();
     } catch (e) {
       if (e && e.status === 404) {
         // Gracefully end infinite scroll on 404 without showing an error toast
         nextUrl = null;
+        const container = qs("#swatch-container");
+        if (container) container.setAttribute("data-" + window.__FC_NO_MORE_CONSTANT, "true");
         try {
           if (observer && typeof observer.disconnect === "function") observer.disconnect();
         } catch {/* noop */}
@@ -205,6 +211,10 @@
   function init() {
     const container = qs("#swatch-container");
     if (!container || container.dataset.jsonPagination !== "true") return;
+
+    // If we've already reached the end, or if we've already initialized, don't restart.
+    if (container.getAttribute("data-" + window.__FC_NO_MORE_CONSTANT) === "true") return;
+    if (nextUrl !== null) return;
 
     // Always reset when (re)initializing after HTMX swaps
     try {
@@ -271,7 +281,12 @@
 
   // Proactive cleanup before HTMX swaps to avoid any lingering observers
   if (!NS.cleanupBound) {
-    document.body.addEventListener("htmx:beforeSwap", function() {
+    document.body.addEventListener("htmx:beforeSwap", function(evt) {
+      const target = evt.detail.target;
+      if (!target) return;
+      // Only reset if the swap is actually going to replace or include our container
+      if (target.id !== "swatch-container" && !target.querySelector("#swatch-container")) return;
+
       try {
         if (observer && typeof observer.disconnect === "function") observer.disconnect();
       } catch {/* noop */

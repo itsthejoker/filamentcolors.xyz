@@ -14,9 +14,10 @@
   }
 
   const API_BASE = "/api/swatch/";
-  let nextUrl = null;
-  let loading = false;
-  let observer = null;
+  // State shared across HTMX navigations and script re-executions
+  NS.nextUrl = NS.nextUrl || null;
+  NS.loading = NS.loading || false;
+  NS.observer = NS.observer || null;
 
   function parseFilterValues() {
     try {
@@ -138,8 +139,8 @@
   }
 
   async function fetchAndAppend(url) {
-    if (loading || !url) return;
-    loading = true;
+    if (NS.loading || !url) return;
+    NS.loading = true;
     showSpinner();
     try {
       const res = await fetchWithRetry(url);
@@ -155,20 +156,20 @@
       }
       grid.appendChild(frag);
       afterAppend(newBoxes);
-      nextUrl = data.next;
+      NS.nextUrl = data.next;
       if (data[window.__FC_NO_MORE_CONSTANT]) {
         const container = qs("#swatch-container");
         if (container) container.setAttribute("data-" + window.__FC_NO_MORE_CONSTANT, "true");
       }
-      if (!nextUrl) observer && observer.disconnect();
+      if (!NS.nextUrl) NS.observer && NS.observer.disconnect();
     } catch (e) {
       if (e && e.status === 404) {
         // Gracefully end infinite scroll on 404 without showing an error toast
-        nextUrl = null;
+        NS.nextUrl = null;
         const container = qs("#swatch-container");
         if (container) container.setAttribute("data-" + window.__FC_NO_MORE_CONSTANT, "true");
         try {
-          if (observer && typeof observer.disconnect === "function") observer.disconnect();
+          if (NS.observer && typeof NS.observer.disconnect === "function") NS.observer.disconnect();
         } catch {/* noop */}
         console.info("No more swatches to load (404).");
       } else {
@@ -178,7 +179,7 @@
       // retries are handled in fetchWithRetry; surface error toast after final failure
     } finally {
       hideSpinner();
-      loading = false;
+      NS.loading = false;
     }
   }
 
@@ -186,18 +187,18 @@
     const sentinel = qs("#infinite-scroll-sentinel");
     if (!sentinel) return;
     // Disconnect any prior observer to avoid duplicate fetch triggers
-    if (observer && typeof observer.disconnect === "function") {
+    if (NS.observer && typeof NS.observer.disconnect === "function") {
       try {
-        observer.disconnect();
+        NS.observer.disconnect();
       } catch {/* noop */
       }
     }
-    observer = new IntersectionObserver((entries) => {
+    NS.observer = new IntersectionObserver((entries) => {
       for (const entry of entries) {
-        if (entry.isIntersecting && nextUrl) fetchAndAppend(nextUrl);
+        if (entry.isIntersecting && NS.nextUrl) fetchAndAppend(NS.nextUrl);
       }
     });
-    observer.observe(sentinel);
+    NS.observer.observe(sentinel);
   }
 
   function removeHTMXInfinite() {
@@ -214,16 +215,16 @@
 
     // If we've already reached the end, or if we've already initialized, don't restart.
     if (container.getAttribute("data-" + window.__FC_NO_MORE_CONSTANT) === "true") return;
-    if (nextUrl !== null) return;
+    if (NS.nextUrl !== null) return;
 
     // Always reset when (re)initializing after HTMX swaps
     try {
-      if (observer && typeof observer.disconnect === "function") observer.disconnect();
+      if (NS.observer && typeof NS.observer.disconnect === "function") NS.observer.disconnect();
     } catch {/* noop */
     }
-    observer = null;
-    loading = false;
-    nextUrl = null;
+    NS.observer = null;
+    NS.loading = false;
+    NS.nextUrl = null;
 
     const filters = parseFilterValues(); // { m, cf, mfr, ft, td, q/f, ... }
 
@@ -243,7 +244,7 @@
       delete window.infiniteScrollStartPage;
     } catch {/* noop */
     }
-    nextUrl = API_BASE + "?" + toQuery({ ...params, page: startPage + 1 });
+    NS.nextUrl = API_BASE + "?" + toQuery({ ...params, page: startPage + 1 });
 
     removeHTMXInfinite();
     installObserver();
@@ -288,12 +289,12 @@
       if (target.id !== "swatch-container" && !target.querySelector("#swatch-container")) return;
 
       try {
-        if (observer && typeof observer.disconnect === "function") observer.disconnect();
+        if (NS.observer && typeof NS.observer.disconnect === "function") NS.observer.disconnect();
       } catch {/* noop */
       }
-      observer = null;
-      loading = false;
-      nextUrl = null;
+      NS.observer = null;
+      NS.loading = false;
+      NS.nextUrl = null;
     });
     NS.cleanupBound = true;
   }

@@ -5,7 +5,7 @@ import time
 from io import BytesIO
 from pathlib import Path
 from typing import List, Tuple, Union
-from urllib.parse import urlsplit, urlunparse
+from urllib.parse import urlsplit, urlunparse, urlencode, quote as urlquote
 
 import pytz
 from colormath.color_conversions import convert_color
@@ -158,6 +158,12 @@ class Manufacturer(models.Model):
     )
     affiliate_portal = models.CharField(max_length=2000, null=True, blank=True)
     affiliate_url_param = models.CharField(max_length=150, null=True, blank=True)
+    awin_affiliate_id = models.CharField(
+        max_length=150, null=True, blank=True, help_text=(
+            "Awin affiliate ID for tracking. If this is provided, urls will be rebuilt"
+            " in the Awin format."
+        )
+    )
     parent_company_name = models.CharField(
         max_length=160, null=True, blank=True, help_text="Used for purchase buttons."
     )
@@ -1217,7 +1223,9 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
                     self.amazon_purchase_link = urlunparse(
                         (scheme, netloc, path, "", query, fragment)
                     )
-        if param := self.manufacturer.affiliate_url_param:
+        if (
+            param := self.manufacturer.affiliate_url_param
+        ) and not self.manufacturer.awin_affiliate_id:
             if mfr_url := self.mfr_purchase_link:
                 param = param.strip("&")
                 pieces_to_add = []
@@ -1235,6 +1243,16 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
                 self.mfr_purchase_link = urlunparse(
                     (scheme, netloc, path, "", query, fragment)
                 )
+
+        if param := self.manufacturer.awin_affiliate_id:
+            base_url = "https://www.awin1.com/cread.php"
+            if self.mfr_purchase_link and base_url not in self.mfr_purchase_link:
+                params = {
+                    'awinmid': param,
+                    'awinaffid': settings.AWIN_AFFID,
+                    'ued': self.mfr_purchase_link
+                }
+                self.mfr_purchase_link = f"{base_url}?{urlencode(params, quote_via=urlquote)}"
 
         for location in self.purchaselocation_set.all():
             if location.url is None or location.url == "":

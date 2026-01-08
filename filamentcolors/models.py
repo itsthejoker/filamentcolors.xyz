@@ -169,6 +169,9 @@ class Manufacturer(models.Model):
     )
     slug = models.SlugField(max_length=160, null=True, blank=True)
 
+    def is_mfr_affiliate_link(self):
+        return any([self.affiliate_portal, self.affiliate_url_param, self.awin_affiliate_id])
+
     @property
     def get_possessive_apostrophe(self):
         return "'" if self.name.endswith("s") else "'s"

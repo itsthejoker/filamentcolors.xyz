@@ -4,7 +4,7 @@
        target="_blank"
        role="button"
        rel="noopener">Buy from {{ swatch.manufacturer.parent_company_name|default:swatch.manufacturer.name }}
-      {% if swatch.manufacturer.affiliate_portal or swatch.manufacturer.affiliate_url_param %}
+      {% if swatch.manufacturer.is_mfr_affiliate_link %}
         <br><span style="font-size: smaller">(affiliate link)</span>
       {% endif %}
     </a>

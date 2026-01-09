@@ -712,15 +712,18 @@ tests = ["coverage", "coveralls", "django-nose", "flake8", "isort", "mock", "nos
 
 [[package]]
 name = "django-widget-tweaks"
-version = "1.5.0"
+version = "1.5.1"
 description = "Tweak the form field rendering in templates, not in python-level form definitions."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "django-widget-tweaks-1.5.0.tar.gz", hash = "sha256:1c2180681ebb994e922c754804c7ffebbe1245014777ac47897a81f57cc629c7"},
-    {file = "django_widget_tweaks-1.5.0-py3-none-any.whl", hash = "sha256:a41b7b2f05bd44d673d11ebd6c09a96f1d013ee98121cb98c384fe84e33b881e"},
+    {file = "django_widget_tweaks-1.5.1-py3-none-any.whl", hash = "sha256:3f5080f8365740fc1c14607498c975cbfed896dd0c40e1b563095716ee31e3b5"},
+    {file = "django_widget_tweaks-1.5.1.tar.gz", hash = "sha256:084acc9eeb5a3208f2670522de6284287973e54d54488ce6d402f4b99bc5f452"},
 ]
+
+[package.dependencies]
+django = ">=4.2"
 
 [[package]]
 name = "djangorestframework"
@@ -2543,4 +2546,4 @@ test = ["pytest (>=6.0.0)", "setuptools (>=65)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.15"
-content-hash = "c727b5719bce3e3e0fa820465cbb672620afa5338be4e48a8fc60baec48a668b"
+content-hash = "f2fdc196e1c21253b3ecca3f4f7ef027574e03ead49f5f903f468b768521afac"

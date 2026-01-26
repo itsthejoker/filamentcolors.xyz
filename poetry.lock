@@ -186,14 +186,14 @@ beautifulsoup4 = "*"
 
 [[package]]
 name = "bugsnag"
-version = "4.8.0"
+version = "4.8.1"
 description = "Automatic error monitoring for django, flask, etc."
 optional = false
 python-versions = "<4,>=3.5"
 groups = ["main"]
 files = [
-    {file = "bugsnag-4.8.0-py3-none-any.whl", hash = "sha256:47358a290bd0dc8a6718db259d80023b6ce867ac678137f67e782b78c14b4723"},
-    {file = "bugsnag-4.8.0.tar.gz", hash = "sha256:9bd600fcf6ae8567b6d116522649ea173517aa98b3739e9ba73b1fea2bc82444"},
+    {file = "bugsnag-4.8.1-py3-none-any.whl", hash = "sha256:1695fdfe93b79e5f50f501af40282c91fa5a6291cdffc7a7342d173c4325be46"},
+    {file = "bugsnag-4.8.1.tar.gz", hash = "sha256:b6c8b5431efd8de4c950493c2d9df231313e214890b72354648f9dafb54085be"},
 ]
 
 [package.dependencies]
@@ -2571,4 +2571,4 @@ test = ["pytest (>=6.0.0)", "setuptools (>=77)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.15"
-content-hash = "795529281710aba24bab43bf3cb8814df9d25a2b541ee9090babcb25a3f8696d"
+content-hash = "0fef2ac0af28622541954766b1c0ea35f8a847fc98dcc6006d88523d6ac75fa6"

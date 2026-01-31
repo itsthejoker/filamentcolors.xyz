@@ -6,8 +6,8 @@ authors = ["Joe Kaufeld <opensource@joekaufeld.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.15"
-django = "^5.2"
+python = ">=3.13,<3.15"
+django = "^6.0.1"
 Pillow = "^12.0.0"
 sorl-thumbnail = "^12.10.0"
 gunicorn = "^23.0.0"

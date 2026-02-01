@@ -159,10 +159,13 @@ class Manufacturer(models.Model):
     affiliate_portal = models.CharField(max_length=2000, null=True, blank=True)
     affiliate_url_param = models.CharField(max_length=150, null=True, blank=True)
     awin_affiliate_id = models.CharField(
-        max_length=150, null=True, blank=True, help_text=(
+        max_length=150,
+        null=True,
+        blank=True,
+        help_text=(
             "Awin affiliate ID for tracking. If this is provided, urls will be rebuilt"
             " in the Awin format."
-        )
+        ),
     )
     parent_company_name = models.CharField(
         max_length=160, null=True, blank=True, help_text="Used for purchase buttons."
@@ -170,7 +173,9 @@ class Manufacturer(models.Model):
     slug = models.SlugField(max_length=160, null=True, blank=True)
 
     def is_mfr_affiliate_link(self):
-        return any([self.affiliate_portal, self.affiliate_url_param, self.awin_affiliate_id])
+        return any(
+            [self.affiliate_portal, self.affiliate_url_param, self.awin_affiliate_id]
+        )
 
     @property
     def get_possessive_apostrophe(self):
@@ -1251,11 +1256,13 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
             base_url = "https://www.awin1.com/cread.php"
             if self.mfr_purchase_link and base_url not in self.mfr_purchase_link:
                 params = {
-                    'awinmid': param,
-                    'awinaffid': settings.AWIN_AFFID,
-                    'ued': self.mfr_purchase_link
+                    "awinmid": param,
+                    "awinaffid": settings.AWIN_AFFID,
+                    "ued": self.mfr_purchase_link,
                 }
-                self.mfr_purchase_link = f"{base_url}?{urlencode(params, quote_via=urlquote)}"
+                self.mfr_purchase_link = (
+                    f"{base_url}?{urlencode(params, quote_via=urlquote)}"
+                )
 
         for location in self.purchaselocation_set.all():
             if location.url is None or location.url == "":

@@ -7,9 +7,7 @@ class Command(BaseCommand):
     help = "Generate opengraph images for all swatches"
 
     def handle(self, *args, **options):
-        for swatch in Swatch.objects.filter(
-            published=True, image_opengraph__isnull=True
-        ):
+        for swatch in Swatch.objects.filter(published=True):
             swatch.create_opengraph_image(close_django_file_too=True)
             swatch.save()
             self.stdout.write(f"Generated opengraph image for {swatch.id}")

@@ -2,8 +2,15 @@ import os
 
 import pytest
 from PIL import Image
+from django.db import transaction
 
-from filamentcolors.tests.helpers import get_swatch
+from filamentcolors.models import Swatch
+from filamentcolors.tests.helpers import (
+    get_filament_type,
+    get_manufacturer,
+    get_swatch,
+    test_image,
+)
 
 
 class DummyHtml2Image:
@@ -80,3 +87,32 @@ def test_get_opengraph_image_generates_when_missing(patch_html2image, db):
 
     # Cleanup the generated file to keep the test media folder tidy
     swatch.image_opengraph.delete(save=False)
+
+
+def test_opengraph_generation_waits_for_commit(monkeypatch, transactional_db):
+    calls = []
+
+    def _record_opengraph(self, *args, **kwargs):
+        calls.append(self.id)
+
+    def _stub_crop(self):
+        self.card_img = test_image(name="card.jpg", size=(96, 96))
+
+    monkeypatch.setattr(Swatch, "create_opengraph_image", _record_opengraph)
+    monkeypatch.setattr(Swatch, "crop_and_save_images", _stub_crop)
+    monkeypatch.setattr(Swatch, "regenerate_all", lambda self, *args, **kwargs: None)
+    monkeypatch.setattr(Swatch, "update_affiliate_links", lambda self: None)
+
+    swatch = Swatch(
+        manufacturer=get_manufacturer(),
+        filament_type=get_filament_type(),
+        color_name="Test Swatch",
+        hex_color="#ffffff",
+        published=True,
+    )
+
+    with transaction.atomic():
+        swatch.save()
+        assert calls == []
+
+    assert calls == [swatch.id]

@@ -1,11 +1,16 @@
 import pytest
+from django.utils import timezone
 
 from filamentcolors.exceptions import ForeignKeyLoop
+from filamentcolors.models import Swatch
+from filamentcolors.tests.constants import TestColors
 from filamentcolors.tests.helpers import (
+    get_filament_type,
     get_manufacturer,
     get_purchase_location,
     get_retailer,
     get_swatch,
+    test_image,
 )
 
 # def test_complement() -> None:
@@ -48,6 +53,37 @@ def test_cropped_images_automatically_added() -> None:
     assert swatch.image_other is not None
     assert swatch.image_other.height == 3040
     assert swatch.image_other.width == 4056
+
+
+def test_save_rolls_back_when_image_generation_fails(monkeypatch) -> None:
+    manufacturer = get_manufacturer()
+    filament_type = get_filament_type()
+    swatch = Swatch(
+        manufacturer=manufacturer,
+        filament_type=filament_type,
+        hex_color=TestColors.WHITE1,
+        date_published=timezone.now(),
+        color_name="Rollback Test",
+        color_parent=Swatch.WHITE,
+        image_front=test_image(name="front.jpg", size=(4056, 3040)),
+        image_back=test_image(name="back.jpg", size=(4056, 3040)),
+        image_other=test_image(name="other.jpg", size=(4056, 3040)),
+        image_opengraph=test_image(name="og.jpg", size=(4056, 3040)),
+        published=True,
+    )
+    swatch._set_rgb_from_hex()
+    swatch._set_lab_from_rgb()
+
+    def _raise_crop_error(_self):
+        raise RuntimeError("crop failed")
+
+    monkeypatch.setattr(Swatch, "crop_and_save_images", _raise_crop_error)
+
+    with pytest.raises(RuntimeError, match="crop failed"):
+        swatch.save()
+
+    if swatch.id:
+        assert not Swatch.objects.filter(id=swatch.id).exists()
 
 
 def test_affiliate_link_update() -> None:

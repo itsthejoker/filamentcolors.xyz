@@ -15,7 +15,7 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
 from django.core.files.storage import default_storage
-from django.db import models
+from django.db import models, transaction
 from django.db.models.query import QuerySet
 from django.template.defaultfilters import slugify
 from django.urls import reverse
@@ -1361,6 +1361,7 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
                 return True
 
     def save(self, *args, **kwargs):
+        skip_asset_generation = kwargs.pop("skip_asset_generation", False)
         rebuild_matches = False
 
         if self.replaced_by:
@@ -1393,6 +1394,11 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         if rebuild_matches:
             self.update_all_color_matches(Swatch.objects.filter(published=True))
 
+        if skip_asset_generation:
+            self.set_slug()
+            super(Swatch, self).save(*args, **kwargs)
+            return
+
         if self.card_img or not self.published:
             # we already have a card image, so save everything and abort.
 
@@ -1405,29 +1411,33 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         else:
             # For newly published swatches without prebuilt assets, persist first
             # to ensure we have a valid ID, then generate assets that depend on it.
-            super(Swatch, self).save(*args, **kwargs)
+            # Wrap in a transaction to avoid exposing a published row without assets.
+            with transaction.atomic():
+                super(Swatch, self).save(*args, **kwargs)
 
-            self.set_slug()
-            # Now that a slug exists (and ID is assigned), generate images
-            self.crop_and_save_images()
-            self.regenerate_all()
-            # Create OpenGraph image after slug/ID are set so the URL resolves correctly
-            self.create_opengraph_image()
+                self.set_slug()
+                # Now that a slug exists (and ID is assigned), generate images
+                self.crop_and_save_images()
+                self.regenerate_all()
+                # Create OpenGraph image after the transaction commits so the route is visible
+                swatch_id = self.id
 
-            # Persist generated assets and derived fields
-            safe_kwargs = {k: v for k, v in kwargs.items() if k != "force_insert"}
-            super(Swatch, self).save(*args, **safe_kwargs)
+                def _create_opengraph_after_commit():
+                    swatch = Swatch.objects.filter(id=swatch_id).first()
+                    if not swatch or swatch.image_opengraph:
+                        return
+                    swatch.create_opengraph_image()
+                    swatch.save(
+                        update_fields=["image_opengraph"],
+                        skip_asset_generation=True,
+                    )
 
-            self.update_affiliate_links()
+                transaction.on_commit(_create_opengraph_after_commit)
+                self.update_affiliate_links()
 
-            if kwargs.get("force_insert"):
-                # In normal operation, this will never trigger. However,
-                # in tests, the `force_insert` flag is set to True, which
-                # will trigger the double save operation here to try and
-                # create two items with the same ID.
-                del kwargs["force_insert"]
-
-            super(Swatch, self).save(*args, **kwargs)
+                # Persist generated assets and derived fields
+                safe_kwargs = {k: v for k, v in kwargs.items() if k != "force_insert"}
+                super(Swatch, self).save(*args, **safe_kwargs)
 
     def __str__(self):
         try:

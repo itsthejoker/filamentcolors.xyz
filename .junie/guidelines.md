@@ -2,7 +2,7 @@
 
 This document captures practical guidelines derived from the current codebase. It should help you write code that fits the repository and run tests confidently.
 
-Last updated: 2025-09-15 23:54 (local time)
+Last updated: 2026-02-01 17:07 (local time)
 
 
 ## 1) Coding conventions used in this codebase
@@ -113,6 +113,7 @@ Top-level (selected):
 ### Notes specific to this repo
 - HTMX-driven interactions can be tested with regular GET/POST requests; server behavior is standard Django.
 - The test settings ensure no posts to external services (`POST_TO_SOCIAL_MEDIA = False`).
+- OpenGraph images for new swatches are generated after DB commit (`transaction.on_commit`) to avoid transient 404s.
 
 
 ## Quick reference

@@ -213,6 +213,10 @@ class SwatchViewSet(ReadOnlyModelViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, *args, **kwargs):
+        try:
+            int(kwargs["pk"])
+        except ValueError:
+            return Response(status.HTTP_404_NOT_FOUND)
         instance = self.get_queryset(force_all=True).filter(id=kwargs["pk"]).first()
         if not instance:
             return Response(status.HTTP_404_NOT_FOUND)

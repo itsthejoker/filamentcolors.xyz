@@ -946,27 +946,27 @@ all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2
 
 [[package]]
 name = "imagecodecs"
-version = "2025.11.11"
+version = "2026.1.14"
 description = "Image transformation, compression, and decompression codecs"
 optional = false
 python-versions = ">=3.11"
 groups = ["main"]
 files = [
-    {file = "imagecodecs-2025.11.11-cp311-abi3-macosx_10_15_x86_64.whl", hash = "sha256:f5d01cc85ca2fe354302b3650f4848e8f1d3174200277b7cb2624abed4d02ea5"},
-    {file = "imagecodecs-2025.11.11-cp311-abi3-macosx_11_0_arm64.whl", hash = "sha256:45a865690275a3a8893c4c54377c678a7b361ebe13dd3a9e22c66443a96b1c2a"},
-    {file = "imagecodecs-2025.11.11-cp311-abi3-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:be6e2f4b6601b57cfc9fba2382da7e02ad43c44e3b037adbf275a11f688b231f"},
-    {file = "imagecodecs-2025.11.11-cp311-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:d4a3894b62ca6ad0c4d75cb0a0aac2a525c4a5c4a2a60defc5d7fb716a4bb355"},
-    {file = "imagecodecs-2025.11.11-cp311-abi3-win32.whl", hash = "sha256:3735ea088321b0685e593c5d44fc1d146a84fcf6645c52ed136fa576e16c3572"},
-    {file = "imagecodecs-2025.11.11-cp311-abi3-win_amd64.whl", hash = "sha256:4252b15f5ba55bc7d7aacf621f6bb6e73fd70e66d56277a1f26563198b2cd576"},
-    {file = "imagecodecs-2025.11.11-cp311-abi3-win_arm64.whl", hash = "sha256:f4480973fcf2d826ba6806b7ac6f4d9bd72eeb557cfd3687ac885939d130ec47"},
-    {file = "imagecodecs-2025.11.11-cp314-cp314t-macosx_10_15_x86_64.whl", hash = "sha256:bb0f4714e60dd94b94ca778b872fb90b885b83381228743903035d79b7e91a88"},
-    {file = "imagecodecs-2025.11.11-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:faf4ab8f2f11694aa2d6ed7548ce1d1598a14e326a6bb3d50669ed5c7da764c6"},
-    {file = "imagecodecs-2025.11.11-cp314-cp314t-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:fdb475f54d0abac3cfcde42ec47f606eea1d4afa52173420577317102d361ae5"},
-    {file = "imagecodecs-2025.11.11-cp314-cp314t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:e3d4cb2dc507c0bab057321333927575d1d611efe368e76b752f5ad3c55856ad"},
-    {file = "imagecodecs-2025.11.11-cp314-cp314t-win32.whl", hash = "sha256:7bcc214d6f6ecd2bd7b648a6ac5589edcde946bcb738b6c763ce1c864934c58c"},
-    {file = "imagecodecs-2025.11.11-cp314-cp314t-win_amd64.whl", hash = "sha256:58dbc0095142dcef55aaac392ee5bd8fb7c3656753e3c37424c3612209c656a4"},
-    {file = "imagecodecs-2025.11.11-cp314-cp314t-win_arm64.whl", hash = "sha256:dd61871455ae6c3486051e68e0d576d54e53c45d157ce233c4a09269f132bf48"},
-    {file = "imagecodecs-2025.11.11.tar.gz", hash = "sha256:a836d329f91c890d17b9dc3f3a2bba944a198ae741592c3cb0c4b9b097d10d34"},
+    {file = "imagecodecs-2026.1.14-cp311-abi3-macosx_10_14_x86_64.whl", hash = "sha256:b94c57922816eb025d443f4594f1235d80f0f56b4b48aa9b60bf9d679ea49415"},
+    {file = "imagecodecs-2026.1.14-cp311-abi3-macosx_11_0_arm64.whl", hash = "sha256:bd72bdff628d6c32c71f086e488f483abbf84816b05d439964d980af49f2a9c5"},
+    {file = "imagecodecs-2026.1.14-cp311-abi3-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:4e92f8b3bddf632c23d3a832f35e5a2c2326eb0e2ae1ebce419789cce63e5c30"},
+    {file = "imagecodecs-2026.1.14-cp311-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:8a78451926905459f42e827c207d80e1601abf68eaf0e38fd65ddd3c346d1f47"},
+    {file = "imagecodecs-2026.1.14-cp311-abi3-win32.whl", hash = "sha256:6bbf7defac9f71e0401305440f7e94160201789e03ee75e6e5709bc904742429"},
+    {file = "imagecodecs-2026.1.14-cp311-abi3-win_amd64.whl", hash = "sha256:13ec4659d05010aa072644f100d0e1e1fcc61d7eaa960923b8216272682e6c9a"},
+    {file = "imagecodecs-2026.1.14-cp311-abi3-win_arm64.whl", hash = "sha256:2a6102f3b99c66e090a619f8a0204e6e95c01399854ffa09e4a9de476dc1671a"},
+    {file = "imagecodecs-2026.1.14-cp314-cp314t-macosx_10_15_x86_64.whl", hash = "sha256:455915b32ae1ecccaeb9dad32ad1499aa2e6928b6b853e3635cb32af9aa56857"},
+    {file = "imagecodecs-2026.1.14-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:c189f5d842f1f2524c27c307220c5f2cf201af44dab74b1f7476645f72eb2e87"},
+    {file = "imagecodecs-2026.1.14-cp314-cp314t-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:ca3325e68dffeb29383f4a28957ac61d3c0ade1b244ebf70797bdaf009ad1578"},
+    {file = "imagecodecs-2026.1.14-cp314-cp314t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:a6819b8365cf28e2a85dcb04fb9c1f1acb63cf5da61495910cd751a7e2548e1d"},
+    {file = "imagecodecs-2026.1.14-cp314-cp314t-win32.whl", hash = "sha256:ae422def59fab163ba0cb79470e10aa64b8a62b29e74d50ecd0edab4349444c2"},
+    {file = "imagecodecs-2026.1.14-cp314-cp314t-win_amd64.whl", hash = "sha256:9b11ced125e7b8da2a9d1a30505827cdb27f7023ccee4cd4cc5e3b352dce8574"},
+    {file = "imagecodecs-2026.1.14-cp314-cp314t-win_arm64.whl", hash = "sha256:d4c19df6142481d2fda62d91542c078aecd647f120da52cc79019ed6938e587d"},
+    {file = "imagecodecs-2026.1.14.tar.gz", hash = "sha256:e37ef5116d41ba90b1c9d1d7121846671fd65c271f0c15ef24208353fa79b283"},
 ]
 
 [package.dependencies]
@@ -974,7 +974,7 @@ numpy = "*"
 
 [package.extras]
 all = ["matplotlib", "numcodecs", "tifffile"]
-test = ["bitshuffle", "blosc", "blosc2", "brotli", "czifile", "kerchunk", "lz4", "numcodecs", "pyliblzfse", "pytest", "pytest-run-parallel", "python-lzf", "python-snappy", "tifffile", "zarr", "zopflipy", "zstd"]
+test = ["backports.zstd", "bitshuffle", "blosc", "blosc2", "brotli", "czifile", "kerchunk", "liffile", "lz4", "numcodecs", "pyliblzfse", "pytest", "pytest-run-parallel", "python-lzf", "python-snappy", "tifffile", "zarr", "zopflipy"]
 
 [[package]]
 name = "iniconfig"
@@ -2444,4 +2444,4 @@ test = ["pytest (>=6.0.0)", "setuptools (>=77)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.15"
-content-hash = "3ae325d0bf42ff9d54fc5f8d22834ab399dfa35cf66d5504fda9e3e7a42d58d0"
+content-hash = "0c795fb5ea8a0d541d638b3556b464078df2ffbc8d2fc58da42f040dd7740374"

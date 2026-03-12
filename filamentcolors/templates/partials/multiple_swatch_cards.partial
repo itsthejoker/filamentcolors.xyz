@@ -15,9 +15,11 @@
     {% if user_settings.show_delta_e_values %}
       {% include 'components/badges/delta_e_badge.partial' with value=s.distance %}
     {% endif %}
+    {% if not is_hex_search %}
     <div class="text-center">
       <div class="btn btn-primary" id="grab-{{ s.id }}" onclick="grabSwatch(this)">Grab Swatch</div>
     </div>
+    {% endif %}
   {% endif %}
 </div>
 {% endfor %}

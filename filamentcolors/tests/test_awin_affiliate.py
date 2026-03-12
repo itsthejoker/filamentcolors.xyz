@@ -1,5 +1,6 @@
 import pytest
 from django.conf import settings
+
 from filamentcolors.tests.helpers import get_manufacturer, get_swatch
 
 

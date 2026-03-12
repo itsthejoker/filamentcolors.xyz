@@ -1,8 +1,8 @@
 import os
 
 import pytest
-from PIL import Image
 from django.db import transaction
+from PIL import Image
 
 from filamentcolors.models import Swatch
 from filamentcolors.tests.helpers import (

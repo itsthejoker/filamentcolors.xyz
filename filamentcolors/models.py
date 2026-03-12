@@ -5,7 +5,8 @@ import time
 from io import BytesIO
 from pathlib import Path
 from typing import List, Tuple, Union
-from urllib.parse import urlsplit, urlunparse, urlencode, quote as urlquote
+from urllib.parse import quote as urlquote
+from urllib.parse import urlencode, urlsplit, urlunparse
 
 import pytz
 from colormath.color_conversions import convert_color

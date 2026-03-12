@@ -44,6 +44,7 @@ from filamentcolors.models import (
     GenericFilamentType,
     GenericFile,
     Manufacturer,
+    SocialLink,
     Swatch,
 )
 
@@ -860,3 +861,12 @@ def inventory_search(request: HttpRequest) -> HttpResponse:
     data["results"] = data["results"][:5]
 
     return prep_request(request, "htmx_partials/donation_sort_view.partial", data)
+
+
+def links_page(request: HttpRequest) -> HttpResponse:
+    data = build_data_dict(request)
+    data |= {
+        "links": SocialLink.objects.filter(active=True),
+        "title": "Links",
+    }
+    return prep_request(request, "standalone/links.html", data)

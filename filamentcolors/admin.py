@@ -9,9 +9,16 @@ from filamentcolors.models import (
     Manufacturer,
     PurchaseLocation,
     Retailer,
+    SocialLink,
     Swatch,
     UserSubmittedTD,
 )
+
+
+class SocialLinkAdmin(admin.ModelAdmin):
+    list_display = ("name", "url", "order", "active")
+    list_editable = ("order", "active")
+    ordering = ("order", "name")
 
 
 class UserSubmittedTDAdmin(admin.ModelAdmin):
@@ -110,3 +117,4 @@ admin.site.register(GenericFilamentType)
 admin.site.register(Retailer)
 admin.site.register(PurchaseLocation)
 admin.site.register(DeadLink, DeadLinkAdmin)
+admin.site.register(SocialLink, SocialLinkAdmin)

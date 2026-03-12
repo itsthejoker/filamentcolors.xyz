@@ -5,7 +5,8 @@ import time
 from io import BytesIO
 from pathlib import Path
 from typing import List, Tuple, Union
-from urllib.parse import urlsplit, urlunparse, urlencode, quote as urlquote
+from urllib.parse import quote as urlquote
+from urllib.parse import urlencode, urlsplit, urlunparse
 
 import pytz
 from colormath.color_conversions import convert_color
@@ -1463,3 +1464,20 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
 
     class Meta:
         verbose_name_plural = "swatches"
+
+
+class SocialLink(models.Model):
+    name = models.CharField(max_length=100)
+    url = models.URLField(max_length=2000)
+    order = models.IntegerField(
+        default=0, help_text="Lower numbers will be shown first."
+    )
+    active = models.BooleanField(
+        default=True, help_text="Whether this link should be shown on the links page."
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["order", "name"]

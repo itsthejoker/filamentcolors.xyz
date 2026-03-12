@@ -1,0 +1,88 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% include 'partials/head.partial' %}
+  <title>{{ title }} | FilamentColors</title>
+  <style>
+    body {
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+    .links-container {
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+    }
+    .profile-img {
+      width: 106px;
+      height: 96px;
+      margin-bottom: 1rem;
+      object-fit: cover;
+    }
+    .site-title {
+      font-weight: bold;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .site-description {
+      color: #6c757d;
+      margin-bottom: 2rem;
+    }
+    .link-btn {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background-color: #ffffff;
+      border: 2px solid #000;
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.2s ease-in-out;
+      border-radius: 0.5rem;
+    }
+    .link-btn:hover {
+      background-color: #000;
+      color: #fff;
+      text-decoration: none;
+    }
+    .footer-logo {
+        margin-top: 2rem;
+        opacity: 0.7;
+    }
+    .footer-logo img {
+        height: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="links-container">
+    <a href="{% url 'homepage' %}">
+        <img src="{% static 'filamentcolors_square_logo_no_background_cropped.png' %}" alt="FilamentColors Logo" class="profile-img">
+    </a>
+    <h1 class="site-title">FilamentColors.xyz</h1>
+    <p class="site-description">Find the best colors for your 3D printing projects!</p>
+
+    {% for link in links %}
+      <a href="{{ link.url }}" class="link-btn" target="_blank" rel="noopener">
+        {{ link.name }}
+      </a>
+    {% empty %}
+      <p>No links added yet. Check back soon!</p>
+    {% endfor %}
+
+    <div class="footer-logo">
+        <a href="{% url 'homepage' %}">
+            <img src="{% static 'favicons/favicon-32x32.png' %}" alt="FilamentColors Logo">
+            <p class="text-muted small mt-2">filamentcolors.xyz</p>
+        </a>
+    </div>
+  </div>
+</body>
+</html>

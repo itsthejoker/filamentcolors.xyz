@@ -1,6 +1,8 @@
-import pytest
 from unittest.mock import patch
+
+import pytest
 from django.conf import settings
+
 from filamentcolors.tests.helpers import get_swatch
 from filamentcolors.views import librarysort
 

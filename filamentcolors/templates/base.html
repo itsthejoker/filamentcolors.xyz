@@ -53,14 +53,15 @@
   {% include 'components/alerts/no-js-alert.partial' %}
 </noscript>
 
-<main
+<main-container
+  style="opacity: 0"
   id="main"
   hx-swap="innerHTML scroll:window:top show:window:top"
   hx-history-elt
 >
   {% block content %}
   {% endblock content %}
-</main>
+</main-container>
 
 {% include 'partials/browser_console_message.partial' %}
 

@@ -32,7 +32,7 @@ class PlausibleAPIMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        if "/api/" in request.path:
+        if "/api/" in request.path and request.path != "/api/event":
             if "X-FC" in request.headers:
                 # This is an API request from the frontend
                 return response

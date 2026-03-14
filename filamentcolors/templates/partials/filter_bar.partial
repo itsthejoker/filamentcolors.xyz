@@ -171,6 +171,11 @@
             aria-label="Search"
           >
         </div>
+        {% if mfrs_hidden %}
+          <div class="alert alert-info py-2 px-3 text-white" role="alert">
+            Some manufacturers have been hidden based on your current settings.
+          </div>
+        {% endif %}
         <div class="list-group" id="mfrFilterListGroup">
           <div
             id="filterMfrNone"
@@ -180,14 +185,16 @@
             No Filter
           </div>
           {% for mfr in manufacturers %}
-            <div
-              id="filter-{{ mfr.slug }}"
-              data-mfr-slug="{{ mfr.slug }}"
-              class="list-group-item list-group-item-action mfrFilterEntry"
-              onclick="selectMfrFilter(this)"
-            >
-              {{ mfr.get_display_name }}
-            </div>
+            {% if mfr in user_settings.mfr_whitelist %}
+              <div
+                id="filter-{{ mfr.slug }}"
+                data-mfr-slug="{{ mfr.slug }}"
+                class="list-group-item list-group-item-action mfrFilterEntry"
+                onclick="selectMfrFilter(this)"
+              >
+                {{ mfr.get_display_name }}
+              </div>
+            {% endif %}
           {% endfor %}
         </div>
       </div>

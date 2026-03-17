@@ -16,7 +16,7 @@ from filamentcolors.models import (
 from filamentcolors.tests.constants import TestColors
 
 
-def test_image(name="test.jpg", size=(64, 64)):
+def get_test_image(name="test.jpg", size=(64, 64)):
     # https://stackoverflow.com/q/69141293
     # the size is the swatchrig photo size
     solidcolor = (randrange(0, 255), randrange(0, 255), randrange(0, 255))
@@ -46,13 +46,13 @@ BASE_SWATCH_DATA = {
     "color_name": Swatch.WHITE,
     "color_parent": Swatch.WHITE,
     # Keep images tiny for tests to avoid expensive JPEG processing
-    "image_front": test_image(name="front.jpg"),
-    "image_back": test_image(name="back.jpg"),
-    "image_other": test_image(name="other.jpg"),
-    "image_opengraph": test_image(name="og.jpg"),
+    "image_front": get_test_image(name="front.jpg"),
+    "image_back": get_test_image(name="back.jpg"),
+    "image_other": get_test_image(name="other.jpg"),
+    "image_opengraph": get_test_image(name="og.jpg"),
     # Pre-populate a small card image so Swatch.save() takes the fast path
     # (it skips heavy image cropping/generation when card_img is already set).
-    "card_img": test_image(name="card.jpg", size=(96, 96)),
+    "card_img": get_test_image(name="card.jpg", size=(96, 96)),
     "mfr_purchase_link": "https://example.com/",
 }
 BASE_FILAMENT_TYPE_DATA = {"name": "Test", "parent_type": None}
@@ -100,10 +100,10 @@ def get_swatch(**kwargs) -> Swatch:
     if process_images:
         # Use large source images and remove pre-populated card image to
         # exercise the full cropping pipeline in Swatch.save().
-        info["image_front"] = test_image(name="front.jpg", size=(4056, 3040))
-        info["image_back"] = test_image(name="back.jpg", size=(4056, 3040))
-        info["image_other"] = test_image(name="other.jpg", size=(4056, 3040))
-        info["image_opengraph"] = test_image(name="og.jpg", size=(4056, 3040))
+        info["image_front"] = get_test_image(name="front.jpg", size=(4056, 3040))
+        info["image_back"] = get_test_image(name="back.jpg", size=(4056, 3040))
+        info["image_other"] = get_test_image(name="other.jpg", size=(4056, 3040))
+        info["image_opengraph"] = get_test_image(name="og.jpg", size=(4056, 3040))
         if "card_img" in info:
             del info["card_img"]
     if not info.get("manufacturer"):

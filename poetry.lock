@@ -2225,14 +2225,14 @@ files = [
 
 [[package]]
 name = "sorl-thumbnail"
-version = "12.11.0"
+version = "13.0.0"
 description = "Thumbnails for Django"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "sorl_thumbnail-12.11.0-py3-none-any.whl", hash = "sha256:e3e375013ca3f14bca9f98fe9861153adac3a6ea4af5e9dc3f31cb605df765b5"},
-    {file = "sorl_thumbnail-12.11.0.tar.gz", hash = "sha256:191b89c27ecb40b5c2a35549d557d17c4841c6aff439b2e17b938b91eea463b3"},
+    {file = "sorl_thumbnail-13.0.0-py3-none-any.whl", hash = "sha256:8035d218b2b90511326c9a73dbf6e8a829f9ea808e448e98332190a0e2c0ee18"},
+    {file = "sorl_thumbnail-13.0.0.tar.gz", hash = "sha256:75f1f22fa742846917ca4774cd4c578cd802ff5e4f6f53328735c3a38264ee49"},
 ]
 
 [package.extras]
@@ -2428,4 +2428,4 @@ test = ["pytest (>=6.0.0)", "setuptools (>=77)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.15"
-content-hash = "f203a78dc9048cf398d3a85112898c524b420d7c861d9e4ce42f7c23e0aabd36"
+content-hash = "5ea3b66a6a492ff7e875dc766bcfee8494cdc0f8f35c3bb03641ee0d131a94c3"

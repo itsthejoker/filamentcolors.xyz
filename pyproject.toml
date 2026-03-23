@@ -18,7 +18,7 @@ colormath = { git = "https://github.com/itsthejoker/python-colormath.git", branc
 django-taggit = "^6.0.0"
 colorthief = "^0.2.1"
 djangorestframework = "^3.16.1"
-numpy = "^2.0.1"
+numpy = "^2.4.3"
 django-widget-tweaks = "^1.5.1"
 regex = "^2026.1.15"
 django-cors-headers = "^4.8.0"

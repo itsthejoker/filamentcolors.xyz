@@ -207,6 +207,9 @@ def build_data_dict(
             data["deadlink_count"] = DeadLink.objects.count()
 
     data.update(**kwargs)
+    data["mfrs_hidden"] = (
+        data["manufacturers"].exclude(id__in=user_settings["mfr_whitelist"]).exists()
+    )
 
     return data
 

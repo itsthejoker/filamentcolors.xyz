@@ -692,6 +692,11 @@ def colormatch(request: HttpRequest) -> HttpResponse:
         data["swatches"] = matches
         return prep_request(request, "partials/colormatch_results.partial", data)
 
+    if hex_val := request.GET.get("hex"):
+        if not hex_val.startswith("#") or len(hex_val) != 7:
+            hex_val = "#" + hex_val
+        data["prefill_hex"] = hex_val
+
     return prep_request(request, "standalone/colormatch.html", data)
 
 

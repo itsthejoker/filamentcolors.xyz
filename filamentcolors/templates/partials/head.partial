@@ -25,6 +25,7 @@
   {% plausible script='script.outbound-links.js' %}
 {% endif %}
 
+<script src="{% static 'js/components/main.js' %}" async></script>
 <script src="{% static 'vendored/js/jquery-3.4.1.min.js' %}"></script>
 <script src="{% static 'vendored/js/baguetteBox.min.js' %}"></script>
 <script src="{% static 'js/components/card.js' %}?v=2"></script>
@@ -36,6 +37,9 @@
 <script src="{% static 'vendored/js/sortable.min.js' %}"></script>
 <script src="{% static 'vendored/js/jquery-sortable.js' %}"></script>
 <script src="{% static 'vendored/js/altcha.min.js' %}" async defer type="module"></script>
+
+<script src="{% static 'js/components/centered-column.js' %}" async></script>
+
 
 <script type="text/javascript" src="{% static 'vendored/js/toastify.min.js' %}" async defer></script>
 <script src="{% static 'js/cookies/cookie.js' %}?v=1"></script>

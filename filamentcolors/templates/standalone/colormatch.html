@@ -20,11 +20,13 @@
                   hx-swap="innerHTML show:none"
                   hx-indicator="#colorMatchSpinner,.loaded-content"
                   hx-post="{% url 'colormatch' %}"
+                  id="colormatch-form"
             >
               <div class="my-3">
                 <label for="hex-input">Hex</label>
                 <input type="text" id="hex-input" onchange="changeHexColorPicker()"
                        name="hex_color"
+                       value="{{ prefill_hex|default:'' }}"
                        class="form-control text-center fs-5">
               </div>
               <div class="row">
@@ -146,5 +148,36 @@
   </div>
   </fc-colormatch>
   <script src="{% static 'js/components/colormatch.js' %}" defer></script>
+  <script>
+    (() => {
+      {% if prefill_hex %}
+        const triggerSearch = () => {
+          if (typeof changeHexColorPicker === 'function') {
+            console.log("Triggering search for prefill_hex: {{ prefill_hex }}");
+            changeHexColorPicker();
+            const form = document.getElementById('colormatch-form');
+            if (form) {
+              form.requestSubmit();
+            }
+          } else {
+            // If the component isn't fully ready, wait a bit
+            setTimeout(triggerSearch, 100);
+          }
+        };
 
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', triggerSearch);
+        } else {
+          triggerSearch();
+        }
+
+        // Handle HTMX boosted navigation
+        document.body.addEventListener('htmx:afterSettle', function(evt) {
+          if (evt.detail.target.id === 'main' || evt.detail.target.contains(document.getElementById('colormatch-form'))) {
+             triggerSearch();
+          }
+        }, { once: true });
+      {% endif %}
+    })();
+  </script>
 {% endblock content %}

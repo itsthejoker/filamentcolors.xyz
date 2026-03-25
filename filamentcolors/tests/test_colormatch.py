@@ -86,3 +86,17 @@ def test_colormatch_page_post_invalid_hex(client: Client) -> None:
     """Test that the colormatch page handles invalid HEX color"""
     response = client.post("/colormatch/", {"hex_color": "INVALID"})
     assert response.status_code == 701  # HTTP_701_BAD_COLOR_CODE
+
+
+@pytest.mark.django_db
+def test_colormatch_page_get_with_hex_prefill(client: Client) -> None:
+    """Test that the colormatch page pre-fills the hex input and includes the trigger script."""
+    response = client.get("/colormatch/?hex=45FFC1")
+    assert response.status_code == 200
+    content = response.content.decode()
+
+    # Check that the hex value is pre-filled in the input
+    assert 'value="#45FFC1"' in content
+    # Check that the script to trigger the search is present
+    assert "changeHexColorPicker()" in content
+    assert "requestSubmit()" in content

@@ -9,7 +9,7 @@ from filamentcolors.tests.helpers import (
     get_filament_type,
     get_manufacturer,
     get_swatch,
-    test_image,
+    get_test_image,
 )
 
 
@@ -96,7 +96,7 @@ def test_opengraph_generation_waits_for_commit(monkeypatch, transactional_db):
         calls.append(self.id)
 
     def _stub_crop(self):
-        self.card_img = test_image(name="card.jpg", size=(96, 96))
+        self.card_img = get_test_image(name="card.jpg", size=(96, 96))
 
     monkeypatch.setattr(Swatch, "create_opengraph_image", _record_opengraph)
     monkeypatch.setattr(Swatch, "crop_and_save_images", _stub_crop)

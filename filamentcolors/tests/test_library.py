@@ -85,3 +85,34 @@ def test_replaced_swatches_not_in_library(prep_mock, rf) -> None:
     swatches = prep_mock.call_args[0][2]["swatches"].object_list
     assert swatch not in swatches
     assert len(swatches) == 1
+
+
+@patch("filamentcolors.views.prep_request")
+def test_hex_search(prep_mock, rf) -> None:
+    # A swatch with a specific color
+    # Blue is 0000FF
+    swatch = get_swatch(color_name="Blue", hex_color="0000FF")
+
+    # Search for a blue-ish hex code with #
+    request = rf.get("/?f=%230000FE")
+    librarysort(request)
+
+    prep_mock.assert_called()
+    data = prep_mock.call_args[0][2]
+    swatches = data["swatches"].object_list
+
+    assert len(swatches) == 1
+    assert swatch in swatches
+    assert data.get("is_hex_search") is True
+
+    # Search for a short hex code
+    request = rf.get("/?f=00F")
+    librarysort(request)
+
+    prep_mock.assert_called()
+    data = prep_mock.call_args[0][2]
+    swatches = data["swatches"].object_list
+
+    assert len(swatches) == 1
+    assert swatch in swatches
+    assert data.get("is_hex_search") is True

@@ -4,6 +4,9 @@ import threading
 from django.conf import settings
 from django.core.signals import request_finished
 from django.dispatch import receiver
+from plausible_proxy.services import send_custom_event
+
+from filamentcolors.helpers import fire_and_forget
 
 
 class CacheControlMiddleware:
@@ -14,6 +17,28 @@ class CacheControlMiddleware:
         response = self.get_response(request)
         if "HX-Request" in request.headers:
             response["Cache-Control"] = "no-store, max-age=0"
+
+        return response
+
+
+@fire_and_forget
+def send_update_ping(request):
+    send_custom_event(request, "API Request", domain="filamentcolors.xyz/api")
+
+
+class PlausibleAPIMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if "/api/" in request.path and request.path != "/api/event":
+            if "X-FC" in request.headers:
+                # This is an API request from the frontend
+                return response
+
+            if not settings.DEBUG:
+                send_update_ping(request)
 
         return response
 

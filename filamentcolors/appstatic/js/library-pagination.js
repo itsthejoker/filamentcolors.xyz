@@ -116,9 +116,18 @@
 
   async function fetchWithRetry(url, opts = {}, retries = 2, backoffMs = 400) {
     let lastErr;
+    const headers = {
+      "X-FC": "true",
+      ...(opts.headers || {}),
+    };
+    const finalOpts = {
+      credentials: "same-origin",
+      ...opts,
+      headers,
+    };
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
-        const res = await fetch(url, { credentials: "same-origin", ...opts });
+        const res = await fetch(url, finalOpts);
         if (!res.ok) {
           const err = new Error("HTTP " + res.status);
           err.status = res.status;

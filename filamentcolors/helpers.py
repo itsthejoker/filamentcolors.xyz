@@ -1,6 +1,7 @@
 import colorsys
 import secrets
-from typing import Any, Optional, Tuple
+import threading
+from typing import Any, Callable, Optional, Tuple
 
 from django.conf import settings
 from django.core.paginator import EmptyPage, Paginator
@@ -579,3 +580,25 @@ def apply_td_range_filter(
     if treat_full_as_no_filter and (min_td <= 0 and max_td >= 100):
         return qs
     return qs.filter(calculated_td__gte=min_td, calculated_td__lte=max_td)
+
+
+def fire_and_forget(
+    func: Callable[[Any], Any], *args: tuple, **kwargs: dict
+) -> Callable[[Any], Any]:
+    """Decorate functions to build a thread for a given function and trigger it.
+
+    Originally from https://stackoverflow.com/a/59043636, this function
+    prepares a thread for a given function and then starts it, intentionally
+    severing communication with the thread so that we can continue moving
+    on.
+
+    This should be used sparingly and only when we are 100% sure that
+    the function we are passing does not need to communicate with the main
+    process and that it will exit cleanly (and that if it explodes, we don't
+    care).
+    """
+
+    def wrapped(*args: tuple, **kwargs: dict) -> None:
+        threading.Thread(target=func, args=args, kwargs=kwargs).start()
+
+    return wrapped

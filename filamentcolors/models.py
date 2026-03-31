@@ -1465,6 +1465,17 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
 
 
 class SocialLink(models.Model):
+    VARIANTS = (
+        ("success", "success"),
+        ("danger", "danger"),
+        ("warning", "warning"),
+        ("info", "info"),
+        ("primary", "primary"),
+        ("secondary", "secondary"),
+        ("light", "light"),
+        ("dark", "dark"),
+    )
+    variant = models.CharField(max_length=10, choices=VARIANTS, default="primary")
     name = models.CharField(max_length=100)
     url = models.URLField(max_length=2000)
     order = models.IntegerField(

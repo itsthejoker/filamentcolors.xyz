@@ -108,9 +108,14 @@ def librarysort(
     if not method:
         method = request.GET.get("m", None)
 
+    is_hex_search = False
     if filter_str:
         data.update({"search_prefill": filter_str})
-        items = filter_qs_by_search_string(items, filter_str)
+        potential_hex = filter_str.strip()
+        if is_short_hex(potential_hex) or is_hex(potential_hex):
+            is_hex_search = True
+        else:
+            items = filter_qs_by_search_string(items, filter_str)
 
     # Shared filters via helpers
     items = apply_color_family_filter(items, color_family_str, strict=True)
@@ -153,6 +158,38 @@ def librarysort(
         # deterministic tie-breaker on id to avoid duplicates/gaps when
         # many items share the same publication timestamp (common in tests).
         items = items.order_by("-date_published", "-id")
+
+    if is_hex_search:
+        # If it's a hex search, we want to find the closest matches and
+        # override the items list.
+        potential_hex = filter_str.strip()
+        if is_short_hex(potential_hex):
+            potential_hex = convert_short_to_full_hex(potential_hex)
+
+        target_lab = convert_color(sRGBColor.new_from_rgb_hex(potential_hex), LabColor)
+
+        library = items
+        matches = []
+        num_results = data["user_settings"].get("number_of_colormatch_results", 4)
+
+        for _ in range(num_results):
+            matching_swatch = Swatch().get_closest_color_swatch(library, target_lab)
+            if not matching_swatch:
+                continue
+            distance = matching_swatch.get_distance_to(target_lab)
+            matching_swatch.distance = distance
+            matches.append(matching_swatch)
+            library = library.exclude(id=matching_swatch.id)
+
+        matches.sort(key=lambda s: s.distance)
+        items = matches
+        data.update(
+            {
+                "is_hex_search": True,
+                "show_colormatch_extras": True,
+                "show_delta_e_distance_warning": True,
+            }
+        )
 
     # this loads the data obj with everything needed to render
     # the swatches
@@ -654,6 +691,11 @@ def colormatch(request: HttpRequest) -> HttpResponse:
         matches.sort(key=lambda s: s.distance)
         data["swatches"] = matches
         return prep_request(request, "partials/colormatch_results.partial", data)
+
+    if hex_val := request.GET.get("hex"):
+        if not hex_val.startswith("#") or len(hex_val) != 7:
+            hex_val = "#" + hex_val
+        data["prefill_hex"] = hex_val
 
     return prep_request(request, "standalone/colormatch.html", data)
 

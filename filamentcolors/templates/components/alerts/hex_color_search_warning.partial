@@ -1,14 +1,17 @@
 <div class="container mb-5 d-none" id="hexColorSearchAlert">
   <div class="alert alert-secondary center-text" role="alert">
-    <h4 class="alert-heading">Hrm...</h4>
+    <h4 class="alert-heading">Hex Code Detected!</h4>
     <p>
-      It looks like you're trying to search for a color by hex code. We don't
-      have that feature yet, but we're working on it! In the meantime, you
-      can search for a color by <a href="{% url 'colormatch' %}" class="alert-link">
-      trying the Color Match page.</a>
+      We're showing swatches that come the closest to that hex code and we're limiting
+      to {{ user_settings.number_of_colormatch_results }} results based on your settings.
     </p>
-    <div class="text-center">
-      <a href="{% url 'colormatch' %}" class="btn btn-lg bg-gradient btn-success">Take me there!</a>
-    </div>
+    <p>
+      If you want to do more advanced searching and build collections, try the color match page!
+    </p>
+    <centered-column class="col-12 col-md-6 col-lg-4 col-xl-3">
+      <div class="d-grid">
+        <a hx-boost="false" href="{% url 'colormatch' %}" class="btn btn-success btn-lg" id="hexColorSearchAlertButton">Color Match</a>
+      </div>
+    </centered-column>
   </div>
 </div>

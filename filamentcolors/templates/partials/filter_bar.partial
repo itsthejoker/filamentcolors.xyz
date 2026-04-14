@@ -493,7 +493,19 @@
     if (!hexColorSearchAlert) {
       return;
     }
-    $.isHexColor(el.value) ? hexColorSearchAlert.classList.remove("d-none") : hexColorSearchAlert.classList.add("d-none");
+    const isHex = $.isHexColor(el.value);
+    if (isHex) {
+      hexColorSearchAlert.classList.remove("d-none");
+      const button = document.getElementById("hexColorSearchAlertButton");
+      if (button) {
+        const hex = el.value.replace("#", "").trim().toUpperCase();
+        const url = new URL(button.href, window.location.origin);
+        url.searchParams.set("hex", hex);
+        button.href = url.pathname + url.search;
+      }
+    } else {
+      hexColorSearchAlert.classList.add("d-none");
+    }
   }
 
   $(document).ready(function() {

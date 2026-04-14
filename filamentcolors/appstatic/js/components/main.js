@@ -106,9 +106,11 @@ class MainContainer extends HTMLElement {
 
       // Check if any of these undefined elements are custom elements (have a hyphen)
       const pendingCustomElements = Array.from(undefinedElements).some(el => el.tagName.includes('-'));
-      console.log('Waiting for the following custom elements to be defined: ', pendingCustomElements ? Array.from(undefinedElements) : 'none')
+      // console.log('Waiting for the following custom elements to be defined: ', pendingCustomElements ? Array.from(undefinedElements) : 'none')
       if (!pendingCustomElements) {
-        this._finishLoading();
+        setInterval(() => {
+          this._finishLoading();
+        }, Math.random() * 500);
       }
     }, 50);
   }

@@ -10,7 +10,7 @@ from filamentcolors.tests.helpers import (
     get_purchase_location,
     get_retailer,
     get_swatch,
-    test_image,
+    get_test_image,
 )
 
 # def test_complement() -> None:
@@ -65,10 +65,10 @@ def test_save_rolls_back_when_image_generation_fails(monkeypatch) -> None:
         date_published=timezone.now(),
         color_name="Rollback Test",
         color_parent=Swatch.WHITE,
-        image_front=test_image(name="front.jpg", size=(4056, 3040)),
-        image_back=test_image(name="back.jpg", size=(4056, 3040)),
-        image_other=test_image(name="other.jpg", size=(4056, 3040)),
-        image_opengraph=test_image(name="og.jpg", size=(4056, 3040)),
+        image_front=get_test_image(name="front.jpg", size=(4056, 3040)),
+        image_back=get_test_image(name="back.jpg", size=(4056, 3040)),
+        image_other=get_test_image(name="other.jpg", size=(4056, 3040)),
+        image_opengraph=get_test_image(name="og.jpg", size=(4056, 3040)),
         published=True,
     )
     swatch._set_rgb_from_hex()

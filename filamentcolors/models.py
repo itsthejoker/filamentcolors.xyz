@@ -2,13 +2,13 @@ import colorsys
 import os
 import random
 import time
+from datetime import UTC
 from io import BytesIO
 from pathlib import Path
 from typing import List, Tuple, Union
 from urllib.parse import quote as urlquote
 from urllib.parse import urlencode, urlsplit, urlunparse
 
-import pytz
 from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cie2000
 from colormath.color_objects import LabColor, sRGBColor
@@ -469,9 +469,7 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
     date_added = models.DateTimeField(default=timezone.now)
     date_published = models.DateTimeField(null=True, blank=True)
     last_cache_update = models.DateTimeField(
-        default=pytz.timezone("UTC").localize(
-            timezone.datetime(year=1969, month=1, day=1)
-        )
+        default=timezone.datetime(year=1969, month=1, day=1, tzinfo=UTC)
     )
     notes = models.TextField(max_length=4000, null=True, blank=True)
     amazon_purchase_link = models.URLField(null=True, blank=True, max_length=2000)

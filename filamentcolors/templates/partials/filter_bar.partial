@@ -172,7 +172,7 @@
           >
         </div>
         {% if mfrs_hidden %}
-          <div class="alert alert-info py-2 px-3 text-white" role="alert">
+          <div class="alert alert-info py-2 px-3" role="alert">
             Some manufacturers have been hidden based on your current settings.
           </div>
         {% endif %}

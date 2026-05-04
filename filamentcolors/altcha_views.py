@@ -2,7 +2,7 @@ import json
 from datetime import timedelta
 
 import bugsnag
-from altcha import ChallengeOptions, create_challenge, verify_solution
+from altcha.v1 import ChallengeOptions, create_challenge, verify_solution
 from django.conf import settings
 from django.http import HttpRequest, JsonResponse
 from django.utils import timezone

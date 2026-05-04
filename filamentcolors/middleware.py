@@ -38,7 +38,8 @@ class PlausibleAPIMiddleware:
                 return response
 
             if not settings.DEBUG:
-                send_update_ping(request)
+                # send_update_ping(request)
+                pass
 
         return response
 

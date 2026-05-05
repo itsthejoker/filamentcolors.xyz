@@ -116,3 +116,48 @@ def test_hex_search(prep_mock, rf) -> None:
     assert len(swatches) == 1
     assert swatch in swatches
     assert data.get("is_hex_search") is True
+
+
+@patch("filamentcolors.views.prep_request")
+def test_hex_search_with_color_sort(prep_mock, rf) -> None:
+    # Create some swatches
+    blue = get_swatch(color_name="Blue", hex_color="0000FF")
+    get_swatch(color_name="Red", hex_color="FF0000")
+
+    # Search for a blue-ish hex code while sorting by color
+    # This triggers the conversion of items to a list in views.py
+    request = rf.get("/?f=%230000FE&m=color")
+    librarysort(request)
+
+    prep_mock.assert_called()
+    data = prep_mock.call_args[0][2]
+    swatches = data["swatches"].object_list
+
+    # Should find the blue swatch and not crash
+    assert blue in swatches
+    assert data.get("is_hex_search") is True
+
+
+@patch("filamentcolors.views.prep_request")
+def test_hex_search_with_random_sort(prep_mock, rf) -> None:
+    # Create some swatches
+    get_swatch(color_name="Blue", hex_color="0000FF")
+    red = get_swatch(color_name="Red", hex_color="FF0000")
+
+    # Search for a red-ish hex code while sorting by random
+    request = rf.get("/?f=%23FE0000&m=random")
+    from django.contrib.sessions.middleware import SessionMiddleware
+
+    middleware = SessionMiddleware(lambda r: None)
+    middleware.process_request(request)
+    request.session.save()
+
+    librarysort(request)
+
+    prep_mock.assert_called()
+    data = prep_mock.call_args[0][2]
+    swatches = data["swatches"].object_list
+
+    # Should find the red swatch and not crash
+    assert red in swatches
+    assert data.get("is_hex_search") is True

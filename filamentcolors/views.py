@@ -179,7 +179,10 @@ def librarysort(
             distance = matching_swatch.get_distance_to(target_lab)
             matching_swatch.distance = distance
             matches.append(matching_swatch)
-            library = library.exclude(id=matching_swatch.id)
+            if isinstance(library, QuerySet):
+                library = library.exclude(id=matching_swatch.id)
+            else:
+                library = [s for s in library if s.id != matching_swatch.id]
 
         matches.sort(key=lambda s: s.distance)
         items = matches

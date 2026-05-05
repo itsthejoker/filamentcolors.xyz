@@ -1015,24 +1015,29 @@ class Swatch(models.Model, DistanceMixin, CSSMixin):
         # target_srgb = convert_color(target_lab, sRGBColor)
         # rgb = target_srgb.get_upscaled_value_tuple()
 
-        # options = queryset.filter(
-        #     **extra_args,
-        #     rgb_r__gt=max(rgb[0] - step, 0),
-        #     rgb_r__lt=min(rgb[0] + step, 255),
-        #     rgb_g__gt=max(rgb[1] - step, 0),
-        #     rgb_g__lt=min(rgb[1] + step, 255),
-        #     rgb_b__gt=max(rgb[2] - step, 0),
-        #     rgb_b__lt=min(rgb[2] + step, 255),
-        # )
-        options = queryset.filter(
-            **extra_args,
-            lab_l__gt=max(target_lab.lab_l - step, 0),
-            lab_l__lt=min(target_lab.lab_l + step, 100),
-            lab_a__gt=max(target_lab.lab_a - step, -127),
-            lab_a__lt=min(target_lab.lab_a + step, 128),
-            lab_b__gt=max(target_lab.lab_b - step, -127),
-            lab_b__lt=min(target_lab.lab_b + step, 128),
-        )
+        if isinstance(queryset, QuerySet):
+            options = queryset.filter(
+                **extra_args,
+                lab_l__gt=max(target_lab.lab_l - step, 0),
+                lab_l__lt=min(target_lab.lab_l + step, 100),
+                lab_a__gt=max(target_lab.lab_a - step, -127),
+                lab_a__lt=min(target_lab.lab_a + step, 128),
+                lab_b__gt=max(target_lab.lab_b - step, -127),
+                lab_b__lt=min(target_lab.lab_b + step, 128),
+            )
+        else:
+            options = [
+                obj
+                for obj in queryset
+                if (
+                    all(getattr(obj, k) == v for k, v in extra_args.items())
+                    if extra_args
+                    else True
+                )
+                and max(target_lab.lab_l - step, 0) < obj.lab_l < min(target_lab.lab_l + step, 100)
+                and max(target_lab.lab_a - step, -127) < obj.lab_a < min(target_lab.lab_a + step, 128)
+                and max(target_lab.lab_b - step, -127) < obj.lab_b < min(target_lab.lab_b + step, 128)
+            ]
         for option in options:
             possible_lab = LabColor(
                 option.lab_l, option.lab_a, option.lab_b, OBSERVER_ANGLE, ILLUMINANT

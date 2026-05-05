@@ -5,7 +5,7 @@ from typing import Any
 
 import numpy
 import pandas
-from altcha import verify_solution
+from altcha.v1 import verify_solution
 from colormath.color_conversions import convert_color
 from colormath.color_objects import LabColor, sRGBColor
 from django.conf import settings

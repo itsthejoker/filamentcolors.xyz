@@ -19,6 +19,7 @@ class MainContainer extends HTMLElement {
     this._initialized = false;
     this._spinner = null;
     this._interval = null;
+    this.MAX_WAIT_MS = 5000;
   }
 
   connectedCallback() {
@@ -100,17 +101,21 @@ class MainContainer extends HTMLElement {
    * @private
    */
   _startCheck() {
-    this._interval = setInterval(() => {
-      // Find all custom elements that are not yet defined
-      const undefinedElements = document.querySelectorAll(':not(:defined)');
+    const startTime = Date.now();
 
-      // Check if any of these undefined elements are custom elements (have a hyphen)
-      const pendingCustomElements = Array.from(undefinedElements).some(el => el.tagName.includes('-'));
-      // console.log('Waiting for the following custom elements to be defined: ', pendingCustomElements ? Array.from(undefinedElements) : 'none')
-      if (!pendingCustomElements) {
-        setInterval(() => {
-          this._finishLoading();
-        }, Math.random() * 500);
+    this._interval = setInterval(() => {
+      // Only look at custom elements inside this component's own content.
+      // Scanning the whole document hangs forever when an undefined custom
+      // element is injected outside the app (browser extensions, password
+      // managers, page-translation tools), since the page never defines it.
+      const pendingCustomElements = Array.from(
+        this.querySelectorAll(':not(:defined)')
+      ).some(el => el.tagName.includes('-'));
+
+      // Always resolve after a hard ceiling so the page can never get stuck
+      // behind the spinner if something inside still fails to upgrade.
+      if (!pendingCustomElements || Date.now() - startTime >= this.MAX_WAIT_MS) {
+        this._finishLoading();
       }
     }, 50);
   }

@@ -25,7 +25,7 @@
         {% for m in manufacturers %}
           {% with first_letter=m.name.0|upper %}
             {% ifchanged %}
-              <div class="mfr-header">
+              <div class="mfr-header mt-4">
                 <h3 id="{{ first_letter }}">{{ first_letter }}</h3>
                 <hr>
               </div>

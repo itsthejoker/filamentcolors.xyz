@@ -551,14 +551,14 @@ files = [
 
 [[package]]
 name = "django"
-version = "6.0.5"
+version = "6.0.6"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
 python-versions = ">=3.12"
 groups = ["main", "dev"]
 files = [
-    {file = "django-6.0.5-py3-none-any.whl", hash = "sha256:9d58a7cb49244e74c8e161d5e403a46d6209f1009ba40f5a66d6aa0d0786a8f0"},
-    {file = "django-6.0.5.tar.gz", hash = "sha256:bc6d6872e98a2864c836e42edd644b362db311147dd5aa8d5b82ba7a032f5269"},
+    {file = "django-6.0.6-py3-none-any.whl", hash = "sha256:25148b1194c47c2e685e5f5e9c5d59c78b075dfd282cb9618861ba6c1708f4d2"},
+    {file = "django-6.0.6.tar.gz", hash = "sha256:ad03916ba59523d781ae5c3f631960c23d69a9d9c43cecda52fc23b47e953713"},
 ]
 
 [package.dependencies]
@@ -965,9 +965,6 @@ files = [
     {file = "imagecodecs-2026.5.10-cp314-cp314t-win32.whl", hash = "sha256:7189cb0919d2bd4e93be92c93b418be14997586bef3964a8ed40794a4a5ffff2"},
     {file = "imagecodecs-2026.5.10-cp314-cp314t-win_amd64.whl", hash = "sha256:78ce31baa9f5c38d269650bc18a9d904f63b0af07bb64e17e1a68d9fe9d16b39"},
     {file = "imagecodecs-2026.5.10-cp314-cp314t-win_arm64.whl", hash = "sha256:7f429cab8f5cac312b992e3c2e78c17bde86421d81ded487ba1e80a66bbb2393"},
-    {file = "imagecodecs-2026.5.10-cp315-cp315t-win32.whl", hash = "sha256:7d7a63566eaf38ff3535723909a17dcd548af25236e7d89496bc8b4ac4041c04"},
-    {file = "imagecodecs-2026.5.10-cp315-cp315t-win_amd64.whl", hash = "sha256:40a22aebc4575742b86e8f1465f4d357c3b18f4c07b58fc17f6bf96d48ab5477"},
-    {file = "imagecodecs-2026.5.10-cp315-cp315t-win_arm64.whl", hash = "sha256:06cea6c5f94ad5df835f908306eeb251b82118bf165f28e6331221a9a4976e66"},
     {file = "imagecodecs-2026.5.10.tar.gz", hash = "sha256:1c0c46860f35e4637c2df70ebe8aa15141f6c4202a698e63757a4d7917a85acc"},
 ]
 

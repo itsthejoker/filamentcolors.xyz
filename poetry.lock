@@ -958,16 +958,6 @@ files = [
     {file = "imagecodecs-2026.6.6-cp312-abi3-win32.whl", hash = "sha256:00596506fcea638063491db1baeef9a2445b3e0147bcbd76633561df702b1eb1"},
     {file = "imagecodecs-2026.6.6-cp312-abi3-win_amd64.whl", hash = "sha256:3ba2bcee53dabfb7d4dbd6f3c3ae731f3bfa43fa9c936d969886dff2f50e2160"},
     {file = "imagecodecs-2026.6.6-cp312-abi3-win_arm64.whl", hash = "sha256:031c5ea4d0c8bfacc87a5ca0ffdfee9a06b64265960d8b0b5d3f4a32434404c3"},
-    {file = "imagecodecs-2026.6.6-cp314-cp314t-macosx_10_15_x86_64.whl", hash = "sha256:5ee77053841dc7a8fbe59df774c0456fbe604edf2cd12c795c29deee1384ce8d"},
-    {file = "imagecodecs-2026.6.6-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:1fe0a7c8fb67bdd1bbb406c0e830dd1652acf6dce62620071a47e20f7d00619a"},
-    {file = "imagecodecs-2026.6.6-cp314-cp314t-manylinux_2_28_aarch64.whl", hash = "sha256:2673fc78fc6e2178b13957eccaa2e97c716ea03607af6a2a44a2f09d00919f3f"},
-    {file = "imagecodecs-2026.6.6-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:ed0760b9d428408798c010593ef204f88d949a9f57fa037623544e811c462c67"},
-    {file = "imagecodecs-2026.6.6-cp314-cp314t-win32.whl", hash = "sha256:16540ed96854312d235bb86f885cb5f6ca2f4f1acde8e283d13a2bda2fb01e26"},
-    {file = "imagecodecs-2026.6.6-cp314-cp314t-win_amd64.whl", hash = "sha256:325f72db99e2678c9ad0ccca8ac9f274b6ac7b4a1a5df71db0f96e23f964aeab"},
-    {file = "imagecodecs-2026.6.6-cp314-cp314t-win_arm64.whl", hash = "sha256:fcd8b838bbe10c6b312b8aa67add4bb375bd1537ae4d92815c1ea522bef43cbc"},
-    {file = "imagecodecs-2026.6.6-cp315-cp315t-win32.whl", hash = "sha256:b20be458a4d4a0283acaae17c94ad8128dfc6ce62fefdd55f1882c8e3a67850c"},
-    {file = "imagecodecs-2026.6.6-cp315-cp315t-win_amd64.whl", hash = "sha256:51703586bb553d3b3ef9a0ab5c5b26432611c2bbb262f5f8fdeb19095c5e130f"},
-    {file = "imagecodecs-2026.6.6-cp315-cp315t-win_arm64.whl", hash = "sha256:e4a059c2f57df75f99024bf9499b17b10d5a3916c5b5addba31317a523f120cd"},
     {file = "imagecodecs-2026.6.6.tar.gz", hash = "sha256:c7b014f5c0e73ff455700b1db271415d3c35a3bddedca6527cb2eefcd2fa8a10"},
 ]
 
@@ -1531,20 +1521,20 @@ type = ["mypy (>=1.18.2)"]
 
 [[package]]
 name = "playwright"
-version = "1.60.0"
+version = "1.61.0"
 description = "A high-level API to automate web browsers"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "playwright-1.60.0-py3-none-macosx_10_13_x86_64.whl", hash = "sha256:6a8cd0fec171fb3089e95e898c8bc8a6f35dea0b78b399e12fcc19427e91b1d7"},
-    {file = "playwright-1.60.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:39b5420ba6145045b69ced4c5c47d4d9fe5bddfc8ff816c518913afcb25ec7a5"},
-    {file = "playwright-1.60.0-py3-none-macosx_11_0_universal2.whl", hash = "sha256:2581d0e6a3392c71f91b27460c7fd093356818dc430f48153896c8aeeaef7705"},
-    {file = "playwright-1.60.0-py3-none-manylinux1_x86_64.whl", hash = "sha256:1c2bfae7884fb3fb05b853290eab8f343d524e5016f2f1def702acbbdf14c93e"},
-    {file = "playwright-1.60.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:43e66564125ee31b07a58cefb21e256d62d67d8d1713e6858df7a3019d8ed353"},
-    {file = "playwright-1.60.0-py3-none-win32.whl", hash = "sha256:ec94e416ea320711e0ad4bf185dcbf41833672961e90773e1885255d7db7b7e7"},
-    {file = "playwright-1.60.0-py3-none-win_amd64.whl", hash = "sha256:9566821ce6030a1f9e7146a24e19355ab0d98805fd0f9be50bb3d8fef1750c02"},
-    {file = "playwright-1.60.0-py3-none-win_arm64.whl", hash = "sha256:6e4f6700a4c2250efff8e690a81d66e3855754fb587b6b87cf5c784014f91537"},
+    {file = "playwright-1.61.0-py3-none-macosx_10_13_x86_64.whl", hash = "sha256:ff138c3a604f69911e9d42fd036e55c2a171e5616edf04c1e7f60a2a285540b0"},
+    {file = "playwright-1.61.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:009588c2a7e499bc5a8b425b61fa65490968bbda9cd69e0cf2cff10f8304659a"},
+    {file = "playwright-1.61.0-py3-none-macosx_11_0_universal2.whl", hash = "sha256:9f7de4536088d12037c13a52b7ea34b59270b78926bb56935070597ffac6b1af"},
+    {file = "playwright-1.61.0-py3-none-manylinux1_x86_64.whl", hash = "sha256:54f3b39f6eab832e33458c1dd7da0b5682aedab3b09ae731b5c59fa12fd2024e"},
+    {file = "playwright-1.61.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:93454322ade8c11d5d6c211bfd91bdfb9ffb4810e3e026371bcbc4bec1b7ee4c"},
+    {file = "playwright-1.61.0-py3-none-win32.whl", hash = "sha256:372d55a6f1248fa1dd47599686980cb8fb5bbe6fcda59eab793eb657c11d8a9b"},
+    {file = "playwright-1.61.0-py3-none-win_amd64.whl", hash = "sha256:35c6cc4589a5d00964a59d7b3e59641e0aac0c02f15479a7af77d20f6bc79597"},
+    {file = "playwright-1.61.0-py3-none-win_arm64.whl", hash = "sha256:e9fcbffcf557a8620fdedd92491eb59a32d18e23d6f3b4f6214b952be324fe51"},
 ]
 
 [package.dependencies]

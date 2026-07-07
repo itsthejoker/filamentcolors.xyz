@@ -486,6 +486,84 @@ def filter_qs_by_search_string(
     return qs
 
 
+def is_sql_injection(link: str) -> bool:
+    link = link.lower()
+
+    # Substrings that, if present anywhere in the submission, flag it as an
+    # injection attempt. These are deliberately specific (mostly function
+    # calls, keyword pairs, or punctuation combos) so they don't trip on
+    # ordinary English notes ("please update this link") or normal purchase
+    # URLs. A bare "select" or "update" would be too aggressive; the paren'd
+    # or paired forms below are what actually show up in payloads.
+    injection_substrings = (
+        # --- time-based blind injection ---
+        "waitfor delay",
+        "waitfor time",
+        "pg_sleep",
+        "dbms_pipe",
+        "sleep(",
+        "benchmark(",
+        "sysdate()",
+        # --- classic / subquery injection ---
+        "(select",
+        "select(",
+        "from(",
+        "union(",
+        "union select",
+        "union all select",
+        "drop table",
+        "truncate table",
+        "insert into",
+        "delete from",
+        "load_file(",
+        "into outfile",
+        "into dumpfile",
+        "information_schema",
+        # --- boolean-based tautologies ---
+        "1=1",
+        "0=0",
+        "'='",
+        "' or '",
+        "'or'",
+        "having 1=1",
+        # --- stacked queries ---
+        "; drop",
+        "; delete",
+        "; insert",
+        "; update",
+        "; select",
+        # --- command execution / dangerous functions ---
+        "xp_cmdshell",
+        "exec(",
+        "execute(",
+        "declare @",
+        "extractvalue(",
+        "updatexml(",
+        "concat(",
+        "convert(",
+        "xor(",
+        # --- string-literal breakouts ---
+        # Adjacent or doubled quotes are how a payload closes/reopens a SQL
+        # string (e.g. `1'"`, `' OR ''='`). Normal notes only ever contain a
+        # lone apostrophe between characters (couldn't, Bob's, the 90's), so
+        # these pairs don't trip on English prose or possessives.
+        "'\"",
+        "\"'",
+        "''",
+        '""',
+        # --- comment markers / obfuscation ---
+        "/*",
+        "@@",
+        "�",  # replacement char; shows up in mangled/encoded payloads
+    )
+
+    if any(needle in link for needle in injection_substrings):
+        return True
+
+    # Anchored patterns that are only meaningful at the very edges of the
+    # submission (a lone "1" or a trailing SQL comment).
+    return link == "1" or link.endswith("--")
+
 # ---- Shared filtering helpers for views and API ----
 
 

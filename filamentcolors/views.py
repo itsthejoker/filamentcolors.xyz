@@ -37,7 +37,7 @@ from filamentcolors.helpers import (
     get_swatches,
     is_infinite_scroll_request,
     is_searchbar_request,
-    prep_request,
+    prep_request, is_sql_injection,
 )
 from filamentcolors.models import (
     DeadLink,
@@ -627,12 +627,17 @@ def report_bad_link(
             messages.error(request, generic_error_text)
             return swatch_redirect
 
-    DeadLink.objects.create(
-        swatch=swatch,
-        link_type=link_type,
-        current_url=current_link,
-        suggested_url=request.POST.get("newLink"),
-    )
+    # Sometimes we get _really dedicated assholes_ who try to submit sql
+    # injections. Filter them out based on the most common ones and still
+    # tell them it submitted.
+    new_link = request.POST.get("newLink", "").lower()
+    if not is_sql_injection(new_link):
+        DeadLink.objects.create(
+            swatch=swatch,
+            link_type=link_type,
+            current_url=current_link,
+            suggested_url=new_link,
+        )
 
     messages.success(request, "Thanks! We've received your report.")
 

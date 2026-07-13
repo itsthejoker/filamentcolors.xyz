@@ -634,19 +634,19 @@ drf = ["djangorestframework"]
 
 [[package]]
 name = "django-htmx"
-version = "1.27.0"
+version = "1.28.0"
 description = "Extensions for using Django with htmx."
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "django_htmx-1.27.0-py3-none-any.whl", hash = "sha256:13e1e13b87d39b57f95aae6e4987cb3df056d0b1373a41f4a94504a00298ffd8"},
-    {file = "django_htmx-1.27.0.tar.gz", hash = "sha256:036e5da801bfdf5f1ca815f21592cfb9f004a898f330c842f15e55c70e301a75"},
+    {file = "django_htmx-1.28.0-py3-none-any.whl", hash = "sha256:e6911acccf3e7905d511c4fd6ab86fe06572205e80a0f32ca7aa94a115ae0619"},
+    {file = "django_htmx-1.28.0.tar.gz", hash = "sha256:699e229de0bbf19b3ee1a5d419702f5c154fa956e6921fec89faa7401b99e536"},
 ]
 
 [package.dependencies]
 asgiref = ">=3.6"
-django = ">=4.2"
+django = ">=5.2"
 
 [[package]]
 name = "django-plausible-proxy"

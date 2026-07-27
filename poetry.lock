@@ -2,14 +2,14 @@
 
 [[package]]
 name = "altcha"
-version = "2.0.2"
+version = "2.1.0"
 description = "A library for creating and verifying challenges for ALTCHA."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "altcha-2.0.2-py3-none-any.whl", hash = "sha256:1631905ac468538fccff04cabf6d2f026c03fe170aa96cab0af799363cb405e8"},
-    {file = "altcha-2.0.2.tar.gz", hash = "sha256:5897bb3812569e9b7b5234d7d93e216d9f158c9ccf0f5b822380bcdba59c1626"},
+    {file = "altcha-2.1.0-py3-none-any.whl", hash = "sha256:843de4146e14c604ceca7e563eb245e0cfb96936323ecac2fd898fab6e034cd2"},
+    {file = "altcha-2.1.0.tar.gz", hash = "sha256:5d4d15d89f7833f0f32bb89a1dd650923d3cb113ee9f1178d8a69b2172d087ce"},
 ]
 
 [[package]]

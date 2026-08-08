@@ -5,7 +5,12 @@ class Card extends HTMLElement {
     this.retrieveAttrs();
     this.selected = this.hasAttribute('selected');
     this._didLongPress = false;
-    this._preventContextMenu = (e) => e.preventDefault();
+    this._preventContextMenu = (e) => {
+      const isTouchContextMenu = e.pointerType === 'touch' || (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents);
+      if (isTouchContextMenu) {
+        e.preventDefault();
+      }
+    };
     // Touch tracking for scroll-vs-tap discrimination
     this._touchMoved = false;
     this._touchStartX = 0;
@@ -32,6 +37,9 @@ class Card extends HTMLElement {
     this._onTouchCancelOverlay = () => {
       this._touchMoved = true;
     };
+    this._isNewTabIntent = (e) => {
+      return !!(e && (e.ctrlKey || e.metaKey || e.button === 1));
+    };
     this._onLongPress = (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -53,6 +61,11 @@ class Card extends HTMLElement {
 
     // Passthrough handler for the click overlay: forward taps to anchor
     this._onClickOverlayActivate = (e) => {
+      // Let right-click keep native browser context-menu behavior
+      if (e.type === 'auxclick' && e.button === 2) {
+        return;
+      }
+
       // If a long-press just happened, consume this activation
       if (this._didLongPress) {
         this._didLongPress = false;
@@ -75,6 +88,15 @@ class Card extends HTMLElement {
       if (window.multiselect && window.multiselect.collectionModeEnabled) return;
       const anchor = this.querySelector('a');
       if (!anchor) return;
+
+      if (this._isNewTabIntent(e)) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.open(anchor.href, '_blank', 'noopener');
+        this._touchMoved = false;
+        return;
+      }
+
       e.preventDefault();
       e.stopPropagation();
       // Programmatically trigger navigation
@@ -239,6 +261,7 @@ class Card extends HTMLElement {
       const clickOverlayEl = this.querySelector('.card-click-overlay');
       if (clickOverlayEl) {
         clickOverlayEl.addEventListener('click', this._onClickOverlayActivate, { passive: false });
+        clickOverlayEl.addEventListener('auxclick', this._onClickOverlayActivate, { passive: false });
         clickOverlayEl.addEventListener('touchend', this._onClickOverlayActivate, { passive: false });
         // Track touch movement to distinguish scroll from tap
         clickOverlayEl.addEventListener('touchstart', this._onTouchStartOverlay, { passive: true });
@@ -303,6 +326,7 @@ class Card extends HTMLElement {
       const clickOverlayEl = this.querySelector('.card-click-overlay');
       if (clickOverlayEl) {
         clickOverlayEl.removeEventListener('click', this._onClickOverlayActivate);
+        clickOverlayEl.removeEventListener('auxclick', this._onClickOverlayActivate);
         clickOverlayEl.removeEventListener('touchend', this._onClickOverlayActivate);
         clickOverlayEl.removeEventListener('touchstart', this._onTouchStartOverlay);
         clickOverlayEl.removeEventListener('touchmove', this._onTouchMoveOverlay);

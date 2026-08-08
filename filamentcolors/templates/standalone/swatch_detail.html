@@ -5,7 +5,7 @@
   <meta
     name="twitter:description"
     content="FilamentColors.xyz: {{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}: {{ swatch.hex_color }}!"
->
+  >
   <meta
     name="description"
     content="FilamentColors.xyz: {{ swatch.manufacturer.name }} - {{ swatch.color_name }} {{ swatch.filament_type.name }}: {{ swatch.hex_color }}!"
@@ -136,6 +136,11 @@
                     </tr>
                   {% endif %}
                 {% endwith %}
+                <tr>
+                  <td class="ps-4 bg-body-secondary">Manufacturer</td>
+                  <td class="bg-body-secondary"><a
+                    href="{% url 'manufacturersort' swatch.manufacturer.id %}">{{ swatch.manufacturer.name }}</a></td>
+                </tr>
                 <tr>
                   <td class="ps-4 bg-body-secondary">Date added</td>
                   <td class="bg-body-secondary">{{ swatch.human_readable_date }}</td>

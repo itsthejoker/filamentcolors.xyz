@@ -2467,14 +2467,14 @@ test = ["pytest", "websockets"]
 
 [[package]]
 name = "wheel"
-version = "0.47.0"
+version = "0.48.0"
 description = "Command line tool for manipulating wheel files"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "wheel-0.47.0-py3-none-any.whl", hash = "sha256:212281cab4dff978f6cedd499cd893e1f620791ca6ff7107cf270781e587eced"},
-    {file = "wheel-0.47.0.tar.gz", hash = "sha256:cc72bd1009ba0cf63922e28f94d9d83b920aa2bb28f798a31d0691b02fa3c9b3"},
+    {file = "wheel-0.48.0-py3-none-any.whl", hash = "sha256:3217dcc807155e45db462d7ef2431f5ddda0d7273b700d05a67b271ceb1287ab"},
+    {file = "wheel-0.48.0.tar.gz", hash = "sha256:94800765601e9171bf5d58d066e640662842bcedcbab982b2c90787a2c987322"},
 ]
 
 [package.dependencies]
@@ -2483,4 +2483,4 @@ packaging = ">=24.0"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.15"
-content-hash = "d9d09906b41849bb7190b822fb4405e41f1560e93c0f267b380fd23f4a9c8ba7"
+content-hash = "24657b7e244b889b799ef90856e511bbc8a38ef3ecccd7575427ff8fad3d237c"

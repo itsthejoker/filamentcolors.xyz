@@ -180,14 +180,14 @@ beautifulsoup4 = "*"
 
 [[package]]
 name = "bugsnag"
-version = "4.9.1"
+version = "4.9.2"
 description = "Automatic error monitoring for django, flask, etc."
 optional = false
 python-versions = "<4,>=3.5"
 groups = ["main"]
 files = [
-    {file = "bugsnag-4.9.1-py3-none-any.whl", hash = "sha256:24a36782d0775fdf6147cd75be369bc13154a665081848c109e5b7962a07ff18"},
-    {file = "bugsnag-4.9.1.tar.gz", hash = "sha256:2817577a47e253985fd0d9646d21ebe5094deabf40c1a5938567541c5f40ad79"},
+    {file = "bugsnag-4.9.2-py3-none-any.whl", hash = "sha256:c49d45bd1dacb7eea05159442851c2c3f0477f1b97092b08d60458a6a8e2bb55"},
+    {file = "bugsnag-4.9.2.tar.gz", hash = "sha256:33933c82ace14a51921e0b5f6796725bc0445ce99e2015b63312fda4bb4d9ec2"},
 ]
 
 [package.dependencies]

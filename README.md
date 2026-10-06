@@ -1,39 +1,20 @@
 # filamentcolors.xyz
 
-The source code for filamentcolors.xyz, a small website for comparing pieces of printed filament and exploring color data. This repo includes the Django backend, REST API, templates, and frontend assets.
+[filamentcolors.xyz](https://filamentcolors.xyz/) is a library of real, printed filament swatches. Manufacturers always want to show you filament that looks pretty and worth spending your money on, but that doesn't match the real world. I print a swatch of each filament, photograph it under consistent lighting, and measure the printed plastic directly to get the actual color of the actual plastic. You can browse the library, compare swatches, find close matches to a color you already have, and find Pantone and RAL equivalents.
 
-- Live site: https://filamentcolors.xyz/
-- Public API root: https://filamentcolors.xyz/api/
+This repo holds the whole site: the Django app, the public API, the templates, and the frontend JS/CSS.
 
-## Overview
+## Running it locally
 
-This project is a Django 5.x application managed with Poetry. It provides:
-- A public JSON API for swatches and related data
-- A server-rendered frontend (Django templates) with progressive enhancement using HTMX and a bit of jQuery/vanilla JS
-- Management commands for importing/curating data
+You'll need Python 3.13+ and [Poetry](https://python-poetry.org/). A few dependencies build native extensions, so have a C toolchain handy if your platform doesn't ship wheels for them.
 
-The codebase favors small, focused modules and minimal dependencies beyond Django and a handful of utilities for color processing and images.
+```shell
+git clone https://github.com/itsthejoker/filamentcolors.xyz.git
+cd filamentcolors.xyz
+poetry install
+```
 
-## Requirements
-
-- Python >= 3.10, < 3.13
-- Poetry (for dependency management and virtualenv)
-- A working C toolchain for packages that need compilation (platform dependent)
-
-Optional (used in development/tests/formatting):
-- Make (for convenience commands)
-
-## Setup
-
-1) Clone the repository
-
-2) Install dependencies
-- poetry install
-
-3) Configure settings
-Create a local_settings.py in the project root (same folder as manage.py) with the below content.
-
-local_settings.py:
+Next, create `local_settings.py` in the repo root, next to `manage.py`:
 
 ```python
 from filamentcolors.settings.base import *
@@ -44,110 +25,128 @@ INTERNAL_IPS = ["127.0.0.1", "localhost"]
 POST_TO_SOCIAL_MEDIA = False
 ```
 
-4) Initialize the database (SQLite by default)
-- poetry run python manage.py migrate
-- Optional seed data (may take a bit):
-  - poetry run python manage.py seed_swatches
+The settings router (`filamentcolors/settings/routing.py`) looks for this file on startup. If it can't find it, it falls back to production settings, which is much less fun to debug with.
 
-## Running the app locally
+Then fill the database with fake data and start the server:
 
-- With Makefile: make run
-- Or directly: poetry run python manage.py runserver
+```shell
+poetry run python manage.py seed_swatches
+make run
+```
 
-Entry points:
-- Django manage script: manage.py
-- WSGI app: filamentcolors.wsgi:application
-- Settings router: filamentcolors.settings.routing (selects prod/local/local_settings based on ENVIRONMENT and presence of local_settings.py)
+`seed_swatches` runs migrations, asks you to create a superuser, imports the Pantone and RAL reference colors, and generates a pile of made-up manufacturers and swatches. It takes a minute. Once it finishes, the site lives at http://localhost:8000 and the admin at http://localhost:8000/admin/.
 
-Note on static files:
-- Authoring assets live in filamentcolors/appstatic
-- Collected/static files are in filamentcolors/static (do not edit by hand)
+If you only want an empty database, `make migrate` does that instead.
 
-## Scripts and common tasks
+### Where things live
 
-Make targets:
-- make run -- start dev server
-- make migrate -- apply migrations
-- make tests -- run test suite with coverage
-- make pretty -- run black and isort
+| Path                                        | What's in it                                                                               |
+|---------------------------------------------|--------------------------------------------------------------------------------------------|
+| `filamentcolors/models.py`                  | Swatches, manufacturers, filament types, and friends                                       |
+| `filamentcolors/views.py`, `staff_views.py` | Public pages and the staff-only upload/editing tools                                       |
+| `filamentcolors/api/`                       | The DRF-powered public API                                                                 |
+| `filamentcolors/templates/`                 | Django templates, with HTMX doing most of the interactive bits                             |
+| `filamentcolors/appstatic/`                 | JS and CSS that you edit                                                                   |
+| `filamentcolors/static/`                    | Output of `collectstatic`. Don't edit anything in here; your changes will get overwritten. |
+| `filamentcolors/management/commands/`       | Seeding, importers, and maintenance scripts                                                |
+| `filamentcolors/tests/`                     | The pytest suite                                                                           |
 
-Other helpers:
-- format.sh -- runs black and djade (template formatter) across templates
+### Handy commands
 
-## Environment variables
-These are read by settings; exact usage can be seen in filamentcolors/settings/*.py.
+- `make run` starts the dev server
+- `make migrate` applies migrations
+- `make tests` runs the test suite with coverage (HTML report lands in `htmlcov/`)
+- `make test_all` also runs the Playwright browser tests (run `poetry run playwright install` once first)
+- `make pretty` runs black and isort
+- `./format.sh` runs black plus [djade](https://github.com/adamchainz/djade) on the templates
 
-- ENVIRONMENT: Selects settings profile (local | prod). If unset and local_settings.py exists, that file is loaded; otherwise prod is used.
-- DJANGO_SECRET_KEY: Secret key for Django (base.py provides a development default; set a strong value in production).
-- ALTCHA_HMAC_KEY: HMAC key for Altcha challenges.
-- DEBUG_MODE: Set to truthy value to enable DEBUG in base settings (use only in development).
-- PLAUSIBLE_DOMAIN: Domain used by plausible_proxy.
-- POST_TO_SOCIAL_MEDIA: Boolean flag; disabled in tests, enabled by default in base.
-- BUGSNAG_KEY: API key used when running with prod settings to enable Bugsnag middleware.
+### Environment variables
 
-Database configuration:
-- Default DB is SQLite via base.py. For Postgres or other backends in production, override DATABASES in local_settings.py or a custom settings module. TODO: Document production DB configuration and environment variables if applicable.
+You can skip all of these for local development; each one has a dev-safe default or only matters in production.
 
-## Testing
+| Variable            | Purpose                                                                                                                           |
+|---------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| `ENVIRONMENT`       | Set to `local` to force `settings/local.py`. Otherwise the router uses `local_settings.py` if it exists, then falls back to prod. |
+| `DJANGO_SECRET_KEY` | Django's secret key. The default exists for development only.                                                                     |
+| `ALTCHA_HMAC_KEY`   | HMAC key for the [Altcha](https://altcha.org/) challenges on public forms.                                                        |
+| `DEBUG_MODE`        | Any truthy value turns on `DEBUG` in the base settings.                                                                           |
+| `BUGSNAG_KEY`       | Enables Bugsnag error reporting under prod settings.                                                                              |
 
-- Run all tests: make tests
-  - Equivalent: poetry run pytest --cov --cov-report html
-- Coverage HTML output: htmlcov/index.html
+The base settings use SQLite. Production runs on Postgres; override `DATABASES` in your own settings module if you want to do the same.
 
-Notes:
-- Tests run with DJANGO_SETTINGS_MODULE=filamentcolors.settings.testing (see pyproject.toml).
-- A session-scoped fixture seeds reference color data automatically; database access is enabled for tests by default.
-- External side effects (e.g., social posting) are disabled in testing settings.
+## Tests
 
-## Project structure (selected)
+```shell
+make tests
+```
 
-- filamentcolors/ -- main Django app
-  - settings/ -- base, local, prod, testing, routing
-  - api/ -- REST API endpoints
-  - templates/ -- Django templates (partials/, modals/, standalone/)
-  - appstatic/ -- JS and CSS authored assets (e.g., js/components, css/main.css)
-  - static/ -- collected/static files (do not edit)
-  - management/ -- management commands (e.g., seed_swatches, importers)
-  - tests/ -- pytest test suite
-  - helpers/constants/middleware/etc. -- small support modules
-- manage.py -- Django entry point
-- pyproject.toml -- Poetry project, dependencies, and pytest config
-- Makefile -- convenience tasks
+Pytest picks up `filamentcolors.settings.testing` automatically (see `pyproject.toml`). That settings module turns off social media posting, and a session-scoped fixture loads the reference color data, so you don't have to set anything up first. Tests marked `playwright` get skipped unless you pass `--runplaywright`.
 
-## Public API
+## The API
 
-Please give credit if you use this work for your project! Let me know if you do use this for something; I always love to see how this information is used!
+The API is free and public at https://filamentcolors.xyz/api/. If you build something with it, please give credit and drop me a line. I love seeing what people do with this data.
 
-API root: https://filamentcolors.xyz/api/
+### Endpoints
 
-If you use the API for a project, please consider supporting server costs:
-- Patreon: https://www.patreon.com/filamentcolors
-- One-time donation: https://buy.stripe.com/8wMbKg8UT4k8fBKaEE
+- `/api/swatch/` lists swatches
+- `/api/manufacturer/` lists manufacturers
+- `/api/filament_type/` lists filament types
+- `/api/pantone/` and `/api/ral/` list reference colors
+- `/api/version/` tells you when the data last changed (more on that below)
 
-API notes:
+### Searching and filtering swatches
 
-- Color family is marked by a 3-letter code for data savings; the map can be found here: https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/models.py
-- /api/swatch/ supports sort methods via the `m` query parameter: `type`, `manufacturer`, `color`, and `random`. See: https://github.com/itsthejoker/filamentcolors.xyz/blob/master/filamentcolors/api/views.py
-- Text search: use `q` (or `f`) to search across `color_name`, `manufacturer.name`, and `filament_type.name`.
-- Additional filters:
-  - `manufacturer__slug` (exact or comma-separated for `in`)
-  - `filament_type__parent_type__slug` (exact or comma-separated for `in`)
-  - `td` range as `min-max` (e.g., `td=0-30`)
-- Pagination: standard page-number pagination. Default page size for swatch list is 15; override with `page_size` up to a max of 100.
-- Example URLs:
-  - https://filamentcolors.xyz/api/swatch/?m=manufacturer
-  - https://filamentcolors.xyz/api/swatch/?m=type
-  - https://filamentcolors.xyz/api/swatch/?m=color
-  - https://filamentcolors.xyz/api/swatch/?m=random&q=orange&manufacturer__slug=prusa&page=1&page_size=15
+| Parameter                          | Example                                | Notes                                                                                       |
+|------------------------------------|----------------------------------------|---------------------------------------------------------------------------------------------|
+| `q` (or `f`)                       | `q=orange`                             | Searches color name, manufacturer name, and filament type                                   |
+| `m`                                | `m=color`                              | Sort order: `type`, `manufacturer`, `color`, or `random`. Leave it off to get newest first. |
+| `manufacturer__slug`               | `manufacturer__slug=prusa`             | Add `__in` to pass a comma-separated list                                                   |
+| `filament_type__parent_type__slug` | `filament_type__parent_type__slug=pla` | Also supports `__in`                                                                        |
+| `td`                               | `td=0-30`                              | Transmission distance range as `min-max`                                                    |
+| `page`, `page_size`                | `page_size=50`                         | Pages default to 15 swatches; you can ask for up to 100                                     |
 
-Please avoid hammering the API if you only need specific values; keep a cache of the information important to you. To validate your cache, request:
-- GET https://filamentcolors.xyz/api/version/
-- Example response: {"db_version": 1, "db_last_modified": 1586021667}
-  - db_version increments on schema changes
-  - db_last_modified is an ISO timestamp of the last swatch upload
+Some examples:
 
-Questions? Email [joe@filamentcolors.xyz](mailto:joe@filamentcolors.xyz).
+- https://filamentcolors.xyz/api/swatch/?m=color
+- https://filamentcolors.xyz/api/swatch/?m=manufacturer
+- https://filamentcolors.xyz/api/swatch/?q=orange&manufacturer__slug=prusa&page_size=15
+
+Color families come back as three-letter codes:
+
+| Code  | Family | Code  | Family      |
+|-------|--------|-------|-------------|
+| `WHT` | White  | `BRN` | Brown       |
+| `BLK` | Black  | `PPL` | Purple      |
+| `RED` | Red    | `PNK` | Pink        |
+| `GRN` | Green  | `RNG` | Orange      |
+| `YLW` | Yellow | `GRY` | Grey        |
+| `BLU` | Blue   | `TRN` | Translucent |
+
+### Please cache
+
+If you only need part of the data, grab it once and keep your own copy instead of hitting the API over and over. The API rate-limits requests, and the server bill comes out of my pocket. To check whether your copy is stale, call `GET /api/version/`:
+
+```json
+{"db_version": 1, "db_last_modified": 1586021667}
+```
+
+`db_last_modified` gives the Unix timestamp of the most recent swatch upload; if it hasn't changed, neither has the data. `db_version` only goes up when the API schema changes in a breaking way, and I'll announce that well ahead of time.
+
+## Supporting the site
+
+The site runs on my own dime. If you find it useful, especially if you're building on the API, you can chip in for server costs:
+
+- [Patreon](https://www.patreon.com/filamentcolors)
+- [One-time donation](https://buy.stripe.com/8wMbKg8UT4k8fBKaEE)
+
+Questions, ideas, or bug reports: open an issue or email [joe@filamentcolors.xyz](mailto:joe@filamentcolors.xyz).
+
+## Want to donate plastic?
+
+Most of the library exists because people sent me filament. If you have one I don't, I'd love to add it. Search the [inventory](https://filamentcolors.xyz/inventory/) first, since I have plenty of plastic on hand that hasn't made it onto the site yet. If your filament doesn't show up, the [donation page](https://filamentcolors.xyz/donating/) walks you through it: cut at least 2 meters of each one, bag and label it, toss it in a padded envelope, and mail it over. I cover up to $100 a month in shipping reimbursements, so send me your receipt if you'd like one.
+
+Want to print the swatches yourself? Email [joe@filamentcolors.xyz](mailto:joe@filamentcolors.xyz) and we'll work something out.
 
 ## License
 
-MIT © 2018–present Joe Kaufeld. See LICENSE for details.
+MIT © 2018–present Joe Kaufeld. See [LICENSE](LICENSE).

@@ -541,22 +541,22 @@ files = [
 
 [[package]]
 name = "djade"
-version = "1.9.0"
+version = "1.10.0"
 description = "A Django template formatter."
 optional = false
-python-versions = ">=3.10"
+python-versions = ">=3.11"
 groups = ["dev"]
 files = [
-    {file = "djade-1.9.0-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:9523c5eebf67bdf4037cbaa3c79fbb453ee883c370e772f2dbb767c753971ac7"},
-    {file = "djade-1.9.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:8da28ee6ac2e163283c1f19965f04cb4ca1e4e9fd9edc4c1f4cf183cab98384e"},
-    {file = "djade-1.9.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:fbfc70ad912b54329363de7a5b62afd6bf4b92a49c12e2a155be1138cef01424"},
-    {file = "djade-1.9.0-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:d9d828aaa871c02655d0a6b2d9fd2a677cd4b16bd101015728dd5db418b8225b"},
-    {file = "djade-1.9.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9b90e709d21c3f953b52fc5a021b8ef69b0790f23aa308923992af1fc3c2353f"},
-    {file = "djade-1.9.0-py3-none-musllinux_1_1_aarch64.whl", hash = "sha256:183b828ffcedb0122bcf0b5eaa008bb288c344a80946c3f372d583f3944c1394"},
-    {file = "djade-1.9.0-py3-none-musllinux_1_1_x86_64.whl", hash = "sha256:1981f77ef3c8b73860e492918ce235e46ab4e62a63c8101dd379e204c8a162de"},
-    {file = "djade-1.9.0-py3-none-win_amd64.whl", hash = "sha256:bb2b62e22971173dae63bb2d18b24fe85bf3470ca1aabf1b8320a578832d64a2"},
-    {file = "djade-1.9.0-py3-none-win_arm64.whl", hash = "sha256:b90633a53bb996e0fffd9bd26ed995a78b15f368aea77348e35e67151de4fd13"},
-    {file = "djade-1.9.0.tar.gz", hash = "sha256:e07dcec03982af3f12e46e42661c83ba6835edbde3597e0385ecfe7385527721"},
+    {file = "djade-1.10.0-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:a65f833034e702d130f92b7c8a13262c2182051e4fd51d808a3469a55b2082e3"},
+    {file = "djade-1.10.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:72923f91485d319ca643796a82a92b85caab26d75caf2c1b7338cd17147418ce"},
+    {file = "djade-1.10.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:22119928123641e7fe017d3465d3018302d4124ae7c378bf982cf485e06803e1"},
+    {file = "djade-1.10.0-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:c13ea6759c346aa8c2af8db9ce9cc542754c4475e4942006811adebada90efb8"},
+    {file = "djade-1.10.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:abf32c9029090f33852d5735609ed99d9e470aef6e350001bc0c77bb11b63694"},
+    {file = "djade-1.10.0-py3-none-musllinux_1_1_aarch64.whl", hash = "sha256:c3dd024a345f5bccf2f02ad66d4ebd4f2e3727645b94b718b1cbc104d9e429b8"},
+    {file = "djade-1.10.0-py3-none-musllinux_1_1_x86_64.whl", hash = "sha256:8b282469e60ab3c57339c6b0aaf6c485d60bfab4b00185cdc789ca9244a82948"},
+    {file = "djade-1.10.0-py3-none-win_amd64.whl", hash = "sha256:db12e7984177cded7be4a2f2a05ab7f706760c98d3e31843260e8c13e098017a"},
+    {file = "djade-1.10.0-py3-none-win_arm64.whl", hash = "sha256:6a90bfe2a6bf727f1b74e6dc437d692af03af90f0ca1f341c214316989bfe19d"},
+    {file = "djade-1.10.0.tar.gz", hash = "sha256:9d8af77a03000914b516d6be0967b5043094db5a91cec22649f689ee5bf2e5de"},
 ]
 
 [[package]]

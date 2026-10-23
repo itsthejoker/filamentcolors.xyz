@@ -1,0 +1,28 @@
+name: Django Probe
+
+on:
+  schedule:
+    - cron: "59 8 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - run: pipx install poetry
+      - run: poetry install
+
+      - run: poetry run django-probe submit .
+        env:
+          DJANGO_PROBE_TOKEN: ${{ secrets.DJANGO_PROBE_TOKEN }}

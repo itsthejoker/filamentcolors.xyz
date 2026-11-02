@@ -2422,14 +2422,14 @@ files = [
 
 [[package]]
 name = "sorl-thumbnail"
-version = "13.2.0"
-description = "Thumbnails for Django"
+version = "13.4.0"
+description = "Thumbnails for Django, made in the template on first use with Pillow, libvips or ImageMagick, stored on any Django storage"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "sorl_thumbnail-13.2.0-py3-none-any.whl", hash = "sha256:3bf689e9c5ab3b7115bf22b02bca3e65e7d06c4eb76797afd60f9417aa76b7b0"},
-    {file = "sorl_thumbnail-13.2.0.tar.gz", hash = "sha256:f3ae9a997485b316d4a44c2d9bf16eb0ab4aa245c6be743e5d34a728eaab59dd"},
+    {file = "sorl_thumbnail-13.4.0-py3-none-any.whl", hash = "sha256:375c7c8760424aeec6d8c394d158b2390afd0129c61ad73e90b6766cea88d600"},
+    {file = "sorl_thumbnail-13.4.0.tar.gz", hash = "sha256:9eafa7be3c6785b06750633a36b20111005b7e3efda735f770e0ee101908ed3b"},
 ]
 
 [package.extras]
@@ -2437,6 +2437,7 @@ avif = ["pillow-avif-plugin"]
 docs = ["sphinx"]
 pgmagick = ["pgmagick"]
 pil = ["pillow"]
+vips = ["pyvips[binary]"]
 wand = ["wand"]
 
 [[package]]

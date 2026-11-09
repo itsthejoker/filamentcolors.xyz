@@ -13,7 +13,7 @@ sorl-thumbnail = "^13.0.0"
 gunicorn = ">=25.3,<27.0"
 psycopg2-binary = "^2.9.11"
 python-dotenv = "^1.2.2"
-colorcorrect = "^0.9.1"
+colorcorrect = ">=0.9.1,<1.1.0"
 colormath = { git = "https://github.com/itsthejoker/python-colormath.git", branch = "master" }
 django-taggit = "^6.0.0"
 colorthief = "^0.2.1"

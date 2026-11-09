@@ -418,19 +418,48 @@ files = [
 
 [[package]]
 name = "colorcorrect"
-version = "0.9.1"
-description = "imprement some of color correction algorithms"
+version = "1.0.0"
+description = "Implementation of some color correction / automatic white balance algorithms"
 optional = false
-python-versions = "*"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "colorcorrect-0.9.1.tar.gz", hash = "sha256:a12bdd9dd71d2c0c29db5fc1a4b6452ffa53a82b22735985924218cb71674bb6"},
+    {file = "colorcorrect-1.0.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:b38a4de6b467aa805152c9d81a772961fa4236e7655b09185189b10bfeff8261"},
+    {file = "colorcorrect-1.0.0-cp310-cp310-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:81e78b55c15138d40de08e3b5c4f8829bfbde0487f179e72e556f90d865133fe"},
+    {file = "colorcorrect-1.0.0-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:b3ee7d882f74de19d4e7e29f7cd388d75c981a72b417065cae60596c1a68313b"},
+    {file = "colorcorrect-1.0.0-cp310-cp310-musllinux_1_2_aarch64.whl", hash = "sha256:71140b9b6014427271306832e77e45afbd362bca7fa13d6176f0d511bc953e39"},
+    {file = "colorcorrect-1.0.0-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:2fa01c5693ed15be7e462b042381bd793e89aac99137eaad5a596278bfc49fa3"},
+    {file = "colorcorrect-1.0.0-cp310-cp310-win_amd64.whl", hash = "sha256:9f702a164500985dd19df2cbe57f4052ad0846e502e01490de1f5eff0d15b0d3"},
+    {file = "colorcorrect-1.0.0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:0d580057f29c957b20c1c01b946813d517887c5e71882efda83cba66fc5b7a7e"},
+    {file = "colorcorrect-1.0.0-cp311-cp311-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:8702b7cbdc2addb2b90145d4c6ef937e7d1a7744852e0a1c9cca4d35c83966c1"},
+    {file = "colorcorrect-1.0.0-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:d4ee648d8c9b4f34991d79dd66df469ca9a4307786fbb073ea263656160ec127"},
+    {file = "colorcorrect-1.0.0-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:655b67f6153be96682a84e53c40919ca9c56b5085ea695b519b7f9d3d90daef7"},
+    {file = "colorcorrect-1.0.0-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:b3558474f6c267cad3d07052415b9642c0328406b08f3717a42406f9520a30a6"},
+    {file = "colorcorrect-1.0.0-cp311-cp311-win_amd64.whl", hash = "sha256:bc368363c79ac2813c151702d7e5f2c03f03b38fa42af345672df2b98c612510"},
+    {file = "colorcorrect-1.0.0-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:ccd4a4902ce12dd6325c0caef149862a0e998e5e5d2caa04a97f68cb41a3e96c"},
+    {file = "colorcorrect-1.0.0-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:ea3a4ea6aa78c56003adede72dd0209e6259c93b2f8491ca894f34ef69d1e4b4"},
+    {file = "colorcorrect-1.0.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:1da67ecf96426f37ace81384fe0e227c3ac1a33930753c3c67f5ea1fd28a1eba"},
+    {file = "colorcorrect-1.0.0-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:b93889dc9c2a25ae23df0b700110b9361916ed636453de03075f594c50f9cb96"},
+    {file = "colorcorrect-1.0.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:f9718ccb20f05afdc083ecc1274978802dbebcce15ded5f6e0c400ab142fdb56"},
+    {file = "colorcorrect-1.0.0-cp312-cp312-win_amd64.whl", hash = "sha256:1870c6905b35a901f1d1f098ffe1143c9f435ea2f37d2257ddece94e7b0c064c"},
+    {file = "colorcorrect-1.0.0-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:dfff9f35e0af5bbb63292de0d1ba397ac909bc371219f76e5357e17f2c88428c"},
+    {file = "colorcorrect-1.0.0-cp313-cp313-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:dea6399ec5d12b981ea18637a0d7e7f9d84a974292727c62635396e0199a1151"},
+    {file = "colorcorrect-1.0.0-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:82c189abff63597825c753b6c937554e896551b5d849adac6e0495fcdef0669a"},
+    {file = "colorcorrect-1.0.0-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:95436fe579f89fdc499010e3009c2b297217460b846ee9e0c5a6970be3a84ffa"},
+    {file = "colorcorrect-1.0.0-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:1aeae9b09191c329831d0af4d18a1a30c3231131147098de171b89f3ebfb1fb3"},
+    {file = "colorcorrect-1.0.0-cp313-cp313-win_amd64.whl", hash = "sha256:54c7c1906f6ae439558c8208bf635c3c04859891a27070a278408eea450dffff"},
+    {file = "colorcorrect-1.0.0-cp314-cp314-macosx_10_15_universal2.whl", hash = "sha256:9e3c3c4aaf4c744c7662cab03163bdfe90d08a85f4abd34f413ba1ff8fcba1c5"},
+    {file = "colorcorrect-1.0.0-cp314-cp314-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:843beff6cb70fab63e1bb220e6a7b0ac538b3852795656010f0d2987a3db33f5"},
+    {file = "colorcorrect-1.0.0-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:c30c66d4e0dfeb7fe2d1924c66ff709f9b0f2cfc3d778fd598ec75f6d50d20dd"},
+    {file = "colorcorrect-1.0.0-cp314-cp314-musllinux_1_2_aarch64.whl", hash = "sha256:9db3e15c811277f3dba1789b489820f13e30a5a0110445300b191a9199a56e13"},
+    {file = "colorcorrect-1.0.0-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:235b4123d7189582905b1ac3b7235539215ada60afb7879032e4acb21b9889a7"},
+    {file = "colorcorrect-1.0.0-cp314-cp314-win_amd64.whl", hash = "sha256:9b784dc7b2db92d6206826982dded4ba8dca2825deeabc53e5e9656cf23eed03"},
+    {file = "colorcorrect-1.0.0.tar.gz", hash = "sha256:23b388dcfb31a048ddbeb793bcd615e2c2491b485bfff048a784dd0255e23019"},
 ]
 
 [package.dependencies]
-numpy = "*"
-Pillow = "*"
-six = "*"
+numpy = ">=2.0"
+Pillow = ">=10.0"
 
 [[package]]
 name = "colormath"
@@ -2652,4 +2681,4 @@ packaging = ">=24.0"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.15"
-content-hash = "0e1a33a129b09640a2a160a75ad70deb8e99bd40f7ede471c559cbd2731a0639"
+content-hash = "26ca3d051085142913436a67d43e2e38c0a7a9e870fde4180a248208a92ba4ee"

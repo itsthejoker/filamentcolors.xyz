@@ -792,18 +792,18 @@ packaging = ">=21"
 
 [[package]]
 name = "django-taggit"
-version = "6.1.0"
+version = "7.0.0"
 description = "django-taggit is a reusable Django application for simple tagging."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "django_taggit-6.1.0-py3-none-any.whl", hash = "sha256:ab776264bbc76cb3d7e49e1bf9054962457831bd21c3a42db9138b41956e4cf0"},
-    {file = "django_taggit-6.1.0.tar.gz", hash = "sha256:c4d1199e6df34125dd36db5eb0efe545b254dec3980ce5dd80e6bab3e78757c3"},
+    {file = "django_taggit-7.0.0-py3-none-any.whl", hash = "sha256:191dd89528f40a6109d1922f197885f25db3cd05b4280b6ec2a1e8e790c295b8"},
+    {file = "django_taggit-7.0.0.tar.gz", hash = "sha256:338b7af0f3417f079a2a4346da1677a1e0d4ca0aba1b04a4e12c9e3a85450a7a"},
 ]
 
 [package.dependencies]
-Django = ">=4.1"
+Django = ">=5.2"
 
 [[package]]
 name = "django-unused-media"
@@ -2680,4 +2680,4 @@ packaging = ">=24.0"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.15"
-content-hash = "d8ba72c4fcc0ed7254694925a4e491703a1b2d8996eef9aad92aa78a5b14c3e6"
+content-hash = "3fc5458b9d933b2a9d1648228671791015a2f2bf34523dc3220ca5c67018c7aa"

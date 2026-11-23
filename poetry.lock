@@ -2419,14 +2419,14 @@ files = [
 
 [[package]]
 name = "sorl-thumbnail"
-version = "13.4.0"
+version = "13.5.0"
 description = "Thumbnails for Django, made in the template on first use with Pillow, libvips or ImageMagick, stored on any Django storage"
 optional = false
-python-versions = ">=3.10"
+python-versions = ">=3.11"
 groups = ["main"]
 files = [
-    {file = "sorl_thumbnail-13.4.0-py3-none-any.whl", hash = "sha256:375c7c8760424aeec6d8c394d158b2390afd0129c61ad73e90b6766cea88d600"},
-    {file = "sorl_thumbnail-13.4.0.tar.gz", hash = "sha256:9eafa7be3c6785b06750633a36b20111005b7e3efda735f770e0ee101908ed3b"},
+    {file = "sorl_thumbnail-13.5.0-py3-none-any.whl", hash = "sha256:e8965d2f64bd1ee363951641b0fa2b0dd3535de380561171f8fe03c9ccc24b6a"},
+    {file = "sorl_thumbnail-13.5.0.tar.gz", hash = "sha256:7cf37e66844922cf454d04640072740deac7ce4a98db5df62ecd5bc4d9c61937"},
 ]
 
 [package.extras]

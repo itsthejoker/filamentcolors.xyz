@@ -777,14 +777,14 @@ requests = ">=2,<3"
 
 [[package]]
 name = "django-probe"
-version = "0.5.0"
+version = "0.6.0"
 description = "Share aggregate Django code-pattern usage with the community."
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "django_probe-0.5.0-py3-none-any.whl", hash = "sha256:354618c94f54538186c9caa1b06770f99d448513f325014d7fab535da793a156"},
-    {file = "django_probe-0.5.0.tar.gz", hash = "sha256:db648a069547c70588d30d0390c2a02059f57166af79be4c07ccbe2c92f9341d"},
+    {file = "django_probe-0.6.0-py3-none-any.whl", hash = "sha256:eb5dd6dab4836d4dd896444b6577f25784a2927fbb58669ef11472fdddfff49c"},
+    {file = "django_probe-0.6.0.tar.gz", hash = "sha256:3b7165f2c5aa52b0aa811e398b4bbfea31b92eff14ecaa313e8702970ef7803a"},
 ]
 
 [package.dependencies]
@@ -2649,4 +2649,4 @@ packaging = ">=24.0"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.15"
-content-hash = "0f6c0b4e98a4990cb9e42985e2dd3997274e2331c95b1e6b64a2c3f53c450bc3"
+content-hash = "9154c2335c60b0b29fd635597276d259c560d35ced6c0d68d47a95067bf9beaf"
